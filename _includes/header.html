@@ -18,13 +18,15 @@
 
         <div class="navigation-wrapper">
 
-          {% if site.author.show_rss %}
+
           <nav class="cover-navigation cover-navigation--primary">
+            {% if site.show_blog %}
             <ul class="navigation">
               <li class="navigation__item"><a href="{{ site.baseurl }}/#blog" title="link to {{ site.title }} blog" class="blog-button">Blog</a></li>
             </ul>
+            {% endif %}
           </nav>
-          {% endif %}
+
 
 
           <nav class="cover-navigation navigation--social">
@@ -80,7 +82,7 @@
               </li>
             {% endif %}
 
-              {% if site.author.show_rss %}
+              {% if site.show_rss %}
             <!-- RSS -->
             <li class="navigation__item">
               <a href="{{ site.baseurl }}/feed.xml" title="Subscribe" target="_blank">
