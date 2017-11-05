@@ -1,18 +1,17 @@
 # Site settings
-title: Jekyll-Uno
-description: 'Jekyll-Uno - a minimal, responsive theme for Jekyll'
-url: 'http://joshgerdes.com/jekyll-uno'
+title: 4Comprehension
+description: 'Grzegorz Piwowarek'
+url: 'http://4comprehension.com'
 baseurl: '/'
 # google_analytics: 'UA-XXXXXX-X'
 # disqus_shortname: 'your-disqus-name'
 
 author:
-  name: 'Josh Gerdes'
-  email: josh@joshgerdes.com
-  twitter_username: joshgerdes
-  facebook_username: joshgerdes
-  github_username:  joshgerdes
-  linkedin_username:  joshgerdes
+  name: 'Grzegorz Piwowarek'
+  email: gpiwowarek@gmail.com
+  twitter_username: pivovarit
+  github_username:  pivovarit
+  linkedin_username:  gpiwowarek
 
 defaults:
   -
