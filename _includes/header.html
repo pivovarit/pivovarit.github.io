@@ -90,6 +90,16 @@
             </li>
               {% endif %}
 
+                {% if site.author.stack-overflow-id %}
+                <!-- Stack Overflow -->
+                <li class="navigation__item">
+                  <a href="https://stackoverflow.com/users/{{ site.author.stack-overflow-id }}" title="StackOverflow" target="_blank">
+                    <i class="icon icon-social-stack-overflow"></i>
+                      <span class="label">StackOverflow</span>
+                  </a>
+                </li>
+                {% endif %}
+
             </ul>
           </nav>
 
