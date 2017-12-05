@@ -480,8 +480,7 @@
                 Either&lt;FetchError, List&lt;URL>> result = getSearchResults("touk")
             </code></pre>
             <pre><code data-trim="">
-                result.getSearchResults("touk")
-                  .right()
+                result..right()
                   .filter(...)
                   .map(...)
                   .getOrElse(Collections::emptyList);
