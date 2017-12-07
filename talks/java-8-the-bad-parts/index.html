@@ -62,21 +62,29 @@
 
         <section>
             <h1>Java 8 - The Bad Parts</h1>
-            <h2>
-                <a href="http://pivovarit.github.io">Grzegorz Piwowarek</a> | <a href="http://twitter.com/pivovarit">@pivovarit</a>
-                | <a href="http://4comprehension.com/">4comprehension.com</a>
-            </h2>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h2><a href="http://twitter.com/pivovarit">@pivovarit</a></h2>
         </section>
 
         <section>
             <h1>Software Engineer | Trainer</h1>
+            <h2>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h2>
             <h3>Software Engineer @ <a href="http://touk.pl/">TouK</a></h3>
-            <h3>blogger @ <a href="http://4comprehension.com/">4comprehension.com</a></h3>
-            <h3>senior editor @ <a href="http://baeldung.com/">Baeldung</a></h3>
-            <h3>commiter @ <a href="http://joel-costigliola.github.io/assertj/">AssertJ</a>, <a
-                    href="http://www.vavr.io">Vavr</a></h3>
+            <h3>OS Contributor</h3>
+            <h3>DZone MVB</h3>
         </section>
 
+        <section>
+            <h1>Agenda</h1>
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+        </section>
+
+
+        <!--https://blogs.msdn.microsoft.com/ericlippert/2008/09/10/vexing-exceptions/-->
+        <!--http://wiki.c2.com/?UseExceptionsInsteadOfErrorValues-->
     </div>
 </div>
 
@@ -102,23 +110,23 @@
         dependencies: [
             {
                 src: 'lib/js/classList.js', condition: function () {
-                return !document.body.classList;
-            }
+                    return !document.body.classList;
+                }
             },
             {
                 src: 'plugin/markdown/marked.js', condition: function () {
-                return !!document.querySelector('[data-markdown]');
-            }
+                    return !!document.querySelector('[data-markdown]');
+                }
             },
             {
                 src: 'plugin/markdown/markdown.js', condition: function () {
-                return !!document.querySelector('[data-markdown]');
-            }
+                    return !!document.querySelector('[data-markdown]');
+                }
             },
             {
                 src: 'plugin/highlight/highlight.js', async: true, callback: function () {
-                hljs.initHighlightingOnLoad();
-            }
+                    hljs.initHighlightingOnLoad();
+                }
             },
             {src: 'plugin/zoom-js/zoom.js', async: true},
             {src: 'plugin/notes/notes.js', async: true}
