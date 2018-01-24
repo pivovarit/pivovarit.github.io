@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Vavr - Functional Java Done Right: Slides</title>
+		<meta name="description" content="Slides">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-white-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="ce9a240692e6df058e7de59e395a46fe"><div class="sl-block" data-block-type="text" style="width: 866px; left: 207px; top: 229px; height: auto;" data-block-id="c8b72271fde6fd15494e2fd2e167d1a9"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="font-size: 69%; z-index: 11;">
+<h1><s>Javaslang</s></h1>
+
+<h1><span style="font-size:0.9em">Vavr - Functional Java Done Right</span></h1>
+
+<p> </p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="8016837f70d6463cb0cb2348cf7b2dc3" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 346px; top: 386px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p>Grzegorz Piwowarek</p>
+</div></div>
+
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 346px; top: 418px;" data-block-id="c0f26c86ba0db1843bf8583b5b0455ed"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p><span style="font-size:0.7em"><span style="color:#A9A9A9">gpiwowarek@gmail.com</span></span></p>
+
+<p> </p>
+</div></div></section><section data-id="2a37dc4344b7344e101866c3ef824441"><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 796px; height: 266px; left: 242px; top: 227px;" data-block-id="5d624a0d8ae81f6c92f06b5cca36b618"><div class="sl-block-content fragment" style="z-index: 11;" data-fragment-index="0"><img data-natural-width="1024" data-natural-height="342" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/48704b302f2e048571f891a73980b78d.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 360px; height: 135px; left: 273px; top: 293px;" data-block-id="133a7c7b01e87c6c71436b5411b9ab90"><div class="sl-block-style" style="z-index: 12; transform: rotate(326deg);"><div class="sl-block-content fragment" style="z-index: 12;" data-fragment-index="1"><img data-natural-width="1100" data-natural-height="413" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/5dde420f0b3ecec20c3ef9e198f5902c.png"></div></div></div></section><section data-id="ae58e2c4fbab95b6e36ccaf8283506cf"><div class="sl-block" data-block-type="image" data-block-id="86461799155817db24557e6592a30ab4" style="min-width: 30px; min-height: 30px; width: 491px; height: 491px; left: 328px; top: 101px;"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="1024" data-natural-height="1024" data-src="javaslang-functional-java-done-right/036955f8bae9b18df33d32885fee8843.png"></div></div></section><section data-id="547f565838d62e995a4bbd9a79c2396c"><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 604px; height: 340px; left: 148px; top: 164px;" data-block-id="76994439694257b4e7396115151aa2f5"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="2048" data-natural-height="1152" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/f783f9ba0903c45f8c53fb45fcacc79d.jpg"></div></div></section><section data-id="5e33d400822097f8663f7cefc30f0adc"><div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 180px; height: auto;" data-block-id="5f06257ec2ddf3d53ac81fb36a32e28a"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Me</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 277px; height: auto;" data-block-id="2dad464f3c579fdcf8dde5e5a67325a9"><div class="sl-block-content fragment" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 11; border-width: 1px;" data-fragment-index="0">
+<h2>Dev@TouK</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 340px; height: auto;" data-block-id="0946a3c3a3419b0bd3139d9595037f1b"><div class="sl-block-content fragment" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 13; border-width: 1px;" data-fragment-index="1">
+<h2>Yoyo Player</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 406px; height: auto;" data-block-id="e269b9c5604f03e72fcd2634c840e740"><div class="sl-block-content fragment" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 14; border-width: 1px;" data-fragment-index="2">
+<h2>Musician</h2>
+</div></div></section><section data-id="3b4074fa06358adeb8367128963439cc"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 174px; height: auto;" data-block-id="0ba3e2d6c9b82baf1bdbc2ec646799bf"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>pivovarit@</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 271px; height: auto;" data-block-id="2f670d6980f88cd0fc6f1f71c5071e18"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 11;">
+<h2>Twitter</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 334px; height: auto;" data-block-id="d9791aee78c59e1f7e9902ae07534168"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 12;">
+<h2>GitHub</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 404px; height: auto;" data-block-id="dc628f180a7c03ed26c7b1f21673f54e"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 14;">
+<h2>...everywhere else</h2>
+</div></div></section><section data-id="a9afee9d87bfe0fa018d0c3bf1cbe843"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 47px; height: auto;" data-block-id="c675f5991ec0a0a982b21100cbfa1a71"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1>Java 8</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" data-block-id="cfe681fa22cb81cf378291c0f4d87a8b" style="min-width: 30px; min-height: 30px; width: 618px; height: 348.169px; left: 331px; top: 228px;"><div class="sl-block-content fragment" style="z-index: 12;" data-fragment-index="0"><img style="" data-natural-width="497" data-natural-height="280" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/bec49272db264f884fc88b2d3ff38fdb.gif"></div></div></section><section data-id="1ec107097c477d0130e894a7eb9fbe0a"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 190px; height: auto;" data-block-id="6684ac61d067e54da9f6d89636520edf"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>"Functional" Java8:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 264px; height: auto;" data-block-id="736bbf43e0dc21870f128d6006dbaf46"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" data-fragment-index="0">Lambda Expressions</li>
+	<li class="fragment" data-fragment-index="1">Optional, Stream, CompletableFuture</li>
+	<li class="fragment" data-fragment-index="2">...</li>
+</ul>
+</div></div></section><section data-id="6b4cb61160af04dd3cafe2e688c24bc5"><div class="sl-block" data-block-type="image" data-block-id="39b34ff3a1efe1b321caad78ac5b9ec5" style="min-width: 30px; min-height: 30px; width: 695px; height: 626.944px; left: 133px; top: 37px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="674" data-natural-height="608" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/3abfd4beffc8e0240a4fcdda2ec33ed5.png"></div></div></section><section data-id="42de74fffd0d23f0f8ef40a9eaa04099"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 66px; height: auto;" data-block-id="876fe037cf7774014724c77d6885cdf3"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Java 8 issues:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 140px; height: auto;" data-block-id="868264188839fec229eaf4527f43e07a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" data-fragment-index="0">Only 3 functional control structures</li>
+	<li class="fragment" data-fragment-index="1">No memoization</li>
+	<li class="fragment" data-fragment-index="2"><span style="text-align:left">No lifting</span></li>
+	<li class="fragment" data-fragment-index="3">No pattern matching</li>
+	<li class="fragment" data-fragment-index="4">No tuples</li>
+	<li class="fragment" data-fragment-index="5">Optional not Serializable/Iterable</li>
+	<li class="fragment" data-fragment-index="6">Lack of Stream/Optional in APIs</li>
+	<li class="fragment" data-fragment-index="7">Checked exceptions in functions</li>
+	<li class="fragment" data-fragment-index="8">"Type pollution"</li>
+	<li class="fragment" data-fragment-index="9">list.stream().map(...).collect(toList())</li>
+	<li class="fragment" data-fragment-index="10">...</li>
+</ul>
+</div></div></section><section data-id="79bd081e13cc496992d1d5a02021f6dc"><div class="sl-block" data-block-type="code" data-block-id="09ad810f799e859d0b484917f91fb880" style="min-width: 30px; min-height: 30px; width: 960px; height: 70px; left: 160px; top: 277px;"><div class="sl-block-content fragment" style="z-index: 11; font-size: 200%;" data-highlight-theme="zenburn" data-fragment-index="0"><pre class="java"><code>List&lt;String&gt; transform(List&lt;String&gt; list);</code></pre></div></div></section><section data-id="c0153bae09374d2143400726246f83b5"><div class="sl-block" data-block-type="code" style="width: 960px; height: 504px; left: 160px; top: 144px;" data-block-id="0b7c3845473d1b4c38609fcc456d9c51"><div class="sl-block-content" style="z-index: 11; font-size: 166%;" data-highlight-theme="zenburn"><pre class="java"><code>List&lt;String&gt; transform(List&lt;String&gt; list) {
+    if (this.state.isEmpty() || list.isEmpty()) {
+        throw new IllegalStateException("Ouch...");
+    }
+
+    list.add(this.state.get(0));
+    list.add(SOME_CONSTANT);
+
+    if (MOON.getLunarPhase() == FULL) list.remove(7); 
+
+    this.moreState.addAll(list);
+    OtherClass.mutableStaticField = list;
+
+    return list;
+}</code></pre></div></div></section><section data-id="4075edfab779d0f829791ad2bee03db0"><div class="sl-block" data-block-type="text" style="width: 800px; left: 34px; top: 72px; height: auto;" data-block-id="bc9e4ed7433baae7813d5d9da4ce04c9"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>Potential inputs:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 35px; top: 146px; height: auto;" data-block-id="0d291412f06af3d199eb84d05469e1b5"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>declared params</li>
+	<li>instance state</li>
+	<li>global state</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 33px; top: 352px; height: auto;" data-block-id="57a9c2036af0a99dcaf7b9dc02fcd0aa"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 13;">
+<h2>Potential outputs:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 37px; top: 426px; height: auto;" data-block-id="15d6543d62da79b0b390e8a927d2305c"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<ul>
+	<li>declared returned value</li>
+	<li>mut<span style="text-align:left">able</span> instance state</li>
+	<li>mut<span style="text-align:left">able</span> global state</li>
+	<li>mutable params</li>
+	<li>exceptions</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 529px; height: 346px; left: 700px; top: 201px;" data-block-id="2a7a5c5c2bf3923ddaf63dece39c42eb"><div class="sl-block-style" style="z-index: 15; transform: rotate(360deg);"><div class="sl-block-content fragment" style="z-index: 15;" data-fragment-index="0"><img data-natural-width="680" data-natural-height="445" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/7183452b572791c45f1ee26e598f71aa.png"></div></div></div></section><section data-id="ec7c3c1eba3e3a18be60bd3368b8bc0d"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;" data-block-id="4ad96b3b16676ad657410cd96c0875b0"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>Potential inputs:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 144px; height: auto;" data-block-id="8218a754c9c70e6f6e393a381bc5fe55"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>declared params</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 350px; height: auto;" data-block-id="49475921927c2b77e6e3191b031a50d5"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 13;">
+<h2>Potential outputs:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 84px; top: 424px; height: auto;" data-block-id="7c00b6a7776a23be0dea6a79f42cd657"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<ul>
+	<li>declared returned value</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 580px; height: 424px; left: 540px; top: 224px;" data-block-id="3e2d85323c1eb3c94232d6d1ca18ecd0"><div class="sl-block-content" style="z-index: 15;"><img data-natural-width="680" data-natural-height="497" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/f66e561ff21369e55ad5de8d97d84549.png"></div></div></section><section data-id="9a52aa12a6e8710005a7525ec5d28e5f"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 255px; height: auto;" data-block-id="6de4ea5eb051c5ddd31793e875bc0c2f"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="font-size: 67%;">
+<h1>Functional programming is not about lambdas.</h1>
+
+<p> </p>
+</div></div></section><section data-id="86347c38b227b33650b4b44dfe28ed58"><div class="sl-block" data-block-type="text" data-block-id="78879d785e14a2d3b2856567cd5e3587" style="height: auto; min-width: 30px; min-height: 30px; width: 888px; left: 196px; top: 263px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; border-width: 1px; text-align: center;">
+<p>"Functional programming is about writing pure functions,<br>
+about removing hidden inputs and outputs as far as we can,<br>
+so that as much of our code as possible<br>
+just describes a relationship between inputs and outputs."</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="dbfb9f27af3427670063e3dc5ba99a0f" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 328px; top: 419px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p><span style="font-size:0.5em">http://blog.jenkster.com/2015/12/what-is-functional-programming.html</span></p>
+</div></div></section><section data-id="dda4255ef2e0a0ece1ba5a56764d5f48"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 135px; height: auto;" data-block-id="3cf17300bfa4e649b4d3076c84f22371"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Immutability</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 345px; height: auto;" data-block-id="44fdea360d826cb8581fbd5f3d72b369"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 12;">
+<h1>Referential Transparency</h1>
+</div></div></section><section data-id="c09d65a8748b1a4596962e2993699c48"><div class="sl-block" data-block-type="image" data-block-id="6cbc0425d7a9437811f756e386c52454" style="min-width: 30px; min-height: 30px; width: 808.333px; height: 425px; left: 236px; top: 128px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="776" data-natural-height="408" style="" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/35e118e422c3be4fe85d8b46c9668349.png"></div></div></section><section data-id="fe9522960fca1ab1db2247cd0ca1bd7b"><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 770px; height: 432px; left: 255px; top: 144px;" data-block-id="966ec2d2b5015e98f1a2c60622981762"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="599" data-natural-height="336" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/19a2ef70a56da1c278f764a6778d1570.jpg"></div></div></section><section data-id="b99a257754c56bacbacb22ac0137b1c8"><div class="sl-block" data-block-type="image" data-block-id="027e67b3f5417ff58534ef1855c965c9" style="min-width: 30px; min-height: 30px; width: 486.801px; height: 544px; left: 398px; top: 82px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="400" data-natural-height="447" style="" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/92407488acb16417854798b991f74db2.jpg"></div></div></section><section data-id="8dfc1abb0f2c68c7756bd356153b0fa3"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 202px; height: auto;" data-block-id="9d9fc65e75bc3d48d183c27d46d5a73c"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Java Collections API:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 276px; height: auto;" data-block-id="0d46fddd48b10b336553f93629fb8b19"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li>add()</li>
+	<li>remove()</li>
+	<li>clear()</li>
+	<li>...</li>
+</ul>
+</div></div></section><section data-id="ecff9befb61899149e535ca6c117f957"><div class="sl-block" data-block-type="code" data-block-id="e5dc4f2546d712aadcedf396cefe7f1e" style="min-width: 30px; min-height: 30px; width: 873px; height: 325px; left: 204px; top: 125px;"><div class="sl-block-content" style="z-index: 11; font-size: 214%;"><pre class="java"><code>Date date = new Date();
+
+Set&lt;Date&gt; dates = new HashSet&lt;&gt;();
+dates.add(date);
+date.setTime(42);
+
+dates.contains(date); //false</code></pre></div></div>
+<div class="sl-block" data-block-type="image" data-block-id="8afd98d8b8144f774f50bd1fc8b41776" style="min-width: 30px; min-height: 30px; width: 180.5px; height: 164.706px; left: 542px; top: 450px;"><div class="sl-block-content fragment" style="z-index: 12;" data-fragment-index="0"><img data-natural-width="400" data-natural-height="365" style="" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/e6a19af3c793fb02cc5e96863c00ed6f.png"></div></div></section><section data-id="4e23275fa53a69457470b30e0754094c"><div class="sl-block" data-block-type="image" data-block-id="83bd36814028500525cc6bc27235a2b4" style="min-width: 30px; min-height: 30px; width: 960px; height: 225.975px; left: 160px; top: 278px;"><div class="sl-block-content fragment" style="z-index: 11;" data-fragment-index="0"><img style="" data-natural-width="1215" data-natural-height="286" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/3b56947032615820fe55682ae6ddd3df.png"></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 360px; height: 106px; left: 460px; top: 144px;" data-block-id="1bc785d314b80360b827594866e3f60a"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="448" data-natural-height="132" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/3d02dcdf4f900ce3ac298d1cd67e16a5.png"></div></div></section><section data-id="325784b74464a9e7fde31591a902862b"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 216px; height: auto;" data-block-id="a46feb254e4cdbaaddbaace33b6aa177"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;" data-gramm_id="6cffdcd0-5a71-51e0-9837-2ddb4cd1fead" data-gramm="true" data-gramm_editor="true" dir="ui"><h1><span style="color:rgb(37, 37, 37); text-align:left">λ</span></h1></div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 294px; height: auto;" data-block-id="567c804336fece53c25c8ed05046bdf4"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1><span style="color:rgb(37, 37, 37); text-align:left">Tuple</span></h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 386px; height: auto;" data-block-id="bb8c1224f60b615f640b1c10dbeae2f2"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 13;">
+<h1><span style="color:rgb(37, 37, 37); text-align:left">Value</span></h1>
+</div></div></section><section data-id="9b8f2c0de94e0698dbfc22b60ca6c50a"><div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 89px; height: auto;" data-block-id="31c54fd5c258320da343deca47490d85"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1><span style="color:rgb(37, 37, 37); text-align:left">λ</span></h1>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="f7dc224c714b9d336ea5baff9e7a4c12" style="min-width: 30px; min-height: 30px; width: 960px; height: 49px; left: 160px; top: 207px;"><div class="sl-block-content" style="z-index: 11; font-size: 159%;"><pre class="java"><code>Function2&lt;Integer, Integer, Integer&gt; sum = (a, b) -&gt; a + b;</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 44px; left: 160px; top: 293px;" data-block-id="3da23aa6de4b4ffd9c3603af8f3fa83f"><div class="sl-block-content fragment" style="z-index: 12; font-size: 141%;" data-fragment-index="0"><pre class="java"><code>CheckedFunction2&lt;Integer, Integer, Integer&gt; sum = (a, b) -&gt; a + b;</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 243px; top: 369px; height: auto;" data-block-id="c7f08b52a2833ae5c3a40f7ba68b4e2d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<ul>
+	<li class="fragment" data-fragment-index="1">composition</li>
+	<li class="fragment" data-fragment-index="2">lifting</li>
+	<li class="fragment" data-fragment-index="3">currying</li>
+	<li class="fragment" data-fragment-index="4">memoization</li>
+</ul>
+</div></div></section><section data-id="087edac58ee0370e4b0f425b52760a78"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 104px; height: auto;" data-block-id="99d18b24739fd5b39bce2c1cfe433ba4"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Lifting</h1>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 50px; left: 160px; top: 271px;" data-block-id="b96f3a4ac1cb6dd5c809f00cecf19162"><div class="sl-block-content" style="z-index: 11; font-size: 148%;"><pre class="java"><code>Function2&lt;Integer, Integer, Integer&gt; divideBy = (a, b) -&gt; a / b;</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 50px; left: 160px; top: 376px;" data-block-id="6f5f432426b38031ab6930debda72038"><div class="sl-block-content fragment" style="z-index: 13; font-size: 139%;" data-fragment-index="0"><pre class="java"><code>Function2&lt;Integer, Integer, Option&lt;Integer&gt;&gt; lift = lift(divideBy);</code></pre></div></div></section><section data-id="3c4c9b8e2e0141037c55daa5638b5e09"><div class="sl-block" data-block-type="text" style="width: 800px; left: 239px; top: 85px; height: auto;" data-block-id="debb9bc0a348c179b91048d740951aa0"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Currying</h1>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 958px; height: 52px; left: 160px; top: 252px;" data-block-id="0b2288255d28b244cff05df200660f66"><div class="sl-block-content" style="z-index: 11; font-size: 158%;"><pre class="java"><code>Function2&lt;Integer, Integer, Integer&gt; sum = (a, b) -&gt; a + b;</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 49px; left: 160px; top: 368px;" data-block-id="fe8735f009974601582fd42af6697fc5"><div class="sl-block-content fragment" style="z-index: 12; font-size: 159%;" data-fragment-index="0"><pre class="java"><code>Function1&lt;Int, Function1&lt;Int, Int&gt;&gt; curried = sum.curried();</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 958px; height: 47px; left: 160px; top: 485px;" data-block-id="d0506715b98e0f30004146a9fc620984"><div class="sl-block-content fragment" style="z-index: 14; font-size: 159%;" data-fragment-index="1"><pre class="java"><code>Function1&lt;Integer, Integer&gt; add2 = curried.apply(2);</code></pre></div></div></section><section data-id="1cc4c5eaf9f312db0d98167ce002c4f0"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 117px; height: auto;" data-block-id="8aee4909d269bea747231b8dd1ab57c9"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Memoization</h1>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 60px; left: 160px; top: 267px;" data-block-id="0da0ab206fdae7f03a74863f9e077fbc"><div class="sl-block-content" style="z-index: 11; font-size: 160%;"><pre class="java"><code>Function2&lt;Integer, Integer, Integer&gt; sum = (a, b) -&gt; a + b;</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 49px; left: 160px; top: 389px;" data-block-id="c3bcd665f19df755083f61e5f9cd68f0"><div class="sl-block-content fragment" style="z-index: 13; font-size: 141%;" data-fragment-index="0"><pre class="java"><code>Function2&lt;Integer, Integer, Integer&gt; memoizedSum = sum.memoized();</code></pre></div></div></section><section data-id="7314ccf76fed474a31c01072499a4083"><div class="sl-block" data-block-type="code" data-block-id="2d45de73c1f709fbfa84a35716586830" style="min-width: 30px; min-height: 30px; width: 955px; height: 70px; left: 163px; top: 144px;"><div class="sl-block-content" style="z-index: 11; font-size: 150%;"><pre class="java"><code>Function0&lt;Double&gt; mem = Function0.of(Math::random).memoized();</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 955px; height: 148px; left: 163px; top: 245px;" data-block-id="ca05006205725848cef80d8425525234"><div class="sl-block-content fragment" style="z-index: 12; font-size: 150%;" data-fragment-index="0"><pre class="java"><code>double randomValue1 = memoizedRand.apply();
+double randomValue2 = memoizedRand.apply();
+
+then(randomValue1).isEqualTo(randomValue2);</code></pre></div></div>
+<div class="sl-block" data-block-type="image" data-block-id="af2b56d43fcb973fd9ef6437755a67c4" style="min-width: 30px; min-height: 30px; width: 207.123px; height: 189px; left: 540px; top: 400px;"><div class="sl-block-content fragment" style="z-index: 13;" data-fragment-index="1"><img style="" data-natural-width="400" data-natural-height="365" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/e6a19af3c793fb02cc5e96863c00ed6f.png"></div></div></section><section data-id="d8b7b2f7cf267641c75a52db38d28a96"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 40px; height: auto;" data-block-id="c59c35b8dcf9e90a2f72ad3f0190dcac"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1><span style="color:rgb(37, 37, 37); text-align:left">Tuple</span></h1>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="5fe040faf7a6359f2fcb97811fce9064" style="min-width: 30px; min-height: 30px; width: 960px; height: 67px; left: 160px; top: 175px;"><div class="sl-block-content" style="z-index: 12; font-size: 176%;"><pre class="java"><code>Tuple2&lt;String, Integer&gt; java8 = Tuple.of("Java", 8); </code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="5bdfc2de384cbe9843561da27bd4410c" style="min-width: 30px; min-height: 30px; width: 960px; height: 151px; left: 160px; top: 277px;"><div class="sl-block-content fragment" style="z-index: 13; font-size: 176%;" data-fragment-index="0"><pre class="java"><code>Tuple2&lt;String, Integer&gt; that = java8.map(
+                s -&gt; s + "slang",
+                i -&gt; i / 4);</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="518fb895cbf75157c569e322d2640868" style="min-width: 30px; min-height: 30px; width: 960px; height: 55px; left: 160px; top: 453px;"><div class="sl-block-content fragment" style="z-index: 14; font-size: 176%;" data-fragment-index="1"><pre class="java"><code>String transform = java8.transform((s, i) -&gt; s + i);</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="816aecda5496291844326f73677e79bf" style="min-width: 30px; min-height: 30px; width: 960px; height: 52px; left: 160px; top: 557px;"><div class="sl-block-content fragment" style="z-index: 15; font-size: 176%;" data-fragment-index="2"><pre class="java"><code>Iterable&lt;?&gt; objects = java8.toSeq()</code></pre></div></div></section><section data-id="39bbbe94bc944f0341cd41c98b6ed1af"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 55px; height: auto;" data-block-id="a3464b79c9584fc3724e458574192125"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1><span style="color:rgb(37, 37, 37); text-align:left">Value</span></h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 292px; height: auto;" data-block-id="02be260e9478fa30e5e0e8fe23a0ae43"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 123%;">
+<ul>
+	<li class="fragment" data-fragment-index="0">Option</li>
+	<li class="fragment" data-fragment-index="1">Try</li>
+	<li class="fragment" data-fragment-index="2">Lazy</li>
+	<li class="fragment" data-fragment-index="3">Either</li>
+	<li class="fragment" data-fragment-index="4">Future</li>
+	<li class="fragment" data-fragment-index="5">Validation</li>
+	<li class="fragment" data-fragment-index="7">Collections API</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="d740f580bb2cb5965dcd0a388d57fc5c" style="min-width: 30px; min-height: 30px; width: 960px; height: 64px; left: 160px; top: 180px;"><div class="sl-block-content fragment" style="z-index: 13; font-size: 205%;" data-fragment-index="6"><pre class="java"><code>public interface Value&lt;T&gt; extends Iterable&lt;T&gt;</code></pre></div></div></section><section data-id="a5642a918fd9db0a93f3c5d527c4f725"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 269px; height: auto;" data-block-id="ad7a26992dc6e457162f52b601a1b180"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Option</h1>
+</div></div></section><section data-id="d78c2f98ffe06b1557bcb928f95baa5a"><div class="sl-block" data-block-type="code" data-block-id="269d80421116af4f53655bb612eecdc0" style="min-width: 30px; min-height: 30px; width: 960px; height: 219px; left: 160px; top: 241px;"><div class="sl-block-content" style="z-index: 11; font-size: 214%;"><pre class="java"><code>String result = Option.of(somethingNullable)
+  .map(Object::toString)
+  .map(String::toLowerCase)
+  .getOrElse(() -&gt; "DEFAULT VALUE");</code></pre></div></div></section><section data-id="75baf3d1808ee71b387f6764daab7304"><div class="sl-block" data-block-type="code" data-block-id="91e14866e495d6d41b806d36a7b06f22" style="min-width: 30px; min-height: 30px; width: 960px; height: 260px; left: 160px; top: 70px;"><div class="sl-block-content" style="z-index: 11; font-size: 200%;"><pre class="java"><code>List&lt;Optional&lt;Integer&gt;&gt; list = ...
+        
+list.stream()
+  .filter(Optional::isPresent)
+  .map(Optional::get)
+  .collect(toList());</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="718bbeebb6b89b296c55c1adfab6d87e" style="min-width: 30px; min-height: 30px; width: 960px; height: 170px; left: 160px; top: 437px;"><div class="sl-block-content fragment" style="z-index: 12; font-size: 231%;" data-fragment-index="0"><pre class="java"><code>List&lt;Option&lt;Integer&gt;&gt; list = ...
+
+list.flatMap(o -&gt; o);</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="2892f449d073cba7f528cd8b02e4263a" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 340px; top: 0px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 143%;">
+<p>Java 8</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="14b79dc05a089c40a1e80f579cb44147" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 341px; top: 368px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 135%;" data-fragment-index="0">
+<p>Vavr</p>
+</div></div></section><section data-id="4161ecaf602093cf3dcd962ea91a1aaa"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 272px; height: auto;" data-block-id="5678328e82139170f434b831d504308b"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Try</h1>
+</div></div></section><section data-id="0da5e6bb0ce836e6d78eda1d26bf4315"><div class="sl-block" data-block-type="code" data-block-id="ef34641ba5020fc54c5546917629d3ee" style="min-width: 30px; min-height: 30px; width: 960px; height: 201px; left: 160px; top: 242px;"><div class="sl-block-content" style="z-index: 11; font-size: 243%;"><pre class="java"><code>Try.of(() -&gt; new URI("bebebe"))
+  .map(URI::getScheme)
+  .getOrElse(() -&gt; "UNKNOWN");</code></pre></div></div></section><section data-id="1d4d0639bd2fb2a9f227f71fe479e8b0"><div class="sl-block" data-block-type="text" style="width: 800px; left: 241px; top: 263px; height: auto;" data-block-id="58dedc6cf197cab965468a8bfccfd1b6"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Lazy</h1>
+</div></div></section><section data-id="ec842c8e24bb93d9d07927d4b305a79f"><div class="sl-block" data-block-type="code" data-block-id="46f9c3710ec1f65a1868f698480f2613" style="min-width: 30px; min-height: 30px; width: 960px; height: 232px; left: 160px; top: 244px;"><div class="sl-block-content" style="z-index: 11; font-size: 210%;"><pre class="java"><code>Lazy&lt;String&gt; lazy = Lazy.of(this::vLC)
+  .map(Object::toString)
+  .map(String::toUpperCase);
+        
+lazy.get();</code></pre></div></div></section><section data-id="1ac9c851abd8868fb3af1993a11281b3"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 269px; height: auto;" data-block-id="9ab73b2a1a057b6aab221557f563c93d"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>Functional Data Structures</h1>
+
+<p> </p>
+</div></div></section><section data-id="0be7e5771b7836a1e2605241e6d05cea"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 186px; height: auto;" data-block-id="c51ad1ca86739013377d83e3f87340ad"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Functional Data Structures:</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 260px; height: auto;" data-block-id="d24f6140ab8fa66b028830c25a170254"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li>Persistent</li>
+	<li>Immutable</li>
+	<li>with Referential Transparent methods</li>
+</ul>
+</div></div></section><section data-id="4052854614346189ed68268d756fb10b"><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 1008px; left: 112px; top: 168px;" data-block-id="7927061ed15c52cee1e46e5ce17bafd1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 124%;">
+<p>"Functional Data Structures in Java" - Oleg Šelajev</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 300px; height: 300px; left: 720px; top: 282px;" data-block-id="5b5df28ea77ee8a4c47eb273f91a6d48"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="302" data-natural-height="302" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/6b4a919d33139683b4ca75c3c7915493.jpg"></div></div></section><section data-id="93a827e15891e5d014a163f5b1c66662"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 72px; height: auto;" data-block-id="9b70c9396bb1f00bb5c7eaf937630cd2"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Seq</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" data-block-id="61275c10de53afd5d7cd48843a2b7416" style="min-width: 30px; min-height: 30px; width: 785.425px; height: 395px; left: 250px; top: 212px;"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="515" data-natural-height="259" style="" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/7877d2372e6d7b1c716f72556ae4efdb.png"></div></div></section><section data-id="a80e3bf55f253acdbd9f3fe06ad4d705"><div class="sl-block" data-block-type="image" data-block-id="87792d9f442985667aa78c7f62f779e5" style="min-width: 30px; min-height: 30px; width: 635.949px; height: 690px; left: 322px; top: 0px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="753" data-natural-height="817" data-lazy-loaded="" data-src="javaslang-functional-java-done-right/cd2a6e65754cb460f1e1180ae33a0865.png"></div></div></section><section data-id="fa211f9f46b128b463ca65e9136cffdd"><div class="sl-block" data-block-type="code" data-block-id="e392060aa6c6dcefa9dde91c8bf618a5" style="min-width: 30px; min-height: 30px; width: 960px; height: 210px; left: 160px; top: 222px;"><div class="sl-block-content" style="z-index: 11; font-size: 176%;"><pre class="java"><code>public static Stream&lt;Integer&gt; fibonacci() {
+   return Stream.of(1, 1)
+            .appendSelf(self -&gt; self.zip(self.tail())
+            .map(t -&gt; t._1 + t._2));
+}</code></pre></div></div></section><section data-id="7b5cf0ff03f07401ecebb3e20524a28d"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 282px; height: auto;" data-block-id="549e24c01faa5d7ffe3ec51ba621bd24"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Pattern Matching</h1>
+</div></div></section><section data-id="ac154807d834ffced78fe964330182d0"><div class="sl-block" data-block-type="code" data-block-id="7a48e8de2d6dbeb3282975f963ce7036" style="min-width: 30px; min-height: 30px; width: 640px; height: 180px; left: 320px; top: 103px;"><div class="sl-block-content fragment" style="z-index: 10; font-size: 171%;" data-fragment-index="0"><pre class="scala"><code>String on = Match(i).of(
+    Case(x -&gt; x % 2 == 0, "Even"),
+    Case(x -&gt; x % 2 == 1, "Odd"),
+    Case($(), "?"));</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 662px; height: 167px; left: 309px; top: 374px;" data-block-id="089f505f81ed28b8973a2862b3ec262f"><div class="sl-block-content fragment" style="z-index: 12; font-size: 171%;" data-fragment-index="1"><pre class="scala"><code>Option&lt;String&gt; on = Match(i).option(
+    Case(x -&gt; x % 2 == 0, "Even"),
+    Case(x -&gt; x % 2 == 1, "Odd"));    </code></pre></div></div></section><section data-id="37b7c7285f62c76b9655a687ee9f285f"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 800px; height: 234px; left: 240px; top: 243px;" data-block-id="7226c35a9361aed6444f2288ce11d644"><div class="sl-block-content fragment" style="z-index: 11; font-size: 196%;" data-fragment-index="0"><pre class="scala"><code>String on = Match(i).of(
+    Case($(1), "One"),
+    Case($(2), "Two"),
+    Case($(),  "Something else"));</code></pre></div></div></section><section data-id="ca949afe4c1ff3970eeaf3b450df1173"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 190px; left: 160px; top: 242px;" data-block-id="489b0dcb1fc0633475a287c9cbc944e3"><div class="sl-block-content fragment" style="z-index: 11; font-size: 137%;" data-fragment-index="0"><pre class="scala"><code>Match(localDate).of(  
+    Case(LocalDate(2016, 2, 13), () -&gt; "2016-02-13"),
+    Case(LocalDate(2016, $(), $_), m -&gt; "month " + m + " in 2016"),
+    Case(LocalDate($(2016), $(), $_), (y, m) -&gt; "my" + m + y),
+    Case($_, () -&gt; "(catch all)")
+);</code></pre></div></div></section><section data-id="91f97e707a9f4e08e4a8c50a2add9dca"><div class="sl-block" data-block-type="code" style="width: 960px; height: 195px; left: 160px; top: 237px;" data-block-id="b946e8ea054a6ae91d615ec830f9e9b1"><div class="sl-block-content fragment" style="z-index: 11; font-size: 210%;" data-fragment-index="0"><pre class="scala"><code>String actual = Match(opt).of(
+    Case(Some($()), String::valueOf),
+    Case(None(), "no value"));</code></pre></div></div></section><section data-id="28b15e6c1d07b86e727b5a933d51c897"><div class="sl-block" data-block-type="code" data-block-id="da2c98e765b9b31156ccf950749aa112" style="min-width: 30px; min-height: 30px; width: 960px; height: 215px; left: 160px; top: 233px;"><div class="sl-block-content" style="z-index: 11; font-size: 140%;"><pre class="scala"><code>Match(i).of(
+    Case(is(1), "1"),
+    Case(isIn(2, 3), "2 or 3"),
+    Case(anyOf(is(4), noneOf(is(5), is(6))), "4 or not (5 or 6)"),
+    Case(instanceOf(String.class), "String content"),
+    Case($(), "?")
+);</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="b7fd9feb2623844cc109c94ee1d8e402" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 340px; top: 448px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p><span style="font-size:0.5em">http://koziolekweb.pl/2016/06/18/pattern-matching-w-javie-z-javaslang-ii/</span></p>
+</div></div></section><section data-id="e0664105b4ffb205a605d91f30239725"><div class="sl-block" data-block-type="code" style="width: 960px; height: 135px; left: 160px; top: 240px;" data-block-id="b9707aaf9b57a6177403f7fa7c734566"><div class="sl-block-content" style="z-index: 11; font-size: 129%;"><pre class="scala"><code>Match(param).of(
+    Case(isIn("-h", "--help"),    o -&gt; run(outerWorld::displayHelp)),
+    Case(isIn("-v", "--version"), o -&gt; run(outerWorld::displayVersion)),
+    Case($(),                     o -&gt; {}));</code></pre></div></div>
+</section><section data-id="b98b6eee6a4d581ef7e7810dd6c9484a"><div class="sl-block" data-block-type="code" data-block-id="97e81d91eef782160d042b386017bff1" style="min-width: 30px; min-height: 30px; width: 960px; height: 320px; left: 160px; top: 174px;"><div class="sl-block-content" style="z-index: 11; font-size: 182%;"><pre class="scala"><code>Try.of(this::doSomething)
+    .recover(x -&gt; Match(x).of(
+        Case(instanceOf(Exception_1.class), ...),
+        Case(instanceOf(Exception_2.class), ...),
+        Case(instanceOf(Exception_n.class), ...)
+    ))
+    .getOrElse(other);</code></pre></div></div></section><section data-id="26b03156a1cc261c8aeeca8ca6b8d7b6"><div class="sl-block" data-block-type="text" data-block-id="e2bd1e0059d11044e36dbcd90a72f7c3" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 340px; top: 110px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 232%;">
+<p>vavr.io</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 868px; height: 284px; left: 206px; top: 250px;" data-block-id="0cf82e17f586ca1580c3a1b3af80bcd8"><div class="sl-block-content" style="z-index: 12;"><img data-natural-width="1248" data-natural-height="408" data-src="javaslang-functional-java-done-right/354e23fbaebf253bd1290b5e35ea2b27.png"></div></div></section><section data-id="a0c0780d05445b7c45a0158273bcc5ad"><div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 256px; height: auto;" data-block-id="362f4d156663edf7a2fc42c7fb5706df"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11;">
+<h1>Thank you!</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 240px; top: 418px; height: auto;" data-block-id="0e18046827c003a94b19ce106e09d7b1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li>gpiwowarek@gmail.com</li>
+	<li>pivovarit@twitter (slides are here!)</li>
+	<li>pivovarit@github</li>
+</ul>
+</div></div>
+</section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":741351,"slug":"javaslang-functional-java-done-right","title":"Vavr - Functional Java Done Right","description":"","width":1280,"height":720,"visibility":"all","published_at":"2016-06-24T05:47:06.109Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/e47637eeb1e1bbc91bbb071793a3f56a/thumb.jpg?1192148707","view_count":8327,"user":{"id":531435,"username":"pivovarit","name":"Grzegorz Piwowarek","description":"","thumbnail_url":"https://www.gravatar.com/avatar/629fdde67cb23f9d3799635d89c7b250?s=140\u0026d=https%3A%2F%2Fs3.amazonaws.com%2Fstatic.slid.es%2Fimages%2Fdefault-profile-picture.png","paid":true,"pro":false,"lite":true,"team_id":null,"settings":{"id":374794,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true}},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"white-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":true,"rolling_links":false,"center":false,"should_loop":false,"share_notes":false,"slide_number":true,"slide_count":54,"rtl":false,"version":2,"collaborative":null,"deck_user_editor_limit":1,"data_updated_at":1497820494391,"font_typekit":null,"font_google":null,"notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/head.min.js"></script>
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 1280,
+				height: 720,
+				margin: 0.05,
+
+				controls: true,
+				progress: true,
+				history: true,
+				mouseWheel: false,
+				showNotes: false,
+				slideNumber: true,
+
+				autoSlide: 0 || 0,
+				autoSlideStoppable: true,
+
+				center: false,
+				loop: false,
+				rtl: false,
+
+				transition: "slide",
+				backgroundTransition: "slide",
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js', async: true, callback: function() { hljs.initHighlighting(); hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+		</script>
+
+		
+
+	</body>
+</html>
