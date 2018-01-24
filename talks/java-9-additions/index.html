@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Java 9 Stream/Optional API Enhancements: Slides</title>
+		<meta name="description" content="Slides">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-grey-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="783265b4b334564f0b71ee1d50e170b1"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 210px; height: auto;" data-block-id="a893e1cc5c2875edb6e0eaaebdcffb28"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" data-gramm_id="77f87268-c7d2-936a-7cfe-4dd177745d83" data-gramm="true" data-gramm_editor="true" style="white-space: normal; z-index: 11; line-height: 0.858;" data-has-line-height="">
+<h1><span style="font-size:0.7em">Java 9 </span></h1>
+
+<h1><span style="font-size:0.7em"><em>Stream/Optional</em> API Additions</span></h1>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="3730aa3f17a6c506e3ccccae3fb2f750" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 181px; top: 447px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" data-gramm_id="6145e5d9-399b-874c-18d3-7eeb4449f0c9" data-gramm="true" data-gramm_editor="true">
+<p>Grzegorz Piwowarek</p>
+
+<p> </p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="ae9a4caefedbef824834b8e32782d4ed" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 387px; top: 490px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="08a34024c50022bb8763d66dc486994c"><div class="sl-block" data-block-type="image" data-block-id="d0aa65c4f769ea5654aa03af809e9337" style="min-width: 30px; min-height: 30px; width: 466px; height: 350px; left: 487px; top: 35px;"><div class="sl-block-content fragment" style="z-index: 11;" data-fragment-index="1"><img style="" data-natural-width="638" data-natural-height="479" data-src="deck/cabea73259f9b6727812522a457e2621.jpg"></div></div>
+<div class="sl-block" data-block-type="image" data-block-id="e6fd3c4f6b66b75db967fd0eba564847" style="min-width: 30px; min-height: 30px; width: 616px; height: 429px; left: 12px; top: 177px;"><div class="sl-block-content fragment" style="z-index: 10;" data-fragment-index="0"><img style="" data-natural-width="431" data-natural-height="300" data-src="deck/4f8ae0cb92695d50e9dee62f68eca057.jpg"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="d7bd1c5a89ae12f012e9712d26b972f5"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="c9197fc9fcaa330d371857ccd3a3db88"><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="3a124591c7788c835b102c15fb73bb47"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="fb690527fa6014231e494d35351937a4" style="min-width: 30px; min-height: 30px; width: 500px; height: 93px; left: 230px; top: 70px;"><div class="sl-block-content" style="z-index: 12; font-size: 327%;"><pre><code>Optional#get
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="9d049d3006f856d90b3e933d6a890ada" style="height: auto; min-width: 30px; min-height: 30px; width: 773px; left: 94px; top: 401px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;" data-fragment-index="1">
+<p><span style="font-size:0.7em">http://mail.openjdk.java.net/pipermail/core-libs-dev/2016-April/040484.html</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="6987daeac6ee239e334de554b8d5e67a" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 191px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 165%;" data-fragment-index="0">
+<p><span style="color:#FFFF00">@Deprecated?</span></p>
+</div></div></section><section data-id="22044cc960ab4b4684e631b9d7c1f465"><div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="d7563bf2c75bb79789fd6dd034289cb8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="74fc7ac8deede7e08d561aa3dcf2a2b1"><div class="sl-block-content" style="z-index: 12; font-size: 327%;"><pre><code>Optional#ifPresentOrElse
+</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="4c27c1a250b75a1486661a77d25f19c1" style="min-width: 30px; min-height: 30px; width: 960px; height: 210px; left: 0px; top: 210px;"><div class="sl-block-content fragment" style="z-index: 13; font-size: 211%;" data-fragment-index="0"><pre class="java"><code>findById(42)
+    .ifPresentOrElse(
+        this::log,
+        this::logError);</code></pre></div></div>
+<div class="sl-block" data-block-type="image" data-block-id="b4532d3c545bd23b402a0e73f12566dc" style="min-width: 30px; min-height: 30px; width: 170px; height: 214px; left: 560px; top: 446px;"><div class="sl-block-content fragment" style="z-index: 14;" data-fragment-index="1"><img data-natural-width="210" data-natural-height="265" style="" data-src="deck/b3dad38a6227cbabb13453143d401588.jpg"></div></div></section><section data-id="7e308e0a5321b554116ff36ab7c5b54b"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="e136906c457abd9cfadbaeba4049826f"><div class="sl-block-content" style="z-index: 10; font-size: 327%;"><pre><code>Optional#or</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="fbb78f9f8422ed9ae475cf33a557b833" style="min-width: 30px; min-height: 30px; width: 960px; height: 337px; left: 0px; top: 210px;"><div class="sl-block-content fragment" style="z-index: 11; font-size: 211%;" data-fragment-index="0"><pre class="java"><code>Optional&lt;User&gt; user = 
+  findById(42).or(() -&gt; findByName("Adam"))</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="340fcd0f4f38a8b9497cb9cc13c53222"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="f71cec20b825436c428b431fd44e23c6"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="1abd0a35cac64343ada2d24a8b5a931c"><div class="sl-block-content" style="z-index: 10; font-size: 327%;"><pre><code>Optional#stream</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="e09a7db2e32340222c489b87d02e0a87" style="min-width: 30px; min-height: 30px; width: 960px; height: 187px; left: 0px; top: 200px;"><div class="sl-block-content fragment" style="z-index: 11; font-size: 211%;" data-fragment-index="0"><pre class="java"><code>list.stream()
+    .filter(Optional::isPresent)
+    .map(Optional::get)
+    .collect(toList());</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 187px; left: 0px; top: 420px;" data-block-id="5ba607a1d2f7b1aabe0ee7337dec7c5a"><div class="sl-block-content fragment" style="z-index: 12; font-size: 211%;" data-fragment-index="1"><pre class="java"><code>list.stream()
+    .flatMap(Optional::stream)
+    .collect(toList());</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="32d11cc828765cfa274dec86a9bf1c95"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="3b89466c28b827c4cdc5433c156f6021"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="76b6d3ab1a9a60227e2bea723e87bb94"><div class="sl-block-content" style="z-index: 10; font-size: 327%;"><pre><code>Stream#ofNullable</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="6995abb8755ae3cc368017ab591e93c2" style="min-width: 30px; min-height: 30px; width: 960px; height: 139px; left: 0px; top: 280px;"><div class="sl-block-content fragment" style="z-index: 11; font-size: 210%;" data-fragment-index="0"><pre class="java"><code> Stream.of("Maria", "Robert", "Krzysztof")
+    .flatMap(n -&gt; ofNullable(findByName(n)))
+    .findAny()</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="61f773194959c0816ca944823e010e03"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="8ec8426a24d52aa9ff830e98df60b7cb"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="cc603d2ff7b7ee481c0b20f096af6a74"><div class="sl-block-content" style="z-index: 10; font-size: 327%;"><pre><code>Stream#takeWhile/dropWhile</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="6d41b4aed193a0f8e6f1f5989d454b77" style="min-width: 30px; min-height: 30px; width: 960px; height: 177px; left: 0px; top: 210px;"><div class="sl-block-content fragment" style="z-index: 11; font-size: 220%;" data-fragment-index="0"><pre class="java"><code>IntStream.iterate(0, i -&gt; 2 * i)
+    .takeWhile(i -&gt; i &lt; 42)
+    .forEach(...)</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 177px; left: 0px; top: 453px;" data-block-id="43001b2a7f9b363d13e1da0b36d01b09"><div class="sl-block-content fragment" style="z-index: 12; font-size: 220%;" data-fragment-index="1"><pre class="java"><code>IntStream.iterate(0, i -&gt; 2 * i)
+    .dropWhile(i -&gt; i &lt; 42)
+    .forEach(...)</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="956afc18720f1a937f73983f9c5aa59b"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="48230bd05d1dc8c10f9f1f6673079afd"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="e5f2cd923ee3041968f5ce4902efffbe"><div class="sl-block-content" style="z-index: 10; font-size: 327%;"><pre><code>Stream#iterate</code></pre></div></div>
+<div class="sl-block" data-block-type="code" data-block-id="3ad200c920aeec3765114e4723067c7f" style="min-width: 30px; min-height: 30px; width: 960px; height: 150px; left: 0px; top: 275px;"><div class="sl-block-content fragment" style="z-index: 11; font-size: 217%;" data-fragment-index="0"><pre class="java"><code>
+Stream.iterate(1, i -&gt; i &lt;= 42, i -&gt; 2 * i)
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="df8518bc8a315b12fcab460449820482"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div></section><section data-id="a69e76b9a25f1f46b9a4a222d7e6ac18"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="2d663561958f3ebe4e205c9e54a37f2a"><div class="sl-block-content" style="z-index: 11; font-size: 327%;"><pre><code>Collectors#filtering</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="1414772441dcaf80fe05912b4df3fd15"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="36a4acb28d86b3ec8399fdf46e503778" style="min-width: 30px; min-height: 30px; width: 960px; height: 127px; left: 0px; top: 287px;"><div class="sl-block-content fragment" style="z-index: 13; font-size: 160%;" data-fragment-index="0"><pre class="java"><code>.collect(
+  groupingBy(User::getName, 
+  filtering(user -&gt; user.getValue() &gt; 15_000, toList())));</code></pre></div></div></section><section data-id="0a1d867cd2571b5e77eb17e02f375efa"><div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 93px; left: 0px; top: 70px;" data-block-id="9b8d4e3ad77a35041faa73c6f5098b1c"><div class="sl-block-content" style="z-index: 10; font-size: 327%;"><pre><code>Collectors#flatmapping</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 187px; left: 0px; top: 649px;" data-block-id="11326f717a6e5bbb0402e4eb11f45681"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;" data-gramm_id="9d8223f2-95b3-370f-97de-8dfd3218eb82" data-gramm="true" data-gramm_editor="true">
+<p>@pivovarit</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 960px; height: 204px; left: 0px; top: 210px;" data-block-id="5bcae7beb5c6d9654ca9c95b88770be2"><div class="sl-block-content fragment" style="z-index: 13; font-size: 200%;" data-fragment-index="0"><pre class="java"><code>.collect(
+  groupingBy(User::getName,
+  flatMapping(User::getChildren, toList())));</code></pre></div></div></section><section data-id="386e60d7d53ec543982ba8967cc91668"><div class="sl-block" data-block-type="text" data-block-id="e8610ba16718893390c6a04e0cf5e57b" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 259px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 234%;" dir="ui"><p>Thank you!</p></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 361px;" data-block-id="9dd71103f97c21cd2d1c78e162095736"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 167%;" dir="ui">
+<p>@pivovarit</p>
+</div></div></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":885224,"slug":"deck","title":"Java 9 Stream/Optional API Enhancements","description":"","width":960,"height":700,"visibility":"all","published_at":"2017-01-02T16:51:10.796Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/c2836211533f4d10c99a239bc0c51ffe/thumb.jpg","view_count":4436,"user":{"id":531435,"username":"pivovarit","name":"Grzegorz Piwowarek","description":"","thumbnail_url":"https://www.gravatar.com/avatar/629fdde67cb23f9d3799635d89c7b250?s=140\u0026d=https%3A%2F%2Fs3.amazonaws.com%2Fstatic.slid.es%2Fimages%2Fdefault-profile-picture.png","paid":true,"pro":false,"lite":true,"team_id":null,"settings":{"id":374794,"present_controls":true,"present_upsizing":true,"present_pointer":false,"present_notes":true}},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"grey-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":true,"rolling_links":false,"center":false,"should_loop":false,"share_notes":null,"slide_number":null,"slide_count":12,"rtl":false,"version":2,"collaborative":null,"deck_user_editor_limit":1,"data_updated_at":1484251171229,"font_typekit":null,"font_google":null,"notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/head.min.js"></script>
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+
+				controls: true,
+				progress: true,
+				history: true,
+				mouseWheel: false,
+				showNotes: false,
+				slideNumber: false,
+
+				autoSlide: 0 || 0,
+				autoSlideStoppable: true,
+
+				center: false,
+				loop: false,
+				rtl: false,
+
+				transition: "slide",
+				backgroundTransition: "slide",
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js', async: true, callback: function() { hljs.initHighlighting(); hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+		</script>
+
+		
+
+	</body>
+</html>
