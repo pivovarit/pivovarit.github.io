@@ -419,49 +419,49 @@
 
         <section>
             <h2>Error objects (Java)</h2>
-            <pre><code data-trim="" style="font-size: 0.35em;line-height: 0.9;">
+            <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
                 public static class FetchError {
                     private final String msg;
                     private final HttpResponse response;
 
                     public FetchError(String msg, HttpResponse response) {
-                    this.msg = msg;
-                    this.response = response;
-                }
+                       this.msg = msg;
+                        this.response = response;
+                    }
 
-                public String getMsg() {
-                    return msg;
-                }
+                    public String getMsg() {
+                        return msg;
+                    }
 
-                public HttpResponse getResponse() {
-                    return response;
-                }
+                    public HttpResponse getResponse() {
+                        return response;
+                    }
 
-                @Override
-                public String toString() {
-                    return "FetchError{" +
-                      "msg='" + msg + '\'' +
-                      ", response=" + response +
-                      '}';
-                }
+                    @Override
+                    public String toString() {
+                        return "FetchError{" +
+                          "msg='" + msg + '\'' +
+                          ", response=" + response +
+                          '}';
+                    }
 
-                @Override
-                public boolean equals(Object o) {
-                    if (this == o) return true;
-                    if (o == null || getClass() != o.getClass()) return false;
+                    @Override
+                    public boolean equals(Object o) {
+                        if (this == o) return true;
+                        if (o == null || getClass() != o.getClass()) return false;
 
-                    FetchError that = (FetchError) o;
+                        FetchError that = (FetchError) o;
 
-                    if (msg != null ? !msg.equals(that.msg) : that.msg != null) return false;
-                    return response != null ? response.equals(that.response) : that.response == null;
-                }
+                        if (msg != null ? !msg.equals(that.msg) : that.msg != null) return false;
+                        return response != null ? response.equals(that.response) : that.response == null;
+                    }
 
-                @Override
-                public int hashCode() {
-                    int result = msg != null ? msg.hashCode() : 0;
-                    result = 31 * result + (response != null ? response.hashCode() : 0);
-                    return result;
-                }
+                    @Override
+                    public int hashCode() {
+                        int result = msg != null ? msg.hashCode() : 0;
+                        result = 31 * result + (response != null ? response.hashCode() : 0);
+                        return result;
+                    }
             }
             </code></pre>
         </section>
