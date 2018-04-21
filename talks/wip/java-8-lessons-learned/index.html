@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Kotlin Collections Antipatterns</title>
+    <title>Java 8 - The Bad Parts</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -61,22 +61,36 @@
 
 
         <section>
-            <h1>Kotlin Collections Antipatterns</h1>
-            <h2>
-                <a href="http://pivovarit.github.io">Grzegorz Piwowarek</a> | <a href="http://twitter.com/pivovarit">@pivovarit</a>
-                | <a href="http://4comprehension.com/">4comprehension.com</a>
-            </h2>
+            <h1>The Dark Side of Java 8</h1>
+            <h3>Lessons Learned</h3>
+            <br>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h2><a href="http://twitter.com/pivovarit">@pivovarit</a></h2>
         </section>
 
         <section>
-            <h1>Software Engineer | Trainer</h1>
-            <h2>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h2>
-            <h3>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h3>
-            <h3>System Engineer @ <a href="http://casumocareers.com">Casumo</a></h3>
-            <h3>OS Contributor</h3>
-            <h3>DZone MVB</h3>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>System Engineer @ <a href="https://www.casumocareers.com">Casumo</a></h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h2><a href="https://github.com/pivovarit">OS Contributor</a></h2>
+            <h2><a href="https://dzone.com/users/3083610/pivovarit.html">DZone MVB</a></h2>
         </section>
 
+        <section>
+            <h1>Agenda</h1>
+            <h2>...</h2>
+            <h2>...</h2>
+            <h2>...</h2>
+        </section>
+
+
+        <section>
+            <h2>Thank You!</h2>
+        </section>
+
+
+        <!--https://blogs.msdn.microsoft.com/ericlippert/2008/09/10/vexing-exceptions/-->
+        <!--http://wiki.c2.com/?UseExceptionsInsteadOfErrorValues-->
     </div>
 </div>
 
@@ -102,23 +116,23 @@
         dependencies: [
             {
                 src: 'lib/js/classList.js', condition: function () {
-                return !document.body.classList;
-            }
+                    return !document.body.classList;
+                }
             },
             {
                 src: 'plugin/markdown/marked.js', condition: function () {
-                return !!document.querySelector('[data-markdown]');
-            }
+                    return !!document.querySelector('[data-markdown]');
+                }
             },
             {
                 src: 'plugin/markdown/markdown.js', condition: function () {
-                return !!document.querySelector('[data-markdown]');
-            }
+                    return !!document.querySelector('[data-markdown]');
+                }
             },
             {
                 src: 'plugin/highlight/highlight.js', async: true, callback: function () {
-                hljs.initHighlightingOnLoad();
-            }
+                    hljs.initHighlightingOnLoad();
+                }
             },
             {src: 'plugin/zoom-js/zoom.js', async: true},
             {src: 'plugin/notes/notes.js', async: true}
