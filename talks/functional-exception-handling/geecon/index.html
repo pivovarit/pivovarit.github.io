@@ -275,6 +275,33 @@
                 getSearchResults("foo")
                   .map(...)
                   .filter(...)
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getSearchResults("foo")
+                  .map(...)
+                  .filter(...)
+                  .onFailure(ex -> LOG.info("..."))
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getSearchResults("foo")
+                  .map(...)
+                  .filter(...)
+                  .onFailure(ex -> LOG.info("..."))
+                  .recoverWith(...)
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getSearchResults("foo")
+                  .map(...)
+                  .filter(...)
                   .onFailure(ex -> LOG.info("..."))
                   .recoverWith(...)
                   .getOrElse(() -> 42);
