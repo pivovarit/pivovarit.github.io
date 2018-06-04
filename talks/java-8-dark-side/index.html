@@ -53,7 +53,7 @@
 <div class="reveal">
 
     <div class="footer">
-        <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+        <small>Twitter/GitHub: <a href="http://twitter.com/pivovarit">@pivovarit</a></small>
     </div>
 
     <!-- Any section element inside of this container is displayed as a slide -->
@@ -86,20 +86,79 @@
         <section data-background="img/vader.jpg"></section>
 
         <section>
-            <h2>Problems</h2>
-            <ul>
-                <li>Type Pollution (Project Amber primitives in generics)</li>
-                <li>Conditional Stream termination (lack of takeWhile/takeUntil)</li>
-                <li>Lambda expressions and checked exceptions</li>
-                <li>Lack of common APIs (add one element to stream, zip streams)</li>
-                <li>Parallel Streams and a shared thread-pool</li>
-                <li>Parallel Streams not that parallel as you might think</li>
-                <li>Streams and eager flatmap</li>
-                <li>Streams and eager flatmap vs takeUntil/takeWhile</li>
-                <li>Streams API and autoclosing</li>
-                <li>CompletableFuture API design (allOf/anyOf)</li>
-                <li>...</li>
-            </ul>
+            <h1>Type Pollution</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                package java.util.function;
+
+                @FunctionalInterface
+                public interface Function&lt;T, R> {
+                    R apply(T t);
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/type-pollution.png" width="20%"/>
+        </section>
+
+        <section>
+            <h3>What about BytePredicate, DoubleToByteFunction, BiCharConsumer, and so on...?</h3>
+        </section>
+
+        <section>
+            <h2>Project Valhalla</h2>
+        </section>
+
+        <section>
+            <h1>Conditional Stream termination</h1>
+        </section>
+
+        <section>
+            <h1>Lambda expressions and checked exceptions</h1>
+        </section>
+
+        <section>
+            <h1>Lack of common APIs (add one element to stream, zip streams)</h1>
+        </section>
+
+        <section>
+            <h1>Parallel Streams and a shared thread-pool</h1>
+        </section>
+
+
+        <section>
+            <img src="img/parallel-all-the-things.png"/>
+        </section>
+
+        <section>
+            <h2>Parallel not always faster</h2>
+        </section>
+
+        <section>
+            <h3>parallelSetAll with a Random instance</h3>
+        </section>
+
+        <section>
+            <h1>Parallel Streams not that parallel as you might think</h1>
+        </section>
+
+        <section>
+            <h1>Streams and eager flatmap</h1>
+        </section>
+
+        <section>
+            <h1>Streams and eager flatmap vs takeUntil/takeWhile</h1>
+        </section>
+
+        <section>
+            <h1>Streams being once-off and resource management</h1>
+        </section>
+
+        <section>
+            <h1>CompletableFuture API design (allOf/anyOf)</h1>
         </section>
 
         <section>
