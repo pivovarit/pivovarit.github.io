@@ -53,7 +53,7 @@
 <div class="reveal">
 
     <div class="footer">
-        <small><a href="http://twitter.com/pivovarit">@pivovarit</a></small>
+        <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
     </div>
 
     <!-- Any section element inside of this container is displayed as a slide -->
@@ -76,13 +76,30 @@
         </section>
 
         <section>
-            <h1>Agenda</h1>
-            <h2>...</h2>
-            <h2>...</h2>
-            <h2>...</h2>
+            <h1>JDK 9/10 adoption jokes and brief information about the new release cycle</h1>
+        </section>
+
+        <section>
+            <h1>Short JDK 8 recap</h1>
         </section>
 
         <section data-background="img/vader.jpg"></section>
+
+        <section>
+            <h2>Problems</h2>
+            <ul>
+                <li>Type Pollution (Project Amber primitives in generics)</li>
+                <li>Conditional Stream termination (lack of takeWhile/takeUntil)</li>
+                <li>Lambda expressions and checked exceptions</li>
+                <li>Lack of common APIs (add one element to stream, zip streams)</li>
+                <li>Parallel Streams and a shared thread-pool</li>
+                <li>Parallel Streams not that parallel as you might think</li>
+                <li>Streams and eager flatmap</li>
+                <li>Streams and eager flatmap vs takeUntil/takeWhile</li>
+                <li>CompletableFuture API design (allOf/anyOf)</li>
+                <li>...</li>
+            </ul>
+        </section>
 
         <section>
             <h2>Key takeaways</h2>
