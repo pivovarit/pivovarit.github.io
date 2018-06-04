@@ -75,12 +75,54 @@
             <h3></h3>
         </section>
 
+        <section></section>
+
         <section>
-            <h1>JDK 9/10 adoption jokes and brief information about the new release cycle</h1>
+
+            <div>
+                <img src="img/java-9-adoption.png" width="50%"/>
+                <br>
+                <small>
+                    <a href="https://twitter.com/mariofusco/status/957540001146986496">https://twitter.com/mariofusco/status/957540001146986496</a>
+                </small>
+            </div>
+
         </section>
 
         <section>
-            <h1>Short JDK 8 recap</h1>
+            <h2>Feature-driven -> Cadence-driven</h2>
+        </section>
+
+        <section>
+            <h2>Feature-driven:</h2>
+            <ul>
+                <li>Java 7 - Strings in Switch Statements</li>
+                <li>Java 8 - Project Lambda</li>
+                <li>Java 9 - Project JigSaw</li>
+                <li>...</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Cadence-driven:</h2>
+            <ul>
+                <li>Java 10 - 3.18</li>
+                <li>Java 11 - 9.18</li>
+                <li>Java 12 - 3.19</li>
+                <li>...</li>
+            </ul>
+        </section>
+        <section>
+
+          <h2>LTS Releases:</h2>
+          <h3>Java 7</h3>
+          <h3>Java 8</h3>
+          <h4>Java 9</h4>
+          <h4>Java 10</h4>
+          <h3>Java 11</h3>
+          <h4>Java 12</h4>
+          <h4>...</h4>
+          <h3>Java 17</h3>
         </section>
 
         <section data-background="img/vader.jpg"></section>
@@ -105,11 +147,20 @@
         </section>
 
         <section>
-            <h3>What about BytePredicate, DoubleToByteFunction, BiCharConsumer, and so on...?</h3>
+            <h2>Why?</h2>
+            <h3>Type-Erasure Issues</h3>
+            <h3>Lack of Value Types</h3>
         </section>
 
         <section>
-            <h2>Project Valhalla</h2>
+            <h3>What about BytePredicate, DoubleToByteFunction, BiCharConsumer, and so on...?</h3>
+            <blockquote>Each specialization is projected to ~100K to the JRE footprint</blockquote>
+        </section>
+
+        <section>
+            <h1>Project Valhalla</h1>
+            <h3><a href="http://openjdk.java.net/jeps/218">JEP 218: Generics over Primitive Types</a></h3>
+            <blockquote>Extend generic types to support the specialization of generic classes and interfaces over primitive types.</blockquote>
         </section>
 
         <section>
