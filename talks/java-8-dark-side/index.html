@@ -308,7 +308,7 @@
         <section>
             <pre><code data-trim="">
                 getUsers().stream()
-                  .flatMap(u -> getAllAddresses(u).stream()) // large/infinite stream
+                  .flatMap(u -> getAllAddresses(u)) // large/infinite stream
                   .peek(System.out::println)
                   .findAny();
             </code></pre>
@@ -327,7 +327,10 @@
         <section>
             <h2>Solution: migrate to JDK10+</h2>
             <h4><a href="http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9">http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9</a></h4>
-            <h2>JDK-8 Solution: don't use Stream API if you need nested collections to be evaluated lazily</h2>
+            <ul>
+                <li>JDK-8 Solution: don't use Stream API if you need nested collections to be evaluated lazily</li>
+                <li>JDK-9 Solution: see above</li>
+            </ul>
         </section>
 
         <section>
