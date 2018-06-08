@@ -172,6 +172,66 @@
         </section>
 
         <section>
+            <pre><code data-trim="">
+                List&lt;LocalDate> getDates()
+            </code></pre>
+            <blockquote>[2012-02-02, 2012-03-02, 2012-04-02, (...)]</blockquote>
+        </section>
+
+        <section>
+            <h2>Task: take all dates before XXX</h2>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .filter(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+            <ul>
+                <li class="fragment">Works properly but evaluates the whole stream</li>
+                <li class="fragment">Doesn't work with infinite streams</li>
+            </ul>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .peek(System.out::println)
+                  .filter(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .map(...)
+                  .forEach(...);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Solution: migrate to JDK9+</h2>
+            <h3 class="fragment">Stream#takeWhile/dropWhile</h3>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .filter(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .takeWhile(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+            <ul>
+                <li class="fragment">The stream terminates as soon the first mismatch is encountered</li>
+            </ul>
+        </section>
+
+        <section>
             <h1>#3 Stream API and eager Stream#flatMap()</h1>
         </section>
 
@@ -207,9 +267,12 @@
             <h1>#7 CompletableFuture API design (allOf/anyOf)</h1>
         </section>
 
-
         <section>
             <h1>#8 Lack of common APIs (add one element to stream, zip streams)</h1>
+        </section>
+
+        <section>
+            <h1>#9 Peek</h1>
         </section>
 
         <section>
