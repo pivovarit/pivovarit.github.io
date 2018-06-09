@@ -442,11 +442,40 @@
         </section>
 
         <section>
+            <img src="img/chosen_one.png"/>
+        </section>
+
+        <section>
             <h2>Solution: migrate to JDK10+</h2>
         </section>
 
         <section>
-            <h1>#5 Lambda expressions vs. Checked Exceptions</h1>
+            <h1>#5 Lambda Expressions vs. Checked Exceptions</h1>
+        </section>
+
+        <section>
+            <h2>java.util.function.Function</h2>
+            <pre><code data-trim="">
+                @FunctionalInterface
+                public interface Function&lt;T, R> {
+
+                    /**
+                     * Applies this function to the given argument.
+                     *
+                     * @param t the function argument
+                     * @return the function result
+                     */
+                    R apply(T t);
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/lambda_ex1.png"/>
+        </section>
+
+        <section>
+            <img src="img/lambda_ex2.png"/>
         </section>
 
         <section>
