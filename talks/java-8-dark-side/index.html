@@ -233,13 +233,12 @@
             </small>
         </section>
 
-
         <section>
-            <h2>Solution: migrate to JDK9+</h2>
+            <h2>Practical solution: migrate to JDK9+</h2>
             <h3 class="fragment">Stream#takeWhile/dropWhile</h3>
             <br>
             <ul>
-                <li class="fragment">[JDK8] don't use Stream API if you need nested collections to be evaluated lazily</li>
+                <li class="fragment">[JDK8] don't use Stream API if you want to be able to break out of it</li>
                 <li class="fragment">[JDK8] use limit() to cap the number of fetched elements (if applicable)</li>
             </ul>
         </section>
@@ -359,16 +358,87 @@
         </section>
 
         <section>
+            <h2>Solution: implement your own Spliterator-based lazy flatMap()</h2>
+        </section>
+
+        <section>
+            <img src="img/custom-spliterator.png" width="40%"/>
+            <h4><a href="https://stackoverflow.com/a/32767282/2229438">https://stackoverflow.com/a/32767282/2229438</a></h4>
+
+        </section>
+
+        <section>
             <h2>Solution: migrate to JDK10+</h2>
             <h4><a href="http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9">http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9</a></h4>
             <ul>
-                <li>JDK-8 Solution: don't use Stream API if you need nested collections to be evaluated lazily</li>
-                <li>JDK-9 Solution: see above</li>
+                <li class="fragment">JDK-8 Solution: don't use Stream API if you need nested collections to be evaluated lazily</li>
+                <li class="fragment">JDK-9 Solution: see above</li>
             </ul>
         </section>
 
         <section>
             <h1>#4 Stream#takeWhile/dropUntil @JDK9</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;List&lt;String>> list = List.of(
+                  List.of("1", "2"),
+                  List.of("3", "4", "5", "6", "7"));
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                list.stream()
+                  .flatMap(Collection::stream)
+                  .forEach(System.out::println);
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                1
+                2
+                3
+                4
+                5
+                6
+                7
+            </code></pre>
+
+        </section>
+
+    <section>
+            <pre><code data-trim="">
+                 Stream.of("1", "2", "3", "4", "5", "6", "7")
+                   .takeWhile(i -> !i.equals("4"))
+                   .forEach(System.out::println);
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                1
+                2
+                3
+            </code></pre>
+
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;List&lt;String>> list = List.of(
+                  List.of("1", "2"),
+                  List.of("3", "4", "5", "6", "7"));
+
+                list.stream()
+                  .flatMap(Collection::stream)
+                  .takeWhile(i -> !i.equals("4"))
+                  .forEach(System.out::println);
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                1
+                2
+                3
+                5
+                6
+                7
+            </code></pre>
         </section>
 
         <section>
