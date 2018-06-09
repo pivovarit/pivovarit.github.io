@@ -479,6 +479,107 @@
         </section>
 
         <section>
+            <blockquote>
+                A bound of the form “throws α” is purely informational: it directs resolution to optimize the instantiation of “α” so that, if possible, it is not a checked exception type. (…)
+                <br>
+                <br>
+                Otherwise, if the bound set contains “throws αi”, and the proper upper bounds of “αi” are, at most, Exception, Throwable, and Object, then Ti = RuntimeException.
+            </blockquote>
+            <h4><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-18.html">https://docs.oracle.com/javase/specs/jls/se8/html/jls-18.html</a></h4>
+        </section>
+
+        <section>
+            <h3>Simply put:</h3>
+            <blockquote>
+                Every T in “&lt;T extends Throwable>” is generously inferred to be a RuntimeException if a more specific type can't be inferred.
+            </blockquote>
+            <h4><a href="http://mail.openjdk.java.net/pipermail/lambda-dev/2013-February/007981.html">http://mail.openjdk.java.net/pipermail/lambda-dev/2013-February/007981.html</a> </h4>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static void rethrow(Exception t) throws Exception {
+                    throw t;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static &lt;T extends Exception> void rethrow(Exception t) throws T {
+                    throw t; // Unhandled exception: java.lang.Exception
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static &lt;T extends Exception> void rethrow(Exception t) throws T {
+                    throw (T) t; // Just cast it, #YOLO
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                public static void main(String[] args) {
+                    rethrow(new Exception(":>")); // no try-catch needed :)
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Let's put that into practice</h3>
+        </section>
+        <section>
+            <pre><code data-trim="">
+                public interface ThrowingFunction&lt;T, R> {
+                    R apply(T t) throws Exception;
+                }
+            </code></pre>
+
+            <pre class="fragment"><code data-trim="">
+                static &lt;T, R> Function&lt;T, R> unchecked(ThrowingFunction&lt;T, R> f)
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static &lt;T, R> Function&lt;T, R> unchecked(ThrowingFunction&lt;T, R> f) {
+                    return t -> {
+                        try {
+                            return f.apply(t);
+                        } catch (Exception ex) {
+                            return ThrowingFunction.sneakyThrow(ex);
+                        }
+                    };
+                 }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                 getUsers().stream()
+                   .map(unchecked(u -> new URL(u.webpage)))
+                   .map(unchecked(url -> url.openConnection())
+                   .map(unchecked(c -> c.getInputStream())));
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/owl.jpg" width="50%"/>
+            <h4><a href="http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/">http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/</a> </h4>
+
+        </section>
+
+        <section>
+            <blockquote>
+                Just because you don’t like the rules, doesn’t mean its a good idea to take the law into your own hands. Your advice is irresponsible because it places the convenience of the code writer over the far more important considerations of transparency and maintainability of the program.<br>Brian Goetz
+            </blockquote>
+            <small><a href="https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception#comment54437053_19757456">https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception#comment54437053_19757456</a> </small>
+        </section>
+
+        <section>
             <h1>#6 Parallel Streams</h1>
         </section>
 
