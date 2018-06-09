@@ -185,7 +185,7 @@
         <section>
             <pre><code data-trim="">
                 getDates().stream()
-                  .filter(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .filter(date -> date.isBefore(LocalDate.of(2012, 4, 4)))
                   .map(...)
                   .forEach(System.out::println);
             </code></pre>
@@ -199,15 +199,49 @@
             <pre><code data-trim="">
                 getDates().stream()
                   .peek(System.out::println)
-                  .filter(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .filter(date -> date.isBefore(LocalDate.of(2012, 4, 4)))
                   .map(...)
                   .forEach(...);
             </code></pre>
+            <small class="fragment">
+                2012-02-02, <br>
+                2012-03-02, <br>
+                2012-04-02, <br> <br>
+                -- POTENTIAL CUT OFF POINT -- <br> <br>
+                2012-05-02, <br>
+                2012-06-02, <br>
+                2012-07-02, <br>
+                2012-08-02, <br>
+                2012-09-02, <br>
+                2012-10-02, <br>
+                2012-11-02, <br>
+                2012-12-02, <br>
+                2013-01-02, <br>
+                2013-02-02, <br>
+                2013-03-02, <br>
+                2013-04-02, <br>
+                2013-05-02, <br>
+                2013-06-02, <br>
+                2013-07-02, <br>
+                2013-08-02, <br>
+                2013-09-02, <br>
+                2013-10-02, <br>
+                2013-11-02, <br>
+                2013-12-02, <br>
+                ...
+
+            </small>
         </section>
+
 
         <section>
             <h2>Solution: migrate to JDK9+</h2>
             <h3 class="fragment">Stream#takeWhile/dropWhile</h3>
+            <br>
+            <ul>
+                <li class="fragment">[JDK8] don't use Stream API if you need nested collections to be evaluated lazily</li>
+                <li class="fragment">[JDK8] use limit() to cap the number of fetched elements (if applicable)</li>
+            </ul>
         </section>
 
         <section>
@@ -246,7 +280,7 @@
                 List&lt;String> addresses = new ArrayList<>();
                 for (User u : getUsers()) {
                     for (String address : u.getAddresses()) {
-                        if (address.contains("foo")) {
+                        if (address.contains("1")) {
                             return address; // short-circuts the ongoing iteration
                         }
                     }
@@ -258,7 +292,7 @@
             <pre><code data-trim="">
                 return getUsers().stream()
                   .flatMap(u -> u.getAddresses().stream())
-                  .filter(address -> address.contains("foo"))
+                  .filter(address -> address.contains("1"))
                   .findAny()
             </code></pre>
         </section>
@@ -335,6 +369,11 @@
 
         <section>
             <h1>#4 Stream#takeWhile/dropUntil @JDK9</h1>
+        </section>
+
+        <section>
+            https://stackoverflow.com/questions/47888814/takewhile-working-differently-with-flatmap/47890166#47890166
+            https://bugs.openjdk.java.net/browse/JDK-8193856
         </section>
 
         <section>
