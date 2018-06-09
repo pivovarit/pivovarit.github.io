@@ -234,7 +234,7 @@
         </section>
 
         <section>
-            <h2>Practical solution: migrate to JDK9+</h2>
+            <h2>Solution: migrate to JDK9+</h2>
             <h3 class="fragment">Stream#takeWhile/dropWhile</h3>
             <br>
             <ul>
@@ -368,7 +368,7 @@
         </section>
 
         <section>
-            <h2>Solution: migrate to JDK10+</h2>
+            <h2>Practical Solution: migrate to JDK10+</h2>
             <h4><a href="http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9">http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9</a></h4>
             <ul>
                 <li class="fragment">JDK-8 Solution: don't use Stream API if you need nested collections to be evaluated lazily</li>
@@ -377,7 +377,7 @@
         </section>
 
         <section>
-            <h1>#4 Stream#takeWhile/dropUntil @JDK9</h1>
+            <h1>#4 JDK9 Stream#takeWhile</h1>
         </section>
 
         <section>
@@ -476,6 +476,18 @@
 
         <section>
             <img src="img/lambda_ex2.png"/>
+        </section>
+
+        <section>
+            <h2>Solution: use helper wrappers</h2>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .map(ThrowingFunction.unchecked(u -> new URL(u.webpage)))
+                  .collect(Collectors.toList());
+            </code></pre>
+            <h3><a href="https://github.com/pivovarit/throwing-function">https://github.com/pivovarit/throwing-function</a></h3>
+            <img src="img/throwing-function.png"/>
+
         </section>
 
         <section>
@@ -584,6 +596,7 @@
         </section>
 
         <section>
+            <h2>Ctrl + R</h2>
             <img src="img/parallel-all-the-things.png"/>
         </section>
 
