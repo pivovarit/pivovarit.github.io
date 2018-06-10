@@ -482,13 +482,15 @@
             <h2>Solution: use helper wrappers</h2>
             <pre><code data-trim="">
                 getUsers().stream()
-                  .map(ThrowingFunction.unchecked(u -> new URL(u.webpage)))
+                  .map(unchecked(u -> new URL(u.webpage)))
                   .collect(Collectors.toList());
             </code></pre>
             <h3><a href="https://github.com/pivovarit/throwing-function">https://github.com/pivovarit/throwing-function</a></h3>
             <img src="img/throwing-function.png"/>
 
         </section>
+
+        <section></section>
 
         <section>
             <blockquote>
@@ -499,6 +501,7 @@
             </blockquote>
             <h4><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-18.html">https://docs.oracle.com/javase/specs/jls/se8/html/jls-18.html</a></h4>
         </section>
+
 
         <section>
             <h3>Simply put:</h3>
@@ -551,13 +554,13 @@
             </code></pre>
 
             <pre class="fragment"><code data-trim="">
-                static &lt;T, R> Function&lt;T, R> unchecked(ThrowingFunction&lt;T, R> f)
+                static &lt;T, R> Function&lt;T, R> sneaky(ThrowingFunction&lt;T, R> f)
             </code></pre>
         </section>
 
         <section>
             <pre><code data-trim="">
-                static &lt;T, R> Function&lt;T, R> unchecked(ThrowingFunction&lt;T, R> f) {
+                static &lt;T, R> Function&lt;T, R> sneaky(ThrowingFunction&lt;T, R> f) {
                     return t -> {
                         try {
                             return f.apply(t);
@@ -572,9 +575,9 @@
         <section>
             <pre><code data-trim="">
                  getUsers().stream()
-                   .map(unchecked(u -> new URL(u.webpage)))
-                   .map(unchecked(url -> url.openConnection())
-                   .map(unchecked(c -> c.getInputStream())));
+                   .map(sneaky(u -> new URL(u.webpage)))
+                   .map(sneaky(url -> url.openConnection())
+                   .map(sneaky(c -> c.getInputStream())));
             </code></pre>
         </section>
 
