@@ -599,12 +599,63 @@
         </section>
 
         <section>
+            <h2>Parallel processing made easy™</h2>
+        </section>
+
+        <section>
+            <h2>Parallel processing made easy (?)™</h2>
+        </section>
+
+        <section>
+            <h3>Sequential</h3>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Parallel</h3>
+            <pre><code data-trim="">
+                getDates().parallelStream()
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
             <h2>Ctrl + R</h2>
             <img src="img/parallel-all-the-things.png"/>
         </section>
 
         <section>
-            <h2>Parallel not always faster</h2>
+            <h2>Multiple questions arise:</h2>
+
+            <h3 class="fragment">...but where are those tasks run?</h3>
+            <h3 class="fragment">...in the cloud?</h3>
+            <h3 class="fragment">...is it blockchain?</h3>
+            <h3 class="fragment">...how to provide a custom thread pool?</h3>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                 static final ForkJoinPool common;
+            </code></pre>
+            <ul class="fragment">
+                <li>Implementation detail</li>
+                <li>A thread pool that is used for execution of parallel streams is unspecified</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>Providing a custom FJP</h2>
+            TODO
+        </section>
+
+        <section>
+            <h2>Parallel - not always faster</h2>
         </section>
 
         <section>
