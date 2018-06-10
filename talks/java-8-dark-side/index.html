@@ -297,6 +297,10 @@
         </section>
 
         <section>
+            <img src="img/separation.jpeg"/>
+        </section>
+
+        <section>
             <h2>Not so true in practice</h2>
         </section>
 
@@ -346,6 +350,26 @@
                   .findAny();
             </code></pre>
             <img src="img/eager-flatmap-heap.png" class="fragment"/>
+        </section>
+
+        <section>
+            <h2>It gets worse once we start adding more operations:</h2>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .flatMap(u -> u.getAddresses().stream())
+                  .map(a -> {
+                      System.out.println("making a super expensive call now");
+                      return 42;
+                  })
+                  .findAny();
+            </code></pre>
+            <pre><code data-trim="">
+                making a super expensive call now
+                making a super expensive call now
+                making a super expensive call now
+                making a super expensive call now
+                making a super expensive call now
+            </code></pre>
         </section>
 
         <section>
@@ -627,6 +651,8 @@
         <section>
             <h2>Ctrl + R</h2>
             <img src="img/parallel-all-the-things.png"/>
+            <h2 class="fragment">Not a very good idea.</h2>
+
         </section>
 
         <section>
@@ -634,11 +660,14 @@
 
             <h3 class="fragment">...but where are those tasks run?</h3>
             <h3 class="fragment">...in the cloud?</h3>
-            <h3 class="fragment">...is it blockchain?</h3>
+            <h3 class="fragment">...in the blockchain?</h3>
             <h3 class="fragment">...how to provide a custom thread pool?</h3>
+            <br>
+            <h4 class="fragment">no answers to the above in the documentation</h4>
         </section>
 
         <section>
+            <h3>Code inspection reveals:</h3>
             <pre><code data-trim="">
                  static final ForkJoinPool common;
             </code></pre>
@@ -650,9 +679,44 @@
 
 
         <section>
-            <h2>Providing a custom FJP</h2>
-            TODO
+            <pre><code>
+                public final ForkJoinTask&lt;V> fork()
+            </code></pre>
+            <blockquote>
+                Arranges to asynchronously execute this task in the pool the current task is running in (...)
+            </blockquote>
         </section>
+
+        <section>
+            <pre><code data-trim="">
+                 ForkJoinPool customPool = new ForkJoinPool(42);
+                 customPool.submit(
+                   () -> getDates().parallelStream().forEach(e -> {}));
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>ForkJoinPool Settings:</h2>
+            <ul>
+                <li>The parallelism level</li>
+                <li>ForkJoinWorkerThreadFactory</li>
+                <li>UncaughtExceptionHandler</li>
+                <li>asyncMode</li>
+            </ul>
+            <br>
+            <br>
+            <br>
+            <h3 class="fragment">Since JDK 9:</h3>
+            <ul class="fragment">
+                <li>corePoolSize</li>
+                <li>maximumPoolSize</li>
+                <li>minimumRunnable</li>
+                <li>saturation allowed</li>
+                <li>keepAliveTime</li>
+            </ul>
+        </section>
+
+
 
         <section>
             <h2>Parallel - not always faster</h2>
@@ -680,10 +744,12 @@
 
         <section>
             <h2>Key takeaways</h2>
+            <h2>Be careful when:</h2>
+
             <ul>
-                <li>...</li>
-                <li>...</li>
-                <li>...</li>
+                <li>Be careful when using Stream API chains containing flatMap() calls</li>
+                <li>Be careful when using JDK9's takeWhile/dropUntil with the above</li>
+                <li>Be careful when using Parallel Streams</li>
             </ul>
         </section>
 
