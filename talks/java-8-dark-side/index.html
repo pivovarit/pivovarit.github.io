@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>The Dark Side of Java 8</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+        <small>Twitter/GitHub: <a href="http://twitter.com/pivovarit">@pivovarit</a></small>
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+        <section>
+            <h1>The Dark Side of Java 8</h1>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h2><a href="http://twitter.com/pivovarit">@pivovarit</a></h2>
+            <br><br>
+            <h2><a href="http://4comprehension.com/">4comprehension.com</a></h2>
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>System Engineer @ <a href="https://twitter.com/CasumoTech">CasumoTech</a></h2>
+	        <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="https://github.com/pivovarit">OS Contributor</a>, <a href="https://dzone.com/users/3083610/pivovarit.html">DZone MVB</a></h3>
+            <h3></h3>
+        </section>
+
+        <section></section>
+
+        <section>
+
+            <div>
+                <img src="img/java-9-adoption.png" width="50%"/>
+                <br>
+                <small>
+                    <a href="https://twitter.com/mariofusco/status/957540001146986496">https://twitter.com/mariofusco/status/957540001146986496</a>
+                </small>
+            </div>
+
+        </section>
+
+        <section>
+            <h2>Feature-driven -> Cadence-driven</h2>
+        </section>
+
+        <section>
+            <h2>Feature-driven:</h2>
+            <ul>
+                <li>Java 7 - Strings in Switch Statements</li>
+                <li>Java 8 - Project Lambda</li>
+                <li>Java 9 - Project JigSaw</li>
+                <li>...</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Cadence-driven:</h2>
+            <ul>
+                <li>Java 10 - 3.18</li>
+                <li>Java 11 - 9.18</li>
+                <li>Java 12 - 3.19</li>
+                <li>...</li>
+            </ul>
+        </section>
+        <section>
+
+          <h2>LTS Releases:</h2>
+          <h3>Java 7</h3>
+          <h3>Java 8</h3>
+          <h4>Java 9</h4>
+          <h4>Java 10</h4>
+          <h3>Java 11</h3>
+          <h4>Java 12</h4>
+          <h4>...</h4>
+          <h3>Java 17</h3>
+        </section>
+
+        <section data-background="img/vader.jpg"></section>
+
+        <section>
+            <h1>#1 Type Pollution</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                package java.util.function;
+
+                @FunctionalInterface
+                public interface Function&lt;T, R> {
+                    R apply(T t);
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/type-pollution.png" width="20%"/>
+        </section>
+
+        <section>
+            <h2>Why?</h2>
+            <h3>Type-Erasure Issues</h3>
+            <h3>Lack of Value Types</h3>
+        </section>
+
+        <section>
+            <h4>What about BytePredicate, DoubleToByteFunction, BiCharConsumer, and so on...?</h4>
+            <blockquote class="fragment">Each specialization is projected to ~100K to the JRE footprint</blockquote>
+        </section>
+
+        <section>
+            <h1>Project Valhalla:</h1>
+            <h3><a href="http://openjdk.java.net/jeps/169">JEP 169: Value Objects</a></h3>
+            <blockquote>Provide JVM infrastructure for working with immutable and reference-free objects, in support of efficient by-value computation with non-primitive types.</blockquote>
+            <h3><a href="http://openjdk.java.net/jeps/218">JEP 218: Generics over Primitive Types</a></h3>
+            <blockquote>Extend generic types to support the specialization of generic classes and interfaces over primitive types.</blockquote>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h1>#2 Conditional Stream Termination</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;LocalDate> getDates()
+            </code></pre>
+            <blockquote>[2012-02-02, 2012-03-02, 2012-04-02, (...)]</blockquote>
+        </section>
+
+        <section>
+            <h2>Task: take all dates before XXX</h2>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .filter(date -> date.isBefore(LocalDate.of(2012, 4, 4)))
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+            <ul>
+                <li class="fragment">Works properly but evaluates the whole stream</li>
+                <li class="fragment">Doesn't work with infinite streams</li>
+            </ul>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .peek(System.out::println)
+                  .filter(date -> date.isBefore(LocalDate.of(2012, 4, 4)))
+                  .map(...)
+                  .forEach(...);
+            </code></pre>
+            <small class="fragment">
+                2012-02-02, <br>
+                2012-03-02, <br>
+                2012-04-02, <br> <br>
+                -- POTENTIAL CUT OFF POINT -- <br> <br>
+                2012-05-02, <br>
+                2012-06-02, <br>
+                2012-07-02, <br>
+                2012-08-02, <br>
+                2012-09-02, <br>
+                2012-10-02, <br>
+                2012-11-02, <br>
+                2012-12-02, <br>
+                2013-01-02, <br>
+                2013-02-02, <br>
+                2013-03-02, <br>
+                2013-04-02, <br>
+                2013-05-02, <br>
+                2013-06-02, <br>
+                2013-07-02, <br>
+                2013-08-02, <br>
+                2013-09-02, <br>
+                2013-10-02, <br>
+                2013-11-02, <br>
+                2013-12-02, <br>
+                ...
+
+            </small>
+        </section>
+
+        <section>
+            <h2>Solution: migrate to JDK9+</h2>
+            <h3 class="fragment">Stream#takeWhile/dropWhile</h3>
+            <br>
+            <ul>
+                <li class="fragment">[JDK8] don't use Stream API if you want to be able to break out of it</li>
+                <li class="fragment">[JDK8] use limit() to cap the number of fetched elements (if applicable)</li>
+            </ul>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .filter(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .takeWhile(date -> date.isBefore(LocalDate.of(2014, 4, 4)))
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+            <ul>
+                <li class="fragment">The stream terminates as soon the first mismatch is encountered</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>#3 Stream#flatMap()</h1>
+        </section>
+
+        <section>
+            <h1>Streams ~ Lazy Sequences</h1>
+            <h3 class="fragment">As performant as imperative equivalents (time complexity) </h3>
+            <h3 class="fragment">In theory.</h3>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;String> addresses = new ArrayList<>();
+                for (User u : getUsers()) {
+                    for (String address : u.getAddresses()) {
+                        if (address.contains("1")) {
+                            return address; // short-circuts the ongoing iteration
+                        }
+                    }
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                return getUsers().stream()
+                  .flatMap(u -> u.getAddresses().stream())
+                  .filter(address -> address.contains("1"))
+                  .findAny()
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/separation.jpeg"/>
+        </section>
+
+        <section>
+            <h2>Not so true in practice</h2>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static List&lt;User> getUsers() { // db fetch stub
+                    return List.of(new User(List.of("a1","a2","a3","a4","a5")));
+                 }
+            </code></pre>
+            <h2>Task: take a first encountered address of a first encountered user</h2>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .flatMap(u -> u.getAddresses().stream())
+                  .findAny();
+            </code></pre>
+        </section>
+
+         <section>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .flatMap(u -> u.getAddresses().stream())
+                  .peek(System.out::println)
+                  .findAny();
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                a1
+                a2
+                a3
+                a4
+                a5
+            </code></pre>
+            <h4><a href="https://bugs.openjdk.java.net/browse/JDK-8075939">https://bugs.openjdk.java.net/browse/JDK-8075939</a></h4>
+            <h4><a href="https://bugs.openjdk.java.net/browse/JDK-8189234">https://bugs.openjdk.java.net/browse/JDK-8189234</a></h4>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .flatMap(u -> getAllAddresses(u)) // large/infinite stream
+                  .peek(System.out::println)
+                  .findAny();
+            </code></pre>
+            <img src="img/eager-flatmap-heap.png" class="fragment"/>
+        </section>
+
+        <section>
+            <h2>It gets worse once we start adding more operations:</h2>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .flatMap(u -> u.getAddresses().stream())
+                  .map(a -> {
+                      System.out.println("making a super expensive call now");
+                      return 42;
+                  })
+                  .findAny();
+            </code></pre>
+            <pre><code data-trim="">
+                making a super expensive call now
+                making a super expensive call now
+                making a super expensive call now
+                making a super expensive call now
+                making a super expensive call now
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>The cause</h2>
+            <img src="img/flatmap-impl.png" class="fragment"/>
+        </section>
+
+        <section>
+            <img src="img/flatmap-impl-focused.png"/>
+        </section>
+
+        <section>
+            <h2>Solution: implement your own Spliterator-based lazy flatMap()</h2>
+        </section>
+
+        <section>
+            <img src="img/custom-spliterator.png" width="40%"/>
+            <h4><a href="https://stackoverflow.com/a/32767282/2229438">https://stackoverflow.com/a/32767282/2229438</a></h4>
+
+        </section>
+
+        <section>
+            <h2>Practical Solution: migrate to JDK10+</h2>
+            <h4><a href="http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9">http://hg.openjdk.java.net/jdk/jdk10/rev/fca88bbbafb9</a></h4>
+            <ul>
+                <li class="fragment">JDK-8 Solution: don't use Stream API if you need nested collections to be evaluated lazily</li>
+                <li class="fragment">JDK-9 Solution: see above</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>#4 JDK9 Stream#takeWhile</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;List&lt;String>> list = List.of(
+                  List.of("1", "2"),
+                  List.of("3", "4", "5", "6", "7"));
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                list.stream()
+                  .flatMap(Collection::stream)
+                  .forEach(System.out::println);
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                1
+                2
+                3
+                4
+                5
+                6
+                7
+            </code></pre>
+
+        </section>
+
+    <section>
+            <pre><code data-trim="">
+                 Stream.of("1", "2", "3", "4", "5", "6", "7")
+                   .takeWhile(i -> !i.equals("4"))
+                   .forEach(System.out::println);
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                1
+                2
+                3
+            </code></pre>
+
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;List&lt;String>> list = List.of(
+                  List.of("1", "2"),
+                  List.of("3", "4", "5", "6", "7"));
+
+                list.stream()
+                  .flatMap(Collection::stream)
+                  .takeWhile(i -> !i.equals("4"))
+                  .forEach(System.out::println);
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                1
+                2
+                3
+                5
+                6
+                7
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/chosen_one.png"/>
+        </section>
+
+        <section>
+            <h2>Solution: migrate to JDK10+</h2>
+        </section>
+
+        <section>
+            <h1>#5 Lambda Expressions vs. Checked Exceptions</h1>
+        </section>
+
+        <section>
+            <h2>java.util.function.Function</h2>
+            <pre><code data-trim="">
+                @FunctionalInterface
+                public interface Function&lt;T, R> {
+
+                    /**
+                     * Applies this function to the given argument.
+                     *
+                     * @param t the function argument
+                     * @return the function result
+                     */
+                    R apply(T t);
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/lambda_ex1.png"/>
+        </section>
+
+        <section>
+            <img src="img/lambda_ex2.png"/>
+        </section>
+
+        <section>
+            <h2>Solution: use helper wrappers</h2>
+            <pre><code data-trim="">
+                getUsers().stream()
+                  .map(unchecked(u -> new URL(u.webpage)))
+                  .collect(Collectors.toList());
+            </code></pre>
+            <h3><a href="https://github.com/pivovarit/throwing-function">https://github.com/pivovarit/throwing-function</a></h3>
+            <img src="img/throwing-function.png"/>
+
+        </section>
+
+        <section></section>
+
+        <section>
+            <blockquote>
+                A bound of the form “throws α” is purely informational: it directs resolution to optimize the instantiation of “α” so that, if possible, it is not a checked exception type. (…)
+                <br>
+                <br>
+                Otherwise, if the bound set contains “throws αi”, and the proper upper bounds of “αi” are, at most, Exception, Throwable, and Object, then Ti = RuntimeException.
+            </blockquote>
+            <h4><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-18.html">https://docs.oracle.com/javase/specs/jls/se8/html/jls-18.html</a></h4>
+        </section>
+
+
+        <section>
+            <h3>Simply put:</h3>
+            <blockquote>
+                Every T in “&lt;T extends Throwable>” is generously inferred to be a RuntimeException if a more specific type can't be inferred.
+            </blockquote>
+            <h4><a href="http://mail.openjdk.java.net/pipermail/lambda-dev/2013-February/007981.html">http://mail.openjdk.java.net/pipermail/lambda-dev/2013-February/007981.html</a> </h4>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static void rethrow(Exception t) throws Exception {
+                    throw t;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static &lt;T extends Exception> void rethrow(Exception t) throws T {
+                    throw t; // Unhandled exception: java.lang.Exception
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static &lt;T extends Exception> void rethrow(Exception t) throws T {
+                    throw (T) t; // Just cast it, #YOLO
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                public static void main(String[] args) {
+                    rethrow(new Exception(":>")); // no try-catch needed :)
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Let's put that into practice</h3>
+        </section>
+        <section>
+            <pre><code data-trim="">
+                public interface ThrowingFunction&lt;T, R> {
+                    R apply(T t) throws Exception;
+                }
+            </code></pre>
+
+            <pre class="fragment"><code data-trim="">
+                static &lt;T, R> Function&lt;T, R> sneaky(ThrowingFunction&lt;T, R> f)
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                static &lt;T, R> Function&lt;T, R> sneaky(ThrowingFunction&lt;T, R> f) {
+                    return t -> {
+                        try {
+                            return f.apply(t);
+                        } catch (Exception ex) {
+                            return ThrowingFunction.sneakyThrow(ex);
+                        }
+                    };
+                 }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                 getUsers().stream()
+                   .map(sneaky(u -> new URL(u.webpage)))
+                   .map(sneaky(url -> url.openConnection())
+                   .map(sneaky(c -> c.getInputStream())));
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/owl.jpg" width="50%"/>
+            <h4><a href="http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/">http://4comprehension.com/sneakily-throwing-exceptions-in-lambda-expressions-in-java/</a> </h4>
+
+        </section>
+
+        <section>
+            <blockquote>
+                Just because you don’t like the rules, doesn’t mean its a good idea to take the law into your own hands. Your advice is irresponsible because it places the convenience of the code writer over the far more important considerations of transparency and maintainability of the program.<br>Brian Goetz
+            </blockquote>
+            <small><a href="https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception#comment54437053_19757456">https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception#comment54437053_19757456</a> </small>
+        </section>
+
+        <section>
+            <h1>#6 Parallel Streams</h1>
+        </section>
+
+        <section>
+            <h2>Parallel processing made easy™</h2>
+        </section>
+
+        <section>
+            <h2>Parallel processing made easy (?)™</h2>
+        </section>
+
+        <section>
+            <h3>Sequential</h3>
+            <pre><code data-trim="">
+                getDates().stream()
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Parallel</h3>
+            <pre><code data-trim="">
+                getDates().parallelStream()
+                  .map(...)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Ctrl + R</h2>
+            <img src="img/parallel-all-the-things.png"/>
+            <h2 class="fragment">Not a very good idea.</h2>
+
+        </section>
+
+        <section>
+            <h2>Multiple questions arise:</h2>
+
+            <h3 class="fragment">...but where are those tasks run?</h3>
+            <h3 class="fragment">...in the cloud?</h3>
+            <h3 class="fragment">...in the blockchain?</h3>
+            <h3 class="fragment">...how to provide a custom thread pool?</h3>
+            <br>
+            <h4 class="fragment">no answers to the above in the documentation</h4>
+        </section>
+
+        <section>
+            <h3>Code inspection reveals:</h3>
+            <pre><code data-trim="">
+                 static final ForkJoinPool common;
+            </code></pre>
+            <ul class="fragment">
+                <li>Implementation detail</li>
+                <li>A thread pool that is used for execution of parallel streams is unspecified</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <pre><code>
+                public final ForkJoinTask&lt;V> fork()
+            </code></pre>
+            <blockquote>
+                Arranges to asynchronously execute this task in the pool the current task is running in (...)
+            </blockquote>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                 ForkJoinPool customPool = new ForkJoinPool(42);
+                 customPool.submit(
+                   () -> getDates().parallelStream().forEach(e -> {}));
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>ForkJoinPool Settings:</h2>
+            <ul>
+                <li>The parallelism level</li>
+                <li>ForkJoinWorkerThreadFactory</li>
+                <li>UncaughtExceptionHandler</li>
+                <li>asyncMode</li>
+            </ul>
+            <br>
+            <br>
+            <br>
+            <h3 class="fragment">Since JDK 9:</h3>
+            <ul class="fragment">
+                <li>corePoolSize</li>
+                <li>maximumPoolSize</li>
+                <li>minimumRunnable</li>
+                <li>saturation allowed</li>
+                <li>keepAliveTime</li>
+            </ul>
+        </section>
+
+
+
+        <section>
+            <h2>Parallel - not always faster</h2>
+        </section>
+
+        <section>
+            <h3>parallelSetAll with a Random instance</h3>
+        </section>
+
+        <section>
+            <h1>Parallel Streams not that parallel as you might think</h1>
+        </section>
+
+        <section>
+            <h1>#7 CompletableFuture API design (allOf/anyOf)</h1>
+        </section>
+
+        <section>
+            <h1>#8 Lack of common APIs (add one element to stream, zip streams)</h1>
+        </section>
+
+        <section>
+            <h1>#9 Peek</h1>
+        </section>
+
+        <section>
+            <h2>Key takeaways</h2>
+            <h2>Be careful when:</h2>
+
+            <ul>
+                <li>Be careful when using Stream API chains containing flatMap() calls</li>
+                <li>Be careful when using JDK9's takeWhile/dropUntil with the above</li>
+                <li>Be careful when using Parallel Streams</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 45,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+
+</body>
+</html>
