@@ -131,47 +131,7 @@
         <section data-background="img/vader.jpg"></section>
 
         <section>
-            <h1>#1 Type Pollution</h1>
-        </section>
-
-        <section>
-            <pre><code data-trim="">
-                package java.util.function;
-
-                @FunctionalInterface
-                public interface Function&lt;T, R> {
-                    R apply(T t);
-                }
-            </code></pre>
-        </section>
-
-        <section>
-            <img src="img/type-pollution.png" width="20%"/>
-        </section>
-
-        <section>
-            <h2>Why?</h2>
-            <h3>Type-Erasure Issues</h3>
-            <h3>Lack of Value Types</h3>
-        </section>
-
-        <section>
-            <h4>What about BytePredicate, DoubleToByteFunction, BiCharConsumer, and so on...?</h4>
-            <blockquote class="fragment">Each specialization is projected to ~100K to the JRE footprint</blockquote>
-        </section>
-
-        <section>
-            <h1>Project Valhalla:</h1>
-            <h3><a href="http://openjdk.java.net/jeps/169">JEP 169: Value Objects</a></h3>
-            <blockquote>Provide JVM infrastructure for working with immutable and reference-free objects, in support of efficient by-value computation with non-primitive types.</blockquote>
-            <h3><a href="http://openjdk.java.net/jeps/218">JEP 218: Generics over Primitive Types</a></h3>
-            <blockquote>Extend generic types to support the specialization of generic classes and interfaces over primitive types.</blockquote>
-        </section>
-
-        <section></section>
-
-        <section>
-            <h1>#2 Conditional Stream Termination</h1>
+            <h1>#1 Conditional Stream Termination</h1>
         </section>
 
         <section>
@@ -268,7 +228,7 @@
         </section>
 
         <section>
-            <h1>#3 Stream#flatMap()</h1>
+            <h1>#2 Stream#flatMap()</h1>
         </section>
 
         <section>
@@ -404,7 +364,7 @@
         </section>
 
         <section>
-            <h1>#4 JDK9 Stream#takeWhile</h1>
+            <h1>#3 JDK9 Stream#takeWhile</h1>
         </section>
 
         <section>
@@ -477,7 +437,7 @@
         </section>
 
         <section>
-            <h1>#5 Lambda Expressions vs. Checked Exceptions</h1>
+            <h1>#4 Lambda Expressions vs. Checked Exceptions</h1>
         </section>
 
         <section>
@@ -764,10 +724,6 @@
 
         <section>
             <h2>Parallel - doesn't always mean faster</h2>
-        </section>
-
-        <section>
-            <h1>#7 Peek</h1>
         </section>
 
         <section>
