@@ -76,6 +76,11 @@
         <section></section>
 
         <section>
+            <h2>Java 8</h2>
+            <img src="img/puke.gif" width="50%"/>
+        </section>
+
+        <section>
 
             <div>
                 <img src="img/java-9-adoption.png" width="50%"/>
@@ -611,7 +616,8 @@
 
         <section>
             <blockquote>
-                Just because you don’t like the rules, doesn’t mean its a good idea to take the law into your own hands. Your advice is irresponsible because it places the convenience of the code writer over the far more important considerations of transparency and maintainability of the program.<br>Brian Goetz
+                Just because you don’t like the rules, doesn’t mean its a good idea to take the law into your own hands. Your advice is irresponsible because it places the convenience of the code writer over the far more important considerations of transparency and maintainability of the program.
+                <br> by Brian Goetz
             </blockquote>
             <small><a href="https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception#comment54437053_19757456">https://stackoverflow.com/questions/19757300/java-8-lambda-streams-filter-by-method-with-exception#comment54437053_19757456</a> </small>
         </section>
@@ -657,11 +663,10 @@
             <h2>Multiple questions arise:</h2>
 
             <h3 class="fragment">...but where are those tasks run?</h3>
-            <h3 class="fragment">...in the cloud?</h3>
-            <h3 class="fragment">...in the blockchain?</h3>
+            <h4 class="fragment">...in the cloud?</h4>
+            <h4 class="fragment">...in the blockchain?</h4>
             <h3 class="fragment">...how to provide a custom thread pool?</h3>
-            <br>
-            <h4 class="fragment">no answers to the above in the documentation</h4>
+            <h3 class="fragment">...what's the maximum number of tasks executed in parallel?</h3>
         </section>
 
         <section>
@@ -714,30 +719,54 @@
             </ul>
         </section>
 
+        <section>
+            <blockquote>
+                Note, however, that this technique of submitting a task to a fork-join pool to run the parallel stream in that pool is an implementation “trick” and is not guaranteed to work.
+                <br>
+                by Stuart Marks
+            </blockquote>
+            <small><a href="https://stackoverflow.com/questions/28985704/parallel-stream-from-a-hashset-doesnt-run-in-parallel/29272776#29272776">https://stackoverflow.com/questions/28985704/parallel-stream-from-a-hashset-doesnt-run-in-parallel/29272776#29272776</a> </small>
+        </section>
 
+        <section></section>
 
         <section>
-            <h2>Parallel - not always faster</h2>
+            <h2>Which is faster and how much? Sequential or Parallel?</h2>
+
+            <h3>Sequential</h3>
+            <pre><code data-trim="">
+                Random rand = new Random();
+
+                int[] array = new int[90000000];
+
+                Arrays.stream(array)
+                  .map(i -> rand.nextInt())
+                  .boxed()
+                  .collect(Collectors.toList());
+            </code></pre>
         </section>
 
         <section>
-            <h3>parallelSetAll with a Random instance</h3>
+            <h2>Which is faster and how much? Sequential or Parallel?</h2>
+            <h3>Parallel</h3>
+            <pre><code data-trim="">
+                Random rand = new Random();
+
+                int[] array = new int[90000000];
+
+                Arrays.stream(array).parallel()
+                  .map(i -> rand.nextInt())
+                  .boxed()
+                  .collect(Collectors.toList());
+            </code></pre>
         </section>
 
         <section>
-            <h1>Parallel Streams not that parallel as you might think</h1>
+            <h2>Parallel - doesn't always mean faster</h2>
         </section>
 
         <section>
-            <h1>#7 CompletableFuture API design (allOf/anyOf)</h1>
-        </section>
-
-        <section>
-            <h1>#8 Lack of common APIs (add one element to stream, zip streams)</h1>
-        </section>
-
-        <section>
-            <h1>#9 Peek</h1>
+            <h1>#7 Peek</h1>
         </section>
 
         <section>
