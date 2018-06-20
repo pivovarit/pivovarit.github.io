@@ -318,14 +318,14 @@
 
         <section>
             <pre><code data-trim="">
-                Try&lt;InputStream> javaday = getSingleSearchResults("javaday")
+                Try&lt;InputStream> foo = getSingleSearchResults("foo")
                   .flatMap(url -> Try.of(url::openStream))
             </code></pre>
         </section>
 
         <section>
             <pre><code data-trim="">
-                Match(javaday).of(
+                Match(foo).of(
                   Case($Success($()), "Opened successfully"),
                   Case($Failure($()), "Failed :(")
                 );
