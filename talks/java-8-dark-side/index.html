@@ -657,6 +657,8 @@
                  customPool.submit(
                    () -> getDates().parallelStream().forEach(e -> {}));
             </code></pre>
+            <h3>The size of the computation will be in proportion to the common pool and not the custom pool.</h3>
+            <h4>Fixed in JDK10 - https://bugs.openjdk.java.net/browse/JDK-8190974</h4>
         </section>
 
         <section>
