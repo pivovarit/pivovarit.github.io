@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Magicless Persistence</title>
+    <title>Wonderful Frameworks and How to Avoid Them</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -53,30 +53,37 @@
 <div class="reveal">
 
     <div class="footer">
-        <small><a href="http://twitter.com/pivovarit">@pivovarit</a></small>
+        <small>Twitter/GitHub: <a href="http://twitter.com/pivovarit">@pivovarit</a></small>
     </div>
 
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
 
-
         <section>
-            <h1>Magicless Persistence</h1>
-            <h2>
-                <a href="http://pivovarit.github.io">Grzegorz Piwowarek</a> | <a href="http://twitter.com/pivovarit">@pivovarit</a>
-                | <a href="http://4comprehension.com/">4comprehension.com</a>
-            </h2>
+            <h1>Wonderful Frameworks and How to Avoid Them</h1>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
         </section>
 
         <section>
-            <h1>Software Engineer | Trainer</h1>
-            <h2>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h2>
-            <h3>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h3>
-            <h3>System Engineer @ <a href="http://casumocareers.com">Casumo</a></h3>
-            <h3>OS Contributor</h3>
-            <h3>DZone MVB</h3>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Lead Engineer @ <a href="https://twitter.com/CasumoTech">CasumoTech</a></h2>
+	        <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="https://github.com/pivovarit">OS Contributor</a>, <a href="https://dzone.com/users/3083610/pivovarit.html">DZone MVB</a></h3>
+            <h3></h3>
         </section>
 
+        <section>
+            <h2>Key takeaways:</h2>
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+            <h4><a href="https://pivovarit.github.io/talks/wonderful-frameworks">https://pivovarit.github.io/talks/wonderful-frameworks</a> </h4>
+            <img src="img/talk_qr.jpg"/>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+
+        </section>
     </div>
 </div>
 
@@ -84,12 +91,11 @@
 <script src="js/reveal.js"></script>
 
 <script>
-
     // More info https://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
         controls: false,
-        defaultTiming: 60,
-        progress: false,
+        defaultTiming: 45,
+        progress: true,
         history: true,
         center: true,
         width: 1920,
@@ -102,23 +108,23 @@
         dependencies: [
             {
                 src: 'lib/js/classList.js', condition: function () {
-                return !document.body.classList;
-            }
+                    return !document.body.classList;
+                }
             },
             {
                 src: 'plugin/markdown/marked.js', condition: function () {
-                return !!document.querySelector('[data-markdown]');
-            }
+                    return !!document.querySelector('[data-markdown]');
+                }
             },
             {
                 src: 'plugin/markdown/markdown.js', condition: function () {
-                return !!document.querySelector('[data-markdown]');
-            }
+                    return !!document.querySelector('[data-markdown]');
+                }
             },
             {
                 src: 'plugin/highlight/highlight.js', async: true, callback: function () {
-                hljs.initHighlightingOnLoad();
-            }
+                    hljs.initHighlightingOnLoad();
+                }
             },
             {src: 'plugin/zoom-js/zoom.js', async: true},
             {src: 'plugin/notes/notes.js', async: true}
