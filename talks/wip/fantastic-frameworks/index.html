@@ -88,6 +88,19 @@
         </section>
 
         <section>
+            <pre><code data-trim="">
+                String sql = create
+                  .select(BOOK.TITLE, AUTHOR.FIRST_NAME, AUTHOR.LAST_NAME)
+                  .from(BOOK)
+                  .join(AUTHOR).on(BOOK.AUTHOR_ID.eq(AUTHOR.ID))
+                  .where(BOOK.PUBLISHED_IN.eq(1948))
+                  .getSQL();
+            </code></pre>
+            <h4><a href="https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf">https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf</a></h4>
+
+        </section>
+
+        <section>
             <img src="img/disenchantment.jpg"/>
             <h4><a href="http://tonsky.me/blog/disenchantment/">http://tonsky.me/blog/disenchantment/</a></h4>
 
