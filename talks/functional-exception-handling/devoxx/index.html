@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Functional Exception Handling in Java</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+        <small>Twitter/GitHub: <a href="http://twitter.com/pivovarit">@pivovarit</a></small>
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+
+        <section>
+            <h1>Functional Exception Handling</h1>
+            <h2>in Java with Vavr</h2>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h2><a href="http://twitter.com/pivovarit">@pivovarit</a></h2>
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Lead Engineer @ <a href="https://twitter.com/CasumoTech">CasumoTech</a></h2>
+	        <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+        </section>
+
+        <section></section>
+
+        <section>
+            <blockquote>
+                "Every time you call a function that can raise an exception and don’t catch it on the spot, you create
+                opportunities for <strong>surprise bugs caused by functions that terminated abruptly,leaving data in an
+                inconsistent state</strong>, or other code paths that you didn’t think about."
+            </blockquote>
+            <small>
+                <a href="https://www.joelonsoftware.com/2003/10/13/13/">October 13, 2003 by Joel Spolsky</a>
+            </small>
+        </section>
+
+        <section>
+            <h1>Exceptions:</h1>
+            <h2>Create unexpected exit points</h2>
+            <h2>Behave like GOTOs</h2>
+            <h2>Invisible in the source code</h2>
+            <h2>Invisible when async</h2>
+        </section>
+
+        <section>
+            <h1>... and don't come for free</h1>
+
+            <pre class="fragment" width="200"><code class="hljs" data-trim>
+			    public synchronized Throwable fillInStackTrace() { ... }
+            </code></pre>
+            <blockquote class="fragment">
+                "Fills in the execution stack trace. This method records within this Throwable object information about
+                the current state of the stack frames for the current thread."
+            </blockquote>
+            <br><br>
+            <a class="fragment" href="https://www.javaspecialists.eu/archive/Issue187.html">"Cost of Causing
+                Exceptions", Heinz Kabutz</a>
+        </section>
+
+        <section>
+            <a href="http://normanmaurer.me/blog/2013/11/09/The-hidden-performance-costs-of-instantiating-Throwables/">"The
+                hidden performance costs of instantiating Throwables", Norman Maurer</a>
+            <img src="img/benchmark_throwable.png" width="1000" class="fragment"/>
+        </section>
+
+        <section>
+            <h1>Error Handling in Go!</h1>
+            <blockquote>
+                "Values can be programmed, and since errors are values, errors can be programmed. <strong>Errors are not
+                like exceptions. There’s nothing special about them</strong>, whereas an unhandled exception can crash
+                your program."
+            </blockquote>
+            <small>
+                <a href="https://blog.golang.org/errors-are-values">"Errors are values", Rob Pike</a>
+            </small>
+            <br>
+        </section>
+        <section>
+            <h2>Errors are values</h2>
+            <pre><code data-trim>func foo(s string) (string, error) { ... }</code></pre>
+            <pre class="fragment"><code class="center" data-trim>
+                response, err := foo("42")
+                if err != nil {
+                    // ...
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/titanic.jpg" width="900" class="fragment"/>
+            <pre><code data-trim="">
+                _, err := os.Create("/tmp/file")
+                if err != nil {
+                    panic(err)
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h1>Meanwhile in Java...</h1>
+        </section>
+
+        <section>
+            <h1>Exception Handling Antipatterns</h1>
+            <h4>Log and throw</h4>
+            <h4>Declaring that your method throws java.lang.Exception</h4>
+            <h4>Declaring that your method throws a large variety of exceptions</h4>
+            <h4>Log and return null</h4>
+            <h4>Catch and ignore</h4>
+            <h4>Catching java.lang.Exception</h4>
+            <h4>Destructive wrapping</h4>
+            <h4>Throw within finally</h4>
+            <h4>Multi-line log messages</h4>
+            <h4>Unsupported operation returning null</h4>
+            <h4>Relying on getCause()</h4>
+            <h4>...</h4>
+        </section>
+
+        <section>
+            <img src="img/dynamic.jpg" width="700" class="fragment"/>
+        </section>
+
+        <section>
+            <img src="img/stupid_tests.png" width="1000"/>
+        </section>
+
+        <section>
+            <h2>Compile-time checks -> shorter feedback cycles</h2>
+            <img src="img/agile.png" width="1000"/>
+            <div>
+                <small>
+                    <a href="http://scrumreferencecard.com/scrum-reference-card/​">Scrum Reference Card</a>
+                </small>
+            </div>
+        </section>
+
+        <section>
+            <h2>CGI Character Rigging</h2>
+            <img class="fragment" src="img/rigging.jpg" width="80%"/>
+            <div>
+                <small>
+                    <a href="https://lesterbanks.com/2016/04/maya-free-dragon-rig/">Source</a>
+                </small>
+            </div>
+
+        </section>
+
+        <section>
+            <img class="fragment" src="img/datatype.png"/>
+        </section>
+
+        <section>
+            <h1>Stringly-typed</h1>
+            <pre><code data-trim="">
+                public class Person {
+                    private final String name;
+                    private final String surname;
+                    private final String address;
+                    private final String phoneNumber;
+                    private final String age;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h1>Strongly-typed</h1>
+            <pre><code data-trim="">
+                public class Person {
+                    private final String name;
+                    private final Surname surname;
+                    private final Address address;
+                    private final PhoneNumber phoneNumber;
+                    private final PositiveInteger age;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Optionality expressed with types</h2>
+            <pre><code data-trim="">
+                Person findOne(long id);
+
+                Optional&lt;Person&gt; findOne(long id);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Same approach can be applied to exception handling</h2>
+        </section>
+
+        <section>
+            <h2>Try (Scala)</h2>
+            <h3>encapsulates exception handling</h3>
+            <pre><code data-trim="">
+                sealed abstract class Try[+T]
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Consumer side</h2>
+            <pre><code data-trim="">
+                List&lt;URL> getSearchResults(String searchString) throws IOException
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                Try&lt;List&lt;URL>> getSearchResults(String searchString) { ... }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                getSearchResults("foo")
+                  .map(...)
+                  .filter(...)
+                  .onFailure(ex -> LOG.info("..."))
+                  .recoverWith(...)
+                  .getOrElse(() -> 42);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>API</h2>
+            <pre><code data-trim="">
+                Try&lt;U&gt; map(Function&lt;? super T, ? extends U> mapper)
+                Try&lt;U&gt; flatMap(Function&lt;? super T, ? extends Try&lt;? extends U>> mapper)
+                Try&lt;T&gt; filter(Predicate&lt;? super T> predicate) ...
+
+                Try&lt;T&gt; orElse(Try&lt;? extends T> other)
+
+                Try&lt;T&gt; onFailure(Consumer&lt;? super Throwable> action)
+                Try&lt;T&gt; onSuccess(Consumer&lt;? super T> action)
+
+                Try&lt;T&gt; recover(Class&lt;X&gt; exception, T value)
+
+                T get(); // do not use that.
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Producer side</h2>
+            <pre><code data-trim="">
+                List&lt;URL> getFromGoogle(String search)
+                  throws NoSuchElementException, IOException
+            </code></pre>
+            <pre><code data-trim="">
+                List&lt;URL> getFromDuckDuckGo(String search)
+                  throws IOException
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                static Try&lt;List&lt;URL>> getSearchResults(String searchString) {
+                    return Try.of(() -> getFromGoogle(searchString))
+                      .recover(NoSuchElementException.class, emptyList())
+                      .recover(NSAForbiddenException.class, emptyList())
+                      .orElse(() -> Try.of(() -> getFromDuckDuckGo(searchString)));
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Option (Scala)</h2>
+            <pre><code data-trim="">
+                sealed abstract class Option[+A]
+            </code></pre>
+            <!-- <h3>No information why something failed</h3>-->
+        </section>
+
+        <section>
+            <h2>Absence modeling</h2>
+            <pre><code data-trim="">
+                Person findOne(long id) throws NoSuchElementException;
+                Integer valueOf(String s) throws NumberFormatException;
+            </code></pre>
+            <h5 class="fragment">-></h5>
+            <pre class="fragment"><code data-trim="">
+                Try&lt;Person> findOne(long id)
+                Try&lt;Integer> valueOf(String s)
+            </code></pre>
+            <h5 class="fragment">-></h5>
+            <pre class="fragment"><code data-trim="">
+                Optional&lt;Person> findOne(long id);
+                Optional&lt;Integer> valueOf(String s);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Emulating Go's error handling with Tuples</h2>
+            <pre><code data-trim="">
+                Tuple2&lt;Person, ErrorObject> findOne(long id);
+            </code></pre>
+            <pre><code data-trim="">
+                Tuple2&lt;Person, ErrorObject> res = findOne(42);
+                if (res._2 != null) { ... }
+                if (res._1 != null) { ... }
+            </code></pre>
+            <h3>Omnipresent "Java" feel</h3>
+            <h3>Tuples are expected to hold non-nullable values</h3>
+        </section>
+
+        <section>
+            <h2>Either (Scala)</h2>
+            <h3>encapsulates exception handling</h3>
+            <pre><code data-trim="">
+                sealed abstract class Either[+A, +B]
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Disjoint union</h3>
+            <h3>Try&lt;T> is isomorphic to Either&lt;Throwable, T>​</h3>
+            <h3>By convention, Right is success and Left is failure</h3>
+            <h3>In Scala (and Vavr), Either is right-biased now*</h3>
+        </section>
+
+        <section>
+            <h2>Instantiation</h2>
+            <pre><code data-trim="">
+                Either.left("42");
+                Either.right(42);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>API</h2>
+            <pre><code data-trim="">
+                LeftProjection&lt;L, R> left()
+                RightProjection&lt;L, R> right()
+            </code></pre>
+            <pre><code data-trim="">
+                Either&lt;X, Y> bimap(
+                  Function<..., X> leftMapper,
+                  Function<..., Y> rightMapper)
+
+                U fold(Function<..., U> leftMapper, Function<..., U> rightMapper)
+
+                R getOrElseGet(Function&lt;? super L, ? extends R> other)
+
+                Either&lt;R, L> swap()
+            </code></pre>
+            <pre><code data-trim="">
+                L getLeft()  // do not use that unless you know what you are doing
+                L getRight() // yup, you guessed it.
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Error objects (Scala)</h2>
+            <pre><code data-trim="">
+                case class FetchError(msg: String, response: HttpResponse)
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Error objects (Java)</h2>
+            <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                public static class FetchError {
+                    private final String msg;
+                    private final HttpResponse response;
+
+                    public FetchError(String msg, HttpResponse response) {
+                        this.msg = msg;
+                        this.response = response;
+                    }
+
+                    public String getMsg() {
+                        return msg;
+                    }
+
+                    public HttpResponse getResponse() {
+                        return response;
+                    }
+
+                    @Override
+                    public String toString() {
+                        return "FetchError{" +
+                          "msg='" + msg + '\'' +
+                          ", response=" + response +
+                          '}';
+                    }
+
+                    @Override
+                    public boolean equals(Object o) {
+                        if (this == o) return true;
+                        if (o == null || getClass() != o.getClass()) return false;
+
+                        FetchError that = (FetchError) o;
+
+                        if (msg != null ? !msg.equals(that.msg) : that.msg != null) return false;
+                        return response != null ? response.equals(that.response) : that.response == null;
+                    }
+
+                    @Override
+                    public int hashCode() {
+                        int result = msg != null ? msg.hashCode() : 0;
+                        result = 31 * result + (response != null ? response.hashCode() : 0);
+                        return result;
+                    }
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Either in action</h2>
+            <pre><code data-trim="">
+                Try&lt;List&lt;URL>> getSearchResults(String searchString)
+
+                Either&lt;FetchError, List&lt;URL>> getSearchResults(String searchString)
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                Either&lt;FetchError, List&lt;URL>> result = getSearchResults("foo")
+            </code></pre>
+            <pre><code data-trim="">
+                result.right()
+                  .filter(...)
+                  .map(...)
+                  .getOrElse(Collections::emptyList);
+            </code></pre>
+            <pre><code data-trim="">
+                result.left()
+                  .map(FetchError::getMsg)
+                  .forEach(System.out::println);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Alternative Paths</h2>
+            <pre><code data-trim="">
+                static Either&lt;DnsUrl, URL> resolve(String url)
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Alternative Paths - Scala TailCalls</h2>
+            <pre><code data-trim="">
+                /** Returns either the next step of the tailcalling computation,
+                 * or the result if there are no more steps. */
+                @annotation.tailrec final def resume: Either[
+                  () => TailRec[A], A] = this match {
+                    case Done(a) => Right(a)
+                    case Call(k) => Left(k)
+                    case Cont(a, f) => a match {
+                      case Done(v) => f(v).resume
+                      case Call(k) => Left(() => k().flatMap(f))
+                      case Cont(b, g) => b.flatMap(x => g(x) flatMap f).resume
+                    }
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Key takeaways</h2>
+            <ul>
+                <li>Exceptions work best when you don't expect people to recover from them</li>
+                <li>Try can be used for representing computations that may throw an exception</li>
+                <li>Absence can be modelled with Option instead of NoSuchElementException</li>
+                <li>Either can be used for advanced scenarios involving custom error objects and modeling alternative paths</li>
+                <li>VAVR is the new Guava</li>
+            </ul>
+        </section>
+
+        <section>
+            <blockquote>
+                Using common sense is the ultimate Best Practice™.
+            </blockquote>
+
+            <pre class="fragment"><code data-trim="">
+                 static &lt;T> Tuple1&lt;Option&lt;Try&lt;T>>> Future(Future&lt;T> future)
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+            <img src="img/qr.png"/>
+            <br>
+            <img src="img/Yoda_SWSB__1_.png" width="400"/>
+            <h4>"To Try or not to Try, there is no throws"</h4>
+            <small>Yoda, ~41:3</small>
+        </section>
+
+        <section data-background-image="img/rateme.png"></section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 60,
+        progress: false,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+
+</body>
+</html>
