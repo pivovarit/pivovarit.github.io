@@ -61,7 +61,7 @@
 
         <section>
             <h1>Fantastic Frameworks</h1>
-            <h3>...and How to Avoid Them</h3>
+            <h3>...and How/Why to Avoid Them</h3>
             <br>
             <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
@@ -73,6 +73,20 @@
 	        <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
         </section>
 
+        <section></section>
+
+        <section>
+            <h2>Developers Smalltalk?</h2>
+
+            <img src="img/familiada.png" width="80%"/>
+            <h2 class="fragment">"What frameworks do you use?" - 100</h2>
+        </section>
+
+        <section>
+            <blockquote>"Regarding opiniated / unopiniated frameworks, I think they appeal to different types of developers. I now have 20 years of experience. In my first 5-8 years I loved frameworks like Spring. However, as I gained more experience, I felt I needed a framework's "opinion" less and less. Now I avoid them."</blockquote>
+            <small>https://www.infoq.com/news/2018/10/the-road-to-micronaut-1.0</small>
+        </section>
+
         <section>
             <img src="img/bosch.jpeg" width="70%" class="fragment"/>
             <div class="fragment">
@@ -82,15 +96,52 @@
         </section>
 
         <section>
-                <blockquote>"Regarding opiniated / unopiniated frameworks, I think they appeal to different types of developers. I now have 20 years of experience. In my first 5-8 years I loved frameworks like Spring. However, as I gained more experience, I felt I needed a framework's "opinion" less and less. Now I avoid them."</blockquote>
-                <small>https://www.infoq.com/news/2018/10/the-road-to-micronaut-1.0</small>
+            <h1>I. Invasive Frameworks</h1>
+            <div class="fragment">
+                <h2>What's an invasive framework?
+                </h2>
+                <ul>
+                </ul>
+            </div>
         </section>
 
         <section>
-            <h2>Developers Smalltalk?</h2>
+            <h1>II. Magic</h1>
+            <div class="fragment">
+                <h2>What's magic?
+                </h2>
+                <ul>
+                    <li>Runtime reflection</li>
+                    <li>Classpath scanning</li>
+                    <li>Thread-locals</li>
+                    <li>Runtime annotation-processing</li>
+                    <li>Proxies/AOP</li>
+                </ul>
+            </div>
+            <div class="fragment">
+                <img src="img/python.jpg" width="30%"/>
+                <br>
+                <small>"The Meaning of Life", Monty Python</small>
+            </div>
 
-            <img src="img/familiada.png"/>
+        </section>
 
+        <section>
+            *examples of bold promises from java world*
+        </section>
+
+        <section>
+            <h2>Meanwhile in Scala ecosystem...</h2>
+            <br>
+            <blockquote>
+                (...) It’s not a web-framework but rather a more general toolkit for providing and consuming HTTP-based services.
+            </blockquote>
+            <small>https://doc.akka.io/docs/akka-http/current/introduction.html#philosophy</small>
+        </section>
+
+        <section>
+            <img src="img/suffer.png"/>
+            <small>http://spiridonov.pro/2015/10/14/scala-implicit-hell/</small>
         </section>
 
         <section>
@@ -103,7 +154,7 @@
             <ul>
                 <li>Take time to learn and outdate quickly</li>
                 <li>Own you</li>
-                <li>Increase complexity/weight</li>
+                <li>Increase complexity/weight/bloat</li>
                 <li>Force you to keep up</li>
                 <li>Require expert help</li>
                 <li>Probably provide more than you need</li>
@@ -144,6 +195,210 @@
             <img src="img/disenchantment.jpg"/>
             <h4><a href="http://tonsky.me/blog/disenchantment/">http://tonsky.me/blog/disenchantment/</a></h4>
 
+        </section>
+
+        <!--field injection vs constructor injection-->
+
+        <section>
+            <h1>Spring</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Component;
+
+                @Component
+                public class FooController {
+
+                    @Autowired
+                    private FooService fooService;
+
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+                public static void main(String[] args) {
+                    new FooController(); // ???
+                }
+            </code></pre>
+            <ul>
+                <li>- Tight coupling with the DI framework</li>
+                <li>- Forces weak encapsulation</li>
+                <li>- Forces mutability</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Component;
+
+                @Component
+                public class FooController {
+
+                    private final FooService fooService;
+
+                    @Autowired
+                    public FooController(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+                public static void main(String[] args) {
+                    FooController fooController = new FooController(new FooService());
+                }
+            </code></pre>
+            <ul>
+                <li>- Tight coupling with the DI framework</li>
+                <li>+ Can be instantiated independently</li>
+                <li>+ Internals can be encapsulated</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                // import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Component;
+
+                @Component
+                public class FooController {
+
+                    private final FooService fooService;
+
+                    // @Autowired
+                    public FooController(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+                public static void main(String[] args) {
+                    FooController fooController = new FooController(new FooService());
+                }
+            </code></pre>
+            <ul>
+                <li>- Tight coupling with the DI framework</li>
+                <li>+ Can be instantiated independently</li>
+                <li>+ Internals can be encapsulated</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                public class FooController {
+
+                    private final FooService fooService;
+
+                    public FooController(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                public static void main(String[] args) {
+                    FooController fooController = new FooController(new FooService());
+                }
+
+            </code></pre>
+            <ul>
+                <li>...but where's the config?</li>
+            </ul>
+        </section>
+        <section>
+             <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+
+                @Configuration
+                public class FooConfiguration {
+
+                    @Bean
+                    FooService fooService() {
+                        return new FooService();
+                    }
+
+                    @Bean
+                    FooController fooController(FooService fooService) {
+                        return new FooController(fooService);
+                    }
+                }
+            </code></pre>
+            <ul>
+                <li>Domain code free of framework configuration</li>
+            </ul>
+        </section>
+
+        <section>
+             <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+
+                @Configuration
+                public class FooConfiguration {
+
+                    @Bean
+                    FooController fooController() {
+                        return new FooController(new FooService());
+                    }
+                }
+            </code></pre>
+            <ul>
+                <li>Domain code free of framework configuration</li>
+            </ul>
+        </section>
+
+        <section>
+             <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Component;
+
+                @Component
+                public class FooController {
+
+                    @Autowired
+                    private FooService fooService;
+
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <h2>Same framework both invasive and non-invasive</h2>
+            <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                public class FooController {
+
+                    private final FooService fooService;
+
+                    public FooController(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+
+                @Configuration
+                public class FooConfiguration {
+
+                    @Bean
+                    FooController fooController() {
+                        return new FooController(new FooService());
+                    }
+                }
+            </code></pre>
         </section>
 
         <section>
