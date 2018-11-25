@@ -228,8 +228,7 @@
 
         <section>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                import org.springframework.beans.factory.annotation.Autowired;
-                import org.springframework.stereotype.Component;
+                import org.springframework.*;
 
                 @Component
                 public class FooFacade {
@@ -237,6 +236,7 @@
                     @Autowired
                     private FooService fooService;
 
+                    @PostConstruct
                     public void foo() {
                         fooService.foo();
                     }
@@ -245,7 +245,7 @@
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
 
                 public static void main(String[] args) {
-                    new FooFacade(); // ???
+                    // ???
                 }
             </code></pre>
             <ul>
@@ -256,8 +256,7 @@
         </section>
         <section>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                import org.springframework.beans.factory.annotation.Autowired;
-                import org.springframework.stereotype.Component;
+                import org.springframework.*;
 
                 @Component
                 public class FooFacade {
@@ -269,6 +268,7 @@
                         this.fooService = fooService;
                     }
 
+                    @PostConstruct
                     public void foo() {
                         fooService.foo();
                     }
@@ -278,6 +278,7 @@
 
                 public static void main(String[] args) {
                     FooFacade fooFacade = new FooFacade(new FooService());
+                    fooFacade.foo();
                 }
             </code></pre>
             <ul>
@@ -288,8 +289,7 @@
         </section>
         <section>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                // import org.springframework.beans.factory.annotation.Autowired;
-                import org.springframework.stereotype.Component;
+                import org.springframework.*;
 
                 @Component
                 public class FooFacade {
@@ -301,6 +301,7 @@
                         this.fooService = fooService;
                     }
 
+                    @PostConstruct
                     public void foo() {
                         fooService.foo();
                     }
@@ -310,6 +311,7 @@
 
                 public static void main(String[] args) {
                     FooFacade fooFacade = new FooFacade(new FooService());
+                    fooFacade.foo();
                 }
             </code></pre>
             <ul>
@@ -326,6 +328,11 @@
 
                     public FooFacade(FooService fooService) {
                         this.fooService = fooService;
+                        foo();
+                    }
+
+                    void foo() {
+                        fooService.foo();
                     }
                 }
             </code></pre>
