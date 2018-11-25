@@ -209,7 +209,7 @@
                 import org.springframework.stereotype.Component;
 
                 @Component
-                public class FooController {
+                public class FooFacade {
 
                     @Autowired
                     private FooService fooService;
@@ -222,7 +222,7 @@
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
 
                 public static void main(String[] args) {
-                    new FooController(); // ???
+                    new FooFacade(); // ???
                 }
             </code></pre>
             <ul>
@@ -237,12 +237,12 @@
                 import org.springframework.stereotype.Component;
 
                 @Component
-                public class FooController {
+                public class FooFacade {
 
                     private final FooService fooService;
 
                     @Autowired
-                    public FooController(FooService fooService) {
+                    public FooFacade(FooService fooService) {
                         this.fooService = fooService;
                     }
 
@@ -254,7 +254,7 @@
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
 
                 public static void main(String[] args) {
-                    FooController fooController = new FooController(new FooService());
+                    FooFacade fooFacade = new FooFacade(new FooService());
                 }
             </code></pre>
             <ul>
@@ -269,12 +269,12 @@
                 import org.springframework.stereotype.Component;
 
                 @Component
-                public class FooController {
+                public class FooFacade {
 
                     private final FooService fooService;
 
                     // @Autowired
-                    public FooController(FooService fooService) {
+                    public FooFacade(FooService fooService) {
                         this.fooService = fooService;
                     }
 
@@ -286,7 +286,7 @@
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
 
                 public static void main(String[] args) {
-                    FooController fooController = new FooController(new FooService());
+                    FooFacade fooFacade = new FooFacade(new FooService());
                 }
             </code></pre>
             <ul>
@@ -297,18 +297,18 @@
         </section>
         <section>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                public class FooController {
+                public class FooFacade {
 
                     private final FooService fooService;
 
-                    public FooController(FooService fooService) {
+                    public FooFacade(FooService fooService) {
                         this.fooService = fooService;
                     }
                 }
             </code></pre>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
                 public static void main(String[] args) {
-                    FooController fooController = new FooController(new FooService());
+                    FooFacade fooFacade = new FooFacade(new FooService());
                 }
 
             </code></pre>
@@ -330,8 +330,8 @@
                     }
 
                     @Bean
-                    FooController fooController(FooService fooService) {
-                        return new FooController(fooService);
+                    FooFacade fooFacade(FooService fooService) {
+                        return new FooFacade(fooService);
                     }
                 }
             </code></pre>
@@ -349,8 +349,8 @@
                 public class FooConfiguration {
 
                     @Bean
-                    FooController fooController() {
-                        return new FooController(new FooService());
+                    FooFacade fooFacade() {
+                        return new FooFacade(new FooService());
                     }
                 }
             </code></pre>
@@ -365,7 +365,7 @@
                 import org.springframework.stereotype.Component;
 
                 @Component
-                public class FooController {
+                public class FooFacade {
 
                     @Autowired
                     private FooService fooService;
@@ -377,11 +377,11 @@
             </code></pre>
             <h2>Same framework both invasive and non-invasive</h2>
             <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
-                public class FooController {
+                public class FooFacade {
 
                     private final FooService fooService;
 
-                    public FooController(FooService fooService) {
+                    public FooFacade(FooService fooService) {
                         this.fooService = fooService;
                     }
                 }
@@ -394,10 +394,163 @@
                 public class FooConfiguration {
 
                     @Bean
-                    FooController fooController() {
-                        return new FooController(new FooService());
+                    FooFacade fooFacade() {
+                        return new FooFacade(new FooService());
                     }
                 }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Pragmatic Hexagonal/Clean Architecture</h2>
+        </section>
+
+        <section>
+            <h2>Axon RabbitMQ/Kafka Story</h2>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+            import org.axonframework.eventhandling.annotation.EventHandler;
+
+            public class SessionEventsHandler {
+
+                //...
+
+                @EventHandler
+                public void handle(SessionStartedEvent event) {
+                    // ...
+                }
+
+                @EventHandler
+                public void handle(SessionEndedEvent event) {
+                    // ...
+                }
+            }
+                 </code></pre>
+        </section>
+
+       <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            @FunctionalInterface
+            public interface EventHandler {
+                Map&lt;String, EventRoute> getRoutingConfig();
+            }
+            </code></pre>
+        </section>
+
+     <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            public class SessionEventsHandler implements EventHandler {
+
+                // ...
+
+                private void playerSessionStarted(SessionStartedEvent event) {
+                    // ...
+                }
+
+                private void playerSessionEnded(SessionEndedEvent event) {
+                    // ...
+                }
+
+                @Override
+                public Map&lt;String, EventRoute> getRoutingConfig() {
+                    return Map.ofEntries(
+                      route(
+                        SessionEndedEvent.ROUTING_KEY,
+                        SessionEndedEvent.class,
+                        this::playerSessionEnded),
+                      route(
+                        SessionStartedEvent.ROUTING_KEY,
+                        SessionStartedEvent.class,
+                        this::playerSessionStarted)
+                    );
+                }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+
+            public class RabbitEventStreamListener implements MessageListener {
+
+                // ...
+
+                private final Map&lt;String, EventRoute> eventRoutes;
+
+                @Override
+                public void onMessage(Message message) {
+                    var route = eventRoutes.get(message.getMessageProperties().getReceivedRoutingKey());
+                    if (null != route) {
+                        route.getEventHandler().accept(new DomainMessage(...);
+                    } else {
+                        log.warn("couldn't find a matching routing for routing key");
+                    }
+                }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+
+            @Configuration
+            @Profile("kafka-eventstream")
+            public class KafkaEventStreamConfiguration {
+
+                @Bean
+                public KafkaEventStreamListener kafkaEventStreamListener(
+                  List&lt;EventHandler> handlers, ObjectMapper mapper) {
+
+                    var eventRoutes = handlers.stream()
+                      .flatMap(h -> h.getRoutingConfig().entrySet().stream())
+                      .collect(
+                        groupingBy(Map.Entry::getKey,
+                          mapping(Map.Entry::getValue, toUnmodifiableSet())));
+
+                    return new KafkaEventStreamListener(mapper, eventRoutes);
+                }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+
+            @Configuration
+            @Profile("rabbit-eventstream")
+            public class RabbitEventStreamConfiguration {
+
+                @Bean
+                public Collection&lt;MessageListenerContainer> rabbitEventStreamListener(
+                  @Value("${rabbitmq.axon.exchange}") String axonExchangeName,
+                  @Value("${rabbitmq.axon.queuePrefix}") String axonQueuePrefix,
+                  AmqpAdmin amqpAdmin,
+                  RabbitListenerContainerFactory eventstreamRabbitListenerContainerFactory,
+                  List&lt;EventHandler> handlers,
+                  ConfigurableBeanFactory beanFactory,
+                  ObjectMapper mapper) {
+
+                    TopicExchange axonExchange = new TopicExchange(axonExchangeName);
+                    amqpAdmin.declareExchange(axonExchange);
+
+                    return handlers.stream()
+                      .map(handler -> buildRabbitListener(...))
+                      .collect(toUnmodifiableList());
+                }
+
+                private static MessageListenerContainer buildRabbitListener(
+                  EventHandler handler,
+                  ConfigurableBeanFactory beanFactory,
+                  ObjectMapper mapper,
+                  String queuePrefix,
+                  AmqpAdmin amqpAdmin,
+                  TopicExchange axonExchange,
+                  RabbitListenerContainerFactory eventstreamRabbitListenerContainerFactory) { ... }
+            }
             </code></pre>
         </section>
 
