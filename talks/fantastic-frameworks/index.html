@@ -183,7 +183,7 @@
                 <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
                 <small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small>
             </div>
-            <h3 class="fragment">So you spend time learning someone's abstraction and not basics</h3>
+            <h3 class="fragment">So you spend time learning someone's abstraction and not the underlying technologies</h3>
 
         </section>
 
@@ -260,7 +260,22 @@
                   .where(BOOK.PUBLISHED_IN.eq(1948))
                   .getSQL();
             </code></pre>
-                <h4><a href="https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf">https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf</a></h4>
+                <h4><a href="https://www.jooq.org">https://www.jooq.org</a></h4>
+            </div>
+        </section>
+
+        <section>
+            <h3>Kotlin Exposed</h3>
+            <div class="fragment">
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                fun findLastRentalId(customerId: CustomerId): RentalId? =
+                  RentalTable
+                    .select { RentalTable.customerId eq customerId.value }
+                    .orderBy(RentalTable.startDate, true)
+                    .map { RentalId(it[RentalTable.id]) }
+                    .firstOrNull()
+            </code></pre>
+                <h4><a href="https://github.com/JetBrains/Exposed">https://github.com/JetBrains/Exposed</a></h4>
             </div>
         </section>
 
@@ -315,12 +330,6 @@
                     private String name;
                 }
             </code></pre>
-        </section>
-
-        <section>
-            <img src="img/disenchantment.jpg"/>
-            <h4><a href="http://tonsky.me/blog/disenchantment/">http://tonsky.me/blog/disenchantment/</a></h4>
-
         </section>
 
         <!--field injection vs constructor injection-->
@@ -688,6 +697,17 @@
         </section>
 
         <section>
+            <h2>Ratpack</h2>
+            <br>
+            <blockquote>
+                Ratpack is a set of Java libraries for building scalable HTTP applications.<br><br>
+                It is a lean and powerful foundation, not an all-encompassing framework.
+            </blockquote>
+            <small>https://ratpack.io</small>
+            <small>https://www.youtube.com/watch?v=rqCHb9M3uiI</small>
+        </section>
+
+        <section>
             <blockquote>
                 Using common sense is the ultimate Best Practice™.
             </blockquote>
@@ -698,7 +718,11 @@
 
         </section>
 
+        <section>
+            <img src="img/disenchantment.jpg"/>
+            <h4><a href="http://tonsky.me/blog/disenchantment/">http://tonsky.me/blog/disenchantment/</a></h4>
 
+        </section>
 
         <section>
             <!--
