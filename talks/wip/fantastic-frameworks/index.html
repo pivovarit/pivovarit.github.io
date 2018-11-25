@@ -159,14 +159,15 @@
         <section>
             <h2>Frameworks</h2>
 
-            <ul>
-                <li>Take time to learn and outdate quickly</li>
-                <li>Own you</li>
-                <li>Increase complexity/weight/bloat</li>
-                <li>Force you to keep up</li>
-                <li>Require expert help</li>
-                <li>Probably provide more than you need</li>
-            </ul>
+            <blockquote>Puts work into a frame</blockquote>
+        </section>
+
+        <section>
+            <h2>Frameworks exist beyond software</h2>
+            <br>
+            <h3>Franchizes</h3>
+            <h3>Project Management Methodologies (for example, Scrum)</h3>
+
         </section>
 
         <section>
@@ -192,17 +193,69 @@
 
         <section>
             <h2>for example, ORM</h2>
-            <small>Hibernate</small>
+            <small>JPA/Hibernate</small>
+        </section>
+
+        <section>
+            <h2>Often seen: domain full of framework-specific annotations</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.pivovarit.domain;
+
+                import javax.persistence.Column;
+                import javax.persistence.Entity;
+
+                @Entity
+                public class PersistedUser {
+
+                    private Long id;
+
+                    @Column
+                    private String name;
+                }
+            </code></pre>
+            <h3 class="fragment">Not really a problem as long as the model is simple and graspable</h3>
         </section>
 
         <section>
             <img src="img/orm.png"/>
             <h4><a href="https://twitter.com/lukaseder/status/1051858654989836288">https://twitter.com/lukaseder/status/1051858654989836288</a></h4>
-
         </section>
 
         <section>
-            <pre><code data-trim="">
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                @OneToMany(@HowManyDBADoYouNeedToChangeALightBulb)
+                @OneToManyMore @AnyOne @AnyBody
+                @YouDoNotTalkAboutOneToMany // Fightclub, LOL
+                @TweakThisWithThat(
+                    tweak = {
+                        @TweakID(name = "id", preferredValue = 1839),
+                        @TweakID(name = "test", preferredValue = 839),
+                        @TweakID(name = "test.old", preferredValue = 34),
+                    },
+                    inCaseOf = {
+                        @ConditionalXMLFiltering(run = 5),
+                    }
+                )
+                @ManyToMany @Many @AnnotationsTotallyRock @DeclarativeProgrammingRules @NoMoreExplicitAlgorithms
+                @Fetch @FetchMany @FetchWithDiscriminator(name = "no_name")
+                @SeveralAndThenNothing @MaybeThisDoesSomething
+                @JoinTable(joinColumns = {
+                    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+                })
+                @DoesThisEvenMeanAnything @DoesAnyoneEvenReadThis
+                @PrefetchJoinWithDiscriminator @JustTrollingYouKnow @LOL
+                @IfJoiningAvoidHashJoins @ButUseHashJoinsWhenMoreThan(records = 1000)
+                @XmlDataTransformable @SpringPrefechAdapter
+                private Collection employees;
+            </code></pre>
+            <small>http://www.annotatiomania.com</small>
+        </section>
+
+        <section>
+            <h3>SQL is complete and self-sufficient, too bad that not type-safe...</h3>
+            <div class="fragment">
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
                 String sql = create
                   .select(BOOK.TITLE, AUTHOR.FIRST_NAME, AUTHOR.LAST_NAME)
                   .from(BOOK)
@@ -210,8 +263,61 @@
                   .where(BOOK.PUBLISHED_IN.eq(1948))
                   .getSQL();
             </code></pre>
-            <h4><a href="https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf">https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf</a></h4>
+                <h4><a href="https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf">https://www.jooq.org/doc/latest/manual-pdf/jOOQ-manual-3.11.pdf</a></h4>
+            </div>
+        </section>
 
+        <section>
+            But frameworks don't need to be that invasive as well, if you don't let them.
+        </section>
+
+        <section>
+            <h2>Let's look again</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.pivovarit.domain;
+
+                import javax.persistence.Column;
+                import javax.persistence.Entity;
+
+                @Entity
+                public class PersistedUser {
+
+                    private Long id;
+
+                    @Column
+                    private String name;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>ORM as plugin</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.casumo.domain;
+
+                public class User {
+                    private final Long id;
+                    private final String name;
+                }
+            </code></pre>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.casumo.persistence;
+
+                import javax.persistence.Column;
+                import javax.persistence.Entity;
+
+                @Entity
+                public class PersistedUser {
+
+                    private Long id;
+
+                    @Column
+                    private String name;
+                }
+            </code></pre>
         </section>
 
         <section>
@@ -610,15 +716,7 @@
             http://tomasp.net/blog/2015/library-frameworks/
             https://dzone.com/articles/discussion-recap-to-framework-or-not-to-framework
             https://dev.to/gypsydave5/why-you-shouldnt-use-a-web-framework-3g24
-            https://doc.akka.io/docs/akka-http/current/introduction.html#philosophy
-            https://www.slideshare.net/debasishg/qconny-12
-            https://twitter.com/progpaintings/status/723276501081190400
             Hexagonal Architecture, domain decoupled from infra, Hibernate, Lagom, Event sourcing
-            Axon routing
-
-
-
-
             -->
         </section>
 
