@@ -708,6 +708,36 @@
         </section>
 
         <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+            public class MyApp {
+
+                public static void main(String[] args) throws Exception {
+                  RatpackServer.start(s -> s
+                      .serverConfig(c -> c.baseDir(BaseDir.find()))
+                      .registry(Guice.registry(b -> b.module(MyModule.class)))
+                      .handlers(chain -> chain
+                          .path("foo", ctx -> ctx.render("from the foo handler"))
+                          .path("bar", ctx -> ctx.render("from the bar handler"))
+                          .prefix("nested", nested -> {
+                            nested.path(":var1/:var2?", ctx -> {
+                              Map&lt;String, String> pathTokens = ctx.getPathTokens();
+                              ctx.render(
+                                "from the nested handler, var1: " + pathTokens.get("var1") +
+                                  ", var2: " + pathTokens.get("var2")
+                              );
+                            });
+                          })
+                          .path("injected", MyHandler.class)
+                          .prefix("static", nested -> nested.fileSystem("assets/images", Chain::files))
+                          .all(ctx -> ctx.render("root handler!"))
+                      )
+                  );
+                }
+              }
+            </code></pre>
+        </section>
+
+        <section>
             <blockquote>
                 Using common sense is the ultimate Best Practice™.
             </blockquote>
