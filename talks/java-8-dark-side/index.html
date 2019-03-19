@@ -244,6 +244,15 @@
 
         <section>
             <pre><code data-trim="">
+                return getUsers().stream()
+                  .flatMap(u -> u.getAddresses().stream())
+                  .filter(address -> address.contains("1"))
+                  .findAny()
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
                 List&lt;String> addresses = new ArrayList<>();
                 for (User u : getUsers()) {
                     for (String address : u.getAddresses()) {
@@ -252,15 +261,6 @@
                         }
                     }
                 }
-            </code></pre>
-        </section>
-
-        <section>
-            <pre><code data-trim="">
-                return getUsers().stream()
-                  .flatMap(u -> u.getAddresses().stream())
-                  .filter(address -> address.contains("1"))
-                  .findAny()
             </code></pre>
         </section>
 
