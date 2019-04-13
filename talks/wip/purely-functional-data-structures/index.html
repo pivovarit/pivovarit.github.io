@@ -80,6 +80,22 @@
             <h1 class="fragment">Immutability</h1>
         </section>
 
+        <section>
+            <pre><code data-trim="">
+                Date date = new Date();
+
+                Set&lt;Date> dates = new HashSet<>();
+                dates.add(date);
+                date.setTime(42);
+
+                dates.contains(date); //false
+            </code></pre>
+        </section>
+
+        <section>
+            Is String immutable?
+        </section>
+
 
         <section>
             <blockquote>
