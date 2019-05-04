@@ -76,6 +76,34 @@
         </section>
 
         <section>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list) {
+                    list.add(this.state.get(0));
+                    list.add(SOME_CONSTANT);
+
+                    this.orderPizza();
+
+                    if (MOON.getLunarPhase() == FULL) list.remove(7);
+                    this.moreState.addAll(list);
+                    OtherClass.mutableStaticField = list;
+                    return list;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Keys to maintain</h3>
+        </section>
+
+
+
+        <section>
             <h3>Immutability helps in minimizing the number of invalid states</h3>
         </section>
 
@@ -129,8 +157,13 @@
         </section>
 
         <section>
-            Is String immutable?
+            <h2>Is String immutable?</h2>
+
+            <pre class="fragment"><code data-trim="">
+                // TODO insert some String mutations here
+            </code></pre>
         </section>
+
 
         <section>
             <blockquote>
