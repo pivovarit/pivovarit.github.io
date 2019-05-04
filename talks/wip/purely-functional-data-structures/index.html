@@ -76,6 +76,47 @@
         </section>
 
         <section>
+            <h3>Immutability helps in minimizing the number of invalid states</h3>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                User user = new User();
+
+                user.setName(...);
+                user.setSurname(...);
+                user.setPhone(...);
+                // ...
+                user.set(...);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                User user = new User(); // 2^0
+
+                user.setName(...);
+                user.setSurname(...);
+                user.setPhone(...);
+                // ...
+                user.set(...);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                User user = new User(); // 2^0
+
+                user.setName(...);      // 2^1
+                user.setSurname(...);   // 2^2
+                user.setPhone(...);     // 2^3
+                // ...
+                user.set(...);          // 2^N
+
+            </code></pre>
+        </section>
+
+        <section>
             <pre><code data-trim="">
                 Date date = new Date();
 
@@ -136,10 +177,11 @@
             <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
             <h2>Lead Software Engineer @ <a href="https://twitter.com/CasumoTech">CasumoTech</a></h2>
             <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
-            <br>
-            <h4><a href="https://pivovarit.github.io/talks/purely-functional-data-structures">https://pivovarit.github.io/talks/purely-functional-data-structures</a> </h4>
-            <img src="img/talk_qr.png"/>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+
+            <br>
+            <img src="img/talk_qr.png"/>
+            <h4><a href="https://pivovarit.github.io/talks/purely-functional-data-structures">https://pivovarit.github.io/talks/purely-functional-data-structures</a> </h4>
             <h2>Thank You!</h2>
         </section>
     </div>
