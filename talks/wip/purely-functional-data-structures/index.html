@@ -100,14 +100,6 @@
         </section>
 
         <section>
-            <h3>Keys to maintain</h3>
-        </section>
-
-
-
-
-
-        <section>
             <h3>Immutability helps in minimizing the number of invalid states</h3>
         </section>
 
@@ -240,14 +232,17 @@
             <h4>Persistent Data Structure?</h4>
             <br>
             <br>
-            <pre class="fragment"><code data-trim="">
+            <div class="fragment">
+                <pre><code data-trim="">
                 public List&lt;E> subList(int fromIndex, int toIndex) {
                     subListRangeCheck(fromIndex, toIndex, size);
                     return new SubList(this, 0, fromIndex, toIndex);
                 }
             </code></pre>
-            <br>
-            <h3>Underlying structure is mutable which can lead to sneaky bugs</h3>
+                <br>
+                <h3>Underlying structure is mutable which can lead to sneaky bugs</h3>
+            </div>
+
 
         </section>
 
