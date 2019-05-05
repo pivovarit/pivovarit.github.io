@@ -158,10 +158,24 @@
 
         <section>
             <h2>Is String immutable?</h2>
+            <h4 class="fragment">Is anything even immutable?</h4>
 
-            <pre class="fragment"><code data-trim="">
-                // TODO insert some String mutations here
+            <div class="fragment">
+            <pre ><code data-trim="">
+                public static void main(String[] args) throws Exception {
+                    VarHandle VALUE = MethodHandles.privateLookupIn(String.class, MethodHandles.lookup()).findVarHandle(String.class, "value", byte[].class);
+                    Object kotlin = VALUE.get("Kotlin");
+                    Object java = VALUE.get("Java!!");
+                    System.arraycopy(java, 0, kotlin, 0, Array.getLength(kotlin));
+
+                    System.out.println("Kotlin"); // Java!!
+                }
             </code></pre>
+            <small>
+                <a href="https://www.youtube.com/watch?v=uk08-H_GtwI">"Safely Shoot Yourself in the Foot with Java 9" by Heinz Kabutz</a>
+            </small>
+            </div>
+
         </section>
 
 
