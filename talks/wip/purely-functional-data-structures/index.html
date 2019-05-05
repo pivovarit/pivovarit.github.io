@@ -153,6 +153,41 @@
         </section>
 
         <section>
+            <pre><code data-trim="">
+                User user = new User(name, surname);
+            </code></pre>
+            <h3>Error space reduced drastically</h3>
+
+        </section>
+
+        <section>
+            <h2>Designing Immutable APIs</h2>
+
+            <div>
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods throw UnsupportedOperationException
+                      void    add(int index, E element) { throw uoe(); }
+                      boolean addAll(int index, Collection&lt;? extends E> c) { throw uoe(); }
+                      E       remove(int index) { throw uoe(); }
+                      void    replaceAll(UnaryOperator&lt;E> operator) { throw uoe(); }
+                      E       set(int index, E element) { throw uoe(); }
+                      void    sort(Comparator&lt;? super E> c) { throw uoe();
+                    }
+
+            </code></pre>
+            </div>
+            <h2 class="fragment">Not very user-friendly</h2>
+
+        </section>
+
+        <section>
+            TODO: Scala example
+        </section>
+
+        <section>
             <h2>Is String immutable?</h2>
             <h4 class="fragment">Is anything even immutable?</h4>
 
@@ -229,10 +264,9 @@
 
         <section>
             <h2>ArrayList</h2>
-            <h4>Persistent Data Structure?</h4>
             <br>
             <br>
-            <div class="fragment">
+            <div>
                 <pre><code data-trim="">
                 public List&lt;E> subList(int fromIndex, int toIndex) {
                     subListRangeCheck(fromIndex, toIndex, size);
