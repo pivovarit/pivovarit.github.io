@@ -185,6 +185,18 @@
         </section>
 
         <section>
+            <h2>String</h2>
+            <pre><code data-trim="">
+                public String substring(int beginIndex) {
+                     // ...
+                     return (beginIndex == 0)
+                       ? this
+                       : new String(value, beginIndex, subLen);
+                }
+            </code></pre>
+        </section>
+
+        <section>
             // TODO Naive Implementations (banker's queue)
         </section>
 
