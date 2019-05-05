@@ -185,7 +185,9 @@
         </section>
 
         <section>
-            <h2>String</h2>
+            <h1>String</h1>
+            <br>
+            <br>
             <pre><code data-trim="">
                 public String substring(int beginIndex) {
                      // ...
@@ -194,6 +196,21 @@
                        : new String(value, beginIndex, subLen);
                 }
             </code></pre>
+            <br>
+            <h3>Avoids new String allocation safely due to String's immutability</h3>
+            <h3>and reuses already existing String</h3>
+        </section>
+
+        <section>
+            <h2>ArrayList</h2>
+            <pre><code data-trim="">
+                public List&lt;E> subList(int fromIndex, int toIndex) {
+                    subListRangeCheck(fromIndex, toIndex, size);
+                    return new SubList(this, 0, fromIndex, toIndex);
+                }
+            </code></pre>
+
+            <h3></h3>
         </section>
 
         <section>
