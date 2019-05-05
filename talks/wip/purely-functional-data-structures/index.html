@@ -186,9 +186,10 @@
 
         <section>
             <h1>String</h1>
+            <h4>Persistent Data Structure?</h4>
             <br>
             <br>
-            <pre><code data-trim="">
+            <pre class="fragment"><code data-trim="">
                 public String substring(int beginIndex) {
                      // ...
                      return (beginIndex == 0)
@@ -196,21 +197,50 @@
                        : new String(value, beginIndex, subLen);
                 }
             </code></pre>
+            <pre class="fragment"><code data-trim="">
+                public String trim() {
+                    // ...
+                    return ((st > 0) || (len < value.length))
+                      ? substring(st, len)
+                      : this;
+                }
+            </code></pre>
             <br>
-            <h3>Avoids new String allocation safely due to String's immutability</h3>
-            <h3>and reuses already existing String</h3>
+            <h3 class="fragment">Avoids new String allocation safely due to String's immutability</h3>
         </section>
 
         <section>
             <h2>ArrayList</h2>
-            <pre><code data-trim="">
+            <h4>Persistent Data Structure?</h4>
+            <br>
+            <br>
+            <pre class="fragment"><code data-trim="">
                 public List&lt;E> subList(int fromIndex, int toIndex) {
                     subListRangeCheck(fromIndex, toIndex, size);
                     return new SubList(this, 0, fromIndex, toIndex);
                 }
             </code></pre>
+            <br>
+            <h3>Underlying structure is mutable which can lead to sneaky bugs</h3>
 
+        </section>
+
+        <section>
+            <h2>For example:</h2>
+            <br>
+            <br>
+            <pre><code data-trim="">
+                    List&lt;Integer> numbers = // ...
+                    List&lt;Integer> transformed = com.google.common.collect.Lists.transform(numbers, i -> i * 2);
+                    Collections.shuffle(numbers);
+                    List&lt;Integer> someNumbers = transformed.subList(0, 3);
+
+                    System.out.println(numbers);      // [2,3,4,5...]
+                    System.out.println(someNumbers);  // [4,6,8]
+            </code></pre>
+            <br>
             <h3></h3>
+
         </section>
 
         <section>
