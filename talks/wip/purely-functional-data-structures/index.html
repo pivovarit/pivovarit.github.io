@@ -326,41 +326,63 @@
             <br>
             <pre><code data-trim="">
                     List&lt;Integer> numbers = // ...
-                    List&lt;Integer> transformed = guava.Lists.transform(numbers, i -> i * 2);
-                    Collections.shuffle(numbers);
+                    List&lt;Integer> transformed = guava.Lists.transform(numbers, i -> i);
                     List&lt;Integer> someNumbers = transformed.subList(0, 3);
+                    Collections.shuffle(numbers);
 
                     System.out.println(numbers);      // [2,3,4,5...]
-                    System.out.println(someNumbers);  // [4,6,8]
+                    System.out.println(someNumbers);  // [2,3,4]
             </code></pre>
             <br>
             <h3></h3>
-
         </section>
 
         <section>
-            // TODO Collections API vs Immutability
-            // TODO undead unicorn
-            // TODO "solving concurrency"
-            // TODO cache locality issues
-            // TODO single contention point
-            // TODO lock-free GC issues
+            // TODO recursive LinkedList as persistent data structure
         </section>
 
         <section>
-            // TODO Persistent Collections
-            // faux-thread-safety
-            // String as persistent data structure
-        </section>
-
-
-        <section>
-            // TODO Naive Implementations (banker's queue)
+            // TODO time-complexity differences between append/prepend
         </section>
 
         <section>
-            // TODO Smart Implementations (tries, finger trees)
-            // cache locality issues
+            <h2>Persistent Collections are Thread-Safe</h2>
+        </section>
+
+        <section>
+            // TODO food into gold story
+        </section>
+
+        <section>
+            // TODO changes bubbling up to root
+        </section>
+
+        <section>
+            // TODO single contention point at the root
+        </section>
+
+        <section>
+            // TODO killing GC when doing lock-free
+        </section>
+
+        <section>
+            // TODO persistent queue, how to implement?
+        </section>
+
+        <section>
+            // TODO persistent queue with a linkedlist
+        </section>
+
+        <section>
+            // TODO persistent map with linkedlist
+        </section>
+
+        <section>
+            // TODO persistent queue with two lists (banker's queue)
+        </section>
+
+        <section>
+            // TODO smart persistent queue with finger tree
         </section>
 
         <section>
@@ -368,6 +390,14 @@
             <img src="img/finger-tree2.png" width="50%"/>
             <br>
             <small><a href="http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf">http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf</a></small>
+        </section>
+
+        <section>
+            // TODO cache locality issues
+        </section>
+
+        <section>
+            // TODO cache-aware implementations
         </section>
 
         <section>
