@@ -278,21 +278,6 @@
         </section>
 
         <section>
-            // TODO Collections API vs Immutability
-            // TODO undead unicorn
-            // TODO "solving concurrency"
-            // TODO cache locality issues
-            // TODO single contention point
-            // TODO lock-free GC issues
-        </section>
-
-        <section>
-            // TODO Persistent Collections
-            // faux-thread-safety
-            // String as persistent data structure
-        </section>
-
-        <section>
             <h1>String</h1>
             <h4>Persistent Data Structure?</h4>
             <br>
@@ -314,13 +299,15 @@
                 }
             </code></pre>
             <br>
-            <h3 class="fragment">Avoids new String allocation safely due to String's immutability</h3>
+            <h3 class="fragment">Avoids new String allocation and is safe</h3>
         </section>
 
         <section>
             <h2>ArrayList</h2>
             <br>
             <br>
+            <h3>Doesn't work with mutable structures</h3>
+
             <div>
                 <pre><code data-trim="">
                 public List&lt;E> subList(int fromIndex, int toIndex) {
@@ -329,10 +316,8 @@
                 }
             </code></pre>
                 <br>
-                <h3>Underlying structure is mutable which can lead to sneaky bugs</h3>
+                <h3>Source can be mutated which can lead to sneaky bugs</h3>
             </div>
-
-
         </section>
 
         <section>
@@ -341,7 +326,7 @@
             <br>
             <pre><code data-trim="">
                     List&lt;Integer> numbers = // ...
-                    List&lt;Integer> transformed = com.google.common.collect.Lists.transform(numbers, i -> i * 2);
+                    List&lt;Integer> transformed = guava.Lists.transform(numbers, i -> i * 2);
                     Collections.shuffle(numbers);
                     List&lt;Integer> someNumbers = transformed.subList(0, 3);
 
@@ -352,6 +337,22 @@
             <h3></h3>
 
         </section>
+
+        <section>
+            // TODO Collections API vs Immutability
+            // TODO undead unicorn
+            // TODO "solving concurrency"
+            // TODO cache locality issues
+            // TODO single contention point
+            // TODO lock-free GC issues
+        </section>
+
+        <section>
+            // TODO Persistent Collections
+            // faux-thread-safety
+            // String as persistent data structure
+        </section>
+
 
         <section>
             // TODO Naive Implementations (banker's queue)
