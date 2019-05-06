@@ -160,33 +160,6 @@
 
         </section>
 
-        <section>
-            <h2>Designing Immutable APIs</h2>
-
-            <div>
-                <pre><code data-trim="">
-                 static abstract class AbstractImmutableList&lt;E>
-                    extends AbstractImmutableCollection&lt;E> ... {
-
-                      // all mutating methods throw UnsupportedOperationException
-                      void    add(int index, E element) { throw uoe(); }
-                      boolean addAll(int index, Collection&lt;? extends E> c) { throw uoe(); }
-                      E       remove(int index) { throw uoe(); }
-                      void    replaceAll(UnaryOperator&lt;E> operator) { throw uoe(); }
-                      E       set(int index, E element) { throw uoe(); }
-                      void    sort(Comparator&lt;? super E> c) { throw uoe();
-                    }
-
-            </code></pre>
-            </div>
-            <h2 class="fragment">The easy and not-very user-friendly way</h2>
-            <h2 class="fragment">And it violates Liskov's Substitution Principle</h2>
-
-        </section>
-
-        <section>
-            TODO: Scala example
-        </section>
 
         <section>
             <h2>Is String immutable?</h2>
@@ -205,11 +178,77 @@
                     System.out.println("Kotlin"); // Java!!
                 }
             </code></pre>
-            <small>
-                <a href="https://www.youtube.com/watch?v=uk08-H_GtwI">"Safely Shoot Yourself in the Foot with Java 9" by Heinz Kabutz</a>
-            </small>
+                <small>
+                    <a href="https://www.youtube.com/watch?v=uk08-H_GtwI">"Safely Shoot Yourself in the Foot with Java 9" by Heinz Kabutz</a>
+                </small>
             </div>
 
+        </section>
+
+        <section>
+            <h2>Designing Immutable APIs</h2>
+            <h2 class="fragment">java.util.List</h2>
+
+            <div class="fragment">
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods throw UnsupportedOperationException
+                      void    add(...) { throw uoe(); }
+                      boolean addAll(...) { throw uoe(); }
+                      E       remove(...) { throw uoe(); }
+                      void    replaceAll(...) { throw uoe(); }
+                      E       set(...) { throw uoe(); }
+                      void    sort(...) { throw uoe();
+                    }
+
+            </code></pre>
+            </div>
+            <h2 class="fragment">The easy and not-very user-friendly way</h2>
+            <h2 class="fragment">And it violates Liskov's Substitution Principle</h2>
+
+        </section>
+
+        <section>
+            <h2>The key to user-friendly APIs of immutable structures are "mutating" methods returning a copy of the source</h2>
+            <div>
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods return a changed copy
+                      List&lt;E> add(...) { return copyWith(...) }
+                      List&lt;E> addAll(...) { return copyWithAll(...) }
+                      List&lt;E> remove(...) { return copyWithout(...) }
+                      List&lt;E> replaceAll(...) { return copyWithReplaced(...) }
+                      List&lt;E> set(...) { return copyAndSet(...) }
+                      List&lt;E> sort(...) { return copySorted(...) }
+                    }
+
+            </code></pre>
+            </div>
+        </section>
+
+        <section>
+            <div>
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods return a changed copy
+                      List&lt;E> add(...) { return copyWith(...) }
+                      List&lt;E> addAll(...) { return copyWithAll(...) }
+                      List&lt;E> remove(...) { return copyWithout(...) }
+                      List&lt;E> replaceAll(...) { return copyWithReplaced(...) }
+                      List&lt;E> set(...) { return copyAndSet(...) }
+                      List&lt;E> sort(...) { return copySorted(...) }
+                    }
+
+            </code></pre>
+            </div>
+            <h2 class="fragment">That's quite a lot of copying</h2>
+            <h2 class="fragment">... and iterating</h2>
         </section>
 
         <section>
@@ -222,12 +261,20 @@
         </section>
 
         <section>
-            <blockquote>
-                A data structure that supports multiple versions is called persistent while a data structure that allows only a single version at a time is called ephemeral
-            </blockquote>
-            <small>
-                "Making data structures persistent" - James R. Driscoll, Neil Sarnak, Daniel D. K. Sleator, and Robert E. Tarjan
-            </small>
+            <h1 class="fragment">Persistent Collections</h1>
+
+            <div class="fragment">
+                <blockquote>
+                    A data structure that supports multiple versions is called persistent while a data structure that allows only a single version at a time is called ephemeral
+                </blockquote>
+                <small>
+                    "Making data structures persistent" - James R. Driscoll, Neil Sarnak, Daniel D. K. Sleator, and Robert E. Tarjan
+                </small>
+            </div>
+        </section>
+
+        <section>
+            TODO insert Oleg's talk ref and undead unicorn here
         </section>
 
         <section>
