@@ -179,7 +179,8 @@
 
             </code></pre>
             </div>
-            <h2 class="fragment">Not very user-friendly</h2>
+            <h2 class="fragment">The easy and not-very user-friendly way</h2>
+            <h2 class="fragment">And it violates Liskov's Substitution Principle</h2>
 
         </section>
 
@@ -194,7 +195,9 @@
             <div class="fragment">
             <pre ><code data-trim="">
                 public static void main(String[] args) throws Exception {
-                    VarHandle VALUE = MethodHandles.privateLookupIn(String.class, MethodHandles.lookup()).findVarHandle(String.class, "value", byte[].class);
+                    VarHandle VALUE = MethodHandles.privateLookupIn(
+                      String.class, MethodHandles.lookup())
+                      .findVarHandle(String.class, "value", byte[].class);
                     Object kotlin = VALUE.get("Kotlin");
                     Object java = VALUE.get("Java!!");
                     System.arraycopy(java, 0, kotlin, 0, Array.getLength(kotlin));
