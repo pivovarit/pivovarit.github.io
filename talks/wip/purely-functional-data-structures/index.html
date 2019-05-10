@@ -160,6 +160,44 @@
 
         </section>
 
+        <section>
+
+            <blockquote>
+                An object is immutable when:<br><br>
+                <li>its state cannot be modified after construction</li>
+                <li>all its fields are final*</li>
+                <li>"this" reference doesn't escape during construction</li>
+            </blockquote>
+            <small>Java Concurrency in Practice, Brian Goetz</small>
+        </section>
+
+        <section>
+            <h2>Is String immutable?</h2>
+            <pre class="fragment"><code data-trim="">
+                final class String {
+                    // ...
+                    private final byte[] value;
+                    private final byte coder;
+                    private int hash;
+                    // ...
+                }
+            </code></pre>
+                <pre class="fragment"><code data-trim="">
+                public int hashCode() {
+                    int h = hash;
+                    if (h == 0 && value.length > 0) {
+                        hash = h = isLatin1() ? StringLatin1.hashCode(value)
+                          : StringUTF16.hashCode(value);
+                    }
+                    return h;
+                }
+            </code></pre>
+
+            <h3 class="fragment">It depends on the abstraction layer.</h3>
+
+
+        </section>
+
 
         <section>
             <h2>Is String immutable?</h2>
@@ -261,7 +299,7 @@
         </section>
 
         <section>
-            <h1 class="fragment">Persistent Collections</h1>
+            <h1 class="fragment">Persistent Data Structures</h1>
 
             <div class="fragment">
                 <blockquote>
@@ -431,9 +469,8 @@
             <h3><a href="https://arxiv.org/pdf/1709.06056.pdf">Cache-Aware Lock-Free Concurrent Hash Tries</a> </h3>
 
             <img src="img/ctries.png" width="30%"/>
+            <br>
             <small><a href="https://arxiv.org/pdf/1709.06056.pdf">https://arxiv.org/pdf/1709.06056.pdf</a></small>
-
-
         </section>
 
 
