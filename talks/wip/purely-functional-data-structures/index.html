@@ -422,13 +422,13 @@
         </section>
 
         <section>
-            <h2>What about append?</h2>
+            <h2>What about List#append?</h2>
             <pre class="fragment"><code data-trim="">
                     List&lt;T> append(T element) {
                         return foldRight(of(element), (x, xs) -> xs.prepend(x));
                     }
             </code></pre>
-            <h2 class="fragment">O(n)</h2>
+            <h3 class="fragment">O(n) - acceptable for lists since we have O(1) prepend</h3>
 
         </section>
 
