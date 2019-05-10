@@ -389,7 +389,36 @@
         </section>
 
         <section>
-            // TODO recursive LinkedList as persistent data structure
+            <h2>Persistent Singly-Linked List</h2>
+            <pre><code data-trim="">
+                    class Cons&lt;T> implements List&lt;T> {
+                        private final T head;
+                        private final List&lt;T> tail;
+                    }
+            </code></pre>
+            <pre><code data-trim="">
+                    class Nil&lt;T> implements List&lt;T> {
+                        private static final Nil&lt;?> INSTANCE = new Nil<>();
+                    }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Persistent Singly-Linked List</h2>
+            <pre><code data-trim="">
+                    List&lt;Integer> list1 = List.of(0);
+                    List&lt;Integer> list2 = list1.prepend(1);
+
+                    list1: List(0, NIL)
+                    list2: List(1, list1)
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                    List&lt;T> prepend(T element) {
+                        return new Cons<>(element, this);
+                    }
+            </code></pre>
+            <h2 class="fragment">Zero copy and constant time</h2>
+
         </section>
 
         <section>
