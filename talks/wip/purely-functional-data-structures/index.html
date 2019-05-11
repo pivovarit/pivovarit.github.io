@@ -406,7 +406,6 @@
         </section>
 
         <section>
-            <h2>Persistent Singly-Linked List</h2>
             <pre><code data-trim="">
                     List&lt;Integer> list1 = List.of(0);
                     List&lt;Integer> list2 = list1.prepend(1);
@@ -430,8 +429,8 @@
                         return foldRight(of(element), (x, xs) -> xs.prepend(x));
                     }
             </code></pre>
-            <h3 class="fragment">O(n) - acceptable for lists since we have O(1) prepend</h3>
-
+            <h3 class="fragment">O(n)</h3>
+            <h3 class="fragment">Acceptable for lists since we have O(1) prepend</h3>
         </section>
 
         <section>
