@@ -447,7 +447,35 @@
         </section>
 
         <section>
-             </section>
+            <h3>If we want to "share" an immutable structure, we need to manually control access to the root reference</h3>
+            <pre class="fragment"><code data-trim="">
+                private volatile Queue&lt;Integer> queue;
+
+                // ..
+                // contention!
+                private synchronized void add(Integer e) {
+                   queue = queue.enqueue(e);
+                }
+            </code></pre>
+            <h3 class="fragment">...or just use a dedicated mutable data structure</h3>
+
+        </section>
+
+        <section>
+            <h3>Same applies to any immutable structure</h3>
+            <pre><code data-trim="">
+                private volatile String text;
+
+                private synchronized void add(String postfix) {
+                    text = text + postfix;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>We could do the same lock-free with CAS but that would generate even more garbage and further stress GC</h3>
+        </section>
+
 
         <section>
             // TODO changes bubbling up to root
