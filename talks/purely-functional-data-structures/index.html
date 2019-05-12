@@ -315,15 +315,6 @@
         </section>
 
         <section>
-            <img src="img/clojure-trees.png" width="50%"/>
-            <br>
-            <small>
-                Rich Hickey’s “Clojure Concurrency”
-            </small>
-
-        </section>
-
-        <section>
             <img src="img/oleg.png" width="70%"/>
             <br>
             <small>
@@ -336,6 +327,16 @@
             <img src="img/undead.jpg" width="50%"/>
             <br>
             <small>Purely Functional Data Structures by Grzegorz Piwowarek</small>
+        </section>
+
+        <section>
+            <h3>Main idea: increase efficiency by minimizing copying and maximizing reuse</h3>
+            <img src="img/clojure-trees.png" width="50%"/>
+            <br>
+            <small>
+                Rich Hickey’s “Clojure Concurrency”
+            </small>
+
         </section>
 
         <section>
@@ -462,7 +463,7 @@
                 private volatile ImmutableList&lt;Integer> queue;
 
                 // ..
-                // contention!
+                // major contention here!
                 private synchronized void prepend(Integer e) {
                    queue = queue.prepend(e);
                 }
@@ -505,7 +506,7 @@
             <pre class="fragment"><code data-trim="">
                 class Cons&lt;T> implements List&lt;T>, Queue&lt;T> {
                     private final List&lt;T> front;
-                    private final List&lt;T> rear;
+                    private final List&lt;T> rear; // in opposite direction
                 }
             </code></pre>
         </section>
@@ -530,9 +531,6 @@
                     return new Queue<>(front, rear.prepend(element));
                 }
             </code></pre>
-        </section>
-
-        <section>
             <h3>Queue#dequeue</h3>
 
             <pre><code data-trim="">
@@ -542,6 +540,13 @@
                        : Option.some(Tuple.of(head(), tail()));
                  }
             </code></pre>
+            <h3 class="fragment">Amortized constant-time! (mostly O(1), rarely O(n))</h3>
+            <h3 class="fragment">List#reverse is performed infrequently</h3>
+            <h3 class="fragment">Most likely not acceptable for real-time systems</h3>
+        </section>
+
+        <section>
+            <h3>Can we do something... smarter?</h3>
         </section>
 
         <section>
