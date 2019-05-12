@@ -550,10 +550,31 @@
         </section>
 
         <section>
-            <h2>Finger Tree</h2>
+            <h2>2-3 Finger Tree</h2>
+
             <img src="img/finger-tree2.png" width="50%"/>
             <br>
             <small><a href="http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf">http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf</a></small>
+
+            <blockquote>
+                Finger is a structure providing efficient access to nodes of a tree near a distinguished location.
+            </blockquote>
+        </section>
+
+        <section>
+            <img src="img/finger-tree-0.png" width="80%"/>
+            <img src="img/finger-tree2.png" width="50%"/>
+        </section>
+
+        <section>
+            <h3>Persistent Map</h3>
+
+            <pre class="fragment"><code data-trim="">
+                class PMap&lt;K, V> implements Map&lt;K, V> {
+                    private final List&lt;Entry&lt;K, V> map;
+                }
+            </code></pre>
+            <h3 class="fragment">Works, but performs nowhere near HashMap</h3>
         </section>
 
         <section>
@@ -561,23 +582,7 @@
         </section>
 
         <section>
-            // TODO changes bubbling up to root
-        </section>
-
-        <section>
-            // TODO single contention point at the root
-        </section>
-
-        <section>
-            // TODO persistent map with linkedlist
-        </section>
-
-        <section>
-            // TODO smart persistent queue with finger tree
-        </section>
-
-        <section>
-            // TODO cache locality issues
+            <h3>Hash-Array Mapped Trie</h3>
         </section>
 
         <section>
@@ -590,12 +595,6 @@
 
         <section>
             // refs, paper, what to explore next
-        </section>
-
-        <section>
-            <h2>Java Libraries</h2>
-            <small><a href="http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf">http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf</a></small>
-
         </section>
 
         <section>
@@ -614,7 +613,6 @@
 <!--        <section>-->
 <!--            TODO-->
        <!-- https://medium.com/@johnmcclean/dysfunctional-programming-in-java-7-immutable-collections-83ba78aaf4dd
-        http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf
         http://andrew.gibiansky.com/blog/haskell/finger-trees/
         https://github.com/vavr-io/vavr/issues/569-->
 <!--            http://stackoverflow.com/questions/1990464/efficiency-of-purely-functional-programming-->
