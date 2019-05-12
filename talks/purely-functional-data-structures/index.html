@@ -310,7 +310,17 @@
                 <small>
                     "Making data structures persistent" - James R. Driscoll, Neil Sarnak, Daniel D. K. Sleator, and Robert E. Tarjan
                 </small>
-            </div>
+                <br>
+                </div>
+        </section>
+
+        <section>
+            <img src="img/clojure-trees.png" width="50%"/>
+            <br>
+            <small>
+                Rich Hickey’s “Clojure Concurrency”
+            </small>
+
         </section>
 
         <section>
@@ -458,6 +468,7 @@
                 }
             </code></pre>
             <h3 class="fragment">...or just use a dedicated mutable data structure</h3>
+            <h3 class="fragment">...or a different way of sharing updates</h3>
 
         </section>
 
@@ -476,6 +487,69 @@
             <h3>We could do the same lock-free with CAS but that would generate even more garbage and further stress GC</h3>
         </section>
 
+        <section>
+            <h3>Persistent Queue</h3>
+
+            <pre class="fragment"><code data-trim="">
+                class Cons&lt;T> implements List&lt;T>, Queue&lt;T> {
+                    private final List&lt;T> queue;
+                }
+            </code></pre>
+            <h3 class="fragment">Works great as a LIFO stack</h3>
+            <h3 class="fragment">Queues exhibit different access patterns than lists which makes this implementation highly inefficient</h3>
+        </section>
+
+        <section>
+            <h3>Efficient Persistent Queue</h3>
+
+            <pre class="fragment"><code data-trim="">
+                class Cons&lt;T> implements List&lt;T>, Queue&lt;T> {
+                    private final List&lt;T> front;
+                    private final List&lt;T> rear;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Queue#new</h3>
+
+            <pre><code data-trim="">
+                private Queue(List&lt;T> front, List&lt;T> rear) {
+                    this.front = front.isEmpty() ? rear.reverse() : front;
+                    this.rear = front.isEmpty() ? front : rear;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Queue#enqueue</h3>
+
+            <pre><code data-trim="">
+                @Override
+                public Queue&lt;T> enqueue(T element) {
+                    return new Queue<>(front, rear.prepend(element));
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Queue#dequeue</h3>
+
+            <pre><code data-trim="">
+                 public Option&lt;Tuple2&lt;T, Q>> dequeue() {
+                     return isEmpty()
+                       ? Option.none()
+                       : Option.some(Tuple.of(head(), tail()));
+                 }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Finger Tree</h2>
+            <img src="img/finger-tree2.png" width="50%"/>
+            <br>
+            <small><a href="http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf">http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf</a></small>
+        </section>
 
         <section>
             // TODO changes bubbling up to root
@@ -483,18 +557,6 @@
 
         <section>
             // TODO single contention point at the root
-        </section>
-
-        <section>
-            // TODO killing GC when doing lock-free
-        </section>
-
-        <section>
-            // TODO persistent queue, how to implement?
-        </section>
-
-        <section>
-            // TODO persistent queue with a linkedlist
         </section>
 
         <section>
@@ -507,13 +569,6 @@
 
         <section>
             // TODO smart persistent queue with finger tree
-        </section>
-
-        <section>
-            <h2>Finger Tree</h2>
-            <img src="img/finger-tree2.png" width="50%"/>
-            <br>
-            <small><a href="http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf">http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf</a></small>
         </section>
 
         <section>
