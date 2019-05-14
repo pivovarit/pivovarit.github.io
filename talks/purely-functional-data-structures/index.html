@@ -67,6 +67,24 @@
             <br>
             <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+
+            <aside class="notes">
+                Hello, world!
+            </aside>
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Lead Software Engineer @ <a href="https://twitter.com/CasumoTech">CasumoTech</a></h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+
+        </section>
+
+        <section>
+            <h2>Questions?</h2>
+            <h2>https://wall2.sli.do/event/kaaafqla </h2>
         </section>
 
         <section>
@@ -75,6 +93,13 @@
         <section>
             <img src="img/answer.gif" width="50%"/>
             <h1 class="fragment">Immutability</h1>
+
+            <aside class="notes">
+                Today, I'd like to tell you a story about immutability.
+
+                Nowadays, immutability and making things immutable became quite... fashionable. We started massively adopting functional programming ideas in Java.
+                However, I will not try to sell you the idea, but highlight the concerns that we need to keep in mind when implementing and using immutable data structures.
+            </aside>
         </section>
 
         <section>
@@ -226,12 +251,16 @@
         <section>
             <h2>Immutable objects are not always thread-safe</h2>
             <br>
+            <blockquote>
+                The state of a new collection instance may not have been "published" (in the sense of the Java Memory Model specification), so that an unsynchronized non-volatile read from another thread may observe the object in an invalid state
+            </blockquote>
             <h3><a href="https://github.com/scala/bug/issues/7838">https://github.com/scala/bug/issues/7838</a> </h3>
             <br>
             <blockquote>
                 If someone unsafely publishes new ::("", Nil) or Vector(1) to another thread,
                 <br>that thread could observe a inconsistent state (...)
             </blockquote>
+
         </section>
 
         <section>
