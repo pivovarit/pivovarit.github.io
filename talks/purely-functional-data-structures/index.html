@@ -600,7 +600,7 @@
 
         <section>
             <h3>Can we do something... smarter?</h3>
-
+            <br>
             <h3 class="fragment">We could use a tree</h3>
         </section>
 
@@ -612,6 +612,11 @@
         <section>
             <h3>Path copying</h3>
             <img src="img/after.png" width="80%"/>
+        </section>
+
+        <section>
+            <h3>Subtrees not on the path can be shared</h3>
+            <img src="img/s-sharing.png" width="80%"/>
         </section>
 
 
@@ -664,11 +669,20 @@
             <br>
             <h4>A trie for keys "A", "to", "tea", "ted", "ten", "i", "in", and "inn" with random values</h4>
             <small><a href="https://en.wikipedia.org/wiki/Trie">https://en.wikipedia.org/wiki/Trie</a> </small>
-
         </section>
 
         <section>
             <img src="img/lucky.png" width="40%"/>
+        </section>
+
+        <section>
+            <h3>Hash-Array Mapped Trie</h3>
+            <li>"A trie with hashes"</li>
+            <img src="img/hamt.png" width="60%"/>
+            <br>
+            <small><a href="https://idea.popcount.org/2012-07-25-introduction-to-hamt/">https://idea.popcount.org/2012-07-25-introduction-to-hamt/</a> </small>
+
+            <h3 class="fragment">Can be further optimized by using bitmaps</h3>
         </section>
 
         <section>
@@ -677,10 +691,6 @@
             <img src="img/ctries.png" width="30%"/>
             <br>
             <small><a href="https://arxiv.org/pdf/1709.06056.pdf">https://arxiv.org/pdf/1709.06056.pdf</a></small>
-        </section>
-
-        <section>
-            // TODO cache-aware implementations
         </section>
 
         <section>
@@ -695,6 +705,7 @@
             <li>Efficient immutability involves minimization of copying and maximization of structural sharing</li>
             <li>Simple beats complex</li>
             <li>Immutability is not a silver bullet</li>
+            <li>Trade-offs are everywhere</li>
         </section>
 
 
