@@ -186,6 +186,38 @@
         </section>
 
         <section>
+            <h3>Immutability enables multiple optimizations</h3>
+            <li>Objects can be memoized</li>
+            <li>Properties can be precomputed (hashes, sizes, etc)</li>
+        </section>
+
+        <section>
+            <h3>2 Element List (JDK9) </h3>
+
+            <pre><code data-trim="">
+                static final class List12&lt;E> extends AbstractImmutableList&lt;E> {
+
+                     @Stable
+                     private final E e0;
+
+                     @Stable
+                     private final E e1;
+                }
+            </code></pre>
+            <pre><code data-trim="">
+                     @Override
+                     public E get(int index) {
+                         if (index == 0) {
+                             return e0;
+                         } else if (index == 1 && e1 != null) {
+                             return e1;
+                         }
+                         throw outOfBounds(index);
+                     }
+            </code></pre>
+        </section>
+
+        <section>
 
             <blockquote>
                 An object is immutable when:<br><br>
