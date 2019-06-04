@@ -53,14 +53,14 @@
 <div class="reveal">
 
     <div class="footer">
-        <small><a href="http://twitter.com/pivovarit">@pivovarit</a></small>
+<!--        <small><a href="http://twitter.com/pivovarit">@pivovarit</a></small>-->
     </div>
 
     <!-- Any section element inside of this container is displayed as a slide -->
     <div class="slides">
 
         <section>
-            <h1>Pragmatic Functional Programming in Java</h1>
+            <h2>Pragmatic Functional Programming in Java</h2>
             <br>
             <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
@@ -76,14 +76,17 @@
         <section>
             <h2>What's Object-Oriented Programming?</h2>
             <h3>OOP Pillars:</h3>
-            <li>Encapsulation</li>
-            <li>Inheritance</li>
-            <li>Polymorphism</li>
-            <li>Abstraction</li>
+            <div class="fragment">
+                <li>Encapsulation</li>
+                <li>Inheritance</li>
+                <li>Polymorphism</li>
+                <li>Abstraction</li>
+            </div>
         </section>
 
         <section>
             <h2>What's Functional Programming?</h2>
+            <br>
             <h3>FP Pillars:</h3>
             <li>Immutability</li>
             <li>Purity (Referential Transparency)</li>
@@ -96,6 +99,7 @@
         <section>
             <h2>Immutability</h2>
             <blockquote>It's impossible to change object's state after its creation</blockquote>
+            <br>
             <li>Simplified Reasoning</li>
             <li>Thread Safety</li>
             <li>Reduced Number of Moving Parts and Invalid States</li>
@@ -104,6 +108,7 @@
         <section>
             <h2>Purity</h2>
             <blockquote>Functions/Methods are pure when they have no dependencies on internal/external state, and don't do any side-effects</blockquote>
+            <br>
             <li>Simplified Reasoning</li>
             <li>Simplified Testing</li>
             <li>Memoizable (cacheable)</li>
@@ -111,28 +116,89 @@
 
         <section>
             <h2>Type-Driven Development</h2>
-            <blockquote>TODO</blockquote>
-            <li>TODO</li>
-            <li>TODO</li>
-            <li>TODO</li>
+            <blockquote>A strong type system can not only prevent errors, but also guide you and provide feedback in your design process.</blockquote>
+            <br>
+            <li>Reduced Number of Moving Parts and Invalid States</li>
+            <li>Self-discoverable APIs</li>
+            <li>Fewer bugs</li>
         </section>
 
         <section>
             <h2>Function Composition</h2>
-            <blockquote>TODO</blockquote>
-            <li>TODO</li>
-            <li>TODO</li>
-            <li>TODO</li>
+            <br>
+            <li>Low-scale modularity</li>
         </section>
 
         <section>
             <h2>Equational Reasoning</h2>
-            <blockquote>TODO</blockquote>
-            <li>TODO</li>
-            <li>TODO</li>
-            <li>TODO</li>
+            <br>
+            <li>The power of substitution</li>
         </section>
 
+        <section>
+        </section>
+
+        <section>
+            <h2>What's wrong with Java?</h2>
+            <br>
+            <li class="fragment">Omnipresent mutability</li>
+            <li class="fragment">Omnipresent side-effects</li>
+            <li class="fragment">Spurious control flows (exceptions)</li>
+            <li class="fragment">Magic frameworks abusing reflection, proxies, classpath scanning, implicit configurations</li>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h3>Judging by its name and signature, what do you think that method does?</h3>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list) {
+                    list.add(this.state.get(0));
+                    list.add(SOME_CONSTANT);
+
+                    this.orderPizza();
+
+                    if (MOON.getLunarPhase() == FULL) list.remove(7);
+                    this.moreState.addAll(list);
+                    OtherClass.mutableStaticField = list;
+                    return list;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>A dirty and imperative program</h2>
+            <pre><code data-trim="">
+                     println("hello!")
+                     callSomeExternalService()
+
+                     program.unsafeRunSync()
+            </code></pre>
+        </section>
+
+
+        <section>
+            <h2>A "purely functional" declarative program</h2>
+             <pre><code data-trim="">
+                     val program: IO[Unit] = for {
+                       _ <- IO { println("hello!") }
+                       _ <- IO { callSomeExternalService }
+                     } yield ()
+
+                     program.unsafeRunSync()
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/monoid.jpg" width="50%"/>
+        </section>
 
         <section>
             <h2>Thank You!</h2>

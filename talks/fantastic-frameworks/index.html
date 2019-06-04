@@ -286,7 +286,29 @@
         </section>
 
         <section>
-            But frameworks don't need to be that invasive as well, if you don't let them.
+            <h3>JdbcTemplate</h3>
+            <div class="fragment">
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                @Override
+                public Collection&lt;Movie> findAll() {
+                    return jdbcTemplate.query("SELECT * FROM movie",
+                      JdbcTemplateMovieRepository::mapper);
+                }
+            </code></pre>
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                private static Movie mapper(ResultSet resultSet, int i)
+                  throws SQLException {
+                    return new Movie(new MovieId(
+                      resultSet.getLong("id")),
+                      resultSet.getString("title"),
+                      MovieType.valueOf(resultSet.getString("type")));
+                }
+            </code></pre>
+            </div>
+        </section>
+
+        <section>
+            But frameworks don't need to be that invasive as well, if you don't let them be.
         </section>
 
         <section>
