@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Pragmatic Functional Programming in Java</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+<!--        <small><a href="http://twitter.com/pivovarit">@pivovarit</a></small>-->
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+        <section>
+            <h2>Pragmatic Functional Programming in Java</h2>
+            <br>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+        </section>
+
+        <section>
+            <img class="fragment" src="img/survey.png"/>
+        </section>
+
+        <section>
+            <h3>What do you think FP is? Can you give a definition?</h3>
+        </section>
+
+        <section>
+            <h3>Why FP and OOP can't coexist?</h3>
+            <h4 class="fragment">Actually, they can :)</h4>
+        </section>
+
+        <section>
+
+            <blockquote>
+                Happy families are all alike; every unhappy family is unhappy in its own way. — Tolstoy: Anna Karenina
+            </blockquote>
+        </section>
+
+        <section>
+            <h2>What's Object-Oriented Programming?</h2>
+            <h3>OOP Pillars:</h3>
+            <div class="fragment">
+                <li>Encapsulation</li>
+                <li>Inheritance</li>
+                <li>Polymorphism</li>
+                <li>Abstraction</li>
+            </div>
+        </section>
+
+        <section>
+            <h2>What's Functional Programming?</h2>
+            <br>
+            <h3>FP Pillars:</h3>
+            <li>Immutability</li>
+            <li>Purity (Referential Transparency)</li>
+            <li>Type-Driven Development</li>
+            <li>Declarative Programming</li>
+            <li>Function Composition</li>
+            <li>Equational Reasoning</li>
+        </section>
+
+        <section>
+            <h2>Immutability</h2>
+            <blockquote>It's impossible to change object's state after its creation</blockquote>
+            <br>
+            <li>Simplified Reasoning</li>
+            <li>Thread Safety</li>
+            <li>Reduced Number of Moving Parts and Invalid States</li>
+        </section>
+
+        <section>
+            <h2>Purity</h2>
+            <blockquote>Functions/Methods are pure when they have no dependencies on internal/external state, and don't do any side-effects</blockquote>
+            <br>
+            <li>Simplified Reasoning</li>
+            <li>Simplified Testing</li>
+            <li>Memoizable (cacheable)</li>
+        </section>
+
+        <section>
+            <h2>Type-Driven Development</h2>
+            <blockquote>A strong type system can not only prevent errors, but also guide you and provide feedback in your design process.</blockquote>
+            <br>
+            <li>Reduced Number of Moving Parts and Invalid States</li>
+            <li>Self-discoverable APIs</li>
+            <li>Fewer bugs</li>
+        </section>
+
+        <section>
+            <h2>Function Composition</h2>
+            <br>
+            <li>Low-scale modularity</li>
+        </section>
+
+        <section>
+            <h2>Equational Reasoning</h2>
+            <br>
+            <li>The power of substitution</li>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h2>What's wrong with Java?</h2>
+            <br>
+            <li class="fragment">Omnipresent mutability</li>
+            <li class="fragment">Omnipresent side-effects</li>
+            <li class="fragment">Spurious control flows (exceptions)</li>
+            <li class="fragment">Magic frameworks abusing reflection, proxies, classpath scanning, implicit configurations</li>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h3>Judging by its name and signature, what do you think that method does?</h3>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list) {
+                    list.add(this.state.get(0));
+                    list.add(SOME_CONSTANT);
+
+                    this.orderPizza();
+
+                    if (MOON.getLunarPhase() == FULL) list.remove(7);
+                    this.moreState.addAll(list);
+                    OtherClass.mutableStaticField = list;
+                    return list;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Pure FP doesn't exist</h2>
+        </section>
+
+        <section>
+            <h2>A dirty and imperative program</h2>
+            <pre><code data-trim="">
+                     println("hello!")
+                     callSomeExternalService()
+
+                     program.unsafeRunSync()
+            </code></pre>
+        </section>
+
+
+        <section>
+            <h2>A "purely functional" declarative program</h2>
+             <pre><code data-trim="">
+                     val program: IO[Unit] = for {
+                       _ <- IO { println("hello!") }
+                       _ <- IO { callSomeExternalService }
+                     } yield ()
+
+                     program.unsafeRunSync()
+            </code></pre>
+        </section>
+
+
+        <section>
+            <h2>Pure FP doesn't exist</h2>
+            <h3 class="fragment">but we can get pretty close if keep the domain "clean"</h3>
+        </section>
+
+        <section>
+            <img src="img/monoid.jpg" width="50%"/>
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 45,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+
+</body>
+</html>
