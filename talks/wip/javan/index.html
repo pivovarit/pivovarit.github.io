@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
 
-    <title>Modularity vs Java</title>
+    <title>Java 9,10,11... N</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -60,91 +60,19 @@
     <div class="slides">
 
         <section>
-            <h2>Modularity vs Java</h2>
+            <h1>Java 9,10,11... N</h1>
             <br>
             <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
         </section>
 
         <section>
-            <h2 class="fragment">What's a Module?</h2>
-            <h2 class="fragment">Why do you think it's needed?</h2>
+            <h2>Project Valhalla</h2>
+            <h2>Project Amber</h2>
+            <h2>Project Loom</h2>
+            <h2>Project Panama</h2>
         </section>
 
-        <section>
-            <h2 class="fragment">We're good at high-level encapsulation (Service-level)</h2>
-            <h2 class="fragment">We're good at low-level encapsulation (Class-level)</h2>
-            <h2 class="fragment">And what about everything inbetween?</h2>
-        </section>
-
-        <section>
-            <img src="img/spaghetti.jpg" width="30%"/>
-        </section>
-
-
-        <section>
-            <h2>rt.jar</h2>
-            <h4 class="fragment">All runtime Java libraries</h4>
-            <img class="fragment" src="img/spaghetti-ugly.png" width="60%"/>
-        </section>
-
-        <section>
-            <h2 class="fragment">What happens if a JAR is missing on classpath?</h2>
-            <h2 class="fragment">What if it's duplicated?</h2>
-            <h2 class="fragment">What if there are multiple versions of the same jar?</h2>
-            <h2 class="fragment">What are the visibility restrictions between jars?</h2>
-        </section>
-
-        <section>
-            <h2>JAR HELL</h2>
-            <li>Lack of explicit dependencies</li>
-            <li>Transitive Dependencies</li>
-            <li>Random Class Resolution (shadowing)</li>
-            <li>Version Conflicts (NoClassDefFoundError)</li>
-        </section>
-
-        <section>
-            <h2>Modularity Visualized</h2>
-            <h4>(poorly)</h4>
-            <div class="fragment">
-                <img src="img/ravioli.png" width="40%"/>
-                <br>
-                <small><a href="https://www.marthastewart.com/1154578/cheese-ravioli-brown-butter-and-sage">https://www.marthastewart.com/1154578/cheese-ravioli-brown-butter-and-sage</a>
-                </small>
-
-            </div>
-        </section>
-
-        <section>
-            <h2>Benefits of Modularization</h2>
-            <li>String Encapsulation (hidden implementation details)</li>
-            <li>Clear Interfaces/APIs</li>
-            <li>Explicit Dependencies</li>
-            <li>Divide and Conquer</li>
-        </section>
-
-        <section>
-            <h2>Migrating beyond JDK 8 let's us benefit from modularity even if we don't use them explicitly</h2>
-            <br>
-            <h2 class="fragment">Why?</h2>
-        </section>
-
-        <section>
-            <img src="img/before.png" width="50%"/>
-            <img src="img/after.png" width="50%"/>
-            <br>
-            <small><a href="https://twitter.com/mreinhold/status/882644292036026368">https://twitter.com/mreinhold/status/882644292036026368</a></small>
-        </section>
-
-        <section>
-            <h2>Looks good, right?</h2>
-            <h2 class="fragment">Let's see how it feels like...</h2>
-        </section>
-
-        <section>
-            <h2>Thank You!</h2>
-            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
-        </section>
     </div>
 </div>
 
