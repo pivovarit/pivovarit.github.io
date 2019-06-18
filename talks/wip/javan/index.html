@@ -145,21 +145,44 @@
             <h2>JEP 254: Compact Strings</h2>
             <br>
             <blockquote>Adopt a more space-efficient internal representation for strings.</blockquote>
+
+            <pre class="fragment"><code data-trim="">
+                public final class String
+                  implements ... {
+
+                    private final byte[] value; // instead of char[]
+                }
+            </code></pre>
         </section>
         <section>
             <h2>JEP 259: Stack-Walking API</h2>
             <br>
             <blockquote>Define an efficient standard API for stack walking that allows easy filtering of, and lazy access to, the information in stack traces.</blockquote>
+
+            <pre><code data-trim="">
+                StackWalker instance = StackWalker.getInstance();
+            </code></pre>
+
         </section>
         <section>
             <h2>JEP 269: Convenience Factory Methods for Collections</h2>
             <br>
             <blockquote>Define library APIs to make it convenient to create instances of collections and maps with small numbers of elements, so as to ease the pain of not having collection literals in the Java programming language.</blockquote>
+
+            <pre><code data-trim="">
+                List.of(1, 2, 3);
+                Set.of(1, 2, 3);
+                Map.of("key", 42);
+            </code></pre>
         </section>
         <section>
             <h2>JEP 271: Unified GC Logging</h2>
             <br>
             <blockquote>Reimplement GC logging using the unified JVM logging framework introduced in JEP 158.</blockquote>
+
+            <img width="50%" src="img/unified-logging-diagram.png"/>
+            <br>
+            <small><a href="https://blog.codefx.org/java/unified-logging-with-the-xlog-option/">https://blog.codefx.org/java/unified-logging-with-the-xlog-option/</a> </small>
         </section>
         <section>
             <h2>JEP 274: Enhanced Method Handles</h2>
