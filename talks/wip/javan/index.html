@@ -217,6 +217,11 @@
             <h2>JEP 286: Local-Variable Type Inference</h2>
             <br>
             <blockquote>Enhance the Java Language to extend type inference to declarations of local variables with initializers.</blockquote>
+            <pre><code data-trim="">
+            var foo = new User("Jan");
+            </code></pre>
+
+
         </section>
 
         <section>
@@ -290,6 +295,10 @@
             <h2>JEP 328: Flight Recorder</h2>
             <br>
             <blockquote>Provide a low-overhead data collection framework for troubleshooting Java applications and the HotSpot JVM.</blockquote>
+
+            <pre><code data-trim="">
+                -XX:+FlightRecorder -XX:FlightRecorderOptions=stackdepth=128
+              </code></pre>
         </section>
 
 
@@ -335,6 +344,16 @@
             <h2>JEP 325: Switch Expressions (Preview)</h2>
             <br>
             <blockquote>Extend the switch statement so that it can be used as either a statement or an expression, and that both forms can use either a "traditional" or "simplified" scoping and control flow behavior.</blockquote>
+            <br>
+            <pre><code data-trim="">
+            switch (day) {
+                case MONDAY, FRIDAY, SUNDAY -> System.out.println(6);
+                case TUESDAY                -> System.out.println(7);
+                case THURSDAY, SATURDAY     -> System.out.println(8);
+                case WEDNESDAY              -> System.out.println(9);
+            }
+            </code></pre>
+
         </section>
 
 
