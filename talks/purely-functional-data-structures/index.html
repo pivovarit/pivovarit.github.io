@@ -419,22 +419,15 @@
             <br>
             <pre class="fragment"><code data-trim="">
                 public String substring(int beginIndex) {
-                     // ...
+                     // ... JDK 8
                      return (beginIndex == 0)
                        ? this
                        : new String(value, beginIndex, subLen);
                 }
             </code></pre>
-            <pre class="fragment"><code data-trim="">
-                public String trim() {
-                    // ...
-                    return ((st > 0) || (len < value.length))
-                      ? substring(st, len)
-                      : this;
-                }
-            </code></pre>
             <br>
             <h3 class="fragment">Avoids new String allocation and is safe</h3>
+            <h3 class="fragment">...but could create memory leaks so that String's constructor does the copy anyway</h3>
         </section>
 
         <section>
