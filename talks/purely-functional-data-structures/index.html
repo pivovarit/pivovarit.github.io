@@ -155,13 +155,13 @@
 
         <section>
             <pre><code data-trim="">
-                Date date = new Date();
+                User user = new User();
 
-                Set&lt;Date> dates = new HashSet<>();
-                dates.add(date);
-                date.setTime(42);
+                Set&lt;Users> users = new HashSet<>();
+                users.add(user);
+                user.setName(42);
 
-                dates.contains(date); //false
+                users.contains(user); //false
             </code></pre>
         </section>
 
@@ -239,14 +239,10 @@
             </code></pre>
 
             <h3 class="fragment">It depends.</h3>
-
-
         </section>
 
-
         <section>
-            <h2>Is String immutable?</h2>
-            <h4 class="fragment">Does immutable even exist?</h4>
+            <h2>Does immutable even exist?</h2>
 
             <div class="fragment">
             <pre ><code data-trim="">
@@ -265,8 +261,9 @@
                     <a href="https://www.youtube.com/watch?v=uk08-H_GtwI">"Safely Shoot Yourself in the Foot with Java 9" by Heinz Kabutz</a>
                 </small>
             </div>
-
         </section>
+
+        <section></section>
 
         <section>
             <h2>Immutable objects are not always thread-safe</h2>
@@ -285,6 +282,8 @@
             </blockquote>
 
         </section>
+
+        <section></section>
 
         <section>
             <h2>Designing Immutable APIs</h2>
@@ -426,8 +425,8 @@
                 }
             </code></pre>
             <br>
-            <h3 class="fragment">Avoids new String allocation and is safe</h3>
-            <h3 class="fragment">...but could create memory leaks so that String's constructor does the copy anyway</h3>
+            <h3 class="fragment">Could avoid a new String allocation and would be perfectly safe</h3>
+            <h3 class="fragment">...but could create memory leaks so String's constructor does the copy anyway</h3>
         </section>
 
         <section>
@@ -475,39 +474,31 @@
                         private final List&lt;T> tail;
                     }
             </code></pre>
-            <pre><code data-trim="">
-                    class Nil&lt;T> implements List&lt;T> {
-                        private static final Nil&lt;?> INSTANCE = new Nil<>();
-                    }
-            </code></pre>
-        </section>
-
-        <section>
-            <pre><code data-trim="">
-                    List&lt;Integer> list1 = List.of(0);
-                    List&lt;Integer> list2 = list1.prepend(1);
-
-                    list1: List(0, NIL)
-                    list2: List(1, list1)
-            </code></pre>
             <pre class="fragment"><code data-trim="">
-                    List&lt;T> prepend(T element) {
+                    List&lt;T> add(T element) {
                         return new Cons<>(element, this);
                     }
             </code></pre>
-            <h2 class="fragment">Zero copy and constant time</h2>
+            <h3 class="fragment">Zero copy and constant time</h3>
+        </section>
+
+        <section>
+
+            <img src="img/struct-sharing-list.png" width="80%"/>
+            <br>
+            <small>"Purely Functional Data Structures in Scala", Vladimir Kostyukov</small>
 
         </section>
 
         <section>
-            <h2>What about List#append?</h2>
+            <h2>What about List#prepend?</h2>
             <pre class="fragment"><code data-trim="">
-                    List&lt;T> append(T element) {
+                    List&lt;T> prepend(T element) {
                         return foldRight(of(element), (x, xs) -> xs.prepend(x));
                     }
             </code></pre>
             <h3 class="fragment">O(n)</h3>
-            <h3 class="fragment">Acceptable for lists since we have O(1) prepend</h3>
+            <h3 class="fragment">Acceptable for lists since we have O(1) additions</h3>
         </section>
 
         <section></section>
@@ -672,8 +663,14 @@
         <section>
             <h3>...if it's so smart, why does Scala use Banker's Queue?</h3>
             <br>
-            <h3 class="fragment">Insertions/removals are cheaper</h3>
             <h3 class="fragment">It's much more cache-friendly*</h3>
+            <div class="fragment">
+                <img src="img/linkedlist.png" width="50%"/>
+                <br>
+                <small><a href="https://computer-fundamentals.com/difference-between-linked-list-and-array/">https://computer-fundamentals.com/difference-between-linked-list-and-array/</a></small>
+            </div>
+
+
         </section>
 
         <section>
