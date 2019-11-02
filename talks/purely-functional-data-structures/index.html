@@ -472,7 +472,7 @@
                     }
             </code></pre>
             <pre class="fragment"><code data-trim="">
-                    List&lt;T> add(T element) {
+                    List&lt;T> prepend(T element) {
                         return new Cons<>(element, this);
                     }
             </code></pre>
@@ -488,9 +488,9 @@
         </section>
 
         <section>
-            <h2>What about List#prepend?</h2>
+            <h2>What about List#append?</h2>
             <pre class="fragment"><code data-trim="">
-                    List&lt;T> prepend(T element) {
+                    List&lt;T> append(T element) {
                         return foldRight(of(element), (x, xs) -> xs.prepend(x));
                     }
             </code></pre>
