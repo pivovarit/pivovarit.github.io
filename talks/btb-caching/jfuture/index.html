@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Purely Dysfunctional Data Structures</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+        <small><a href="http://twitter.com/pivovarit">Twitter: @pivovarit</a></small>
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+        <section>
+            <h1>Purely Dysfunctional Data Structures</h1>
+            <h4>Practical Side of Implementing Immutable Structures</h4>
+            <br>
+            <br>
+            <br>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+
+            <aside class="notes">
+                Hello, world!
+            </aside>
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Senior Software Engineer @ Hazelcast</h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+
+        </section>
+
+        <section>
+            <img src="img/answer.gif" width="50%"/>
+            <h1 class="fragment">Immutability</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                List&lt;String> transform(List&lt;String> list) {
+                    list.add(this.state.get(0));
+                    list.add(SOME_CONSTANT);
+
+                    this.orderPizza();
+
+                    if (MOON.getLunarPhase() == FULL) list.remove(7);
+                    this.moreState.addAll(list);
+                    OtherClass.mutableStaticField = list;
+                    return list;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Immutability helps in minimizing the number of invalid states</h3>
+        </section>
+
+        <section>
+            <h3>Immutability enables multiple optimizations</h3>
+            <li>Objects can be memoized</li>
+            <li>Properties can be precomputed (hashes, sizes, etc)</li>
+        </section>
+
+        <section>
+            <h3>2 Element List (JDK9) </h3>
+
+            <pre><code data-trim="">
+                static final class List12&lt;E> extends AbstractImmutableList&lt;E> {
+
+                     @Stable
+                     private final E e0;
+
+                     @Stable
+                     private final E e1;
+                }
+            </code></pre>
+            <pre><code data-trim="">
+                     @Override
+                     public E get(int index) {
+                         if (index == 0) {
+                             return e0;
+                         } else if (index == 1 && e1 != null) {
+                             return e1;
+                         }
+                         throw outOfBounds(index);
+                     }
+            </code></pre>
+        </section>
+
+        <section>
+
+            <blockquote>
+                An object is immutable when:<br><br>
+                <li>its state cannot be modified after construction</li>
+                <li>all its fields are final*</li>
+                <li>"this" reference doesn't escape during construction</li>
+            </blockquote>
+            <small>Java Concurrency in Practice, Brian Goetz</small>
+        </section>
+
+        <section>
+            <h2>Is String immutable?</h2>
+            <pre class="fragment"><code data-trim="">
+                final class String {
+                    // ...
+                    private final byte[] value;
+                    private final byte coder;
+                    private int hash;
+                    // ...
+                }
+            </code></pre>
+                <pre class="fragment"><code data-trim="">
+                public int hashCode() {
+                    int h = hash;
+                    if (h == 0 && value.length > 0) {
+                        hash = h = isLatin1() ? StringLatin1.hashCode(value)
+                          : StringUTF16.hashCode(value);
+                    }
+                    return h;
+                }
+            </code></pre>
+
+            <h3 class="fragment">It depends.</h3>
+        </section>
+
+        <section>
+            <h2>Does immutable even exist?</h2>
+
+            <div class="fragment">
+            <pre ><code data-trim="">
+                public static void main(String[] args) throws Exception {
+                    VarHandle VALUE = MethodHandles.privateLookupIn(
+                      String.class, MethodHandles.lookup())
+                      .findVarHandle(String.class, "value", byte[].class);
+                    Object kotlin = VALUE.get("Kotlin");
+                    Object java = VALUE.get("Java!!");
+                    System.arraycopy(java, 0, kotlin, 0, Array.getLength(kotlin));
+
+                    System.out.println("Kotlin"); // Java!!
+                }
+            </code></pre>
+                <small>
+                    <a href="https://www.youtube.com/watch?v=uk08-H_GtwI">"Safely Shoot Yourself in the Foot with Java 9" by Heinz Kabutz</a>
+                </small>
+            </div>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Immutable objects are not always thread-safe</h2>
+            <br>
+            <blockquote>
+                The state of a new collection instance may not have been "published" (in the sense of the Java Memory Model specification), so that an unsynchronized non-volatile read from another thread may observe the object in an invalid state
+            </blockquote>
+        </section>
+
+        <section>
+            <h3><a href="https://github.com/scala/bug/issues/7838">https://github.com/scala/bug/issues/7838</a> </h3>
+            <br>
+            <blockquote>
+                If someone unsafely publishes new ::("", Nil) or Vector(1) to another thread,
+                <br>that thread could observe a inconsistent state (...)
+            </blockquote>
+
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Designing Immutable APIs</h2>
+            <h2 class="fragment">java.util.List</h2>
+
+            <div class="fragment">
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods throw UnsupportedOperationException
+                      void    add(...) { throw uoe(); }
+                      boolean addAll(...) { throw uoe(); }
+                      E       remove(...) { throw uoe(); }
+                      void    replaceAll(...) { throw uoe(); }
+                      E       set(...) { throw uoe(); }
+                      void    sort(...) { throw uoe();
+                    }
+
+            </code></pre>
+            </div>
+            <h2 class="fragment">The easy and not-very user-friendly way</h2>
+            <h2 class="fragment">And it violates Liskov's Substitution Principle</h2>
+
+        </section>
+
+        <section>
+            <h2>The key to user-friendly APIs of immutable structures are "mutating" methods returning a copy of the source</h2>
+            <div>
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods return a changed copy
+                      List&lt;E> add(...) { return copyWith(...) }
+                      List&lt;E> addAll(...) { return copyWithAll(...) }
+                      List&lt;E> remove(...) { return copyWithout(...) }
+                      List&lt;E> replaceAll(...) { return copyWithReplaced(...) }
+                      List&lt;E> set(...) { return copyAndSet(...) }
+                      List&lt;E> sort(...) { return copySorted(...) }
+                    }
+
+            </code></pre>
+            </div>
+        </section>
+
+        <section>
+            <div>
+                <pre><code data-trim="">
+                 static abstract class AbstractImmutableList&lt;E>
+                    extends AbstractImmutableCollection&lt;E> ... {
+
+                      // all mutating methods return a changed copy
+                      List&lt;E> add(...) { return copyWith(...) }
+                      List&lt;E> addAll(...) { return copyWithAll(...) }
+                      List&lt;E> remove(...) { return copyWithout(...) }
+                      List&lt;E> replaceAll(...) { return copyWithReplaced(...) }
+                      List&lt;E> set(...) { return copyAndSet(...) }
+                      List&lt;E> sort(...) { return copySorted(...) }
+                    }
+
+            </code></pre>
+            </div>
+            <h2 class="fragment">That's quite a lot of copying</h2>
+            <h2 class="fragment">... and iterating</h2>
+        </section>
+
+        <section>
+            <blockquote>
+                "Haskell computations produce a lot of memory garbage - much more than conventional imperative languages."
+                <br> (...)
+                <br> "It's not uncommon to produce 1gb of data per second ..."
+            </blockquote>
+            <small>https://wiki.haskell.org/GHC/Memory_Management</small>
+        </section>
+
+        <section>
+            <h1 class="fragment">Persistent Data Structures</h1>
+
+            <div class="fragment">
+                <blockquote>
+                    A data structure that supports multiple versions is called persistent
+                    <br><br>
+                    while a data structure that allows only a single version at a time is called ephemeral
+                </blockquote>
+                <small>
+                    "Making data structures persistent" - James R. Driscoll, Neil Sarnak, Daniel D. K. Sleator, and Robert E. Tarjan
+                </small>
+                <br>
+                </div>
+        </section>
+
+        <section>
+            <li>Brute-force copying</li>
+            <li>Fat nodes (think in-memory event-sourcing for data structures)</li>
+            <li>Structural sharing</li>
+        </section>
+
+        <section>
+
+            <h2>Structural sharing</h2>
+            <h3>Gain efficiency by minimizing copying and maximizing reuse of existing elements</h3>
+            <img src="img/clojure-trees.png" width="50%"/>
+            <br>
+            <small>
+                Rich Hickey’s “Clojure Concurrency”
+            </small>
+
+        </section>
+
+        <section>
+            <img src="img/oleg.png" width="70%"/>
+            <br>
+            <small>
+                <a href="https://www.youtube.com/watch?v=NWV5IrEg3c0">Functional Data Structures by Oleg Šelajev</a>
+
+            </small>
+        </section>
+
+        <section>
+            <img src="img/undead.jpg" width="50%"/>
+            <br>
+            <small>Purely Functional Data Structures by Grzegorz Piwowarek</small>
+        </section>
+
+
+
+        <section>
+            <h1>String</h1>
+            <h4>A Persistent Data Structure?</h4>
+            <br>
+            <br>
+            <pre class="fragment"><code data-trim="">
+                public String substring(int beginIndex) {
+                     // ... JDK 8
+                     return (beginIndex == 0)
+                       ? this
+                       : new String(value, beginIndex, subLen);
+                }
+            </code></pre>
+            <br>
+            <h3 class="fragment">Could avoid a new String allocation and would be perfectly safe</h3>
+            <h3 class="fragment">...but could create memory leaks so String's constructor does the copy anyway</h3>
+        </section>
+
+        <section>
+            <h2>ArrayList</h2>
+            <br>
+            <br>
+            <h3>Doesn't work with mutable structures</h3>
+
+            <div>
+                <pre><code data-trim="">
+                public List&lt;E> subList(int fromIndex, int toIndex) {
+                    subListRangeCheck(fromIndex, toIndex, size);
+                    return new SubList(this, 0, fromIndex, toIndex);
+                }
+            </code></pre>
+                <br>
+                <h3>Source can be mutated which can lead to sneaky bugs</h3>
+            </div>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Persistent Singly-Linked List</h2>
+            <pre><code data-trim="">
+                    class Cons&lt;T> implements List&lt;T> {
+                        private final T head;
+                        private final List&lt;T> tail;
+                    }
+            </code></pre>
+            <pre class="fragment"><code data-trim="">
+                    List&lt;T> prepend(T element) {
+                        return new Cons<>(element, this);
+                    }
+            </code></pre>
+            <h3 class="fragment">Zero copy and constant time</h3>
+        </section>
+
+        <section>
+
+            <img src="img/struct-sharing-list.png" width="80%"/>
+            <br>
+            <small>"Purely Functional Data Structures in Scala", Vladimir Kostyukov</small>
+
+        </section>
+
+        <section>
+            <h2>What about List#append?</h2>
+            <pre class="fragment"><code data-trim="">
+                    List&lt;T> append(T element) {
+                        return foldRight(of(element), (x, xs) -> xs.prepend(x));
+                    }
+            </code></pre>
+            <h3 class="fragment">O(n)</h3>
+            <h3 class="fragment">Acceptable for lists since we have O(1) additions</h3>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Immutable Structures are thread-safe</h2>
+            <div class="fragment">
+                <h3 >...but not always useful for multithreaded scenarios</h3>
+
+                <img src="img/midas.jpg" width="30%"/>
+                <br>
+                <small>From the book "King Midas and the Golden Touch" by Marie C Craft</small>
+            </div>
+        </section>
+
+        <section>
+            <h3>If we want to share "updates" of an immutable structure, we need to manually control access to the root reference</h3>
+            <pre class="fragment"><code data-trim="">
+                private volatile ImmutableList&lt;Integer> queue;
+
+                // ..
+                // major contention here!
+                private synchronized void prepend(Integer e) {
+                   queue = queue.prepend(e);
+                }
+            </code></pre>
+            <h3 class="fragment">...or just use a dedicated mutable data structure</h3>
+            <h3 class="fragment">...or a different way of sharing updates</h3>
+
+        </section>
+
+        <section>
+            <h3>Same applies to any immutable structure</h3>
+            <pre><code data-trim="">
+                private volatile String text;
+
+                private synchronized void add(String postfix) {
+                    text = text + postfix;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>We could do the same lock-free with CAS but that would generate even more garbage and further stress GC</h3>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h2>Persistent Set</h2>
+
+            <pre class="fragment"><code data-trim="">
+                class Set&lt;T> {
+                    private final List&lt;T> set;
+                }
+            </code></pre>
+            <h3 class="fragment">Highly inefficient because of O(N) element access</h3>
+        </section>
+
+        <section>
+            <h3>Can we do something... smarter?</h3>
+            <br>
+            <h3 class="fragment">We could use a tree</h3>
+        </section>
+
+        <section>
+            <h3>Path copying</h3>
+            <img src="img/before.png" width="80%"/>
+        </section>
+
+        <section>
+            <h3>Path copying</h3>
+            <img src="img/after.png" width="80%"/>
+        </section>
+
+        <section>
+            <h3>Subtrees not on the path can be shared</h3>
+            <img src="img/s-sharing.png" width="80%"/>
+        </section>
+
+        <section>
+            <h3>Persistent Queue</h3>
+
+            <pre class="fragment"><code data-trim="">
+                class Cons&lt;T> implements List&lt;T>, Queue&lt;T> {
+                    private final List&lt;T> queue;
+                }
+            </code></pre>
+            <h3 class="fragment">Works great as a LIFO stack</h3>
+            <h3 class="fragment">Queues exhibit different access patterns than lists which makes this implementation highly inefficient</h3>
+        </section>
+
+        <section>
+            <h3>Efficient Persistent Queue</h3>
+
+            <pre class="fragment"><code data-trim="">
+                class Cons&lt;T> implements List&lt;T>, Queue&lt;T> {
+                    private final List&lt;T> front;
+                    private final List&lt;T> rear; // in opposite direction
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Queue#new</h3>
+
+            <pre><code data-trim="">
+                private Queue(List&lt;T> front, List&lt;T> rear) {
+                    this.front = front.isEmpty() ? rear.reverse() : front;
+                    this.rear = front.isEmpty() ? front : rear;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Queue#enqueue</h3>
+
+            <pre><code data-trim="">
+                @Override
+                public Queue&lt;T> enqueue(T element) {
+                    return new Queue<>(front, rear.prepend(element));
+                }
+            </code></pre>
+            <h3>Queue#dequeue</h3>
+
+            <pre><code data-trim="">
+                 public Option&lt;Tuple2&lt;T, Q>> dequeue() {
+                     return isEmpty()
+                       ? Option.none()
+                       : Option.some(Tuple.of(head(), tail()));
+                 }
+            </code></pre>
+            <h3 class="fragment">Amortized constant-time! (mostly O(1), rarely O(n))</h3>
+            <h3 class="fragment">List#reverse is performed infrequently</h3>
+            <h3 class="fragment">Most likely not acceptable for real-time systems</h3>
+        </section>
+
+        <section>
+            <h3>Can we do something... smarter?</h3>
+            <br>
+            <h3 class="fragment">We could use a tree</h3>
+        </section>
+
+        <section>
+            <h2>2-3 Tree</h2>
+            <img src="img/finger-tree-0.png" width="80%"/>
+        </section>
+
+        <section>
+            <h2>2-3 Finger Tree</h2>
+
+            <img src="img/finger-tree2.png" width="50%"/>
+            <br>
+            <small><a href="http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf">http://www.staff.city.ac.uk/~ross/papers/FingerTree.pdf</a></small>
+
+            <blockquote>
+                Finger is a structure providing efficient access to nodes of a tree near a distinguished location.
+            </blockquote>
+        </section>
+
+        <section>
+            <h3>...if it's so smart, why does Scala use Banker's Queue?</h3>
+            <br>
+            <h3 class="fragment">It's much more cache-friendly*</h3>
+            <div class="fragment">
+                <img src="img/linkedlist.png" width="50%"/>
+                <br>
+                <small><a href="https://computer-fundamentals.com/difference-between-linked-list-and-array/">https://computer-fundamentals.com/difference-between-linked-list-and-array/</a></small>
+            </div>
+
+
+        </section>
+
+        <section>
+            <h3>Persistent Map</h3>
+
+            <pre class="fragment"><code data-trim="">
+                class PMap&lt;K, V> implements Map&lt;K, V> {
+                    private final List&lt;Entry&lt;K, V> map;
+                }
+            </code></pre>
+            <h3 class="fragment">Advantages: it works</h3>
+            <h3 class="fragment">Disadvantages: performs nowhere near HashMap</h3>
+        </section>
+
+        <section>
+            <h3>Can we do something... smarter?</h3>
+        </section>
+
+        <section>
+            <h3>Hash-Array Mapped Trie</h3>
+        </section>
+
+        <section>
+            <h3>Trie (Radix Tree)</h3>
+            <img src="img/Trie_example.svg" width="40%"/>
+            <br>
+            <h4>A trie for keys "A", "to", "tea", "ted", "ten", "i", "in", and "inn" with random values</h4>
+            <small><a href="https://en.wikipedia.org/wiki/Trie">https://en.wikipedia.org/wiki/Trie</a> </small>
+        </section>
+
+        <section>
+            <img src="img/lucky.png" width="40%"/>
+        </section>
+
+        <section>
+            <h3>Hash-Array Mapped Trie</h3>
+            <li>"A trie with hashes"</li>
+            <img src="img/hamt.png" width="60%"/>
+            <br>
+            <small><a href="https://idea.popcount.org/2012-07-25-introduction-to-hamt/">https://idea.popcount.org/2012-07-25-introduction-to-hamt/</a> </small>
+
+            <h3 class="fragment">Node can hold up to 32 elements (branching factor = 32)</h3>
+            <h3 class="fragment">Space efficiency can be increased by using bitmaps</h3>
+        </section>
+
+        <section>
+            <h3>Lookup: log_32(N)</h3>
+            <br>
+            <h3 class="fragment">log_32(Integer.MAX_VALUE) ~ 6</h3>
+            <br>
+            <h3 class="fragment">log_32(Long.MAX_VALUE) ~ 13</h3>
+        </section>
+
+        <section>
+            <h2>Compressed Hash-Array Mapped Prefix-Tree</h2>
+            <h4>for better locality</h4>
+            <br>
+            <h3>Scala's HashMap since 2.13</h3>
+
+            <small><a href="https://michael.steindorfer.name/publications/oopsla15.pdf">https://michael.steindorfer.name/publications/oopsla15.pdf</a> </small>
+
+
+
+        </section>
+
+        <section>
+            <h3><a href="https://arxiv.org/pdf/1709.06056.pdf">Cache-Aware Lock-Free Concurrent Hash Tries</a> </h3>
+
+            <img src="img/ctries.png" width="30%"/>
+            <br>
+            <small><a href="https://arxiv.org/pdf/1709.06056.pdf">https://arxiv.org/pdf/1709.06056.pdf</a></small>
+        </section>
+
+        <section>
+            <h2>Libraries:</h2>
+
+            <li><a href="https://github.com/vavr-io/vavr">Vavr</a></li>
+            <li><a href="https://github.com/aol/cyclops">Cyclops</a></li>
+        </section>
+
+        <section>
+            <h2>Key takeaways:</h2>
+            <li>Efficient immutability involves minimization of copying and maximization of structural sharing</li>
+            <li>Simple beats complex</li>
+            <li>Immutability is not a silver bullet</li>
+            <li>Trade-offs are everywhere</li>
+        </section>
+
+        <section></section>
+
+        <section>
+            <li>Purely Functional Data Structures, Chris Okasaki</li>
+            <li>Red-Black Trees in a Functional Setting, Chris Okasaki</li>
+            <li>Ideal Hash Trees, Phil Bagwell</li>
+            <li>Fast And Space Efficient Trie Searches, Phil Bagwell</li>
+            <li>Cache-Aware Lock-Free Concurrent Hash Tries, Prokopec, Bagwell, Odersky</li>
+            <li>https://shipilev.net/jvm/anatomy-quarks/11-moving-gc-locality/</li>
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Senior Software Engineer @ Hazelcast</h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+
+            <br>
+            <img src="img/talk_qr.png"/>
+            <h4><a href="https://pivovarit.github.io/talks/purely-functional-data-structures">https://pivovarit.github.io/talks/purely-functional-data-structures</a> </h4>
+            <h2>Thank You!</h2>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 45,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+
+</body>
+</html>
