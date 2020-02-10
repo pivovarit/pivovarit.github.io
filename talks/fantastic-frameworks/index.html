@@ -146,12 +146,105 @@
         <section>
             <img src="img/annotations.png" width="40%"/><br/>
             <small>https://twitter.com/alexelcu/status/1114016039841538048</small>
-
         </section>
 
         <section>
             <img src="img/suffer.png"/>
             <small>http://spiridonov.pro/2015/10/14/scala-implicit-hell/</small>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h2>Dependency Hell</h2>
+            <br>
+
+            <blockquote>
+                Dependency hell is a colloquial term for the frustration of some software users
+                who have installed software packages which have dependencies
+                on specific versions of other software packages.
+            </blockquote>
+            <small>https://en.wikipedia.org/wiki/Dependency_hell</small>
+        </section>
+
+    <section>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+
+            </code></pre>
+
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.snakeyaml</groupId>
+                <artifactId>snakeyaml-engine</artifactId>
+                <version>${snakeyaml.engine.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j2.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.api.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.core</artifactId>
+                <version>4.2.0</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>2.1.8</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>org.jruby</groupId>
+                <artifactId>jruby-complete</artifactId>
+                <version>1.7.22</version>
+                <scope>provided</scope>
+                <optional>true</optional>
+            </dependency>
+
+        </dependencies>
+
+
         </section>
 
         <section>
@@ -186,6 +279,12 @@
             <h2 class="fragment">Force you to keep up</h2>
             <h2 class="fragment">Require expert help</h2>
             <h2 class="fragment">Probably provide more than you need</h2>
+        </section>
+
+        <section>
+            <h2>Hazelcast IMDG/Jet</h2>
+            <br>
+            Is not a framework but a toolkit, it doesn't own your application.
         </section>
 
         <section>
@@ -731,7 +830,7 @@
         </section>
 
         <section>
-            <h2>Ratpack</h2>
+            <h2>Unopinionated: Ratpack</h2>
             <br>
             <blockquote>
                 Ratpack is a set of Java libraries for building scalable HTTP applications.<br><br>
@@ -768,6 +867,22 @@
                   );
                 }
               }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Optinionated: Quarkus</h2>
+            <br>
+            <blockquote>
+                ...
+            </blockquote>
+            <small>...</small>
+            <small>...</small>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+                ...
             </code></pre>
         </section>
 
