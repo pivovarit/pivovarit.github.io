@@ -79,6 +79,15 @@
         </section>
 
         <section></section>
+        <section>
+            <img src="img/hz.png" width="20%"/><br>
+
+            The Hazelcast IMDG is an operational in-memory computing platform that manages data and distributes
+            processing using memory and parallel execution for breakthrough application speed and scale.
+            <br><br>
+            Hazelcast IMDG is easy to work with and brings a highly resilient
+            and elastic memory resource to all your applications.
+        </section>
 
         <section>
             <h2>Developers Smalltalk?</h2>
@@ -137,12 +146,59 @@
         <section>
             <img src="img/annotations.png" width="40%"/><br/>
             <small>https://twitter.com/alexelcu/status/1114016039841538048</small>
-
         </section>
 
         <section>
             <img src="img/suffer.png"/>
             <small>http://spiridonov.pro/2015/10/14/scala-implicit-hell/</small>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h2>Dependency Hell</h2>
+            <br>
+
+            <blockquote>
+                Dependency hell is a colloquial term for the frustration of some software users
+                who have installed software packages which have dependencies
+                on specific versions of other software packages.
+            </blockquote>
+            <small>https://en.wikipedia.org/wiki/Dependency_hell</small>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Zero-Dependencies</h2>
+            <br>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            <dependencies>
+                ...
+
+                <dependency>
+                    <groupId>org.assertj</groupId>
+                    <artifactId>assertj-core</artifactId>
+                    <version>${assertj.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Not that easy in practice in complex libraries</h3>
+            <h4>dependencies not exposed publically can be shaded*</h4>
+            <br>
+
+            <img src="img/hz-deps.png" width="40%"/>
+
+
         </section>
 
         <section>
@@ -177,6 +233,12 @@
             <h2 class="fragment">Force you to keep up</h2>
             <h2 class="fragment">Require expert help</h2>
             <h2 class="fragment">Probably provide more than you need</h2>
+        </section>
+
+        <section>
+            <h2>Hazelcast IMDG/Jet</h2>
+            <br>
+            Is not a framework but a toolkit, it doesn't own your application.
         </section>
 
         <section>
@@ -722,7 +784,7 @@
         </section>
 
         <section>
-            <h2>Ratpack</h2>
+            <h2>Unopinionated: Ratpack</h2>
             <br>
             <blockquote>
                 Ratpack is a set of Java libraries for building scalable HTTP applications.<br><br>
@@ -760,6 +822,24 @@
                 }
               }
             </code></pre>
+        </section>
+
+        <section>
+            <h2>Opinionated: Quarkus</h2>
+            <br>
+            <ul>
+                <li>GraalVM Support</li>
+                <li>Build-time Initialization</li>
+                <li>Hot Reload</li>
+            </ul>
+            <br><br>
+            <small>http://quarkus.io</small>
+        </section>
+
+        <section>
+            <h2>quarkus-hazelcast-client</h2>
+            <br>
+            <small>https://github.com/quarkusio/quarkus/pull/6758</small>
         </section>
 
         <section>
