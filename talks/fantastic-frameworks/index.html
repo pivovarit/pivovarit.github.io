@@ -168,81 +168,35 @@
             <small>https://en.wikipedia.org/wiki/Dependency_hell</small>
         </section>
 
-    <section>
+        <section></section>
+
+        <section>
+            <h2>Zero-Dependencies</h2>
+            <br>
 
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
 
+            <dependencies>
+                ...
+
+                <dependency>
+                    <groupId>org.assertj</groupId>
+                    <artifactId>assertj-core</artifactId>
+                    <version>${assertj.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
 
             </code></pre>
 
-        <dependencies>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.snakeyaml</groupId>
-                <artifactId>snakeyaml-engine</artifactId>
-                <version>${snakeyaml.engine.version}</version>
-                <scope>compile</scope>
-            </dependency>
+        </section>
 
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
+        <section>
+            <h3>Not that easy in practice in complex libraries</h3>
+            <h4>dependencies not exposed publically can be shaded*</h4>
+            <br>
 
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j2.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j2.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j.api.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-
-            <dependency>
-                <groupId>org.osgi</groupId>
-                <artifactId>org.osgi.core</artifactId>
-                <version>4.2.0</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>2.1.8</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-            <dependency>
-                <groupId>org.jruby</groupId>
-                <artifactId>jruby-complete</artifactId>
-                <version>1.7.22</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-            </dependency>
-
-        </dependencies>
+            <img src="img/hz-deps.png" width="40%"/>
 
 
         </section>
@@ -871,19 +825,21 @@
         </section>
 
         <section>
-            <h2>Optinionated: Quarkus</h2>
+            <h2>Opinionated: Quarkus</h2>
             <br>
-            <blockquote>
-                ...
-            </blockquote>
-            <small>...</small>
-            <small>...</small>
+            <ul>
+                <li>GraalVM Support</li>
+                <li>Build-time Initialization</li>
+                <li>Hot Reload</li>
+            </ul>
+            <br><br>
+            <small>http://quarkus.io</small>
         </section>
 
         <section>
-            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
-                ...
-            </code></pre>
+            <h2>quarkus-hazelcast-client</h2>
+            <br>
+            <small>https://github.com/quarkusio/quarkus/pull/6758</small>
         </section>
 
         <section>
