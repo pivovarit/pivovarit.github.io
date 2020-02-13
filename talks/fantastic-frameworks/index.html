@@ -67,6 +67,9 @@
             <br>
             <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="20%"/><br>
+
         </section>
 
         <section>
@@ -192,13 +195,11 @@
         </section>
 
         <section>
-            <h3>Not that easy in practice in complex libraries</h3>
+            <h3>Not that easy to apply in practice in complex libraries</h3>
             <h4>dependencies not exposed publically can be shaded*</h4>
             <br>
 
             <img src="img/hz-deps.png" width="40%"/>
-
-
         </section>
 
         <section>
@@ -238,7 +239,24 @@
         <section>
             <h2>Hazelcast IMDG/Jet</h2>
             <br>
-            Is not a framework but a toolkit, it doesn't own your application.
+            <div class="fragment">Is not a framework but a toolkit, it doesn't own your application.</div>
+            <br>
+            <br>
+            <br>
+            <br>
+
+
+            <blockquote>
+                (...) Hazelcast is also used in academia and research as a framework for distributed execution and storage.
+            </blockquote>
+            <blockquote>
+                (...) Hazelcast as its distributed execution framework.
+            </blockquote>
+            <small>https://en.wikipedia.org/wiki/Hazelcast</small>
+        </section>
+
+        <section>
+
         </section>
 
         <section>
@@ -248,6 +266,7 @@
                 <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
                 <small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small>
             </div>
+            <br><br>
             <h3 class="fragment">So you spend time learning someone's abstraction and not the underlying technologies</h3>
 
         </section>
@@ -280,11 +299,6 @@
         </section>
 
         <section>
-            <img src="img/orm.png"/>
-            <h4><a href="https://twitter.com/lukaseder/status/1051858654989836288">https://twitter.com/lukaseder/status/1051858654989836288</a></h4>
-        </section>
-
-        <section>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
                 @OneToMany(@HowManyDBADoYouNeedToChangeALightBulb)
                 @OneToManyMore @AnyOne @AnyBody
@@ -312,6 +326,11 @@
                 private Collection employees;
             </code></pre>
             <small>http://www.annotatiomania.com</small>
+        </section>
+
+        <section>
+            <img src="img/orm.png"/>
+            <h4><a href="https://twitter.com/lukaseder/status/1051858654989836288">https://twitter.com/lukaseder/status/1051858654989836288</a></h4>
         </section>
 
         <section>
@@ -394,7 +413,7 @@
             <h2>ORM as plugin</h2>
 
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                package com.casumo.domain;
+                package com.piwowarek.domain;
 
                 public class User {
                     private final Long id;
@@ -403,7 +422,7 @@
             </code></pre>
 
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                package com.casumo.persistence;
+                package com.piwowarek.persistence;
 
                 import javax.persistence.Column;
                 import javax.persistence.Entity;
@@ -604,7 +623,7 @@
                     }
                 }
             </code></pre>
-            <h2>Same framework both invasive and non-invasive</h2>
+            <h2>Same framework - both invasive and non-invasive</h2>
             <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
                 public class FooFacade {
 
@@ -626,6 +645,25 @@
                     FooFacade fooFacade() {
                         return new FooFacade(new FooService());
                     }
+                }
+            </code></pre>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h3>Composition/Delegation is your friend</h3>
+             <pre><code data-trim="">
+                public interface UserSessionRepository {
+                    // ...
+                }
+            </code></pre>
+            <pre><code data-trim="" >
+                public class CachingUserSessionRepository
+                  implements UserSessionRepository {
+
+                    private final UserSessionRepository;
+                    // ...
                 }
             </code></pre>
         </section>
@@ -784,6 +822,10 @@
         </section>
 
         <section>
+            <h2 class="fragment">Things to try</h2>
+        </section>
+
+        <section>
             <h2>Unopinionated: Ratpack</h2>
             <br>
             <blockquote>
@@ -827,6 +869,14 @@
         <section>
             <h2>Opinionated: Quarkus</h2>
             <br>
+            <blockquote>
+                $ ./my-native-java-rest-app<br>
+                Quarkus started in 0.008s
+            </blockquote>
+            <img src="img/quarkus.png" width="70%"/>
+            <br>
+
+
             <ul>
                 <li>GraalVM Support</li>
                 <li>Build-time Initialization</li>
@@ -837,7 +887,9 @@
         </section>
 
         <section>
-            <h2>quarkus-hazelcast-client</h2>
+
+            <img src="img/hz-client.png"/>
+
             <br>
             <small>https://github.com/quarkusio/quarkus/pull/6758</small>
         </section>
@@ -883,6 +935,9 @@
             <h4><a href="https://pivovarit.github.io/talks/fantastic-frameworks">https://pivovarit.github.io/talks/fantastic-frameworks</a> </h4>
             <img src="img/talk_qr.png"/>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="30%"/><br>
+
         </section>
     </div>
 </div>
