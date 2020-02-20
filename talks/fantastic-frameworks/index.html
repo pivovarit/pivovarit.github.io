@@ -195,12 +195,45 @@
         </section>
 
         <section>
-            <h3>Not that easy to apply in practice in complex libraries</h3>
-            <h4>dependencies not exposed publically can be shaded*</h4>
+            <h3>Not that easy to apply in practice</h3>
+            <h4>... but internal dependencies can be shaded*</h4>
             <br>
 
             <img src="img/hz-deps.png" width="40%"/>
         </section>
+
+        <section>
+            <h3>This and other architectural decisions can be enforced</h3>
+            <h4>arch-unit</h4>
+            <br>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+
+            @Test
+            void shouldHaveZeroDependencies() {
+                classes()
+                  .that().resideInAPackage("com.pivovarit.collectors")
+                  .should()
+                  .dependOnClassesThat().resideInAPackage("java..")
+                  .as("the library should depend only on core Java classes")
+                  .because("users appreciate not experiencing a dependency hell")
+                  .check(classes);
+            }
+
+            @Test
+            void shouldHaveSinglePackage() {
+                classes()
+                  .should().resideInAPackage("com.pivovarit.collectors")
+                  .check(classes);
+            }
+
+            </code></pre>
+            <small><a href="https://github.com/pivovarit/parallel-collectors/blob/e480eb5fc477e5558ea69f81fcc803d005b80ec3/src/test/java/com/pivovarit/collectors/ArchitectureTest.java#L36-L52">source</a></small>
+
+        </section>
+
+
 
         <section>
             <h2>Frameworks vs Libraries</h2>
