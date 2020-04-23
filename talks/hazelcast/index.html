@@ -85,16 +85,509 @@
         <section>
             <img src="img/hz.png" width="20%"/><br>
 
+            Born in 2008 in Turkey as a simple caching solution...
+            <br><br>
+
+            <div class="fragment">
+                <img src="img/cache.png" width="60%"/><br>
+                <small>source: Hazelcast</small>
+            </div>
+
+        </section>
+        <section>
+            <img src="img/hz.png" width="20%"/><br>
+
             The Hazelcast IMDG is an operational in-memory computing platform that manages data and distributes
             processing using memory and parallel execution for breakthrough application speed and scale.
+
+            <br><br><br><br>
+
+            <div class="fragment">
+                <img src="img/imdg.png" width="60%"/><br>
+                <small>source: Hazelcast</small>
+            </div>
+
+        </section>
+
+        <section>
+            <div>
+                <img src="img/hz-all.png" width="50%"/><br>
+                <small>source: Hazelcast</small>
+            </div>
+        </section>
+
+        <section>
+            <img src="img/clients.png" width="90%"/><br>
+            <small>source: Hazelcast</small>
+
+        </section>
+
+        <section>
+            <img src="img/clients2.png" width="90%"/><br>
+            <small>source: Hazelcast</small>
+
+        </section>
+
+        <section>
+            <h2>IMDG</h2>
+            <h4 class="fragment">In-Memory Data Grid</h4>
+            <br><br>
+
+            <li class="fragment">In-Memory (no persistence)</li>
+            <li class="fragment">Storage/Computation</li>
+            <li class="fragment">Multiple processes working as a group</li>
+        </section>
+
+        <section>
+            <li>Embedded</li>
+            <li>Client-Server</li>
+        </section>
+
+        <section>
+            <h2>Cache Access Patterns</h2>
+            <li>Read-through</li>
+            <li>Write-through</li>
+            <li>Write-behind</li>
+            <li>Near Cache</li>
+        </section>
+
+        <section>
+            <h2>Read-through</h2>
+            <img src="img/read-through.png" width="90%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+
+        <section>
+            <h2>Write-through</h2>
+            <img src="img/write-through.png" width="90%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h2>Write-behind</h2>
+            <img src="img/write-behind.png" width="90%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h2>Near Cache</h2>
+            <img src="img/near-cache.png" width="40%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            <dependencies>
+                <dependency>
+                    <groupId>com.hazelcast</groupId>
+                    <artifactId>hazelcast</artifactId>
+                    <version>4.0.1</version>
+                </dependency>
+            </dependencies>
+
+            </code></pre>
+
+        </section>
+
+        <section>
+            <img src="img/hz-deps.png" width="50%"/><br>
+            <h3>Shaded</h3>
+
+        </section>
+
+        <section>
+            <h3>Embedded</h3>
+            <pre><code data-trim="">
+                 HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Client-Server</h3>
+            <pre><code data-trim="">
+                 HazelcastInstance hazelcastInstance = HazelcastClient.newHazelcastClient();
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h2>Clients</h2>
+            <h3><a href="https://github.com/hazelcast/hazelcast-client-protocol">Binary Client Protocol</a>
+                <br>
+                <h4>Java</h4>
+                <h4>Scala</h4>
+                <h4>C++</h4>
+                <h4>C#/.NET</h4>
+                <h4>Python</h4>
+                <h4>Node.js</h4>
+                <h4>Go</h4>
+                <h4>Rust (work-in-progress)</h4>
+        </section>
+
+
+        <section>
+             <pre><code data-trim="">
+                 // import com.hazelcast.map.IMap;
+
+                 HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+
+                 IMap&lt;String, Integer> simpleMap = hazelcastInstance.getMap("simpleMap");
+
+                 simpleMap.put("foo", 42);
+
+                 simpleMap.get("foo"); // 42
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="">
+                 // import java.util.Map;
+
+                 HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance();
+
+                 Map&lt;String, Integer> simpleMap = hazelcastInstance.getMap("simpleMap");
+
+                 simpleMap.put("foo", 42);
+
+                 simpleMap.get("foo"); // 42
+            </code></pre>
+
+        </section>
+
+        <section>
+            <img src="img/partition.png" width="80%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h3>Map is just the beginning</h3>
+            <br>
+            <li class="fragment">MultiMap</li>
+            <li class="fragment">ReplicatedMap (non-partitioned Map)</li>
+            <li class="fragment">Set</li>
+            <li class="fragment">List</li>
+            <br>
+            <li class="fragment">Queue</li>
+            <li class="fragment">Topic</li>
+        </section>
+
+        <section>
+            <h3>Data Structures is just the beginning</h3>
+        </section>
+
+        <section>
+            <h3>EntryProcessor</h3>
+            Instead of fetching the data, processing it and sending it back, let a cluster process it.
+
+            A processed entry remains locked during processing
+
+            <pre><code data-trim="">
+            @BinaryInterface
+            @FunctionalInterface
+            public interface EntryProcessor&lt;K, V, R> extends Serializable {
+                R process(Entry&lt;K, V> entry);
+            }
+            </code></pre>
+
+
+        </section>
+
+        <section>
+            <h3>ExecutorService</h3>
+
+            <pre><code data-trim="">
+                public interface IExecutorService
+                  extends ExecutorService, DistributedObject {
+                    void execute(Runnable command, MemberSelector memberSelector);
+                    void executeOnAllMembers(Runnable command);
+                    // ...
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Aggregation</h3>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                 IMap&lt;String, Employee> employees = hz.getMap("employees");
+
+                 double avgSalary = employees.aggregate(
+                   new Aggregator&lt;Map.Entry&lt;String, Employee>, Double>() {
+
+                     protected long sum;
+                     protected long count;
+
+                     @Override
+                     public void accumulate(Map.Entry&lt;String, Employee> entry) {
+                         count++;
+                         sum += entry.getValue().getSalaryPerMonth();
+                     }
+
+                     // ...
+                  });
+            </code></pre>
+
+
+        </section>
+
+        <section>
+            <h3>Queries</h3>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                 IMap&lt;String, Employee> map = hazelcastInstance.getMap("employee");
+
+                 Set&lt;Employee> employees = map.values(new SqlPredicate("active AND age < 30"));
+            </code></pre>
+
+
+        </section>
+
+        <section>
+            <h2>CAP Theorem</h2>
+            <br>
+            <h3>Consistency</h3>
+            <h3>Availability</h3>
+            <h3>Partition Tolerance</h3>
+            <small>Pick two.</small>
+
+
+        </section>
+
+        <section>
+            <img src="img/partitioned.png" width="60%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h3>CP Subsystem</h3>
+            <img src="img/cpap.png" width="50%"/><br>
+            <small>source: Hazelcast</small>
+
+            <br>
+            <li>Linearizable, distributed implementations of Java concurrency primitives</li>
+            <li>Raft-based(http://thesecretlivesofdata.com/raft/)</li>
+            <li>Jepsen-verified</li>
+            <li class="fragment">Requires minimum 3 members</li>
+
+        </section>
+
+        <section>
+            <li>Semaphore</li>
+            <li>CountDownLatch</li>
+            <li>AtomicReference</li>
+            <li>AtomicLong</li>
+        </section>
+
+        <section>
+            <h3>Advanced Data Structures</h3>
+        </section>
+
+        <section>
+            <h3>RingBuffer</h3>
+            A fixed-capacity data structure that overwrites oldest elements when capacity is exceeded
+        </section>
+
+        <section>
+            <h3>HyperLogLog</h3>
+            A probabilistic data structure used to estimate the cardinality(number of unique elements) of a data set.
+
+            <blockquote>
+                <small>The HyperLogLog algorithm can estimate cardinalities well beyond 10^9 with a relative accuracy
+                    (standard error) of 2% while only using 1.5kb of memory.</small>
+
+                <small>Fangjin Yang Fast, Cheap, and 98% Right: Cardinality Estimation for Big Data</small>
+            </blockquote>
+        </section>
+
+        <section>
+            <h3>Flake Id Generator</h3>
+            Cluster-wide ordered and unique identifiers IDs without any coordination between members
+            <br>safe even in split-brain scenario
+        </section>
+
+        <section>
+            <h3>CRDT PN Counter</h3>
+            A conflict-free alternative to AtomicLong
+        </section>
+
+        <section>
+            <h3>Other Integrations</h3>
+        </section>
+
+        <section>
+            <h3>Hibernate 2LC</h3>
+            Hazelcast provides a distributed second level cache for your Hibernate entities, collections and queries.
+            <br><br>
+            <h4><a href="http://github.com/hazelcast/hazelcast-hibernate5/">http://github.com/hazelcast/hazelcast-hibernate5/</a>
+            </h4>
+
+        </section>
+
+        <section>
+            <h3>Spring Data</h3>
+            Spring Data Hazelcast Integration
+            <br><br>
+            <h4><a href="https://github.com/hazelcast/spring-data-hazelcast">https://github.com/hazelcast/spring-data-hazelcast</a>
+            </h4>
+
+        </section>
+
+        <section>
+            <h3>Quarkus Hazelcast Client</h3>
+            <br><br>
+            <h4><a href="https://github.com/hazelcast/quarkus-hazelcast-client">https://github.com/hazelcast/quarkus-hazelcast-client</a>
+            </h4>
+
+        </section>
+
+        <section>
+            <h3>Tomcat Session Manager</h3>
+            Each HttpSession object is kept in the Hazelcast Map
+            <br><br>
+            <h4><a href="https://github.com/hazelcast/hazelcast-tomcat-sessionmanager">https://github.com/hazelcast/hazelcast-tomcat-sessionmanager</a>
+            </h4>
+
+        </section>
+
+        <section>
+            <h3>Apache Shiro</h3>
+            Apache Shiro is a security framework that performs authentication, authorization, cryptography, and session
+            management.
+            Shiro uses Hazelcast for caching and session clustering.
+
+        </section>
+
+        <section>
+            <h3>Envoy Proxy</h3>
+            Apache Shiro is a security framework that performs authentication, authorization, cryptography, and session
+            management.
+            Shiro uses Hazelcast for caching and session clustering.
+            <br><br>
+
+            <h4>
+                <a href="https://github.com/envoyproxy/envoy/pull/10536">https://github.com/envoyproxy/envoy/pull/10536</a>
+            </h4>
+
+        </section>
+
+
+        <section>
+            <h3>Cloud Integrations</h3>
+            <h4>Zone-awareness + autodiscovery</h4>
+            <br>
+            <li>AWS</li>
+            <li>GCP</li>
+            <li>Azure</li>
+        </section>
+
+        <section>
+            <h3>Hazelcast Cloud</h3>
+            <h4>Hazelcast IMDG cluster as a service</h4>
+            <br>
+            <h4><a href="https://cloud.hazelcast.com">https://cloud.hazelcast.com</a></h4>
+        </section>
+
+        <section>
+            <h3>Enterprise Features</h3>
+            <li>Striim Hot Cache</li>
+            <li>Management Center</li>
+            <li>Security Suite</li>
+            <li>Disaster Recovery</li>
+            <li>WAN Replication</li>
+            <li>Rolling Upgrades</li>
+            <li>HD Memory</li>
+        </section>
+
+        <section>
+            <h3>Striim Hot Cache</h3>
+            <img src="img/striim.png" width="80%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h3>Disaster Recovery</h3>
+            <img src="img/adr.png" width="60%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+
+        <section>
+            <h3>WAN Replication</h3>
+            <img src="img/wan.png" width="60%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h3>HD Memory(off-heap store)</h3>
+
+            <h3>Hot Restart Store</h3>
+            <img class="fragment" src="img/optanedc.png" width="40%"/><br>
+        </section>
+
+        <section>
+            <h3>Future</h3>
+        </section>
+
+        <section>
+            <img src="img/vlad.png" width="40%"/><br>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h3>Hazelcast Jet</h3>
+            <img src="img/jet.png" width="70%"/><br>
+
+        </section>
+
+        <section>
+             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                  private static Pipeline buildPipeline() {
+                      Pipeline p = Pipeline.create();
+                      p.readFrom(TestSources.itemStream(100, (ts, seq) -> nextRandomNumber()))
+                        .withIngestionTimestamps()
+                        .window(WindowDefinition.tumbling(1000))
+                        .aggregate(AggregateOperations.topN(TOP, ComparatorEx.comparingLong(l -> l)))
+                        .map(WindowResult::result)
+                        .writeTo(Sinks.observable(RESULTS));
+                      return p;
+                  }
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Hazelcast Jet Design Documents</h3>
+            <h4><a href="https://jet-start.sh/docs/design-docs/">https://jet-start.sh/docs/design-docs/</a></h4>
+
+            <h3>Hazelcast Jet Architecture</h3>
+            <h4><a href="https://jet-start.sh/docs/architecture/distributed-computing">https://jet-start.sh/docs/architecture/distributed-computing</a>
+            </h4>
+        </section>
+
+        <section>
+            <h3>Tutorials</h3>
+            <h4><a href="https://training.hazelcast.com">https://training.hazelcast.com</a></h4>
+
+            <img src="img/training.png" width="40%"/><br>
+
+
+        </section>
+
+        <section>
+            <h3>Want to contribute but don't know where/how to start?</h3>
+            <h2>@jholusa</h2>
         </section>
 
         <section>
             <h2>Thank You!</h2>
-            <h4><a href="https://pivovarit.github.io/talks/hazelcast">https://pivovarit.github.io/talks/hazelcast</a> </h4>
-            <h1>TODO QR</h1>
+            <h4><a href="https://pivovarit.github.io/talks/hazelcast">https://pivovarit.github.io/talks/hazelcast</a>
+            </h4>
             <img src="img/talk_qr.png"/>
-            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <h3><a href="http://twitter.com/pivovarit">Twitter: @pivovarit</a></h3>
             <br>
             <img src="img/hz.png" width="30%"/><br>
 
