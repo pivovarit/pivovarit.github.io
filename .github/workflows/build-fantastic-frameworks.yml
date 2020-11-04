@@ -1,4 +1,4 @@
-name: build-fantastic-frameworks
+name: build-pdfs
 on:
   push:
     paths:
@@ -24,3 +24,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./slides
           publish_branch: slides
+          keep_files: true
