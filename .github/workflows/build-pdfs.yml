@@ -2,7 +2,7 @@ name: build
 on:
   push:
     paths-ignore:
-      - '**.md'
+      - 'talks/index.html'
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
         run: mkdir slides && sudo chmod 777 slides
                
       - name: Build PDF
-        run: docker run --rm -t -v `pwd`:/slides -v ~:/home/user astefanutti/decktape talks/hazelcast/index.html slides/hazelcast.pdf
+        run: docker run --rm -t -v `pwd`:/slides -v ~:/home/user astefanutti/decktape talks/hazelcast/index.html slides/hazelcast-gpiwowarek.pdf
       
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
