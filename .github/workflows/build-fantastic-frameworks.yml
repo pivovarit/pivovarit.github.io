@@ -1,4 +1,4 @@
-name: build-pdfs
+name: build-fantastic-frameworks
 on:
   push:
     paths:
