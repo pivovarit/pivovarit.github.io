@@ -1,4 +1,4 @@
-name: build-tdd
+name: build-modularity
 on:
   push:
     paths:
