@@ -1,0 +1,26 @@
+name: build-functional-exception-handling
+on:
+  push:
+    paths:
+      - 'talks/functional-exception-handling/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    name: Generate PDF
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - name: Create "/slides" directory
+        run: mkdir slides && sudo chmod 777 slides
+
+      - name: Build PDF
+        run: docker run --rm -t -v `pwd`:/slides -v ~:/home/user astefanutti/decktape talks/functional-exception-handling/index.html slides/gpiwowarek-functional-exception-handling.pdf
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./slides
+          publish_branch: slides
