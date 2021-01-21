@@ -196,16 +196,17 @@
 
             import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
-            @Test
-            void shouldHaveZeroDependencies() {
-                classes()
-                  .that().resideInAPackage("com.pivovarit.collectors")
-                  .should()
-                  .dependOnClassesThat().resideInAPackage("java..")
-                  .as("the library should depend only on core Java classes")
-                  .because("users appreciate not experiencing a dependency hell")
-                  .check(classes);
-            }
+             @Test
+             void shouldHaveZeroDependencies() {
+                 classes()
+                   .that().resideInAPackage("com.pivovarit.collectors")
+                   .should()
+                   .onlyDependOnClassesThat()
+                   .resideInAnyPackage("com.pivovarit.collectors", "java..")
+                   .as("the library should depend only on core Java classes")
+                   .because("so that users don't experience dependency hell")
+                   .check(classes);
+             }
 
             @Test
             void shouldHaveSinglePackage() {
