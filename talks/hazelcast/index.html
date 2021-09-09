@@ -60,7 +60,7 @@
     <div class="slides">
 
         <section>
-            <h1>Hazelcast</h1>
+            <h1>Hazelcast 5.0</h1>
             <h3>The Hitchhiker's Guide</h3>
             <br>
             <br>
@@ -74,7 +74,7 @@
 
         <section>
             <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
-            <h2>Senior Software Engineer @ <a href="http://hazelcast.com/">Hazelcast</a></h2>
+            <h2>Lead Architect @ <a href="http://hazelcast.com/">Hazelcast</a></h2>
             <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
             <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
             <br>
@@ -106,6 +106,12 @@
                 <img src="img/imdg.png" width="60%"/><br>
                 <small>source: Hazelcast</small>
             </div>
+
+        </section>
+
+        <section>
+                <img src="img/hazelcast-platform.png" width="80%"/><br>
+                <small>source: Hazelcast</small>
 
         </section>
 
@@ -183,7 +189,19 @@
                 <dependency>
                     <groupId>com.hazelcast</groupId>
                     <artifactId>hazelcast</artifactId>
-                    <version>4.1</version>
+                    <version>4.2</version>
+                </dependency>
+            </dependencies>
+
+            </code></pre>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            <dependencies>
+                <dependency>
+                    <groupId>com.hazelcast</groupId>
+                    <artifactId>hazelcast</artifactId>
+                    <version>5.0-BETA-2</version>
                 </dependency>
             </dependencies>
 
@@ -224,7 +242,6 @@
                 <h4>Python</h4>
                 <h4>Node.js</h4>
                 <h4>Go</h4>
-                <h4>Rust (work-in-progress)</h4>
         </section>
 
 
@@ -340,7 +357,24 @@
 
                  Set&lt;Employee> employees = map.values(new SqlPredicate("active AND age < 30"));
             </code></pre>
+        </section>
 
+        <section>
+            <h3>SQL</h3>
+            <small>GA in 5.0</small>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                 try (SqlResult result = hazelcastInstance.getSql()
+                   .execute("SELECT name FROM emp WHERE age < ?", 30)) {
+                     for (SqlRow row : result) {
+                         String name = row.getObject(0);
+                         System.out.println(name);
+                     }
+                 }
+            </code></pre>
+
+            <h4>+ a JDBC driver</h4>
+            <small><a href="https://hazelcast.com/blog/jdbc-driver-4-2-is-released/">https://hazelcast.com/blog/jdbc-driver-4-2-is-released/</a></small>
 
         </section>
 
@@ -350,7 +384,8 @@
             <h3>Consistency</h3>
             <h3>Availability</h3>
             <h3>Partition Tolerance</h3>
-            <small>Pick two.</small>
+            <small>Pick two</small>
+            <small class="fragment">...but always make sure P is one of them</small>
 
 
         </section>
@@ -439,7 +474,6 @@
             <br><br>
             <h4><a href="https://github.com/hazelcast/quarkus-hazelcast-client">https://github.com/hazelcast/quarkus-hazelcast-client</a>
             </h4>
-
         </section>
 
         <section>
@@ -518,19 +552,15 @@
         </section>
 
         <section>
-            <h3>Future</h3>
-        </section>
-
-        <section>
-            <img src="img/vlad.png" width="40%"/><br>
-        </section>
-
-        <section></section>
-
-        <section>
             <h3>Hazelcast Jet</h3>
             <img src="img/jet.png" width="70%"/><br>
 
+        </section>
+
+        <section>
+            <h3>Hazelcast Jet Whitepaper</h3>
+            <img src="img/jet-whitepaper.png" width="70%"/><br>
+            <h4><a href="https://arxiv.org/abs/2103.10169">https://arxiv.org/abs/2103.10169</a></h4>
         </section>
 
         <section>
