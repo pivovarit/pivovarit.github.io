@@ -206,6 +206,8 @@
             <h2>...but this talk is not about the easy parts</h2>
         </section>
 
+        <section></section>
+
         <section>
             <h2>Cancelling a CompletableFuture</h2>
             <pre><code data-trim>
@@ -222,6 +224,8 @@
             </code></pre>
         </section>
         <section>
+            <h2>Cancels a CompletableFuture and not tasks completing it</h2>
+
             <pre><code data-trim>
                    // @param mayInterruptIfRunning this value has no effect in this
                    // implementation because interrupts are not used to control
@@ -230,10 +234,76 @@
         </section>
 
         <section>
-            <!--            intro-->
+            <h3>Technically, you could hack it...</h3>
+
+            <pre class="stretch"><code data-trim>
+                static final class InterruptibleCompletableFuture&lt;T> extends CompletableFuture&lt;T> {
+                    private volatile FutureTask&lt;?> backingTask;
+
+                    private void completedBy(FutureTask&lt;Void> task) {
+                        backingTask = task;
+                    }
+
+                    @Override
+                    public boolean cancel(boolean mayInterruptIfRunning) {
+                        if (backingTask != null) {
+                            backingTask.cancel(mayInterruptIfRunning);
+                        }
+                        return super.cancel(mayInterruptIfRunning);
+                    }
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Combining Multiple Futures...</h2>
+            <h3>CompletableFuture#allOf/anyOf</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = new CompletableFuture<>();
+                CompletableFuture&lt;Integer> cf2 = new CompletableFuture<>();
+
+                CompletableFuture.allOf(cf1, cf2);
+                CompletableFuture.anyOf(cf1, cf2);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                public static CompletableFuture&lt;Void> allOf(
+                  CompletableFuture&lt;?>... cfs) {
+                    return andTree(cfs, 0, cfs.length - 1);
+                }
+            </code></pre>
+            <ul>
+                <li class="fragment">Accepts CompletableFuture&lt;?>... cfs</li>
+                <li class="fragment">Returns CompletableFuture&lt;Void></li>
+                <li class="fragment">Doesn't shortcircuit on exception</li>
+            </ul>
+        </section>
+
+        <section>
+            <img width="80%" src="img/testcontainers.png"/>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                public static CompletableFuture&lt;Object> anyOf(
+                  CompletableFuture&lt;?>... cfs) {
+                    return // ...
+                }
+            </code></pre>
+            <ul>
+                <li class="fragment">Accepts CompletableFuture&lt;?>... cfs</li>
+                <li class="fragment">Returns CompletableFuture&lt;Object></li>
+                <li class="fragment">Doesn't wait for the first successful completion</li>
+            </ul>
+        </section>
+
+        <section>
+            <!--            cancel-->
             <!--            public API support -->
             <!--            applyToEither-->
-            <!--            cancel-->
             <!--            anyOf-->
             <!--            allOf-->
             <!--            async/sync-->
