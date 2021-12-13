@@ -191,7 +191,42 @@
         </section>
 
         <section>
+            <pre><code data-trim>
+                    CompletableFuture&lt;Integer> cf1 = ...
+                    CompletableFuture&lt;Integer> cf2 = ...
+
+                    CompletableFuture&lt;Void> processed = cf1
+                      .thenApply(i -> i + 1)
+                      .thenCombine(cf2, Integer::sum)
+                      .thenRun(() -> { /*...*/});
+            </code></pre>
+        </section>
+
+        <section>
             <h2>...but this talk is not about the easy parts</h2>
+        </section>
+
+        <section>
+            <h2>Cancelling a CompletableFuture</h2>
+            <pre><code data-trim>
+                   cf.cancel();
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Cancelling a CompletableFuture</h2>
+            <pre><code data-trim>
+                   CompletableFuture&lt;Integer> cf = new CompletableFuture<>();
+                   // ...
+                   cf.cancel();
+            </code></pre>
+        </section>
+        <section>
+            <pre><code data-trim>
+                   // @param mayInterruptIfRunning this value has no effect in this
+                   // implementation because interrupts are not used to control
+                   // processing.
+            </code></pre>
         </section>
 
         <section>
