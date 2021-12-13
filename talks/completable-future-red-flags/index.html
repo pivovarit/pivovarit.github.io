@@ -98,11 +98,12 @@
             <h2>Async</h2>
 
             <img width="40%" src="img/simba.gif"/>
+            <h3 class="fragment">...but how to get the result back?</h3>
         </section>
 
         <section>
             <h2>Future</h2>
-            <h3>Asynchronous operation result's spawn point</h3>
+            <h3>Spawn point for results of async operations</h3>
             <br>
 
             <pre class="fragment"><code data-trim>
@@ -114,7 +115,7 @@
 
         <section>
             <h2>Future</h2>
-            <h3>Asynchronous operation result's spawn point</h3>
+            <h3>Spawn point for results of async operations</h3>
             <br>
 
             <pre><code data-trim>
@@ -122,7 +123,25 @@
                 // ...
                 Integer integer = result.get();
             </code></pre>
+        </section>
 
+        <section>
+            <h3>Any method can become async</h3>
+            <br>
+
+            <pre class="fragment"><code data-trim>
+                Future&lt;Integer> result = executor.submit(() -> someSyncMethod());
+                Integer integer = result.get();
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h2>Java Future Implementations:</h2>
+            <ul>
+                <li>java.util.concurrent.Future</li>
+                <li>java.util.concurrent.CompletableFuture</li>
+            </ul>
         </section>
 
         <section>
