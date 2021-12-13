@@ -147,24 +147,51 @@
         <section>
             <h2>Future's Limitations</h2>
             <ul>
-                <li>Blocking API</li>
-                <li>Limited exception handling</li>
-                <li>A Future can't be manually completed</li>
-                <li>Multiple Futures can't be combined</li>
+                <li class="fragment">Blocking API</li>
+                <li class="fragment">Limited exception handling</li>
+                <li class="fragment">A Future can't be manually completed</li>
+                <li class="fragment">Multiple Futures can't be combined</li>
             </ul>
         </section>
 
         <section>
-            <h2>Future's Limitations</h2>
-            <ul>
-                <li>Blocking API</li>
-                <li>Limited exception handling</li>
-                <li>A Future can't be manually completed</li>
-                <li>Multiple Futures can't be combined</li>
-            </ul>
+
+             <pre><code data-trim>
+                 Future&lt;Integer> result = executor.submit(() -> ...);
+
+                 try {
+                     Integer integer = result.get(); // blocks
+                 } catch (InterruptedException e) {
+                     // handle
+                 } catch (ExecutionException e) {
+                     // handle
+                 }
+            </code></pre>
+
         </section>
 
         <section>
+            <h2>Before JDK 8: ListenableFuture</h2>
+            <pre><code data-trim>
+                   ListenableFuture&lt;Result> future = service.query(name);
+                   future.addListener(new Runnable() {
+                       public void run() {
+                           // ...
+                       }
+                   }, executor);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>JDK 8: CompletableFuture</h2>
+            <pre><code data-trim>
+                   CompletableFuture&lt;Integer> cf = new CompletableFuture<>();
+                   cf.complete(1);
+            </code></pre>
+        </section>
+
+        <section>
+
 
         </section>
 
