@@ -369,7 +369,8 @@
             <h3>The World of Containers</h3>
 
             <img width="60%" src="img/stack.png"/><br>
-            <small><a href="https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op">https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op</a></small>
+            <small><a
+                    href="https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op">https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op</a></small>
 
         </section>
 
@@ -378,29 +379,110 @@
             <h3>ThreadPerTaskExecutor</h3>
 
             <img width="60%" src="img/thread-per-task.png"/><br>
+            <ul>
+                <li class="fragment">ForkJoinPool.commonPool() is not much better either</li>
+            </ul>
         </section>
 
         <section>
             <h3>Thread Pools</h3>
             <img width="60%" src="img/threadpool.png"/><br>
             <small><a href="https://www.baeldung.com/thread-pool-java-and-guava">https://www.baeldung.com/thread-pool-java-and-guava</a></small>
+        </section>
 
+        <section>
+            <h3>ForkJoinPool.commonPool()</h3>
+
+            <ul>
+                <li class="fragment">Just a single instance</li>
+                <li class="fragment">Good for non-blocking operations</li>
+                <li class="fragment">Used by Stream API</li>
+                <li class="fragment">Used by Arrays.parallel*</li>
+                <li class="fragment">Used by Project Loom</li>
+            </ul>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                 list.stream()
+                   .collect(parallel(i -> foo(i), toList(), executor, parallelism))
+                     .orTimeout(1000, MILLISECONDS)
+                     .thenAcceptAsync(System.out::println, otherExecutor)
+                     .thenRun(() -> System.out.println("Finished!"));
+            </code></pre>
+            <h3><a href="https://github.com/pivovarit/parallel-collectors">https://github.com/pivovarit/parallel-collectors</a></h3>
+        </section>
+
+        <section>
+            <h3>Always provide an Executor instance</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Void> future = CompletableFuture
+                  .runAsync(() -> { /* ... */ }, executor) // 1
+                  .thenRun(() -> { /* ... */ })            // 2
+                  .thenRun(() -> { /* ... */ });
+            </code></pre>
+            <ul>
+                <li class="fragment">What thread does #2 run on?</li>
+                <li class="fragment">Either the same thread as #1 or the calling thread</li>
+                <li class="fragment">Not an issue for simple non-blocking processing</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Solution: then***Async</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Void> future = CompletableFuture
+                  .runAsync(() -> { /* ... */ }, executor)
+                  .thenRunAsync(() -> { /* ... */ }, executor)
+                  .thenRunAsync(() -> { /* ... */ }, executor);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#applyToEither vs Exceptions</h3>
         </section>
 
         <section>
             <h3>CompletableFuture#applyToEither</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = ...
+                CompletableFuture&lt;Integer> cf2 = ...
+
+                CompletableFuture&lt;Integer> either = cf1.applyToEither(cf2, i -> i);
+            </code></pre>
         </section>
 
         <section>
-            <!--            cancel-->
-            <!--            public API support -->
-            <!--            applyToEither-->
-            <!--            anyOf-->
-            <!--            allOf-->
-            <!--            async/sync-->
-            <!--            fjp vs loom-->
-            <!--            thread-per-task-executor-->
+            <h3>CompletableFuture#applyToEither</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = completedFuture(42);
+                CompletableFuture&lt;Integer> cf2 = failedFuture(new NullPointerException());
+
+                CompletableFuture&lt;Integer> either = cf1.applyToEither(cf2, i -> i);
+            </code></pre>
+            <ul>
+                <li class="fragment">42</li>
+            </ul>
         </section>
+
+        <section>
+            <h3>CompletableFuture#applyToEither</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = failedFuture(new NullPointerException());
+                CompletableFuture&lt;Integer> cf2 = completedFuture(42)
+
+                CompletableFuture&lt;Integer> either = cf1.applyToEither(cf2, i -> i);
+            </code></pre>
+            <ul>
+                <li class="fragment">NullPointerException</li>
+            </ul>
+        </section>
+
         <section>
             <h2>Thank You!</h2>
             <h4><a href="https://pivovarit.github.io/talks/completable-future-red-flags">https://pivovarit.github.io/talks/completable-future-red-flags</a>
