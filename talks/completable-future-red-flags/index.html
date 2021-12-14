@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>CompletableFuture: Red Flags</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+        <small><a href="http://twitter.com/pivovarit">@pivovarit</a></small>
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+        <section>
+            <h1>CompletableFuture</h1>
+            <h3>Red Flags</h3>
+            <br>
+            <br>
+            <br>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="20%"/><br>
+
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Lead Architect @ <a href="http://hazelcast.com/">Hazelcast</a></h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+
+        </section>
+
+        <section></section>
+
+        <!--<section>
+            <pre><code data-trim>
+                A();
+                B();
+            </code></pre>
+        </section>
+-->
+        <section>
+            <img width="60%" src="img/async.png"/>
+        </section>
+
+        <section>
+            <h2>Async</h2>
+
+            <img width="40%" src="img/simba.gif"/>
+            <h3 class="fragment">...but how to get the result back?</h3>
+        </section>
+
+        <section>
+            <h2>Future</h2>
+            <h3>Spawn point for results of async operations</h3>
+            <br>
+
+            <pre class="fragment"><code data-trim>
+                Future&lt;Integer> result = someAsyncMethod();
+                Integer integer = result.get();
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h2>Future</h2>
+            <h3>Spawn point for results of async operations</h3>
+            <br>
+
+            <pre><code data-trim>
+                Future&lt;Integer> result = someAsyncMethod();
+                // ...
+                Integer integer = result.get();
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Any method can become async</h3>
+            <br>
+
+            <pre class="fragment"><code data-trim>
+                Future&lt;Integer> result = executor.submit(() -> someSyncMethod());
+                Integer integer = result.get();
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h2>Java Future Implementations:</h2>
+            <ul>
+                <li>java.util.concurrent.Future (JDK 1.5)</li>
+                <li>java.util.concurrent.CompletableFuture (JDK 1.8)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Future's Limitations</h2>
+            <ul>
+                <li class="fragment">Blocking API</li>
+                <li class="fragment">Limited exception handling</li>
+                <li class="fragment">A Future can't be manually completed</li>
+                <li class="fragment">Multiple Futures can't be combined</li>
+            </ul>
+        </section>
+
+        <section>
+
+             <pre><code data-trim>
+                 Future&lt;Integer> result = executor.submit(() -> ...);
+
+                 try {
+                     Integer integer = result.get(); // blocks
+                 } catch (InterruptedException e) {
+                     // handle
+                 } catch (ExecutionException e) {
+                     // handle
+                 }
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h2>Before JDK 8: ListenableFuture</h2>
+            <pre><code data-trim>
+                   ListenableFuture&lt;Result> future = service.query(name);
+                   future.addListener(new Runnable() {
+                       public void run() {
+                           // ...
+                       }
+                   }, executor);
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>JDK 8: CompletableFuture</h2>
+            <pre><code data-trim>
+                   CompletableFuture&lt;Integer> cf = new CompletableFuture<>();
+                   cf.complete(1);
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                    CompletableFuture&lt;Integer> cf1 = ...
+                    CompletableFuture&lt;Integer> cf2 = ...
+
+                    CompletableFuture&lt;Void> processed = cf1
+                      .thenApply(i -> i + 1)
+                      .thenCombine(cf2, Integer::sum)
+                      .thenRun(() -> { /*...*/});
+            </code></pre>
+        </section>
+
+        <section>
+            <img width="60%" src="img/nurkiewicz.png"/>
+            <h4><a href="https://youtu.be/-MBPQ7NIL_Y">https://youtu.be/-MBPQ7NIL_Y</a></h4>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Cancelling a CompletableFuture</h2>
+            <pre><code data-trim>
+                   cf.cancel();
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                    CompletableFuture&lt;Void> processed = cf1
+                      .thenApply(i -> i + 1)
+                      .thenCombine(cf2, Integer::sum)
+                      .thenRun(() -> { /*...*/}); // what if I cancel this one?
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                   CompletableFuture&lt;Integer> cf = new CompletableFuture<>();
+                   // ...
+                   cf.cancel();
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Cancels a CompletableFuture and not tasks completing it</h2>
+
+            <pre><code data-trim>
+                   // @param mayInterruptIfRunning this value has no effect in this
+                   // implementation because interrupts are not used to control
+                   // processing.
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Technically, you could hack it...</h3>
+
+            <pre class="stretch"><code data-trim>
+                static final class InterruptibleCompletableFuture&lt;T> extends CompletableFuture&lt;T> {
+                    private volatile FutureTask&lt;?> backingTask;
+
+                    private void completedBy(FutureTask&lt;Void> task) {
+                        backingTask = task;
+                    }
+
+                    @Override
+                    public boolean cancel(boolean mayInterruptIfRunning) {
+                        if (backingTask != null) {
+                            backingTask.cancel(mayInterruptIfRunning);
+                        }
+                        return super.cancel(mayInterruptIfRunning);
+                    }
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Combining Multiple Futures...</h2>
+            <h3>CompletableFuture#allOf/anyOf</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = new CompletableFuture<>();
+                CompletableFuture&lt;Integer> cf2 = new CompletableFuture<>();
+
+                CompletableFuture.allOf(cf1, cf2);
+                CompletableFuture.anyOf(cf1, cf2);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#allOf</h3>
+
+            <pre><code data-trim>
+                public static CompletableFuture&lt;Void> allOf(
+                  CompletableFuture&lt;?>... cfs) {
+                    return andTree(cfs, 0, cfs.length - 1);
+                }
+            </code></pre>
+            <ul>
+                <li class="fragment">Accepts CompletableFuture&lt;?>... cfs</li>
+                <li class="fragment">Returns CompletableFuture&lt;Void></li>
+                <li class="fragment">Doesn't shortcircuit on exception</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Can you spot the issue?</h3>
+
+            <img width="80%" src="img/testcontainers.png"/>
+        </section>
+
+        <section>
+            <img width="70%" src="img/allOf.png"/>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#anyOf</h3>
+
+            <pre><code data-trim>
+                public static CompletableFuture&lt;Object> anyOf(
+                  CompletableFuture&lt;?>... cfs) {
+                    return // ...
+                }
+            </code></pre>
+            <ul>
+                <li class="fragment">Accepts CompletableFuture&lt;?>... cfs</li>
+                <li class="fragment">Returns CompletableFuture&lt;Object></li>
+                <li class="fragment">Doesn't wait for the first successful completion</li>
+            </ul>
+        </section>
+
+        <section>
+            <img width="70%" src="img/anyOf.png"/>
+        </section>
+
+        <section>
+            <h3>CompletableFuture vs Threads</h3>
+        </section>
+
+        <section>
+            <h3>Straightforward with JDK 1.5's Future</h3>
+
+            <pre><code data-trim>
+                ExecutorService executor = Executors.newFixedThreadPool(4);
+                Future&lt;?> future = executor.submit(() -> { /* ... */ });
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>With CompletableFuture</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Void> future = CompletableFuture
+                  .runAsync(() -> { /* ... */ }) // 1
+                  .thenRun(() -> { /* ... */ })  // 2
+                  .thenRun(() -> { /* ... */ });
+            </code></pre>
+            <ul>
+                <li class="fragment">What thread pool does #1 run on?</li>
+                <li class="fragment">What thread does #2 run on?</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Following CompletableFuture#runAsync</h3>
+
+            <img width="60%" src="img/cf-common-pool.png"/><br>
+
+        </section>
+
+        <section>
+            <img width="60%" src="img/common-pool-parallelism.png"/><br>
+
+        </section>
+
+
+        <section>
+            <h3>The World of Containers</h3>
+
+            <img width="60%" src="img/stack.png"/><br>
+            <small><a
+                    href="https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op">https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op</a></small>
+
+        </section>
+
+
+        <section>
+            <h3>ThreadPerTaskExecutor</h3>
+
+            <img width="60%" src="img/thread-per-task.png"/><br>
+            <ul>
+                <li class="fragment">ForkJoinPool.commonPool() is not much better either</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Thread Pools</h3>
+            <img width="60%" src="img/threadpool.png"/><br>
+            <small><a href="https://www.baeldung.com/thread-pool-java-and-guava">https://www.baeldung.com/thread-pool-java-and-guava</a></small>
+        </section>
+
+        <section>
+            <h3>ForkJoinPool.commonPool()</h3>
+
+            <ul>
+                <li class="fragment">Just a single instance</li>
+                <li class="fragment">Good for non-blocking operations</li>
+                <li class="fragment">Used by Stream API</li>
+                <li class="fragment">Used by Arrays.parallel*</li>
+                <li class="fragment">Used by Project Loom</li>
+            </ul>
+        </section>
+
+        <section>
+            <pre><code data-trim>
+                 list.stream()
+                   .collect(parallel(i -> foo(i), toList(), executor, parallelism))
+                     .orTimeout(1000, MILLISECONDS)
+                     .thenAcceptAsync(System.out::println, otherExecutor)
+                     .thenRun(() -> System.out.println("Finished!"));
+            </code></pre>
+            <h3><a href="https://github.com/pivovarit/parallel-collectors">https://github.com/pivovarit/parallel-collectors</a></h3>
+        </section>
+
+        <section>
+            <h3>Always provide an Executor instance</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Void> future = CompletableFuture
+                  .runAsync(() -> { /* ... */ }, executor) // 1
+                  .thenRun(() -> { /* ... */ })            // 2
+                  .thenRun(() -> { /* ... */ });
+            </code></pre>
+            <ul>
+                <li class="fragment">What thread does #2 run on?</li>
+                <li class="fragment">Either the same thread as #1 or the calling thread</li>
+                <li class="fragment">Not an issue for simple non-blocking processing</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Solution: then***Async</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Void> future = CompletableFuture
+                  .runAsync(() -> { /* ... */ }, executor)
+                  .thenRunAsync(() -> { /* ... */ }, executor)
+                  .thenRunAsync(() -> { /* ... */ }, executor);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#applyToEither vs Exceptions</h3>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#applyToEither</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = ...
+                CompletableFuture&lt;Integer> cf2 = ...
+
+                CompletableFuture&lt;Integer> either = cf1.applyToEither(cf2, i -> i);
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#applyToEither</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = completedFuture(42);
+                CompletableFuture&lt;Integer> cf2 = failedFuture(new NullPointerException());
+
+                CompletableFuture&lt;Integer> either = cf1.applyToEither(cf2, i -> i);
+            </code></pre>
+            <ul>
+                <li class="fragment">42</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>CompletableFuture#applyToEither</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Integer> cf1 = failedFuture(new NullPointerException());
+                CompletableFuture&lt;Integer> cf2 = completedFuture(42)
+
+                CompletableFuture&lt;Integer> either = cf1.applyToEither(cf2, i -> i);
+            </code></pre>
+            <ul>
+                <li class="fragment">NullPointerException</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+            <h4><a href="https://pivovarit.github.io/talks/completable-future-red-flags">https://pivovarit.github.io/talks/completable-future-red-flags</a>
+            </h4>
+            <img src="img/talk_qr.png"/>
+            <h3><a href="http://twitter.com/pivovarit">Twitter: @pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="30%"/><br>
+
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 45,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+</body>
+</html>
