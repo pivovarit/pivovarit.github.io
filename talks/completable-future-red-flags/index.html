@@ -217,13 +217,22 @@
         </section>
 
         <section>
-            <h2>Cancelling a CompletableFuture</h2>
+            <pre><code data-trim>
+                    CompletableFuture&lt;Void> processed = cf1
+                      .thenApply(i -> i + 1)
+                      .thenCombine(cf2, Integer::sum)
+                      .thenRun(() -> { /*...*/}); // what if I cancel this one?
+            </code></pre>
+        </section>
+
+        <section>
             <pre><code data-trim>
                    CompletableFuture&lt;Integer> cf = new CompletableFuture<>();
                    // ...
                    cf.cancel();
             </code></pre>
         </section>
+
         <section>
             <h2>Cancels a CompletableFuture and not tasks completing it</h2>
 
@@ -270,6 +279,8 @@
         </section>
 
         <section>
+            <h3>CompletableFuture#allOf</h3>
+
             <pre><code data-trim>
                 public static CompletableFuture&lt;Void> allOf(
                   CompletableFuture&lt;?>... cfs) {
@@ -294,6 +305,8 @@
         </section>
 
         <section>
+            <h3>CompletableFuture#anyOf</h3>
+
             <pre><code data-trim>
                 public static CompletableFuture&lt;Object> anyOf(
                   CompletableFuture&lt;?>... cfs) {
@@ -312,11 +325,66 @@
         </section>
 
         <section>
-            <h3>thenApply() vs threads</h3>
+            <h3>CompletableFuture vs Threads</h3>
         </section>
 
         <section>
-            <h3>ForkJoinPool</h3>
+            <h3>Straightforward with JDK 1.5's Future</h3>
+
+            <pre><code data-trim>
+                ExecutorService executor = Executors.newFixedThreadPool(4);
+                Future&lt;?> future = executor.submit(() -> { /* ... */ });
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>With CompletableFuture</h3>
+
+            <pre><code data-trim>
+                CompletableFuture&lt;Void> future = CompletableFuture
+                  .runAsync(() -> { /* ... */ }) // 1
+                  .thenRun(() -> { /* ... */ })  // 2
+                  .thenRun(() -> { /* ... */ });
+            </code></pre>
+            <ul>
+                <li class="fragment">What thread pool does #1 run on?</li>
+                <li class="fragment">What thread does #2 run on?</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Following CompletableFuture#runAsync</h3>
+
+            <img width="60%" src="img/cf-common-pool.png"/><br>
+
+        </section>
+
+        <section>
+            <img width="60%" src="img/common-pool-parallelism.png"/><br>
+
+        </section>
+
+
+        <section>
+            <h3>The World of Containers</h3>
+
+            <img width="60%" src="img/stack.png"/><br>
+            <small><a href="https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op">https://stackoverflow.com/questions/57003259/runtime-getruntime-availableprocessors-is-always-returning-1-on-container-op</a></small>
+
+        </section>
+
+
+        <section>
+            <h3>ThreadPerTaskExecutor</h3>
+
+            <img width="60%" src="img/thread-per-task.png"/><br>
+        </section>
+
+        <section>
+            <h3>Thread Pools</h3>
+            <img width="60%" src="img/threadpool.png"/><br>
+            <small><a href="https://www.baeldung.com/thread-pool-java-and-guava">https://www.baeldung.com/thread-pool-java-and-guava</a></small>
+
         </section>
 
         <section>
