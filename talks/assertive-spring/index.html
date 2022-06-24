@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Be Assertive with Spring</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+        <small><a href="http://twitter.com/pivovarit">🇺🇦 @pivovarit</a></small>
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+        <section>
+            <h1>Be Assertive with Spring</h1>
+            <br>
+            <br>
+            <br>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="20%"/><br>
+
+        </section>
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Lead Architect @ <a href="http://hazelcast.com/">Hazelcast</a></h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+        </section>
+
+        <section></section>
+
+        <!--        <section>
+                    <img src="img/1gb.jpg" width="70%"/>
+                </section>-->
+
+        <section>
+            <blockquote>"Regarding opinionated / unopinionated frameworks, I think they appeal to different types
+                of developers. I now have 20 years of experience. In my first 5-8 years I loved frameworks like
+                Spring. However, as I gained more experience, I felt I needed a framework's "opinion" less and
+                less. Now I avoid them."
+            </blockquote>
+            <small>https://www.infoq.com/news/2018/10/the-road-to-micronaut-1.0</small>
+        </section>
+
+        <section>
+            <div class="fragment">
+                <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
+                <small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small>
+            </div>
+        </section>
+
+        <section>
+            <h1>Framework Internals</h1>
+            <div class="fragment">
+                <ul>
+                    <li>Runtime reflection</li>
+                    <li>Classpath scanning</li>
+                    <li>Thread-locals</li>
+                    <li>Runtime annotation-processing</li>
+                    <li>Proxies/AOP</li>
+                </ul>
+            </div>
+            <div class="fragment">
+                <img src="img/python.jpg" width="30%"/>
+                <br>
+                <small>"The Meaning of Life", Monty Python</small>
+            </div>
+        </section>
+
+        <section>
+            <img src="img/bosch.jpeg" width="70%"/>
+            <div>
+                <blockquote>"Scala programmer confronts Java project that uses Maven, Spring, and Hibernate" -
+                    Salvador Dali, oil painting, 1946
+                </blockquote>
+                <small>https://twitter.com/progpaintings/status/723276501081190400</small>
+            </div>
+        </section>
+
+        <section>
+            <img src="img/patched.jpg" width="60%"/>
+        </section>
+
+        <section>
+            <img src="img/tight-coupling.png" width="40%"/>
+            <br>
+            <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
+        </section>
+        <section>
+            <img src="img/loose-coupling.png" width="40%"/>
+            <br>
+            <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
+        </section>
+
+
+
+        <section>
+            <h1>I. Invasive Frameworks</h1>
+        </section>
+
+
+
+        <section>
+            <img src="img/patched.jpg" width="60%"/>
+        </section>
+
+        <section>
+            <h2>Meanwhile in Scala ecosystem...</h2>
+            <br>
+            <blockquote>
+                (...) It’s not a web-framework but rather a more general toolkit for providing and consuming
+                HTTP-based services.
+            </blockquote>
+            <small>https://doc.akka.io/docs/akka-http/current/introduction.html#philosophy</small>
+        </section>
+
+        <section>
+            <img src="img/annotations.png" width="40%"/><br/>
+            <small>https://twitter.com/alexelcu/status/1114016039841538048</small>
+        </section>
+
+        <section>
+            <img src="img/suffer.png"/>
+            <small>http://spiridonov.pro/2015/10/14/scala-implicit-hell/</small>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <h2>Dependency Hell</h2>
+            <br>
+
+            <blockquote>
+                Dependency hell is a colloquial term for the frustration of some software users
+                who have installed software packages which have dependencies
+                on specific versions of other software packages.
+            </blockquote>
+            <small>https://en.wikipedia.org/wiki/Dependency_hell</small>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Zero-Dependencies</h2>
+            <br>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            <dependencies>
+                ...
+
+                <dependency>
+                    <groupId>org.assertj</groupId>
+                    <artifactId>assertj-core</artifactId>
+                    <version>${assertj.version}</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+            </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Not that easy to apply in practice</h3>
+            <h4>... but internal dependencies can be shaded*</h4>
+            <br>
+
+            <img src="img/hz-deps.png" width="40%"/>
+        </section>
+
+        <section>
+            <h3>This and other architectural decisions can be enforced</h3>
+            <h4>arch-unit</h4>
+            <br>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+
+             @Test
+             void shouldHaveZeroDependencies() {
+                 classes()
+                   .that().resideInAPackage("com.pivovarit.collectors")
+                   .should()
+                   .onlyDependOnClassesThat()
+                   .resideInAnyPackage("com.pivovarit.collectors", "java..")
+                   .as("the library should depend only on core Java classes")
+                   .because("so that users don't experience dependency hell")
+                   .check(classes);
+             }
+
+            @Test
+            void shouldHaveSinglePackage() {
+                classes()
+                  .should().resideInAPackage("com.pivovarit.collectors")
+                  .check(classes);
+            }
+
+            </code></pre>
+            <small><a
+                    href="https://github.com/pivovarit/parallel-collectors/blob/e480eb5fc477e5558ea69f81fcc803d005b80ec3/src/test/java/com/pivovarit/collectors/ArchitectureTest.java#L36-L52">source</a></small>
+
+        </section>
+
+
+        <section>
+            <h2>Frameworks vs Libraries</h2>
+        </section>
+
+        <section>
+            <h2>Frameworks</h2>
+
+            <blockquote>Puts work into a frame</blockquote>
+            <img src="img/framework1.png" width="15%"/>
+            <br>
+
+            <small>http://tomasp.net/blog/2015/library-frameworks/</small>
+
+        </section>
+
+        <section>
+            <h2>Frameworks exist beyond software</h2>
+            <br>
+            <h3>Franchizes</h3>
+            <h3>Project Management Methodologies (for example, Scrum)</h3>
+
+        </section>
+
+        <section>
+            <h1>Frameworks</h1>
+            <h2 class="fragment">Take time to learn and outdate quickly</h2>
+            <h2 class="fragment">Own you</h2>
+            <h2 class="fragment">Increase complexity/weight</h2>
+            <h2 class="fragment">Go out of fashion/get abandoned</h2>
+            <h2 class="fragment">Force you to keep up</h2>
+            <h2 class="fragment">Require expert help</h2>
+            <h2 class="fragment">Probably provide more than you need</h2>
+        </section>
+
+        <section>
+            <h2>Hazelcast IMDG/Jet</h2>
+            <br>
+            <div class="fragment">Is not a framework but a toolkit, it doesn't own your application.</div>
+            <br>
+            <br>
+            <br>
+            <br>
+
+
+            <blockquote>
+                (...) Hazelcast is also used in academia and research as a framework for distributed execution and
+                storage.
+            </blockquote>
+            <blockquote>
+                (...) Hazelcast as its distributed execution framework.
+            </blockquote>
+            <small>https://en.wikipedia.org/wiki/Hazelcast</small>
+        </section>
+
+        <section>
+
+        </section>
+
+        <section>
+            <h2>- Wouldn't you like to focus on solving real problems and let framework authors do the boring
+                parts?</h2>
+            <h2 class="fragment">- Of course! but...</h2>
+            <div class="fragment">
+                <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
+                <small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small>
+            </div>
+            <br><br>
+            <h3 class="fragment">So you spend time learning someone's abstraction and not the underlying
+                technologies</h3>
+
+        </section>
+
+
+        <section>
+            <h2>for example, ORM</h2>
+            <small>JPA/Hibernate</small>
+        </section>
+
+        <section>
+            <h2>Often seen: domain full of framework-specific annotations</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.pivovarit.domain;
+
+                import javax.persistence.Column;
+                import javax.persistence.Entity;
+
+                @Entity
+                public class PersistedUser {
+
+                    private Long id;
+
+                    @Column
+                    private String name;
+                }
+            </code></pre>
+            <h3 class="fragment">Not really a problem as long as the model is simple and graspable</h3>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                @OneToMany(@HowManyDBADoYouNeedToChangeALightBulb)
+                @OneToManyMore @AnyOne @AnyBody
+                @YouDoNotTalkAboutOneToMany // Fightclub, LOL
+                @TweakThisWithThat(
+                    tweak = {
+                        @TweakID(name = "id", preferredValue = 1839),
+                        @TweakID(name = "test", preferredValue = 839),
+                        @TweakID(name = "test.old", preferredValue = 34),
+                    },
+                    inCaseOf = {
+                        @ConditionalXMLFiltering(run = 5),
+                    }
+                )
+                @ManyToMany @Many @AnnotationsTotallyRock @DeclarativeProgrammingRules @NoMoreExplicitAlgorithms
+                @Fetch @FetchMany @FetchWithDiscriminator(name = "no_name")
+                @SeveralAndThenNothing @MaybeThisDoesSomething
+                @JoinTable(joinColumns = {
+                    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+                })
+                @DoesThisEvenMeanAnything @DoesAnyoneEvenReadThis
+                @PrefetchJoinWithDiscriminator @JustTrollingYouKnow @LOL
+                @IfJoiningAvoidHashJoins @ButUseHashJoinsWhenMoreThan(records = 1000)
+                @XmlDataTransformable @SpringPrefechAdapter
+                private Collection employees;
+            </code></pre>
+            <small>http://www.annotatiomania.com</small>
+        </section>
+
+        <section>
+            <h3>SQL is complete and self-sufficient, too bad that not type-safe...</h3>
+            <div class="fragment">
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                String sql = create
+                  .select(BOOK.TITLE, AUTHOR.FIRST_NAME, AUTHOR.LAST_NAME)
+                  .from(BOOK)
+                  .join(AUTHOR).on(BOOK.AUTHOR_ID.eq(AUTHOR.ID))
+                  .where(BOOK.PUBLISHED_IN.eq(1948))
+                  .getSQL();
+            </code></pre>
+                <h4><a href="https://www.jooq.org">https://www.jooq.org</a></h4>
+            </div>
+        </section>
+
+        <section>
+            <h3>Kotlin Exposed</h3>
+            <div class="fragment">
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                fun findLastRentalId(customerId: CustomerId): RentalId? =
+                  RentalTable
+                    .select { RentalTable.customerId eq customerId.value }
+                    .orderBy(RentalTable.startDate, true)
+                    .map { RentalId(it[RentalTable.id]) }
+                    .firstOrNull()
+            </code></pre>
+                <h4><a href="https://github.com/JetBrains/Exposed">https://github.com/JetBrains/Exposed</a></h4>
+            </div>
+        </section>
+
+        <section>
+            <h3>JdbcTemplate</h3>
+            <div class="fragment">
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                @Override
+                public Collection&lt;Movie> findAll() {
+                    return jdbcTemplate.query("SELECT * FROM movie",
+                      JdbcTemplateMovieRepository::mapper);
+                }
+            </code></pre>
+                <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                private static Movie mapper(ResultSet resultSet, int i)
+                  throws SQLException {
+                    return new Movie(new MovieId(
+                      resultSet.getLong("id")),
+                      resultSet.getString("title"),
+                      MovieType.valueOf(resultSet.getString("type")));
+                }
+            </code></pre>
+            </div>
+        </section>
+
+        <section>
+            But frameworks don't need to be that invasive as well, if you don't let them be.
+        </section>
+
+        <section>
+            <h2>Let's look again</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.pivovarit.domain;
+
+                import javax.persistence.Column;
+                import javax.persistence.Entity;
+
+                @Entity
+                public class PersistedUser {
+
+                    private Long id;
+
+                    @Column
+                    private String name;
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>ORM as plugin</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.pivovarit.domain;
+
+                public class User {
+                    private final Long id;
+                    private final String name;
+                }
+            </code></pre>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                package com.pivovarit.persistence;
+
+                import javax.persistence.Column;
+                import javax.persistence.Entity;
+
+                @Entity
+                public class PersistedUser {
+
+                    private Long id;
+
+                    @Column
+                    private String name;
+                }
+            </code></pre>
+        </section>
+
+        <!--field injection vs constructor injection-->
+
+        <section>
+            <h1>Spring</h1>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.*;
+
+                @Component
+                public class FooFacade {
+
+                    @Autowired
+                    private FooService fooService;
+
+                    @PostConstruct
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+                public static void main(String[] args) {
+                    // ???
+                }
+            </code></pre>
+            <ul>
+                <li>- Tight coupling with the DI framework</li>
+                <li>- Forces weak encapsulation</li>
+                <li>- Forces mutability</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.*;
+
+                @Component
+                public class FooFacade {
+
+                    private final FooService fooService;
+
+                    @Autowired
+                    public FooFacade(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+
+                    @PostConstruct
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+                public static void main(String[] args) {
+                    FooFacade fooFacade = new FooFacade(new FooService());
+                    fooFacade.foo();
+                }
+            </code></pre>
+            <ul>
+                <li>- Tight coupling with the DI framework</li>
+                <li>+ Can be instantiated independently</li>
+                <li>+ Internals can be encapsulated</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.*;
+
+                @Component
+                public class FooFacade {
+
+                    private final FooService fooService;
+
+                    // @Autowired
+                    public FooFacade(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+
+                    @PostConstruct
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+                public static void main(String[] args) {
+                    FooFacade fooFacade = new FooFacade(new FooService());
+                    fooFacade.foo();
+                }
+            </code></pre>
+            <ul>
+                <li>- Tight coupling with the DI framework</li>
+                <li>+ Can be instantiated independently</li>
+                <li>+ Internals can be encapsulated</li>
+            </ul>
+        </section>
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                public class FooFacade {
+
+                    private final FooService fooService;
+
+                    public FooFacade(FooService fooService) {
+                        this.fooService = fooService;
+                        foo();
+                    }
+
+                    void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                public static void main(String[] args) {
+                    FooFacade fooFacade = new FooFacade(new FooService());
+                }
+
+            </code></pre>
+            <ul>
+                <li>...but where's the config?</li>
+            </ul>
+        </section>
+        <section>
+             <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+
+                @Configuration
+                public class FooConfiguration {
+
+                    @Bean
+                    FooService fooService() {
+                        return new FooService();
+                    }
+
+                    @Bean
+                    FooFacade fooFacade(FooService fooService) {
+                        return new FooFacade(fooService);
+                    }
+                }
+            </code></pre>
+            <ul>
+                <li>Domain code free of framework configuration</li>
+            </ul>
+        </section>
+
+        <section>
+             <pre><code data-trim="" style="font-size: 1em;line-height: 0.9; max-height: 90%">
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+
+                @Configuration
+                public class FooConfiguration {
+
+                    @Bean
+                    FooFacade fooFacade() {
+                        return new FooFacade(new FooService());
+                    }
+                }
+            </code></pre>
+            <ul>
+                <li>Domain code free of framework configuration</li>
+            </ul>
+        </section>
+
+        <section>
+             <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                import org.springframework.beans.factory.annotation.Autowired;
+                import org.springframework.stereotype.Component;
+
+                @Component
+                public class FooFacade {
+
+                    @Autowired
+                    private FooService fooService;
+
+                    public void foo() {
+                        fooService.foo();
+                    }
+                }
+            </code></pre>
+            <h2>Same framework - both invasive and non-invasive</h2>
+            <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                public class FooFacade {
+
+                    private final FooService fooService;
+
+                    public FooFacade(FooService fooService) {
+                        this.fooService = fooService;
+                    }
+                }
+            </code></pre>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+
+                @Configuration
+                public class FooConfiguration {
+
+                    @Bean
+                    FooFacade fooFacade() {
+                        return new FooFacade(new FooService());
+                    }
+                }
+            </code></pre>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h3>Composition/Delegation is your friend</h3>
+            <pre><code data-trim="">
+                public interface UserSessionRepository {
+                    // ...
+                }
+            </code></pre>
+            <pre><code data-trim="">
+                public class CachingUserSessionRepository
+                  implements UserSessionRepository {
+
+                    private final UserSessionRepository;
+                    // ...
+                }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Pragmatic Hexagonal/Clean Architecture</h2>
+            <img class="fragment" src="img/hexagonal.png" width="70%"/>
+        </section>
+
+        <section>
+            <h2>Axon RabbitMQ/Kafka Story</h2>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+            import org.axonframework.eventhandling.annotation.EventHandler;
+
+            public class SessionEventsHandler {
+
+                //...
+
+                @EventHandler
+                public void handle(SessionStartedEvent event) {
+                    // ...
+                }
+
+                @EventHandler
+                public void handle(SessionEndedEvent event) {
+                    // ...
+                }
+            }
+                 </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            @FunctionalInterface
+            public interface EventHandler {
+                Map&lt;String, EventRoute> getRoutingConfig();
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+
+            public class SessionEventsHandler implements EventHandler {
+
+                // ...
+
+                private void playerSessionStarted(SessionStartedEvent event) {
+                    // ...
+                }
+
+                private void playerSessionEnded(SessionEndedEvent event) {
+                    // ...
+                }
+
+                @Override
+                public Map&lt;String, EventRoute> getRoutingConfig() {
+                    return Map.ofEntries(
+                      route(
+                        SessionEndedEvent.ROUTING_KEY,
+                        SessionEndedEvent.class,
+                        this::playerSessionEnded),
+                      route(
+                        SessionStartedEvent.ROUTING_KEY,
+                        SessionStartedEvent.class,
+                        this::playerSessionStarted)
+                    );
+                }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+
+            public class RabbitEventStreamListener implements MessageListener {
+
+                // ...
+
+                private final Map&lt;String, EventRoute> eventRoutes;
+
+                @Override
+                public void onMessage(Message message) {
+                    var route = eventRoutes.get(message.getMessageProperties().getReceivedRoutingKey());
+                    if (null != route) {
+                        route.getEventHandler().accept(new DomainMessage(...);
+                    } else {
+                        log.warn("couldn't find a matching routing for routing key");
+                    }
+                }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+
+            @Configuration
+            @Profile("kafka-eventstream")
+            public class KafkaEventStreamConfiguration {
+
+                @Bean
+                public KafkaEventStreamListener kafkaEventStreamListener(
+                  List&lt;EventHandler> handlers, ObjectMapper mapper) {
+
+                    var eventRoutes = handlers.stream()
+                      .flatMap(h -> h.getRoutingConfig().entrySet().stream())
+                      .collect(
+                        groupingBy(Map.Entry::getKey,
+                          mapping(Map.Entry::getValue, toUnmodifiableSet())));
+
+                    return new KafkaEventStreamListener(mapper, eventRoutes);
+                }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+
+            @Configuration
+            @Profile("rabbit-eventstream")
+            public class RabbitEventStreamConfiguration {
+
+                @Bean
+                public Collection&lt;MessageListenerContainer> rabbitEventStreamListener(
+                  @Value("${rabbitmq.axon.exchange}") String axonExchangeName,
+                  @Value("${rabbitmq.axon.queuePrefix}") String axonQueuePrefix,
+                  AmqpAdmin amqpAdmin,
+                  RabbitListenerContainerFactory eventstreamRabbitListenerContainerFactory,
+                  List&lt;EventHandler> handlers,
+                  ConfigurableBeanFactory beanFactory,
+                  ObjectMapper mapper) {
+
+                    TopicExchange axonExchange = new TopicExchange(axonExchangeName);
+                    amqpAdmin.declareExchange(axonExchange);
+
+                    return handlers.stream()
+                      .map(handler -> buildRabbitListener(...))
+                      .collect(toUnmodifiableList());
+                }
+
+                private static MessageListenerContainer buildRabbitListener(
+                  EventHandler handler,
+                  ConfigurableBeanFactory beanFactory,
+                  ObjectMapper mapper,
+                  String queuePrefix,
+                  AmqpAdmin amqpAdmin,
+                  TopicExchange axonExchange,
+                  RabbitListenerContainerFactory eventstreamRabbitListenerContainerFactory) { ... }
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2 class="fragment">Things to try</h2>
+        </section>
+
+        <section>
+            <h2>Unopinionated: Ratpack</h2>
+            <br>
+            <blockquote>
+                Ratpack is a set of Java libraries for building scalable HTTP applications.<br><br>
+                It is a lean and powerful foundation, not an all-encompassing framework.
+            </blockquote>
+            <small>https://ratpack.io</small>
+            <small>https://www.youtube.com/watch?v=rqCHb9M3uiI</small>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.7em;line-height: 0.9; max-height: 90%">
+            public class MyApp {
+
+                public static void main(String[] args) throws Exception {
+                  RatpackServer.start(s -> s
+                      .serverConfig(c -> c.baseDir(BaseDir.find()))
+                      .registry(Guice.registry(b -> b.module(MyModule.class)))
+                      .handlers(chain -> chain
+                          .path("foo", ctx -> ctx.render("from the foo handler"))
+                          .path("bar", ctx -> ctx.render("from the bar handler"))
+                          .prefix("nested", nested -> {
+                            nested.path(":var1/:var2?", ctx -> {
+                              Map&lt;String, String> pathTokens = ctx.getPathTokens();
+                              ctx.render(
+                                "from the nested handler, var1: " + pathTokens.get("var1") +
+                                  ", var2: " + pathTokens.get("var2")
+                              );
+                            });
+                          })
+                          .path("injected", MyHandler.class)
+                          .prefix("static", nested -> nested.fileSystem("assets/images", Chain::files))
+                          .all(ctx -> ctx.render("root handler!"))
+                      )
+                  );
+                }
+              }
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Opinionated: Quarkus</h2>
+            <br>
+            <blockquote>
+                $ ./my-native-java-rest-app<br>
+                Quarkus started in 0.008s
+            </blockquote>
+            <img src="img/quarkus.png" width="70%"/>
+            <br>
+
+            <ul>
+                <li>GraalVM Support</li>
+                <li>Build-time Initialization</li>
+                <li>Hot Reload</li>
+            </ul>
+            <br><br>
+            <small>http://quarkus.io</small>
+        </section>
+
+        <section>
+            <img src="img/quarkus-hazelcast-client.png" width="80%"/>
+        </section>
+
+        <section>
+            <blockquote>
+                Using common sense is the ultimate Best Practice™.
+            </blockquote>
+        </section>
+
+        <section>
+            <img src="img/disenchantment.jpg"/>
+            <h4><a href="http://tonsky.me/blog/disenchantment/">http://tonsky.me/blog/disenchantment/</a></h4>
+
+        </section>
+
+        <section>
+            <!--
+            Of course when frameworks are working out, then they are just the bees knees. Well, until one day the framework is no longer the cool kid on the block. The community starts to fade. A couple years down the road, colleagues look askance because of a code base that is on a has-been framework.
+            Not that big of a problem when doing microservices right
+
+
+            https://www.youtube.com/watch?v=dGws1pMWzCI
+            https://www.youtube.com/watch?v=bEK2Q0AAh6c
+            http://kristopherwilson.com/2013/11/27/decoupling-the-framework/
+            http://memeagora.blogspot.com/2007/11/ruby-matters-frameworks-dsls-and.html
+            https://www.smashingmagazine.com/2017/05/why-no-framework/
+            http://www.catonmat.net/blog/frameworks-dont-make-sense/
+            http://tomasp.net/blog/2015/library-frameworks/
+            https://dzone.com/articles/discussion-recap-to-framework-or-not-to-framework
+            https://dev.to/gypsydave5/why-you-shouldnt-use-a-web-framework-3g24
+            Hexagonal Architecture, domain decoupled from infra, Hibernate, Lagom, Event sourcing
+            -->
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+            <h4><a href="https://pivovarit.github.io/talks/fantastic-frameworks">https://pivovarit.github.io/talks/assertive-spring</a>
+            </h4>
+            <img src="img/talk_qr.png"/>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="30%"/><br>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 45,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+</body>
+</html>
