@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Hazelcast 5.2 - And What Now?</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+
+<div class="reveal">
+
+    <div class="footer">
+        <small><a href="http://twitter.com/pivovarit">🇺🇦 @pivovarit</a></small>
+    </div>
+
+    <!-- Any section element inside of this container is displayed as a slide -->
+    <div class="slides">
+
+        <section>
+            <h1>Hazelcast 5.2</h1>
+            <h3>And What Now?</h3>
+            <br>
+            <br>
+            <br>
+            <h2><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="20%"/><br>
+
+        </section>
+
+<!--        <section data-background-image="img/raffle.png"></section>-->
+
+        <section>
+            <h1>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h1>
+            <h2>Lead Architect @ <a href="http://hazelcast.com/">Hazelcast</a></h2>
+            <h2>Trainer @ <a href="https://bottega.com.pl">Bottega IT Minds</a></h2>
+            <h3><a href="http://twitter.com/pivovarit">@pivovarit</a></h3>
+            <br>
+
+        </section>
+
+        <section></section>
+        <section>
+            <img src="img/hz.png" width="20%"/><br>
+
+            Born in 2008 in Turkey as a simple caching solution...
+            <br><br>
+
+            <div class="fragment">
+                <img src="img/cache.png" width="60%"/><br>
+                <small>source: Hazelcast</small>
+            </div>
+
+        </section>
+        <section>
+            <img src="img/hz.png" width="20%"/><br>
+
+            The Hazelcast IMDG is an operational in-memory computing platform that manages data and distributes
+            processing using memory and parallel execution for breakthrough application speed and scale.
+
+            <br><br><br><br>
+
+            <div class="fragment">
+                <img src="img/imdg.png" width="60%"/><br>
+                <small>source: Hazelcast</small>
+            </div>
+
+        </section>
+
+        <section>
+            <h2>IMDG</h2>
+            <h4 class="fragment">In-Memory Data Grid</h4>
+            <br><br>
+
+            <li class="fragment">In-Memory (no persistence)</li>
+            <li class="fragment">Storage/Computation</li>
+            <li class="fragment">Multiple processes working as a group</li>
+        </section>
+
+        <section>
+            <img src="img/partition.png" width="80%"/><br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <video data-autoplay src="img/arch.mp4"></video>
+            <br>
+            <small>source: Hazelcast</small>
+        </section>
+
+        <section>
+            <h3>Hazelcast Cloud</h3>
+            <h4>Hazelcast IMDG cluster as a service</h4>
+
+            <img src="img/hzcloud.png" width="60%"/><br>
+
+            <br>
+            <h4><a href="https://cloud.hazelcast.com">https://cloud.hazelcast.com</a></h4>
+        </section>
+
+        <section>
+            <h2>Polyglot-first</h2>
+            <li class="fragment">Zero-config Serialization (Compact Serialization)</li>
+            <li class="fragment">SQL Engine(with Streaming)</li>
+            <li class="fragment">Zero-Code Maploader</li>
+        </section>
+
+        <section>
+            <img src="img/sql-example.png" width="90%"/><br>
+
+        </section>
+
+        <section>
+            <h2>IMap Change-Data-Capture</h2>
+        </section>
+
+        <section>
+            <h2>Hazelcast Serverless Cloud Offering</h2>
+            <li class="fragment">Opinionated</li>
+            <li class="fragment">Developer Experience</li>
+            <li class="fragment">Beta Available in 2022</li>
+        </section>
+
+        <section>
+            <img src="img/jet_samples.png" width="40%"/><br>
+
+            <h4><a href="https://github.com/hazelcast/hazelcast-jet-demos">https://github.com/hazelcast/hazelcast-jet-demos</a></h4>
+        </section>
+
+        <section>
+            <h3>Hazelcast Jet Design Documents</h3>
+            <h4><a href="https://jet-start.sh/docs/design-docs/">https://jet-start.sh/docs/design-docs/</a></h4>
+
+            <h3>Hazelcast Jet Architecture</h3>
+            <h4><a href="https://jet-start.sh/docs/architecture/distributed-computing">https://jet-start.sh/docs/architecture/distributed-computing</a>
+            </h4>
+        </section>
+
+        <section>
+            <h3>Hazelcast Jet Whitepaper</h3>
+            <img src="img/jet-whitepaper.png" width="70%"/><br>
+            <h4><a href="https://arxiv.org/abs/2103.10169">https://arxiv.org/abs/2103.10169</a></h4>
+            <br>
+            <h4><a href="https://jet-start.sh/blog/2020/06/09/jdk-gc-benchmarks-part1">Performance of Modern Java on Data-Heavy Workloads: Real-Time Streaming</a></h4>
+            <h4><a href="https://jet-start.sh/blog/2020/05/25/grcp">Processing 10M queries / second on a single node using Jet and gRPC</a></h4>
+        </section>
+
+        <section>
+            <h2>Thank You!</h2>
+            <h3>Q/A time!</h3>
+            <h4><a href="https://pivovarit.github.io/talks/hazelcast52">https://pivovarit.github.io/talks/hazelcast52</a>
+            </h4>
+            <h3><a href="http://twitter.com/pivovarit">Twitter: @pivovarit</a></h3>
+            <br>
+            <img src="img/hz.png" width="30%"/><br>
+
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: false,
+        defaultTiming: 45,
+        progress: true,
+        history: true,
+        center: true,
+        width: 1920,
+        height: 1200,
+        margin: 0.05,
+
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+
+        // More info https://github.com/hakimel/reveal.js#dependencies
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                    return !document.body.classList;
+                }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                    return !!document.querySelector('[data-markdown]');
+                }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+
+</script>
+</body>
+</html>
