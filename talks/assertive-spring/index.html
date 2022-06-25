@@ -95,6 +95,49 @@
         </section>
 
         <section>
+            <h2>Frameworks vs Libraries</h2>
+        </section>
+
+        <section>
+            <h2>Frameworks</h2>
+
+            <blockquote>Puts work into a frame</blockquote>
+            <img src="img/framework1.png" width="15%"/>
+            <br>
+
+            <small>http://tomasp.net/blog/2015/library-frameworks/</small>
+
+        </section>
+
+        <section>
+            <h2>Frameworks exist beyond software</h2>
+            <br>
+            <h3>Franchizes</h3>
+            <h3>Project Management Methodologies (for example, Scrum)</h3>
+
+        </section>
+
+        <section>
+            <h1>Frameworks</h1>
+            <h2 class="fragment">Take time to learn and outdate quickly</h2>
+            <h2 class="fragment">Go out of fashion/get abandoned</h2>
+            <h2 class="fragment">Increase complexity/weight</h2>
+            <h2 class="fragment">Force you to keep up</h2>
+            <h2 class="fragment">Require expert help</h2>
+            <h2 class="fragment">Own you</h2>
+        </section>
+
+        <section>
+            <h2>Meanwhile in Scala ecosystem...</h2>
+            <br>
+            <blockquote>
+                (...) It’s not a web-framework but rather a more general toolkit for providing and consuming
+                HTTP-based services.
+            </blockquote>
+            <small>https://doc.akka.io/docs/akka-http/current/introduction.html#philosophy</small>
+        </section>
+
+        <section>
             <div class="fragment">
                 <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
                 <small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small>
@@ -234,37 +277,6 @@
             </code></pre>
         </section>
 
-        <section>
-            <img src="img/patched.jpg" width="60%"/>
-        </section>
-
-        <section>
-            <img src="img/tight-coupling.png" width="40%"/>
-            <br>
-            <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
-        </section>
-        <section>
-            <img src="img/loose-coupling.png" width="40%"/>
-            <br>
-            <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
-        </section>
-
-
-
-        <section>
-            <img src="img/patched.jpg" width="60%"/>
-        </section>
-
-        <section>
-            <h2>Meanwhile in Scala ecosystem...</h2>
-            <br>
-            <blockquote>
-                (...) It’s not a web-framework but rather a more general toolkit for providing and consuming
-                HTTP-based services.
-            </blockquote>
-            <small>https://doc.akka.io/docs/akka-http/current/introduction.html#philosophy</small>
-        </section>
-
 
         <section>
             <img src="img/suffer.png"/>
@@ -272,10 +284,8 @@
         </section>
 
         <section>
-        </section>
-
-        <section>
             <h2>Dependency Hell</h2>
+            <h4>Common when using shared modules</h4>
             <br>
 
             <blockquote>
@@ -289,7 +299,7 @@
         <section></section>
 
         <section>
-            <h2>Zero-Dependencies</h2>
+            <h2>Zero-Dependencies, duh!</h2>
             <br>
 
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
@@ -350,84 +360,16 @@
 
         </section>
 
-
         <section>
-            <h2>Frameworks vs Libraries</h2>
-        </section>
-
-        <section>
-            <h2>Frameworks</h2>
-
-            <blockquote>Puts work into a frame</blockquote>
-            <img src="img/framework1.png" width="15%"/>
-            <br>
-
-            <small>http://tomasp.net/blog/2015/library-frameworks/</small>
-
-        </section>
-
-        <section>
-            <h2>Frameworks exist beyond software</h2>
-            <br>
-            <h3>Franchizes</h3>
-            <h3>Project Management Methodologies (for example, Scrum)</h3>
-
-        </section>
-
-        <section>
-            <h1>Frameworks</h1>
-            <h2 class="fragment">Take time to learn and outdate quickly</h2>
-            <h2 class="fragment">Own you</h2>
-            <h2 class="fragment">Increase complexity/weight</h2>
-            <h2 class="fragment">Go out of fashion/get abandoned</h2>
-            <h2 class="fragment">Force you to keep up</h2>
-            <h2 class="fragment">Require expert help</h2>
-            <h2 class="fragment">Probably provide more than you need</h2>
-        </section>
-
-        <section>
-            <h2>Hazelcast IMDG/Jet</h2>
-            <br>
-            <div class="fragment">Is not a framework but a toolkit, it doesn't own your application.</div>
-            <br>
-            <br>
-            <br>
-            <br>
-
-
-            <blockquote>
-                (...) Hazelcast is also used in academia and research as a framework for distributed execution and
-                storage.
-            </blockquote>
-            <blockquote>
-                (...) Hazelcast as its distributed execution framework.
-            </blockquote>
-            <small>https://en.wikipedia.org/wiki/Hazelcast</small>
-        </section>
-
-        <section>
-
-        </section>
-
-        <section>
-            <h2>- Wouldn't you like to focus on solving real problems and let framework authors do the boring
-                parts?</h2>
-            <h2 class="fragment">- Of course! but...</h2>
-            <div class="fragment">
-                <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
-                <small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small>
-            </div>
-            <br><br>
-            <h3 class="fragment">So you spend time learning someone's abstraction and not the underlying
-                technologies</h3>
-
-        </section>
-
-
-        <section>
-            <h2>for example, ORM</h2>
+            <h2>Another leaky abstraction: ORM</h2>
             <small>JPA/Hibernate</small>
         </section>
+
+
+       <!-- <section>
+            <h2>- Wouldn't you like to focus on solving real problems and let framework authors do the boring
+                parts?</h2>
+        </section>-->
 
         <section>
             <h2>Often seen: domain full of framework-specific annotations</h2>
@@ -439,7 +381,7 @@
                 import javax.persistence.Entity;
 
                 @Entity
-                public class PersistedUser {
+                public class User {
 
                     private Long id;
 
@@ -477,7 +419,15 @@
                 @XmlDataTransformable @SpringPrefechAdapter
                 private Collection employees;
             </code></pre>
-            <small>http://www.annotatiomania.com</small>
+            <small>source: <a href="http://www.annotatiomania.com">http://www.annotatiomania.com</a></small>
+        </section>
+
+        <section>
+            <h2>JPA Beyond Copy-Paste</h2>
+            <img src="img/jakub_jpa.png" width="60%"/>
+            <br>
+            <small><a href="https://youtu.be/UPWkpl5PL_w">https://youtu.be/UPWkpl5PL_w</a></small>
+
         </section>
 
         <section>
@@ -796,8 +746,6 @@
             </code></pre>
         </section>
 
-        <section></section>
-
         <section>
             <h3>Composition/Delegation is your friend</h3>
             <pre><code data-trim="">
@@ -816,8 +764,58 @@
         </section>
 
         <section>
-            <h2>Pragmatic Hexagonal/Clean Architecture</h2>
+            <img src="img/patched.jpg" width="60%"/>
+        </section>
+
+        <section>
+            <img src="img/tight-coupling.png" width="40%"/>
+            <br>
+            <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
+        </section>
+        <section>
+            <img src="img/loose-coupling.png" width="40%"/>
+            <br>
+            <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
+        </section>
+
+        <section></section>
+
+        <section>
+            <h2>Hexagonal/Clean Architecture</h2>
             <img class="fragment" src="img/hexagonal.png" width="70%"/>
+        </section>
+
+        <section>
+            <h2>Pragmatic Hexagonal/Clean Architecture</h2>
+            <h3>TL;DR use interfaces!</h3>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                   class UserService {
+
+                       private final UserRepository userRepository;
+
+                       private final AccountRepository accountRepository;
+
+                       public UserService(
+                         UserRepository userRepository,
+                         AccountRepository accountRepository) {
+                           this.userRepository = userRepository;
+                           this.accountRepository = accountRepository;
+                       }
+
+                       // ...
+                       interface UserRepository {
+                           List&lt;User> getAll();
+                       }
+
+                       interface AccountRepository {
+                           Optional&lt;Account> findById(int id);
+                       }
+
+                   }
+            </code></pre>
         </section>
 
         <section>
@@ -1034,19 +1032,9 @@
         </section>
 
         <section>
-            <img src="img/quarkus-hazelcast-client.png" width="80%"/>
-        </section>
-
-        <section>
             <blockquote>
                 Using common sense is the ultimate Best Practice™.
             </blockquote>
-        </section>
-
-        <section>
-            <img src="img/disenchantment.jpg"/>
-            <h4><a href="http://tonsky.me/blog/disenchantment/">http://tonsky.me/blog/disenchantment/</a></h4>
-
         </section>
 
         <section>
