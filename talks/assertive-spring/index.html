@@ -102,7 +102,7 @@
         </section>
 
         <section>
-            <h1>Framework Internals</h1>
+            <h1>Frameworks' Internals</h1>
             <div class="fragment">
                 <ul>
                     <li>Runtime reflection</li>
@@ -117,6 +117,85 @@
                 <br>
                 <small>"The Meaning of Life", Monty Python</small>
             </div>
+        </section>
+
+        <section>
+            <h2>Can you spot an issue? #1</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                   import org.springframework.transaction.annotation.Transactional;
+
+                   class UserService {
+
+                       // ...
+
+                       @Transactional
+                       private void createUser(User user) {
+                           // ...
+                       }
+
+                   }
+            </code></pre>
+            <h3 class="fragment">@Transactional doesn't work with private methods</h3>
+        </section>
+
+        <section>
+            <h2>Can you spot an issue? #2</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                  import org.springframework.transaction.annotation.Transactional;
+
+                  class UserService {
+
+                      // ...
+
+                      public void createUser(User user) {
+                          createCredentials(user.getId());
+                          // ...
+                      }
+
+                      @Transactional
+                      public void createCredentials(Integer id) {
+                          // ...
+                      }
+
+                  }
+            </code></pre>
+            <h3 class="fragment">@Transactional doesn't work when called by another method from the same class</h3>
+        </section>
+
+        <section>
+            <h2>Spring-native Solution</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                   class UserService {
+
+                       private final ApplicationContext applicationContext;
+                       private volatile UserService self;
+
+                       public UserService(ApplicationContext applicationContext) {
+                           this.applicationContext = applicationContext;
+                       }
+
+                       @PostConstruct
+                       private void init() {
+                           self = applicationContext.getBean(UserService.class);
+                       }
+
+                       // ...
+
+                       public void createUser(User user) {
+                           self.createCredentials(user.getId());
+                           // ...
+                       }
+
+                       @Transactional
+                       public void createCredentials(Integer id) {
+                           // ...
+                       }
+
+                   }
+            </code></pre>
         </section>
 
         <section>
@@ -147,12 +226,6 @@
 
 
         <section>
-            <h1>I. Invasive Frameworks</h1>
-        </section>
-
-
-
-        <section>
             <img src="img/patched.jpg" width="60%"/>
         </section>
 
@@ -166,10 +239,6 @@
             <small>https://doc.akka.io/docs/akka-http/current/introduction.html#philosophy</small>
         </section>
 
-        <section>
-            <img src="img/annotations.png" width="40%"/><br/>
-            <small>https://twitter.com/alexelcu/status/1114016039841538048</small>
-        </section>
 
         <section>
             <img src="img/suffer.png"/>
