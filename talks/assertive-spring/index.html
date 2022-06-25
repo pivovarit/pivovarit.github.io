@@ -819,7 +819,27 @@
         </section>
 
         <section>
+            <pre><code data-trim="" style="font-size: 0.6em;line-height: 0.9; max-height: 90%">
+                           @RestController
+                           public class UserController {
+
+                               private final UserService userService;
+
+                               public UserController(UserService userService) {
+                                   this.userService = userService;
+                               }
+
+                               @GetMapping("/users/{id}")
+                               public Optional&lt;UserResponse> findById(@PathVariable int id) {
+                                   return userService.findById(id).map(UserConverter::toResponse);
+                               }
+                           }
+            </code></pre>
+        </section>
+
+        <section>
             <h2>Real Life Example (Axon and Kafka)</h2>
+            <h4>Don't do this at home</h4>
         </section>
 
         <section>
