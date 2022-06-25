@@ -209,6 +209,32 @@
         </section>
 
         <section>
+            <h2>Magic-less Solution</h2>
+
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                     class UserService {
+
+                         private final TransactionTemplate transactionTemplate;
+
+                         public UserService(TransactionTemplate transactionTemplate) {
+                             this.transactionTemplate = transactionTemplate;
+                         }
+
+                         public void createUser(User user) {
+                             transactionTemplate.executeWithoutResult(txStatus -> {
+                                 createCredentials(user.getId());
+                             });
+                         }
+
+                         private void createCredentials(Integer id) {
+                             // ...
+                         }
+
+                     }
+            </code></pre>
+        </section>
+
+        <section>
             <img src="img/patched.jpg" width="60%"/>
         </section>
 
