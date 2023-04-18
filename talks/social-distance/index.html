@@ -446,7 +446,7 @@
                      User user = jdbi.withHandle(h -> h
                              .createQuery("SELECT * FROM users WHERE id = :id")
                              .bind("id", id)
-                             .mapTo(User.class)
+                             .map(toUser())
                              .one());
             </code></pre>
             </div>
