@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="dist/theme/simple.css">
 
     <!-- Theme used for syntax highlighted code -->
-    <link rel="stylesheet" href="plugin/highlight/monokai.css">
+    <link rel="stylesheet" href="plugin/highlight/agate.css">
 </head>
 <body>
 <script>
@@ -99,6 +99,10 @@
         </section>
 
         <section>
+            <h3>Sync vs Async</h3>
+        </section>
+
+        <section>
             <h3>Technology Heterogeneity</h3>
             <br>
             <ul>
@@ -110,7 +114,7 @@
         </section>
 
         <section>
-            <h3>Eventual Consistency != Accidental Consistency</h3>
+            <h4>Eventual Consistency != Accidental Consistency</h4>
         </section>
 
         <section data-transition="fade">
@@ -119,6 +123,21 @@
 
         <section data-transition="fade">
             <img src="img/dual-write-2.png" width="60%"/>
+        </section>
+
+        <section>
+
+            <pre><code class="hljs language-java" data-trim data-noescape>
+                @Transactional
+                public void createUser(CreateUserCommand command) {
+                    var user = from(command);
+
+                    persist(user);
+                    send(UserCreatedEvent.from(user));
+                }
+            </code></pre>
+            <h4>@Transactional won't save you in distributed world</h4>
+
         </section>
 
         <section>
