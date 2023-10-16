@@ -132,12 +132,20 @@
                 public void createUser(CreateUserCommand command) {
                     var user = from(command);
 
-                    persist(user);
-                    send(UserCreatedEvent.from(user));
+                    persist(user);                     // 1
+                    send(UserCreatedEvent.from(user)); // 2
                 }
             </code></pre>
-            <h4>@Transactional won't save you in distributed world</h4>
+            <h4><code>@Transactional</code> won't save you in the distributed world</h4>
 
+        </section>
+
+        <section>
+            <h4>Coupling via Shared Libraries</h4>
+        </section>
+
+        <section>
+            <h4>Old Habits Die Hard</h4>
         </section>
 
         <section>
