@@ -43,6 +43,7 @@
         <section>
             <h3>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h3>
             <h4>Owner/Independent Consultant @ 4Comprehension</h4>
+            <h4>WarsawJUG Leader</h4>
             <h5><a href="http://twitter.com/pivovarit">@pivovarit</a></h5>
             <br>
         </section>
@@ -156,12 +157,17 @@
         </section>
 
         <section>
-            <h4>Monorepos make it easy to stick to old habits</h4>
+            <h3>Monorepos</h3>
+            <h5 class="fragment">make it easy to stick to old habits</h5>
+            <h5 class="fragment">- require extra discipline</h5>
+            <h5 class="fragment">- require extra tooling</h5>
         </section>
 
         <section>
             <h3>Sync vs Async</h3>
+            <h4 class="fragment">Both are good choice if you understand trade-offs</h4>
             <h5 class="fragment">Consistency vs Availability</h5>
+            <br>
             <h4 class="fragment">Want to be fully independent? Forget about Strict Consistency</h4>
         </section>
 
@@ -175,24 +181,9 @@
 
         <section>
             <h4>Antipattern #3:</h4>
-            <h3>Technology Heterogeneity</h3>
-            <img src="img/goldblum.jpeg" width="70%"/>
-        </section>
-
-        <section>
-            <ul>
-                <li>Sounds great on paper</li>
-                <li>Most companies will benefit more from standardized tech stack with occasional experiments</li>
-                <li>Don't throw in new tech unless there's a good reason for it</li>
-            </ul>
-        </section>
-
-        <section>
-            <h4>Antipattern #4:</h4>
             <h3>Accidental Consistency</h3>
             <h5>Eventual Consistency != Accidental Consistency</h5>
         </section>
-
 
         <section data-transition="fade">
             <img src="img/dual-write.png" width="60%"/>
@@ -214,7 +205,22 @@
                 }
             </code></pre>
             <h4><code>@Transactional</code> won't save you in the distributed world</h4>
+        </section>
 
+        <section>
+            <h3>Change Data Capture</h3>
+        </section>
+
+        <section>
+            <h4>Antipattern #4:</h4>
+            <h3>Technology Heterogeneity</h3>
+            <img src="img/goldblum.jpeg" width="70%"/>
+        </section>
+
+        <section>
+            <h4>Sounds great on paper</h4>
+            <h5 class="fragment">Most companies will benefit more from standardized tech stacks with occasional experiments</h5>
+            <h5 class="fragment">Don't throw in new tech unless there's a good reason for it</h5>
         </section>
 
         <section>
