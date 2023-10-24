@@ -103,11 +103,15 @@
         </section>
 
         <section data-transition="fade">
+            <h4>Tight coupling - Low cohesion</h4>
+
             <img src="img/tight-coupling.png" width="50%"/>
             <br>
             <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
         </section>
         <section data-transition="fade">
+            <h4>Low coupling - High cohesion</h4>
+
             <img src="img/loose-coupling.png" width="50%"/>
             <br>
             <small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small>
@@ -116,6 +120,7 @@
         <section>
             <h4>You can have modularity without microservices</h4>
             <img class="fragment" src="img/monolith.png" width="40%"/>
+            <h5 class="fragment">Naturally, you don't get all the benefits, but it's not a demanding investment</h5>
         </section>
 
         <section>
@@ -143,8 +148,8 @@
         <section>
             <h5>So... when do we split?</h5>
             <br>
+            <h5 class="fragment">When it hurts too much</h5>
             <h5 class="fragment">The #1 rule of distributed systems: don't do it until you have to</h5>
-            <h5 class="fragment">Do it when pain becomes problematic</h5>
         </section>
 
         <section>
@@ -228,23 +233,19 @@
             <h4><code>@Transactional</code> won't save you in the distributed world</h4>
         </section>
 
-        <section>
-            <h3>Change Data Capture</h3>
-        </section>
-
         <section data-transition="fade">
             <h4>Dual-Write (distributed transaction)</h4>
             <img src="img/cdc3.png" width="50%"/>
         </section>
 
         <section data-transition="fade">
-            <h4>Change Data Capture</h4>
+            <h4>Singe-Write with async propagation</h4>
             <img src="img/cdc4.png" width="50%"/>
         </section>
 
         <section>
             <h4>Transactional Outbox Pattern</h4>
-            <h4>Debezium</h4>
+            <h4>Change Data Capture</h4>
         </section>
 
         <section>
@@ -262,10 +263,7 @@
         <section>
             <h5>Antipattern #6:</h5>
             <h3>DRY abuse and Shared Libraries </h3>
-        </section>
-
-        <section>
-            <h4>Sound like a noble effort</h4>
+            <h4 class="fragment">Sound like a noble effort</h4>
             <h4 class="fragment">Can contribute to dependency hell</h4>
             <h4 class="fragment">A small change can result in N deployments</h4>
             <h4 class="fragment">Need to be treated like libraries and not bags with code</h4>
@@ -274,7 +272,8 @@
 
         <section>
             <h4>I need to consume REST API of another service. Do I create my own DTOs?</h4>
-            <h4 class="fragment">Yes.</h4>
+            <h4 class="fragment">Yes. You want to share contract and not Java classes</h4>
+            <h4 class="fragment">You get independence at the expense of writing boring code</h4>
         </section>
 
         <section>
