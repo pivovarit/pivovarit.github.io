@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Encoder/Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Message Encoder/Decoder</h1>
+
+<label for="message">Enter your message:</label>
+<textarea id="message" placeholder="Type your message here"></textarea>
+
+<label for="key">Enter your key:</label>
+<input type="text" id="key" placeholder="Type your key here">
+
+<br>
+
+<button onclick="encodeMessage()">Encode</button>
+<button onclick="decodeMessage()">Decode</button>
+
+<br>
+
+<label for="result">Result:</label>
+<textarea id="result" readonly></textarea>
+
+<br>
+
+<button onclick="copyToClipboard('message')">Copy Original Message</button>
+<button onclick="copyToClipboard('result')">Copy Result</button>
+
+<script>
+    function encodeMessage() {
+        const message = document.getElementById('message').value;
+        const key = document.getElementById('key').value;
+
+        if (message && key) {
+            document.getElementById('result').value = toBinaryString(encode(message, key));
+
+        } else {
+            alert('Please enter both a message and a key.');
+        }
+    }
+
+    function fromBinaryString(binaryString) {
+        return binaryString.split(' ').map(binaryValue => String.fromCharCode(parseInt(binaryValue, 2))).join('');
+    }
+
+    function toBinaryString(str) {
+        let result = '';
+        for (let i = 0; i < str.length - 1; i++) {
+            result += str[i].charCodeAt(0).toString(2) + ' ';
+        }
+
+        result += str[str.length - 1].charCodeAt(0).toString(2)
+
+        return result;
+    }
+
+    function decodeMessage() {
+        const message = document.getElementById('message').value;
+        const key = document.getElementById('key').value;
+
+        if (message && key) {
+            document.getElementById('result').value = decode(fromBinaryString(message), key);
+        } else {
+            alert('Please enter both a message and a key.');
+        }
+    }
+
+    function encode(message, key) {
+        let result = '';
+        for (let i = 0; i < message.length; i++) {
+            let charCode = message.charCodeAt(i) + key.charCodeAt(i % key.length);
+            result += String.fromCharCode(charCode);
+        }
+        return result;
+    }
+
+    function decode(message, key) {
+        let result = '';
+        for (let i = 0; i < message.length; i++) {
+            const charCode = message.charCodeAt(i) - key.charCodeAt(i % key.length);
+            result += String.fromCharCode(charCode);
+        }
+        return result;
+    }
+
+    function copyToClipboard(elementId) {
+        navigator.clipboard.writeText(document.getElementById(elementId).value);
+    }
+</script>
+</body>
+</html>
