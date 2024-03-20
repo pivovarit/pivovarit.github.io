@@ -1159,7 +1159,7 @@
         for (let i = rows.length - 1; i >= 0; i--) {
             let firstCell = rows[i].querySelector("td:first-child");
             if (firstCell && firstCell.textContent === "") {
-                firstCell.textContent = seq;
+                firstCell.textContent = seq + ".";
                 seq++;
             }
         }
