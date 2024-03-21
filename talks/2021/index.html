@@ -35,11 +35,12 @@
         <th>Where</th>
     </tr>
     </thead>
-    <tbody>
+
+    <tbody id="talks">
 
 
     <tr>
-        <td>7.</td>
+        <td></td>
         <td>Doing Java Better by Segfault</td>
         <td><a href="https://doing-java-better.konfeo.com/pl/groups">Red Flags of CompletableFuture</a></td>
         <td>14.12.2021</td>
@@ -47,7 +48,7 @@
     </tr>
 
     <tr>
-        <td>6.</td>
+        <td></td>
         <td>SilesiaJUG</td>
         <td><a href="https://www.meetup.com/Silesia-JUG/events/281960824/">Wprowadzenie do ekosystemu Hazelcast 5.0</a></td>
         <td>18.11.2021</td>
@@ -55,7 +56,7 @@
     </tr>
 
     <tr>
-        <td>5.</td>
+        <td></td>
         <td>Luxoft TechGround</td>
         <td><a href="https://www.techground.pro">Hazelcast 5.0: The Hitchhiker's Guide</a></td>
         <td>30.10.2021</td>
@@ -63,7 +64,7 @@
     </tr>
 
     <tr>
-        <td>4.</td>
+        <td></td>
         <td data-location="53.14310869846268, 18.130762337675296" data-place="University of Sciences and Technology in Bydgoszcz">BydgoszczJUG</td>
         <td><a href="">Hazelcast: The Hitchhiker's Guide</a></td>
         <td>23.09.2021</td>
@@ -71,21 +72,21 @@
     </tr>
 
     <tr>
-        <td>3.</td>
+        <td></td>
         <td>Javeloper 2021</td>
         <td><a href="https://javeloper.pl">Wprowadzenie do ekosystemu Hazelcast 5.0</a></td>
         <td>23.09.2021</td>
         <td>Online</td>
     </tr>
     <tr>
-        <td>2.</td>
+        <td></td>
         <td>BBJUG#34</td>
         <td><a href="https://twitter.com/bielskobialajug?lang=en">Wprowadzenie do ekosystemu Hazelcast 5.0</a></td>
         <td>09.09.2021</td>
         <td>Online</td>
     </tr>
     <tr>
-        <td>1.</td>
+        <td></td>
         <td>Talk4Devs 2021</td>
         <td><a href="https://app.evenea.pl/event/talk4devs65/">Hazelcast: The Hitchhiker's Guide</a></td>
         <td>27.01.2021</td>
@@ -97,6 +98,19 @@
 <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi4kCXAt5WEgr_4Zc7fmo_TrHM5PD-1z0&callback=initMap">
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let rows = document.querySelectorAll("tbody#talks tr");
+        let seq = 1
+        for (let i = rows.length - 1; i >= 0; i--) {
+            let firstCell = rows[i].querySelector("td:first-child");
+            if (firstCell && firstCell.textContent === "") {
+                firstCell.textContent = seq + ".";
+                seq++;
+            }
+        }
+    });
 </script>
 </body>
 </html>
