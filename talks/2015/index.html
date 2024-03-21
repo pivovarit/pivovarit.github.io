@@ -35,12 +35,12 @@
         <th>Where</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="talks">
     <tr>
         <td style="background: #ffffff" colspan="5" align="center">2015</td>
     </tr>
     <tr>
-        <td>4.</td>
+        <td></td>
         <td data-location="49.774878,24.030280" data-place="Arena Lviv">JDayLviv 2015</td>
         <td><a href="">Functional programming concepts in Java 8</a></td>
         <td>19.09.2015</td>
@@ -48,14 +48,14 @@
     </tr>
 
     <tr>
-        <td>3.</td>
+        <td></td>
         <td data-location="52.240929,21.018974" data-place="University of Warsaw">Confitura 2015</td>
         <td><a href="">Java 8: Lambdas && Monads</a></td>
         <td>04.07.2015</td>
         <td>Warsaw/Poland</td>
     </tr>
     <tr>
-        <td>2.</td>
+        <td></td>
         <td data-location="52.211838,20.982262" data-place="MiM University of Warsaw">Jinkubator #29</td>
         <td><a href="http://jinkubator.pl/#/meeting/29">Java 8: Lambdas, Monads and Java Collections</a></td>
         <td>12.05.2015</td>
@@ -67,6 +67,19 @@
 <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi4kCXAt5WEgr_4Zc7fmo_TrHM5PD-1z0&callback=initMap">
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let rows = document.querySelectorAll("tbody#talks tr");
+        let seq = 1
+        for (let i = rows.length - 1; i >= 0; i--) {
+            let firstCell = rows[i].querySelector("td:first-child");
+            if (firstCell && firstCell.textContent === "") {
+                firstCell.textContent = seq + ".";
+                seq++;
+            }
+        }
+    });
 </script>
 </body>
 </html>

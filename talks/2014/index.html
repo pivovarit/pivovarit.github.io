@@ -35,12 +35,12 @@
         <th>Where</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody id="talks">
     <tr>
         <td style="background: #ffffff" colspan="5" align="center">2014</td>
     </tr>
     <tr>
-        <td>1.</td>
+        <td></td>
         <td data-location="52.212833,20.959682" data-place="TouK">TouK Weekly Workshops 2014</td>
         <td><a href="http://touk.pl">Intellij IDEA Advanced Code Folding</a></td>
         <td>28.03.2014</td>
@@ -52,6 +52,19 @@
 <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi4kCXAt5WEgr_4Zc7fmo_TrHM5PD-1z0&callback=initMap">
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let rows = document.querySelectorAll("tbody#talks tr");
+        let seq = 1
+        for (let i = rows.length - 1; i >= 0; i--) {
+            let firstCell = rows[i].querySelector("td:first-child");
+            if (firstCell && firstCell.textContent === "") {
+                firstCell.textContent = seq + ".";
+                seq++;
+            }
+        }
+    });
 </script>
 </body>
 </html>
