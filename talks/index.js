@@ -30,20 +30,26 @@ function initMap() {
         return all
     }
 
-    let map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 3,
-        center: {lat: 30, lng: -20}
-    });
+    let map
 
     const urlParams = new URLSearchParams(window.location.search);
-    let places = findPlaces(urlParams.get('year'));
-    for (let place in places) {
-        if (places.hasOwnProperty(place)) {
-            new google.maps.marker.AdvancedMarkerElement({
-                position: places[place],
-                map: map,
-                title: place
-            });
+
+    async function load() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 3,
+            center: {lat: 30, lng: -20}
+        });
+        let places = findPlaces(urlParams.get('year'));
+        for (let place in places) {
+            if (places.hasOwnProperty(place)) {
+                new google.maps.marker.AdvancedMarkerElement({
+                    position: places[place],
+                    map: map,
+                    title: place
+                });
+            }
         }
     }
+
+    load()
 }
