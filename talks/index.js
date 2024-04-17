@@ -13,7 +13,6 @@ async function initMap() {
             let events = [];
             for (let i = 0; i < locations.length; ++i) {
                 let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
-                console.log(eventYear)
                 if (place === locations[i].getAttribute('data-place') && (!year || year === eventYear)) {
                     events.push(locations[i].innerHTML)
                 }
@@ -33,7 +32,6 @@ async function initMap() {
 
     let map
 
-    const urlParams = new URLSearchParams(window.location.search);
 
     async function load() {
         const {Map} = await google.maps.importLibrary("maps");
@@ -43,6 +41,8 @@ async function initMap() {
             center: {lat: 30, lng: -20},
             mapId: "talksMapId"
         });
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log(urlParams.get('year'))
         let places = findPlaces(urlParams.get('year'));
         for (let place in places) {
             if (places.hasOwnProperty(place)) {
