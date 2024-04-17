@@ -1,4 +1,4 @@
-function initMap() {
+async function initMap() {
     function findPlaces(year) {
         let locations = document.querySelectorAll('[data-location]');
         let all = {};
