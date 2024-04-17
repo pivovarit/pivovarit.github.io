@@ -13,6 +13,7 @@ async function initMap() {
             let events = [];
             for (let i = 0; i < locations.length; ++i) {
                 let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
+                console.log(eventYear)
                 if (place === locations[i].getAttribute('data-place') && (!year || year === eventYear)) {
                     events.push(locations[i].innerHTML)
                 }
