@@ -21,6 +21,10 @@ async function initMap() {
         }
 
         for (let i = 0; i < locations.length; ++i) {
+            let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
+            if (year && year !== eventYear) {
+                continue;
+            }
             let latLong = locations[i].getAttribute('data-location').split(',');
             let place = locations[i].getAttribute('data-place');
             let events = removeDuplicates(aggregateEvents(place, year)).reverse();
