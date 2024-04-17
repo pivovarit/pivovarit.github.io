@@ -35,6 +35,8 @@ function initMap() {
     const urlParams = new URLSearchParams(window.location.search);
 
     async function load() {
+        const {Map} = await google.maps.importLibrary("maps");
+        const {AdvancedMarkerElement, PinElement} = await google.maps.importLibrary("marker");
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 3,
             center: {lat: 30, lng: -20}
