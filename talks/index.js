@@ -1,5 +1,5 @@
 function initMap() {
-	function findPlaces() {
+	function findPlaces(year) {
 		let locations = document.querySelectorAll('[data-location]');
 		let all = {};
 
@@ -9,10 +9,11 @@ function initMap() {
             });
         }
 
-        function aggregateEvents(place) {
+        function aggregateEvents(place, year) {
             let events = [];
             for (let i = 0; i < locations.length; ++i) {
-                if (place === locations[i].getAttribute('data-place')) {
+                let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
+                if (place === locations[i].getAttribute('data-place') && (!year || year === eventYear)) {
                     events.push(locations[i].innerHTML)
                 }
             }
@@ -22,7 +23,7 @@ function initMap() {
         for(let i = 0; i < locations.length; ++i) {
 			let latLong = locations[i].getAttribute('data-location').split(',');
 			let place = locations[i].getAttribute('data-place');
-			let events = removeDuplicates(aggregateEvents(place)).reverse();
+			let events = removeDuplicates(aggregateEvents(place, year)).reverse();
 
             all[`[${events}] @ ${place}`] = {lat: parseFloat(latLong[0]), lng: parseFloat(latLong[1])};
         }
@@ -33,7 +34,9 @@ function initMap() {
         zoom: 3,
         center: {lat: 30, lng: -20}
     });
-    let places = findPlaces();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let places = findPlaces(urlParams.get('year'));
 	for(let place in places) {
 		if(places.hasOwnProperty(place)) {
 			new google.maps.Marker({
