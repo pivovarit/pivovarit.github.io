@@ -39,7 +39,8 @@ function initMap() {
         const {AdvancedMarkerElement, PinElement} = await google.maps.importLibrary("marker");
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 3,
-            center: {lat: 30, lng: -20}
+            center: {lat: 30, lng: -20},
+            mapId: "talksMapId"
         });
         let places = findPlaces(urlParams.get('year'));
         for (let place in places) {
