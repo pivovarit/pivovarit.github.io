@@ -53,8 +53,7 @@ async function initMap() {
                 new google.maps.marker.AdvancedMarkerElement({
                     position: places[place],
                     map: map,
-                    title: place,
-                    scale: 0.5
+                    title: place
                 });
             }
         }
