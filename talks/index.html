@@ -36,10 +36,6 @@
 
 
     <tr>
-        <td style="background: #ffffff" colspan="5" align="center">UPCOMING</td>
-    </tr>
-
-    <tr>
         <td style="background: #ffffff" colspan="5" align="center">2024</td>
     </tr>
 
@@ -83,11 +79,6 @@
         <td><a href="https://www.linkedin.com/company/lubelskie-dni-informatyki">Embracing Microservices</a></td>
         <td>20.04.2024</td>
         <td>Lublin/Poland</td>
-    </tr>
-
-
-    <tr>
-        <td style="background: #ffffff" colspan="5" align="center">PAST</td>
     </tr>
 
     <tr>
@@ -1208,17 +1199,44 @@
 
         for (let i = rows.length - 1; i >= 0; i--) {
             let row = rows[i];
-            // Check if the row is visible
             if (row.style.display !== 'none') {
                 let firstCell = row.querySelector("td:first-child");
                 if (firstCell && firstCell.textContent === "") {
                     firstCell.textContent = seq + ".";
                     seq++;
-                } else if (queryYear && firstCell && firstCell.textContent !== queryYear) {
+                } else if (queryYear && firstCell && parseInt(firstCell.textContent) && firstCell.textContent !== queryYear) {
                     row.style.display = 'none'
                 }
             }
         }
+
+        for (let i = 0; i < rows.length - 1; i++) {
+            let row = rows[i];
+            if (row.style.display !== 'none') {
+                let dateCell = row.cells[3];
+                if (dateCell) {
+                    let dateString = dateCell.textContent.trim();
+                    let parts = dateString.split(".");
+                    let day = parseInt(parts[0], 10);
+                    let month = parseInt(parts[1], 10) - 1;
+                    let year = parseInt(parts[2], 10);
+
+                    if (new Date(year, month, day) < new Date()) {
+                        let past = document.createElement("tr");
+                        past.innerHTML = '<td style="background: #ffffff; text-align: center" colspan="5">PAST</td>';
+                        row.parentNode.insertBefore(past, row);
+                        break
+                    }
+
+                    if (i === 1 && new Date(year, month, day) >= new Date()) {
+                        let upcoming = document.createElement("tr");
+                        upcoming.innerHTML = '<td style="background: #ffffff; text-align: center" colspan="5">UPCOMING</td>';
+                        row.parentNode.insertBefore(upcoming, row);
+                    }
+                }
+            }
+        }
+
     });
 </script>
 <script src="index.js"></script>
