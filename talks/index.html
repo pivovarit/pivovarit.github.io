@@ -1214,7 +1214,7 @@
                 if (firstCell && firstCell.textContent === "") {
                     firstCell.textContent = seq + ".";
                     seq++;
-                } else if (firstCell && firstCell.textContent !== queryYear) {
+                } else if (queryYear && firstCell && firstCell.textContent !== queryYear) {
                     row.style.display = 'none'
                 }
             }
