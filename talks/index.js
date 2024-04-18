@@ -1,5 +1,5 @@
 async function initMap() {
-    function findPlaces(year) {
+    async function findPlaces(year) {
         let locations = document.querySelectorAll('[data-location]');
         let all = {};
 
@@ -47,16 +47,17 @@ async function initMap() {
         });
         const urlParams = new URLSearchParams(window.location.search);
         console.log(urlParams.get('year'))
-        let places = findPlaces(urlParams.get('year'));
-        for (let place in places) {
-            if (places.hasOwnProperty(place)) {
-                new google.maps.marker.AdvancedMarkerElement({
-                    position: places[place],
-                    map: map,
-                    title: place
-                });
+        findPlaces(urlParams.get('year')).then(places => {
+            for (let place in places) {
+                if (places.hasOwnProperty(place)) {
+                    new google.maps.marker.AdvancedMarkerElement({
+                        position: places[place],
+                        map: map,
+                        title: place
+                    });
+                }
             }
-        }
+        })
     }
 
     load()
