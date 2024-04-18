@@ -34,13 +34,10 @@ async function initMap() {
         return all
     }
 
-    let map
-
-
     async function load() {
         const {Map} = await google.maps.importLibrary("maps");
         const {AdvancedMarkerElement, PinElement} = await google.maps.importLibrary("marker");
-        map = new google.maps.Map(document.getElementById('map'), {
+        let map = new google.maps.Map(document.getElementById('map'), {
             zoom: 3,
             center: {lat: 30, lng: -20},
             mapId: "talksMapId"
