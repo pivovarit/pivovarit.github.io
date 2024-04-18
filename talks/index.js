@@ -46,7 +46,6 @@ async function initMap() {
             mapId: "talksMapId"
         });
         const urlParams = new URLSearchParams(window.location.search);
-        console.log(urlParams.get('year'))
         findPlaces(urlParams.get('year')).then(places => {
             for (let place in places) {
                 if (places.hasOwnProperty(place)) {
