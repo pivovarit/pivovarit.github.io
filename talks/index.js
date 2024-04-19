@@ -3,12 +3,6 @@ async function initMap() {
         let locations = document.querySelectorAll('[data-location]');
         let all = {};
 
-        function removeDuplicates(events) {
-            return events.filter((elem, pos, arr) => {
-                return arr.indexOf(elem) === pos;
-            });
-        }
-
         function aggregateEvents(year) {
             let results = new Map()
             for (let i = 0; i < locations.length; ++i) {
