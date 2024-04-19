@@ -3,6 +3,24 @@ async function initMap() {
         let locations = document.querySelectorAll('[data-location]');
         let all = {};
 
+        function aggregatePlaces(year) {
+            let results = new Map()
+
+            for (let i = 0; i < locations.length; ++i) {
+                let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
+                if (!year || year === eventYear) {
+                    let country = locations[i].nextElementSibling.nextElementSibling.nextElementSibling.textContent.split('/')[1];
+                    if (country) {
+                        if (!results.has(country)) {
+                            results.set(country, 0)
+                        }
+                        results.set(country, results.get(country) + 1)
+                    }
+                }
+            }
+            return results
+        }
+
         function aggregateEvents(year) {
             let results = new Map()
             for (let i = 0; i < locations.length; ++i) {
@@ -26,7 +44,17 @@ async function initMap() {
 
         aggregateEvents(year)
             .forEach((events, place) => {
-                all[`[${events}] @ ${place.place}`] = {lat: parseFloat(place.latLong[0]), lng: parseFloat(place.latLong[1])};
+                all[`[${events}] @ ${place.place}`] = {
+                    lat: parseFloat(place.latLong[0]),
+                    lng: parseFloat(place.latLong[1])
+                };
+            })
+
+        Array.from(aggregatePlaces(year).entries())
+            .sort((a, b) => b[1] - a[1])
+            .map(([country, count]) => `${country}: ${count}`)
+            .forEach(str => {
+                console.log(str)
             })
 
         return all
