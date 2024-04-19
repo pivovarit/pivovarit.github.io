@@ -52,9 +52,8 @@ async function initMap() {
 
         Array.from(aggregatePlaces(year).entries())
             .sort((a, b) => b[1] - a[1])
-            .map(([country, count]) => `${country}: ${count}`)
-            .forEach(str => {
-                console.log(str)
+            .forEach(([country, count]) => {
+                addStatistics(country, count)
             })
 
         return all
@@ -84,4 +83,17 @@ async function initMap() {
     }
 
     load()
+}
+
+function addStatistics(country, talks) {
+    var table = document.getElementById("statistics");
+    var newRow = table.insertRow(-1); // Insert row at the end of the table
+
+    // Insert cells for country and talks
+    var countryCell = newRow.insertCell(0);
+    var talksCell = newRow.insertCell(1);
+
+    // Assign values to the cells
+    countryCell.textContent = country;
+    talksCell.textContent = talks;
 }
