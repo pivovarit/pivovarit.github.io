@@ -76,8 +76,7 @@ async function initMap() {
                         new google.maps.marker.AdvancedMarkerElement({
                             position: places[place],
                             map: map,
-                            title: place,
-                            label: "42"
+                            title: place
                         });
                     }
                 }
