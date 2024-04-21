@@ -57,7 +57,6 @@ async function initMap() {
                 addStatistics(country, count)
             })
 
-        console.log(all);
         return all
     }
 
