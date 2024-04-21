@@ -1,6 +1,11 @@
 async function initMap() {
+    let locations = document.querySelectorAll('[data-location]');
+    let locationsMap = new Map();
+    for (let i = 0; i < locations.length; ++i) {
+        locationsMap.set(locations[i].getAttribute('data-place'), locations[i].getAttribute('data-location').split(','))
+    }
+
     async function findPlaces(year) {
-        let locations = document.querySelectorAll('[data-location]');
         let all = {};
 
         function aggregatePlaces(year) {
@@ -26,17 +31,13 @@ async function initMap() {
             for (let i = 0; i < locations.length; ++i) {
                 let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
                 if (!year || year === eventYear) {
-                    let place = {
-                        place: locations[i].getAttribute('data-place'),
-                        latLong: locations[i].getAttribute('data-location').split(',')
-                    };
-                    if (!results.has(place)) {
-                        results.set(place, [])
+                    let place = locations[i].getAttribute('data-place')
+                    let events = results.get(place) || []
+                    let event = locations[i].innerHTML;
+                    if (!events.includes(event)) {
+                        events.push(event)
                     }
-                    let events = results.get(place);
-                    if (!events.includes(locations[i].innerHTML)) {
-                        events.push(locations[i].innerHTML)
-                    }
+                    results.set(place, events)
                 }
             }
             return results
@@ -44,9 +45,9 @@ async function initMap() {
 
         aggregateEvents(year)
             .forEach((events, place) => {
-                all[`[${events}] @ ${place.place}`] = {
-                    lat: parseFloat(place.latLong[0]),
-                    lng: parseFloat(place.latLong[1])
+                all[`[${events}] @ ${place}`] = {
+                    lat: parseFloat(locationsMap.get(place)[0]),
+                    lng: parseFloat(locationsMap.get(place)[1])
                 };
             })
 
@@ -56,6 +57,7 @@ async function initMap() {
                 addStatistics(country, count)
             })
 
+        console.log(all);
         return all
     }
 
