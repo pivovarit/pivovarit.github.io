@@ -1,8 +1,11 @@
+const dataPlace = 'data-place';
+const dataLocation = 'data-location';
+
 async function initMap() {
     let locations = document.querySelectorAll('[data-location]');
     let locationsMap = new Map();
     for (let i = 0; i < locations.length; ++i) {
-        locationsMap.set(locations[i].getAttribute('data-place'), locations[i].getAttribute('data-location').split(','))
+        locationsMap.set(locations[i].getAttribute(dataPlace), locations[i].getAttribute(dataLocation).split(','))
     }
 
     async function findPlaces(year) {
@@ -31,7 +34,7 @@ async function initMap() {
             for (let i = 0; i < locations.length; ++i) {
                 let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
                 if (!year || year === eventYear) {
-                    let place = locations[i].getAttribute('data-place')
+                    let place = locations[i].getAttribute(dataPlace)
                     let events = results.get(place) || []
                     let event = locations[i].innerHTML;
                     if (!events.includes(event)) {
@@ -87,12 +90,12 @@ async function initMap() {
 }
 
 function addStatistics(country, talks) {
-    var table = document.getElementById("statistics");
-    var newRow = table.insertRow(-1); // Insert row at the end of the table
+    let table = document.getElementById("statistics");
+    let newRow = table.insertRow(-1); // Insert row at the end of the table
 
     // Insert cells for country and talks
-    var countryCell = newRow.insertCell(0);
-    var talksCell = newRow.insertCell(1);
+    let countryCell = newRow.insertCell(0);
+    let talksCell = newRow.insertCell(1);
 
     // Assign values to the cells
     countryCell.textContent = country;
