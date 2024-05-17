@@ -4,9 +4,9 @@ const dataLocation = 'data-location';
 async function initMap() {
     let locations = document.querySelectorAll('[data-location]');
     let locationsMap = new Map();
-    for (let i = 0; i < locations.length; ++i) {
-        locationsMap.set(locations[i].getAttribute(dataPlace), locations[i].getAttribute(dataLocation).split(','))
-    }
+    locations.forEach(location => {
+        locationsMap.set(location.getAttribute(dataPlace), location.getAttribute(dataLocation).split(','))
+    })
 
     async function findPlaces(year) {
         let all = {};
@@ -14,18 +14,16 @@ async function initMap() {
         function aggregatePlaces(year) {
             let results = new Map()
 
-            for (let i = 0; i < locations.length; ++i) {
-                let eventYear = locations[i].nextElementSibling.nextElementSibling.textContent.split('.')[2];
+            locations.forEach(location => {
+                let eventYear = location.nextElementSibling.nextElementSibling.textContent.split('.')[2];
                 if (!year || year === eventYear) {
-                    let country = locations[i].nextElementSibling.nextElementSibling.nextElementSibling.textContent.split('/')[1];
+                    let country = location.nextElementSibling.nextElementSibling.nextElementSibling.textContent.split('/')[1];
                     if (country) {
-                        if (!results.has(country)) {
-                            results.set(country, 0)
-                        }
-                        results.set(country, results.get(country) + 1)
+                        results.set(country, (results.get(country) || 0) + 1);
                     }
                 }
-            }
+            })
+
             return results
         }
 
