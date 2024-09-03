@@ -156,7 +156,9 @@
 
     <tr>
         <td></td>
-        <td data-location="52.23018544156033, 21.023449897930536" data-place="Warsaw Stock Exchange">Inspiring Solutions</td>
+        <td data-location="52.23018544156033, 21.023449897930536" data-place="Warsaw Stock Exchange">Inspiring
+            Solutions
+        </td>
         <td><a href="https://www.inspiringsolutions.pl">Discussion panel: "Cooperation between human and AI"</a></td>
         <td>12.04.2024</td>
         <td>Warsaw/Poland</td>
@@ -348,7 +350,8 @@
     <tr>
         <td></td>
         <td data-location="41.40927967363553, 2.2197463141279963"
-            data-place="International Barcelona Convention Center">JBCNConf 2022</td>
+            data-place="International Barcelona Convention Center">JBCNConf 2022
+        </td>
         <td><a href="http://www.jbcnconf.com/2022/">CompletableFuture and its Quirks</a></td>
         <td>19.07.2022</td>
         <td>Barcelona/Spain</td>
@@ -476,7 +479,8 @@
     <tr>
         <td></td>
         <td data-location="53.14310869846268, 18.130762337675296"
-            data-place="University of Sciences and Technology in Bydgoszcz">BydgoszczJUG</td>
+            data-place="University of Sciences and Technology in Bydgoszcz">BydgoszczJUG
+        </td>
         <td><a href="">Hazelcast: The Hitchhiker's Guide</a></td>
         <td>23.09.2021</td>
         <td>Bydgoszcz</td>
@@ -1045,7 +1049,8 @@
     </tr>
     <tr>
         <td></td>
-        <td data-location="50.433394,30.520315" data-place="National Sports Complex “Olympiyskiy”">BuildStuffUA 2016</td>
+        <td data-location="50.433394,30.520315" data-place="National Sports Complex “Olympiyskiy”">BuildStuffUA 2016
+        </td>
         <td><a href="http://www.buildstuff.com.ua/kiev/">Javaslang - Functional Java Done Right</a></td>
         <td>22.11.2016</td>
         <td>Kiev/Ukraine</td>
@@ -1174,7 +1179,9 @@
     </tr>
     <tr>
         <td></td>
-        <td data-location="52.239186022279604, 21.045004980170685" data-place="Stadion Narodowy">Kariera IT Warsaw 2016</td>
+        <td data-location="52.239186022279604, 21.045004980170685" data-place="Stadion Narodowy">Kariera IT Warsaw
+            2016
+        </td>
         <td><a href="http://careercon.pl/konferencja/kariera-it-warszawa-05-03-2016/">Java Wars VIII: The Function
             Awakens</a></td>
         <td>05.03.2016</td>
@@ -1250,6 +1257,7 @@
             }
         }
     }
+
     document.addEventListener("DOMContentLoaded", function () {
         let queryYear = new URLSearchParams(window.location.search).get('year');
 
@@ -1280,7 +1288,7 @@
                     let month = parseInt(parts[1], 10) - 1;
                     let year = parseInt(parts[2], 10);
 
-                    if (new Date(year, month, day) < new Date()) {
+                    if (new Date(year, month, day) < today()) {
                         let past = document.createElement("tr");
                         past.innerHTML = '<td style="background: #ffffff; text-align: center" colspan="5">PAST</td>';
                         row.parentNode.insertBefore(past, row);
@@ -1297,6 +1305,10 @@
         }
 
     });
+
+    function today() {
+        return new Date(new Date().toDateString());
+    }
 </script>
 <script src="index.js"></script>
 <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
