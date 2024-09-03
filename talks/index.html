@@ -1280,7 +1280,7 @@
                     let month = parseInt(parts[1], 10) - 1;
                     let year = parseInt(parts[2], 10);
 
-                    if (new Date(year, month, day) < new Date()) {
+                    if (new Date(year, month, day) <= new Date()) {
                         let past = document.createElement("tr");
                         past.innerHTML = '<td style="background: #ffffff; text-align: center" colspan="5">PAST</td>';
                         row.parentNode.insertBefore(past, row);
