@@ -46,7 +46,7 @@ async function initMap() {
 
         aggregateEvents(year)
             .forEach((events, place) => {
-                all[`[${events}] @ ${place}`] = {
+                all[`[${events.reverse()}] @ ${place}`] = {
                     lat: parseFloat(locationsMap.get(place)[0]),
                     lng: parseFloat(locationsMap.get(place)[1])
                 };
