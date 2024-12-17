@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/simple.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/agate.css">
+</head>
+<body>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
+    ga('send', 'pageview');
+
+</script>
+<div class="reveal">
+
+    <div class="slides">
+        <section>
+            <h3>Can a Java Developer Learn Anything from... Golang?</h3>
+            <br><br>
+            <h4><a href="http://pivovarit.github.io"> Grzegorz Piwowarek</a></h4>
+            <h5><a href="http://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
+        <section>
+            <h2>{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
+            <h4>Independent Consultant/Trainer</h4>
+            <small>distributed systems | microservices | async | reactive | java | idiomatic go</small>
+            <h4>WarsawJUG | Vavr Leader</h4>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+            <br>
+        </section>
+
+        <section>
+            <h4>Thank You!</h4>
+            <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
+            <small><a href="https://4comprehension.com">4comprehension.com</a></small>
+            <br>
+            <img src="img/qrcode_pivovarit.github.io.png" width="30%"/>
+            <br>
+            <small><a href="https://pivovarit.github.io/talks/can-java-dev-learn-from-go">https://pivovarit.github.io/talks/can-java-dev-learn-from-go</a></small>
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+
+</html>
