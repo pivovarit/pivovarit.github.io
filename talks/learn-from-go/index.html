@@ -1,110 +1,191 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/simple.css">
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/simple.css">
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>
-					<h3>Can a Java Developer Learn Anything...</h3>
-					<h4>From Golang?</h4>
-					<br><br>
-					<h4><a href="https://pivovarit.github.io"> Grzegorz Piwowarek</a></h4>
-					<h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
-				</section>
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/zenburn.css">
 
-				<section>
-					<h2>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h2>
-					<h4>Independent Consultant/Trainer</h4>
-					<small>distributed systems | microservices | async | reactive | java | idiomatic go</small>
-					<h4>WarsawJUG | Vavr Leader</h4>
-					<h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
-					<br>
-				</section>
+    <!--    <link rel="stylesheet" href="plugin/highlight/monokai.css">-->
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h3>Can a Java Developer Learn Anything...</h3>
+            <h4>From Golang?</h4>
+            <br><br>
+            <h4><a href="https://pivovarit.github.io"> Grzegorz Piwowarek</a></h4>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
 
-				<section>
-					<h4 class="fragment">"Imperative"</h4>
-					<h4 class="fragment">"Boilerplate-heavy"</h4>
-					<h5 class="fragment">"Clunky"</h5>
-					<h5 class="fragment">"Bloated"</h5>
-					<h5 class="fragment">...</h5>
+        <section>
+            <h2>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h2>
+            <h4>Independent Consultant/Trainer</h4>
+            <small>distributed systems | microservices | async | reactive | java | idiomatic go</small>
+            <h4>WarsawJUG | Vavr Leader</h4>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+            <br>
+        </section>
 
-					<h5 class="fragment">Words people use to describe Java!</h5>
-				</section>
+        <section>
+            <h4 class="fragment">"Imperative"</h4>
+            <h4 class="fragment">"Boilerplate-heavy"</h4>
+            <h5 class="fragment">"Clunky"</h5>
+            <h5 class="fragment">"Bloated"</h5>
+            <h5 class="fragment">...</h5>
 
-				<section>
-					<h4>Golang is even more "imperative", "boilerplate-heavy" than Java... and it's proud of that!</h4>
+            <h5 class="fragment">Words people use to describe Java!</h5>
+        </section>
 
-					<img src="img/gopher.png" width="10%" alt="gopher"/>
-				</section>
+        <section>
+            <h4>Golang is even more "imperative", "boilerplate-heavy" than Java... and it's proud of that!</h4>
 
-				<section>
-					<h3>Golang's Philosophy</h3>
-					<br>
-					<ul>
-						<li>Simplicity/Minimalism</li>
-						<li>Explicitness</li>
-						<li>Developer Productivity</li>
-						<li>Pragmatism</li>
-					</ul>
+            <img src="img/gopher.png" width="10%" alt="gopher"/>
+        </section>
 
-					<img src="img/gopher.png" width="10%" alt="gopher"/>
-				</section>
+        <section>
+            <h3>Golang's Philosophy</h3>
+            <br>
+            <ul>
+                <li>Simplicity/Minimalism</li>
+                <li>Explicitness</li>
+                <li>Developer Productivity</li>
+                <li>Pragmatism</li>
+            </ul>
 
+            <img src="img/gopher.png" width="10%" alt="gopher"/>
+        </section>
 
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+        	for rowId := 0; rowId < len(pattern)-1; rowId++ {
+        		smudges := 0
+        		isRef := true
+        		for j := rowId; j >= 0; j-- {
+        			if rowId+rowId-j+1 < len(pattern) {
+        				diffs := rowDifferences(rowId+rowId-j+1, j, pattern)
+        				if diffs > 1 || (diffs > 0 && smudges == 1) {
+        					isRef = false
+        					break
+        				} else if diffs == 1 {
+        					smudges++
+        				}
+        			}
+        		}
+        		if !isRef {
+        			continue
+        		}
+        		if smudges == 1 {
+        			result := rowId + 1
+        			return true, result
+        		}
+        	}
+        	return false, -1
+          </code></pre>
+        </section>
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+func main() {
+	urls := []string{"https://golang.org", "https://example.com"}
 
-				<section>
-					<h4>Thank You!</h4>
-					<h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
-					<small><a href="https://4comprehension.com">4comprehension.com</a></small>
-					<br>
-					<img src="img/qrcode_pivovarit.github.io.png" width="30%"/>
-					<br>
-					<small><a href="https://pivovarit.github.io/talks/learn-from-go">https://pivovarit.github.io/talks/learn-from-go</a></small>
-				</section>
+	results := make(chan string)
+	start := time.Now()
 
-				<div class="footer">
-					<a href="https://twitter.com/pivovarit">@pivovarit</a>
-				</div>
-			</div>
-		</div>
+	for _, url := range urls {
+		go func(url string) {
+			content, err := fetchURL(url)
+			if err != nil {
+				results <- fmt.Sprintf("Error fetching %s: %v", url, err)
+				return
+			}
+			results <- fmt.Sprintf("Fetched %s: %s...", url, content)
+		}(url)
+	}
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+	for range urls {
+		fmt.Println(<-results)
+	}
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
-	<style>
-		.footer {
-			position: fixed;
-			bottom: 0;
-			width: 100%;
-			color: black;
-			text-align: right;
-			padding: 10px 0;
-			font-size: 16px;
-		}
-	</style>
+	fmt.Printf("Execution time: %v\n", time.Since(start))
+}
+            </code></pre>
+        </section>
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+                package main
+
+                import (
+                	"fmt"
+                	"net/http"
+                )
+                
+                func main() {
+                	http.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
+                		if r.Method == http.MethodGet {
+                			fmt.Fprintf(w, "Hello, World!")
+                		} else {
+                			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+                		}
+                	})
+
+                	fmt.Println("Starting server on :8080...")
+                	err := http.ListenAndServe(":8080", nil)
+                	if err != nil {
+                		fmt.Printf("Error starting server: %v\n", err)
+                	}
+                }
+
+          </code></pre>
+        </section>
+        <section>
+            <h4>Thank You!</h4>
+            <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
+            <small><a href="https://4comprehension.com">4comprehension.com</a></small>
+            <br>
+            <img src="img/qrcode_pivovarit.github.io.png" width="30%"/>
+            <br>
+            <small><a href="https://pivovarit.github.io/talks/learn-from-go">https://pivovarit.github.io/talks/learn-from-go</a></small>
+        </section>
+
+        <div class="footer">
+            <a href="https://twitter.com/pivovarit">@pivovarit</a>
+        </div>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+<style>
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        color: black;
+        text-align: right;
+        padding: 10px 0;
+        font-size: 16px;
+    }
+</style>
 </html>
