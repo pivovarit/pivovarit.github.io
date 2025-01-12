@@ -157,9 +157,217 @@ func main() {
                 <li>No advanced syntax</li>
                 <li>No magical frameworks</li>
                 <li>No ORM</li>
-                <li>Official formatting style</li>
             </ul>
         </section>
+
+        <section>
+            <h4>So, what can we learn from Golang?</h4>
+        </section>
+
+        <section>
+            <h3>Go Reduces Bikeshedding</h3>
+            <img src="img/styles.jpg" width="60%" alt="gopher"/>
+            <small><small><a href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
+
+
+        </section>
+
+        <section>
+            <h3>No room for questions like:</h3>
+            <h4 class="fragment">What build tool should we use?</h4>
+            <h4 class="fragment">Should we use spaces or tabs?</h4>
+            <h4 class="fragment">Should we use optional parentheses around conditions?</h4>
+            <h4 class="fragment">Should we follow semantic versioning?</h4>
+            <h4 class="fragment">Which static analysis tools should we use?</h4>
+        </section>
+
+
+        <section>
+            <h3>Dependency Inversion by Design</h3>
+            <p>
+                <small>Golang's interfaces are not what you think they are</small>
+            </p>
+
+            <h4 class="fragment">Go’s interfaces are designed with the consumer (caller) in mind rather than the producer</h4>
+        </section>
+
+        <section>
+            <pre data-id="code-animation">
+                <code class="hljs javascript" data-trim data-noescape data-line-numbers="|1|2,7,11|2-5|7-9|11-13|">
+                                    <script type="text/template">
+type MovieRentalService struct {
+    rentalRepository interface {
+        saveRentedMovie(userID, movieId string) error
+        saveReturnedMovie(userID, movieId string) error
+    }
+
+    movieDescriptionsRepository interface {
+        getMovieDescription(movieId string) (string, error)
+    }
+
+    movieRepository interface {
+        getMovie(movieId string) (string, error)
+    }
+}
+					</script>
+                </code></pre>
+            <small class="fragment">Interfaces are implicitly implemented (duck typing)</small>
+
+        </section>
+
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+type PostgresMovieRepository struct {
+	db *sql.DB
+}
+
+func (r PostgresMovieRepository) getMovie(id string) (string, error) {
+    query := "SELECT title FROM movies WHERE id = $1"
+	var title string
+	err := r.db.QueryRow(query, id).Scan(&title)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return "", fmt.Errorf("movie with id %s not found", id)
+		}
+		return "", err
+	}
+	return title, nil
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+type PostgresRentalRepository struct {
+	db *sql.DB
+}
+
+func (r PostgresRentalRepository) saveRentedMovie(userID, movieId string) error {
+	query := "INSERT INTO rentals (user_id, movie_id, rented_at) VALUES ($1, $2, NOW())"
+	_, err := r.db.Exec(query, userID, movieId)
+	return err
+}
+
+func (r PostgresRentalRepository) saveReturnedMovie(userID, movieId string) error {
+	query := "UPDATE rentals SET returned_at = NOW() WHERE user_id = $1 AND movie_id = $2 AND returned_at IS NULL"
+	result, err := r.db.Exec(query, userID, movieId)
+	if err != nil {
+		return err
+	}
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		return fmt.Errorf("no active rental found for user %s and movie %s", userID, movieId)
+	}
+	return nil
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+type RESTMovieDescriptionsRepository struct {
+	apiBaseURL string
+	client     *http.Client
+}
+
+func (r RESTMovieDescriptionsRepository) getMovieDescription(movieId string) (string, error) {
+	url := fmt.Sprintf("%s/movies/%s/description", r.apiBaseURL, movieId)
+	resp, err := r.client.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to fetch description: %s", resp.Status)
+	}
+
+	var result struct {
+		Description string `json:"description"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", err
+	}
+	return result.Description, nil
+}
+          </code></pre>
+        </section>
+
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+service := MovieRentalService{
+  rentalRepository:            PostgresRentalRepository{db},
+  movieDescriptionsRepository: RESTMovieDescriptionsRepository{
+      "https://api.example.com",
+      &http.Client{}},
+  movieRepository:             PostgresMovieRepository{db},
+}
+          </code></pre>
+            <ul>
+                <li class="fragment">Dependency Inversion</li>
+                <li class="fragment">Dependency Injection</li>
+            </ul>
+        </section>
+
+        <section>
+            <h5>Manual Dependency Injection</h5>
+          <pre><code data-trim data-noescape class="stretch">
+rentalRepository := PostgresRentalRepository{db}
+descriptionsRepository := RESTMovieDescriptionsRepository{
+    "https://api.example.com",
+    &http.Client{}}
+movieRepository := PostgresMovieRepository{db}
+
+movieRentalService := MovieRentalService{
+    rentalRepository,
+    descriptionsRepository,
+    movieRepository}
+</code></pre>
+            <small>Dependency Injection is about external supply of dependencies</small>
+            <small>Dependency Injection Containers are just one of the way to achieve this</small>
+</section>
+        <section>
+            <h3>But how to test it without mocks?</h3>
+        </section>
+
+        <section>
+            <h5>Dependency Inversion Leverage</h5>
+            <pre><code data-trim data-noescape class="stretch">
+type InMemoryRentalRepository struct {
+    // userID -> map[movieID]isReturned
+    rentals map[string]map[string]bool
+}
+
+type InMemoryMovieRepository struct {
+    // movieID -> title
+    movies map[string]string
+}
+
+type InMemoryMovieDescriptionsRepository struct {
+    // movieID -> description
+    descriptions map[string]string
+}
+            </code></pre>
+            <small>implementations omitted</small>
+        </section>
+
+        <section>
+            <h5>Hexagonal Architecture</h5>
+
+            <img src="img/hexagonal.png" width="70%" alt="hexagonal"/>
+            <small><small><a href="https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/">https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/</a></small></small>
+        </section>
+
+        <section>
+            <h3>Golang Memory Model</h3>
+            <blockquote>
+                "(...) If you must read the rest of this document to understand the behavior of your program, you are being too clever.
+
+                Don't be clever."
+            </blockquote>
+        </section>
+
+
 
         <section>
             <img src="img/golang-devs-like.png" width="60%" alt="gopher"/>
