@@ -470,6 +470,41 @@ package app
         </section>
 
         <section>
+            <h5>Acyclic Design</h5>
+            <pre><code data-trim data-noescape class="stretch">
+package email
+
+func Send(body, email string) {
+    // ...
+}
+
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+package user
+
+import (
+    "app/email"
+    "math/rand"
+)
+
+type User struct {
+    ID    int
+    Email string
+}
+
+func Register(login string) int {
+    // ..
+    user := User{Email: login, ID: rand.Int()}
+    email.Send("Welcome!", user.Email)
+    return 42
+}
+            </code></pre>
+        </section>
+
+        <section>
             <img src="img/import-cycles.png" width="65%" alt="import cycles"/>
             <br>
 
