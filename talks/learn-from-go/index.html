@@ -165,9 +165,20 @@ func main() {
         </section>
 
         <section>
+            <h3>What's better? tabs or spaces?</h3>
+            <div class="fragment">
+                <blockquote>
+                    "Gofmt formats Go programs. It uses tabs for indentation and blanks for alignment."
+                </blockquote>
+                <small><small><a href="https://github.com/golang/go/blob/master/src/cmd/gofmt/doc.go">https://github.com/golang/go/blob/master/src/cmd/gofmt/doc.go</a></small></small>
+            </div>
+        </section>
+
+        <section>
             <h3>Go Reduces Bikeshedding</h3>
             <img src="img/styles.jpg" width="60%" alt="gopher"/>
-            <small><small><a href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
+            <small><small><a
+                    href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
 
 
         </section>
@@ -188,7 +199,8 @@ func main() {
                 <small>Golang's interfaces are not what you think they are</small>
             </p>
 
-            <h4 class="fragment">Go’s interfaces are designed with the consumer (caller) in mind rather than the producer</h4>
+            <h4 class="fragment">Go’s interfaces are designed with the consumer (caller) in mind rather than the
+                producer</h4>
         </section>
 
         <section>
@@ -311,7 +323,7 @@ service := MovieRentalService{
 
         <section>
             <h5>Manual Dependency Injection</h5>
-          <pre><code data-trim data-noescape class="stretch">
+            <pre><code data-trim data-noescape class="stretch">
 rentalRepository := PostgresRentalRepository{db}
 descriptionsRepository := RESTMovieDescriptionsRepository{
     "https://api.example.com",
@@ -325,7 +337,7 @@ movieRentalService := MovieRentalService{
 </code></pre>
             <small>Dependency Injection is about external supply of dependencies</small>
             <small>Dependency Injection Containers are just one of the way to achieve this</small>
-</section>
+        </section>
         <section>
             <h3>But how to test it without mocks?</h3>
         </section>
@@ -355,7 +367,8 @@ type InMemoryMovieDescriptionsRepository struct {
             <h5>Hexagonal Architecture</h5>
 
             <img src="img/hexagonal.png" width="70%" alt="hexagonal"/>
-            <small><small><a href="https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/">https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/</a></small></small>
+            <small><small><a
+                    href="https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/">https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/</a></small></small>
         </section>
 
         <section>
@@ -365,7 +378,8 @@ type InMemoryMovieDescriptionsRepository struct {
         <section>
             <h3>Golang Memory Model</h3>
             <blockquote>
-                "(...) If you must read the rest of this document to understand the behavior of your program, you are being too clever.
+                "(...) If you must read the rest of this document to understand the behavior of your program, you are
+                being too clever.
 
                 Don't be clever."
             </blockquote>
@@ -377,17 +391,112 @@ type InMemoryMovieDescriptionsRepository struct {
         </section>
 
         <section>
-            <h3>Any advanced syntactic feature can be substituted with finite number of for loops and if-else statements</h3>
+            <h3>Any advanced syntactic feature can be substituted with finite number of for loops and if-else
+                statements</h3>
         </section>
 
         <section>
             <h3>Import/Dependency Cycles</h3>
+            <h5>Golang programs must be acyclic</h5>
         </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+            package main
+
+            import (
+                "app/user"
+            )
+
+            func main() {
+                user.Register("someone@example.com")
+            }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+package user
+
+import (
+    "app/email"
+    "math/rand"
+)
+
+type User struct {
+    ID    int
+    Email string
+}
+
+func Register(email string) int {
+    // ..
+    NotifyUser(User{Email: email, ID: rand.Int()})
+    return 42
+}
+
+func NotifyUser(u User) {
+	email.SendWelcomeEmail(u)
+}
+            </code></pre>
+        </section>
+
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+package email
+
+import "app/user"
+
+func Send(body, email string) {
+	// ...
+}
+
+func SendWelcomeEmail(user user.User) {
+	Send("Welcome!", user.Email)
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+> go build
+
+package app
+        imports app/user
+        imports app/email
+        imports app/user: import cycle not allowed
+
+            </code></pre>
+        </section>
+
         <section>
             <img src="img/import-cycles.png" width="65%" alt="import cycles"/>
             <br>
 
-            <small><small><a href=" https://github.com/golang/go/issues/30247">https://github.com/golang/go/issues/30247</a></small></small>
+            <small><small><a
+                    href="https://github.com/golang/go/issues/30247">https://github.com/golang/go/issues/30247</a></small></small>
+        </section>
+
+        <section>
+            <h3>Identifying Cycles in Java</h3>
+            <h5>with ArchUnit</h5>
+
+            <div class="fragment">
+
+            <pre><code data-trim data-noescape class="stretch">
+@ArchTest
+static final ArchRule shouldBeFreeOfCycles = slices()
+  .matching("com.pivovarit.(*)..")
+  .should().beFreeOfCycles()
+  .as("the library should be free of cycles")
+  .because("cycles are bad");
+
+            </code></pre>
+                <small><small><a href="https://www.archunit.org/">https://www.archunit.org/</a></small></small>
+
+            </div>
+
+
         </section>
         <section>
             <h4>Thank You!</h4>
