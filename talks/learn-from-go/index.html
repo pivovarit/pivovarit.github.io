@@ -322,9 +322,9 @@ func main() {
                 <code class="hljs javascript" data-trim data-noescape>
                                     <script type="text/template">
 type MovieRentalService struct {
-   rentalRepository RentalRepository
-   movieDescriptionsRepository MovieDescriptionsRepository
-   movieRepository MovieRepository
+rentalRepository RentalRepository
+movieDescriptionsRepository MovieDescriptionsRepository
+movieRepository MovieRepository
 }
 					</script>
                 </code></pre>
@@ -335,18 +335,18 @@ type MovieRentalService struct {
                 <code class="hljs javascript" data-trim data-noescape data-line-numbers="|1|2,7,11|2-5|7-9|11-13|">
                                     <script type="text/template">
 type MovieRentalService struct {
-    rentalRepository interface {
-        saveRentedMovie(userID, movieId string) error
-        saveReturnedMovie(userID, movieId string) error
-    }
+rentalRepository interface {
+saveRentedMovie(userID, movieId string) error
+saveReturnedMovie(userID, movieId string) error
+}
 
-    movieDescriptionsRepository interface {
-        getMovieDescription(movieId string) (string, error)
-    }
+movieDescriptionsRepository interface {
+getMovieDescription(movieId string) (string, error)
+}
 
-    movieRepository interface {
-        getMovie(movieId string) (string, error)
-    }
+movieRepository interface {
+getMovie(movieId string) (string, error)
+}
 }
 					</script>
                 </code></pre>
@@ -455,14 +455,14 @@ service := MovieRentalService{
                                     <script type="text/template">
 rentalRepository := PostgresRentalRepository{db}
 descriptionsRepository := RESTMovieDescriptionsRepository{
-    "https://api.example.com",
-    &http.Client{}}
+"https://api.example.com",
+&http.Client{}}
 movieRepository := PostgresMovieRepository{db}
 
 movieRentalService := MovieRentalService{
-    rentalRepository,
-    descriptionsRepository,
-    movieRepository
+rentalRepository,
+descriptionsRepository,
+movieRepository
 }
 					</script>
                 </code></pre>
@@ -525,7 +525,8 @@ type InMemoryMovieDescriptionsRepository struct {
                 }
             }
             </code></pre>
-            <small>some details omitted for clarity</small>
+            <small>Java requires explicit interface implementation, so this approach might generate dozens of
+                boilerplate adapters</small>
         </section>
 
         <section>
@@ -536,13 +537,99 @@ type InMemoryMovieDescriptionsRepository struct {
             </code></pre>
             <pre><code data-trim data-noescape class="stretch">
                 public interface MovieRepository {
-                    boolean exists(UUID movieId);
+                    void save(Movie movie)
                 }
             </code></pre>
             <pre><code data-trim data-noescape class="stretch">
                 public enum MovieRentalEventType {RENTED, RETURNED}
             </code></pre>
         </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+    public static class InMemoryRentalHistoryRepository
+      implements MovieRentalService.RentalHistoryRepository {
+
+        private final List&lt;MovieRentedEvent> events = Collections
+          .synchronizedList(new ArrayList<>());
+
+        @Override
+        public void save(
+          MovieRentalEventType eventType,
+          String login, UUID id) {
+            events.add(new MovieRentedEvent(login, id));
+        }
+
+        @Override
+        public List&lt;UUID> findRentedBy(String user) {
+            return events.stream()
+              .filter(e -> e.login().equals(user))
+              .map(MovieRentedEvent::movieId)
+              .toList();
+        }
+
+        record MovieRentedEvent(String login, UUID movieId) {
+        }
+    }
+            </code></pre>
+        </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+    @Test
+    void shouldRentMovie() {
+        MovieRentalService service = new MovieRentalService(
+          new InMemoryRentalHistoryRepository(),
+          new InMemoryMovieRepository());
+
+        var movieId = UUID.randomUUID();
+        var user = "foo@bar.com";
+
+        service.rentMovie(user, movieId);
+
+        assertThat(service.getRentedMovies(user))
+          .containsExactly(movieId);
+    }
+            </code></pre>
+            <h5 class="fragment">main advantage: in-memory tests are blazingly fast</h5>
+
+        </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+    @RepeatedTest(10_000)
+    void shouldRentMovie() {
+        MovieRentalService service = new MovieRentalService(
+          new InMemoryRentalHistoryRepository(),
+          new InMemoryMovieRepository());
+
+        var movieId = UUID.randomUUID();
+        var user = "foo@bar.com";
+
+        service.rentMovie(user, movieId);
+
+        assertThat(service.getRentedMovies(user))
+          .containsExactly(movieId);
+    }
+            </code></pre>
+        </section>
+
+        <section>
+            <img src="img/fast-unit-test.png" width="100%" alt="hexagonal"/>
+        </section>
+
+        <section>
+            <img src="img/rerun-automatically.png" width="70%" alt="hexagonal"/>
+        </section>
+
+        <section>
+            <video
+                    data-autoplay
+                    src="img/near-compile-time-sudoku.mov"
+            ></video>
+            <small><small>inspired by: <a href="https://x.com/xuwei_k/status/1832381681795526846">compile-time sudoku solver in Scala</a></small></small>
+        </section>
+
 
         <section>
             <h5>Hexagonal Architecture</h5>
