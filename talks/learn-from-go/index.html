@@ -272,10 +272,17 @@ func main() {
             <small class="fragment">We need to consult Golang Memory Model</small>
         </section>
 
+        <section>
+            <blockquote>
+                "Programs that modify data being simultaneously accessed by multiple goroutines must serialize such access."
+            </blockquote>
+            <blockquote class="fragment">
+                "To serialize access, protect the data with channel operations or other synchronization primitives such as those in the sync and sync/atomic packages."
+            </blockquote>
+        </section>
 
         <section>
-            <h3>Golang Memory Model</h3>
-            <blockquote class="fragment">
+            <blockquote>
                 "(...) If you must read the rest of this document to understand the behavior of your program, you are
                 being too clever.
 
