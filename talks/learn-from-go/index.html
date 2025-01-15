@@ -512,6 +512,47 @@ type InMemoryMovieDescriptionsRepository struct {
         </section>
 
         <section>
+            <pre><code data-trim data-noescape class="stretch">
+            class MovieRentalService {
+                private final RentalHistoryRepository rentalHistoryRepository;
+                private final MovieRepository movieRepository;
+
+                public void rentMovie(String login, UUID movieId) {
+                    // ...
+                    if (movieRepository.exists(movieId)) {
+                        rentalHistoryRepository.saveEvent(MovieRentalEventType.RENTED, "foo@bar.com", uuid, eventId);
+                    }
+                }
+
+                public interface RentalHistoryRepository {
+                    void saveEvent(MovieRentalEventType eventType, String login, UUID id, long eventId);
+                }
+
+                public interface MovieRepository {
+                    boolean exists(UUID movieId);
+                }
+            }
+            </code></pre>
+            <small>some details omitted for clarity</small>
+        </section>
+
+        <section>
+            <pre><code data-trim data-noescape class="stretch">
+                public interface RentalHistoryRepository {
+                    void saveEvent(MovieRentalEventType eventType, String login, UUID id, long eventId);
+                }
+            </code></pre>
+            <pre><code data-trim data-noescape class="stretch">
+                public interface MovieRepository {
+                    boolean exists(UUID movieId);
+                }
+            </code></pre>
+            <pre><code data-trim data-noescape class="stretch">
+                public enum MovieRentalEventType {RENTED, RETURNED}
+            </code></pre>
+        </section>
+
+        <section>
             <h3>Import/Dependency Cycles</h3>
             <h5>Golang programs must be acyclic</h5>
         </section>
