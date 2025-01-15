@@ -322,9 +322,9 @@ func main() {
                 <code class="hljs javascript" data-trim data-noescape>
                                     <script type="text/template">
 type MovieRentalService struct {
-rentalRepository RentalRepository
-movieDescriptionsRepository MovieDescriptionsRepository
-movieRepository MovieRepository
+    rentalRepository RentalRepository
+    movieDescriptionsRepository MovieDescriptionsRepository
+    movieRepository MovieRepository
 }
 					</script>
                 </code></pre>
@@ -335,18 +335,18 @@ movieRepository MovieRepository
                 <code class="hljs javascript" data-trim data-noescape data-line-numbers="|1|2,7,11|2-5|7-9|11-13|">
                                     <script type="text/template">
 type MovieRentalService struct {
-rentalRepository interface {
-saveRentedMovie(userID, movieId string) error
-saveReturnedMovie(userID, movieId string) error
-}
+    rentalRepository interface {
+        saveRentedMovie(userID, movieId string) error
+        saveReturnedMovie(userID, movieId string) error
+    }
 
-movieDescriptionsRepository interface {
-getMovieDescription(movieId string) (string, error)
-}
+    movieDescriptionsRepository interface {
+        getMovieDescription(movieId string) (string, error)
+    }
 
-movieRepository interface {
-getMovie(movieId string) (string, error)
-}
+    movieRepository interface {
+        getMovie(movieId string) (string, error)
+    }
 }
 					</script>
                 </code></pre>
@@ -455,14 +455,14 @@ service := MovieRentalService{
                                     <script type="text/template">
 rentalRepository := PostgresRentalRepository{db}
 descriptionsRepository := RESTMovieDescriptionsRepository{
-"https://api.example.com",
-&http.Client{}}
+    "https://api.example.com",
+    &http.Client{}}
 movieRepository := PostgresMovieRepository{db}
 
 movieRentalService := MovieRentalService{
-rentalRepository,
-descriptionsRepository,
-movieRepository
+    rentalRepository,
+    descriptionsRepository,
+    movieRepository
 }
 					</script>
                 </code></pre>
