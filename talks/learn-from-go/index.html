@@ -181,10 +181,7 @@ func main() {
         <section>
             <h3>Go Reduces Bikeshedding</h3>
             <img src="img/styles.jpg" width="60%" alt="gopher"/>
-            <small><small><a
-                    href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
-
-
+            <small><small><a href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
         </section>
 
         <section>
@@ -196,6 +193,43 @@ func main() {
             <h4 class="fragment">Which static analysis tools should we use?</h4>
         </section>
 
+        <section>
+            <h3>Java Alternative: Spotless</h3>
+            <img src="img/spotless.png" width="60%" alt="spotless"/>
+            <br>
+            <small><small><a href="https://github.com/diffplug/spotless">https://github.com/diffplug/spotless</a></small></small>
+        </section>
+
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+&lt;plugin&gt;
+    &lt;groupId&gt;com.diffplug.spotless&lt;/groupId&gt;
+    &lt;artifactId&gt;spotless-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;2.44.1&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;java&gt;
+            &lt;googleJavaFormat/&gt;
+        &lt;/java&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;
+          </code></pre>
+            <pre><code data-trim data-noescape class="stretch">mvn spotless:check</code></pre>
+            <h5>Can be plugged into Maven/Gradle lifecycle</h5>
+            <small class="fragment">Unfortunately, it's configurable...</small>
+        </section>
+
+        <section>
+            <h3>Available Code Styles:</h3>
+            <ul>
+                <li>google-java-format</li>
+                <li>eclipse jdt</li>
+                <li>palantir-java-format</li>
+                <li>formatAnnotations</li>
+                <li>cleanthat</li>
+            </ul>
+            <br><br>
+            <small class="fragment">... now we can argue which code style to choose :)</small>
+        </section>
 
         <section>
             <h3>Dependency Inversion by Design</h3>
