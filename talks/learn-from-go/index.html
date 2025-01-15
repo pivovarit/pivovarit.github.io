@@ -432,10 +432,12 @@ service := MovieRentalService{
                 <li class="fragment">Dependency Injection</li>
             </ul>
         </section>
-
         <section>
             <h5>Manual Dependency Injection</h5>
-            <pre><code data-trim data-noescape class="stretch">
+
+            <pre data-id="code-animation">
+                <code class="hljs javascript" data-trim data-noescape data-line-numbers="|1|2-4|5|7-11">
+                                    <script type="text/template">
 rentalRepository := PostgresRentalRepository{db}
 descriptionsRepository := RESTMovieDescriptionsRepository{
     "https://api.example.com",
@@ -445,11 +447,14 @@ movieRepository := PostgresMovieRepository{db}
 movieRentalService := MovieRentalService{
     rentalRepository,
     descriptionsRepository,
-    movieRepository}
-</code></pre>
+    movieRepository
+}
+					</script>
+                </code></pre>
             <small>Dependency Injection is about external supply of dependencies</small>
             <small>Dependency Injection Containers are just one of the way to achieve this</small>
         </section>
+
         <section>
             <h3>But how to test it without mocks?</h3>
         </section>
