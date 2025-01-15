@@ -181,7 +181,8 @@ func main() {
         <section>
             <h3>Go Reduces Bikeshedding</h3>
             <img src="img/styles.jpg" width="60%" alt="gopher"/>
-            <small><small><a href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
+            <small><small><a
+                    href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
         </section>
 
         <section>
@@ -197,7 +198,8 @@ func main() {
             <h3>Java Alternative: Spotless</h3>
             <img src="img/spotless.png" width="60%" alt="spotless"/>
             <br>
-            <small><small><a href="https://github.com/diffplug/spotless">https://github.com/diffplug/spotless</a></small></small>
+            <small><small><a
+                    href="https://github.com/diffplug/spotless">https://github.com/diffplug/spotless</a></small></small>
         </section>
 
         <section>
@@ -232,6 +234,65 @@ func main() {
         </section>
 
         <section>
+            <h3>Strong Focus on Pragmatism</h3>
+            <h5>Example: Golang Memory Model</h5>
+        </section>
+
+        <section>
+        <pre><code data-trim data-noescape class="stretch">
+func main() {
+    var ints = []int{0, 0}
+
+    go func() { ints[0] = 1 }() // async
+    go func() { ints[1] = 2 }() // async
+
+    for !slices.Equal(ints, []int{1, 2}) {
+        // busy spin ...
+    }
+
+    println("done, exiting!")
+}
+          </code></pre>
+            <h5>Is the main thread guaranteed to exit?</h5>
+            <small class="fragment">We need to consult Golang Memory Model</small>
+        </section>
+
+
+        <section>
+            <h3>Golang Memory Model</h3>
+            <blockquote class="fragment">
+                "(...) If you must read the rest of this document to understand the behavior of your program, you are
+                being too clever.
+
+                Don't be clever."
+            </blockquote>
+        </section>
+
+        <section>
+            <h5>Pragmatic, Not Clever Solution</h5>
+            <pre><code data-trim data-noescape class="stretch">
+func main() {
+    var ints = []int{0, 0}
+
+    var wg sync.WaitGroup
+    wg.Add(2)
+    go func() { defer wg.Done(); ints[0] = 1 }() // async
+    go func() { defer wg.Done(); ints[1] = 2 }() // async
+    wg.Wait()
+
+    println("done, exiting!")
+}
+          </code></pre>
+
+        </section>
+
+        <section>
+            <h3>Lessons Learned:</h3>
+            <h5 class="fragment">Don't be clever when unnecessary</h5>
+            <h5 class="fragment">Example: not sure if volatile should be used? -> use it.</h5>
+        </section>
+
+        <section>
             <h3>Dependency Inversion by Design</h3>
             <p>
                 <small>Golang's interfaces are not what you think they are</small>
@@ -239,6 +300,19 @@ func main() {
 
             <h4 class="fragment">Go’s interfaces are designed with the consumer (caller) in mind rather than the
                 producer</h4>
+        </section>
+
+        <section>
+            <pre data-id="code-animation">
+                <code class="hljs javascript" data-trim data-noescape>
+                                    <script type="text/template">
+type MovieRentalService struct {
+   rentalRepository RentalRepository
+   movieDescriptionsRepository MovieDescriptionsRepository
+   movieRepository MovieRepository
+}
+					</script>
+                </code></pre>
         </section>
 
         <section>
