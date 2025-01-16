@@ -250,7 +250,33 @@ func main() {
 
         <section>
             <h3>Strong Focus on Pragmatism</h3>
-            <h5>Example: Golang Memory Model</h5>
+            <h5>Example: Memory Models</h5>
+        </section>
+
+        <section>
+          <pre><code data-trim data-noescape class="stretch">
+class Example {
+
+    private static boolean stop;
+
+    public static void main(String[] args)
+      throws InterruptedException {
+        var thread = new Thread(() -> {
+            int i = 0;
+            while (!stop) {
+                i++;
+                Integer.sum(i, 2); // ignore result
+            }
+        });
+
+        thread.start();
+        Thread.sleep(10); // play with this value
+
+        stop = true;
+    }
+}
+          </code></pre>
+            <small><small><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.4">https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.4</a></small></small>
         </section>
 
         <section>
