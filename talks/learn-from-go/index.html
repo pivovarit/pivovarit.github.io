@@ -295,13 +295,14 @@ func main() {
             <h5>Pragmatic, Not Clever Solution</h5>
             <pre><code data-trim data-noescape class="stretch">
 func main() {
-    var ints = []int{0, 0}
+    var ints = []atomic.Int32{{}, {}}
 
-    var wg sync.WaitGroup
-    wg.Add(2)
-    go func() { defer wg.Done(); ints[0] = 1 }() // async
-    go func() { defer wg.Done(); ints[1] = 2 }() // async
-    wg.Wait()
+    go func() { ints[0].Store(1) }() // async
+    go func() { ints[1].Store(2) }() // async
+
+    for ints[0].Load() != 1 && ints[1].Load() != 2 {
+        // busy spin
+    }
 
     println("done, exiting!")
 }
