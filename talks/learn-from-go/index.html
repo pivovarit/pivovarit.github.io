@@ -169,15 +169,15 @@ func main() {
             </ul>
         </section>
 
-        <section>
+        <section data-transition="slide-in fade-out">
             <h4>So, what can we learn from Golang?</h4>
         </section>
 
-        <section>
+        <section data-transition="fade">
             <h4>...</h4>
         </section>
 
-        <section>
+        <section data-transition="zoom-in slide-out">
             <h3>What's better? tabs or spaces?</h3>
             <div class="fragment">
                 <blockquote>
@@ -249,7 +249,9 @@ func main() {
         </section>
 
         <section>
-          <pre><code data-trim data-noescape class="stretch">
+            <pre data-id="code-animation">
+                <code class="hljs javascript stretch" data-trim data-noescape data-line-numbers="|3,9,18">
+                                    <script type="text/template">
 class Example {
 
     private static boolean stop;
@@ -264,13 +266,15 @@ class Example {
             }
         });
 
-        thread.start();
-        Thread.sleep(10); // play with this value
+    thread.start();
+    Thread.sleep(10); // play with this value
 
-        stop = true;
+    stop = true;
     }
 }
-          </code></pre>
+					</script>
+                </code></pre>
+
             <small><small><a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.4">https://docs.oracle.com/javase/specs/jls/se8/html/jls-17.html#jls-17.4</a></small></small>
         </section>
 
@@ -600,7 +604,7 @@ type InMemoryMovieDescriptionsRepository struct {
             </code></pre>
         </section>
 
-        <section>
+        <section data-transition="slide-in none-out">
             <pre><code data-trim data-noescape class="stretch">
     @Test
     void shouldRentMovie() {
@@ -621,7 +625,7 @@ type InMemoryMovieDescriptionsRepository struct {
 
         </section>
 
-        <section>
+        <section data-transition="none">
             <pre><code data-trim data-noescape class="stretch">
     @RepeatedTest(10_000)
     void shouldRentMovie() {
@@ -638,6 +642,7 @@ type InMemoryMovieDescriptionsRepository struct {
           .containsExactly(movieId);
     }
             </code></pre>
+            <h5>main advantage: in-memory tests are blazingly fast</h5>
         </section>
 
         <section>
@@ -671,7 +676,7 @@ type InMemoryMovieDescriptionsRepository struct {
         </section>
 
 
-        <section>
+        <section data-transition="zoom">
             <h5>This is Hexagonal Architecture (Ports and Adapters)</h5><br>
             <img src="img/hexagonal.png" width="70%" alt="hexagonal"/>
             <small><small><a
