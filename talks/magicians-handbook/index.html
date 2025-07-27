@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/simple.css">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/zenburn.css">
+
+    <!--    <link rel="stylesheet" href="plugin/highlight/monokai.css">-->
+</head>
+<body>
+<div class="reveal">
+    <div class="footer">socials: <a href="http://twitter.com/pivovarit">@pivovarit</a></div>
+    <div class="slides">
+        <section>
+            <h3>The Magician's Handbook</h3>
+            <h4>Inside Java Framework Sorcery</h4>
+            <br><br>
+            <h4><a href="https://pivovarit.github.io"> Grzegorz Piwowarek</a></h4>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
+        <section>
+            <h2>{ <a href="http://4comprehension.com/">4comprehension.com</a> }</h2>
+            <h4>Independent Consultant/Trainer</h4>
+            <small>distributed systems | microservices | async | reactive | java | idiomatic go</small>
+            <h4>WarsawJUG | Vavr Leader | Oracle ACE</h4>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+            <br>
+        </section>
+
+        <section>
+        </section>
+
+        <section>
+            <blockquote>
+                Using common sense is the ultimate Best Practice™.
+            </blockquote>
+        </section>
+        <section>
+            <h2>Thank You!</h2>
+
+            <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
+            <small><a href="https://4comprehension.com">4comprehension.com</a></small>
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+
+    Reveal.configure({
+        controls: false,
+    });
+</script>
+</body>
+<style>
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 98%;
+        color: black;
+        text-align: right;
+        padding: 10px 0px;
+        font-size: 60%;
+    }
+</style>
+</html>
