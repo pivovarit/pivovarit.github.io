@@ -186,6 +186,7 @@
             <h2>Common Issues</h2>
             <ul>
                 <li>Forgetting <code>@EnableAsync</code> or <code>@EnableCaching</code></li>
+                <li>Not registering a bean</li>
                 <li>Using Lombok <code>@Data</code> with JPA:
                     <ul>
                         <li>Breaks entity identity</li>
@@ -222,7 +223,15 @@
             <small>https://en.wikipedia.org/wiki/Dependency_hell</small>
         </section>
 
-
+        <section>
+            <h2>Aspect-Oriented Programming via Functional Programming</h2>
+            <ul>
+                <li>Simulate AOP using higher-order functions</li>
+                <li>Use decorators/lambdas to wrap behavior</li>
+                <li>Gives full control over execution flow</li>
+                <li>No proxies, no annotation magic — it's all explicit</li>
+            </ul>
+        </section>
 
         <section>
             <h2>Alternatives to Annotation Magic</h2>
