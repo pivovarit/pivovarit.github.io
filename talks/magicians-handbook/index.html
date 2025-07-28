@@ -37,7 +37,30 @@
         </section>
 
         <section>
+            <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
+            <small><small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small></small>
+        </section>
+
+        <section>
+
+            <h3><em>@SpringBootApplication</em></h3>
+
+            <br>
+
             <p><em>What’s really happening under the hood?</em></p>
+        </section>
+
+        <section>
+            <img src="img/bosch.png" width="90%"/>
+            <small><small>The Garden of Earthly Delights, Hieronymus Bosch</small></small>
+        </section>
+
+        <section>
+            <h3>Annotation Magic</h3>
+            <ul>
+                <li>Discovery</li>
+                <li>Handling</li>
+            </ul>
         </section>
 
         <section>
@@ -47,6 +70,38 @@
                 <li>Uses a <strong>custom classloader</strong></li>
                 <li>Inspects classes using reflection and metadata readers</li>
                 <li>Spring AOT speeds up startup by avoiding runtime reflection (experimental)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>ClassGraph</h2>
+            <ul>
+                <li>zero-dependency bytecode parser</li>
+                <li>multi-threaded</li>
+                <li>highly-optimized</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Runtime Annotation Handling</h2>
+        </section>
+
+        <section>
+            <h1>Proxy</h1>
+        </section>
+
+        <section>
+            <h4>Proxy vs Decorator</h4>
+        </section>
+
+        <section>
+            <h2>Dynamic Proxies</h2>
+            <ul>
+                <li><code>java.lang.reflect.Proxy</code> (interfaces only)</li>
+                <li><strong>CGLIB</strong> – subclass proxy (used for classes)</li>
+                <li>If bean implements interfaces → JDK proxy</li>
+                <li>No interfaces → CGLIB subclass proxy</li>
+                <li>Spring uses <a href="https://objenesis.org">Objenesis</a> for object creation</li>
             </ul>
         </section>
 
