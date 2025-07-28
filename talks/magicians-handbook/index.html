@@ -37,6 +37,150 @@
         </section>
 
         <section>
+            <p><em>What’s really happening under the hood?</em></p>
+        </section>
+
+        <section>
+            <h2>Component Discovery</h2>
+            <ul>
+                <li>Spring scans packages for components</li>
+                <li>Uses a <strong>custom classloader</strong></li>
+                <li>Inspects classes using reflection and metadata readers</li>
+                <li>Spring AOT speeds up startup by avoiding runtime reflection (experimental)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Classpath Scanning & Reflection</h2>
+            <ul>
+                <li>Classpath scanning + reflection is <strong>slow</strong></li>
+                <li>Bytecode manipulation is used for performance</li>
+                <li>Libraries:
+                    <ul>
+                        <li><strong>ClassGraph</strong> – scanning</li>
+                        <li><strong>ASM</strong> – bytecode manipulation</li>
+                        <li><strong>Byte Buddy</strong> – runtime code generation</li>
+                    </ul>
+                </li>
+                <li>Future: <a href="https://openjdk.org/jeps/484">JEP-484: ClassFile API</a></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Annotation Processing</h2>
+            <ul>
+                <li>Compile-time processors (APT) do not modify classes</li>
+                <li><strong>Lombok</strong> abuses compiler internals to mutate AST</li>
+                <li>Mutating AST breaks incremental compilation</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Dynamic Proxies</h2>
+            <ul>
+                <li><code>java.lang.reflect.Proxy</code> (interfaces only)</li>
+                <li><strong>CGLIB</strong> – subclass proxy (used for classes)</li>
+                <li>If bean implements interfaces → JDK proxy</li>
+                <li>No interfaces → CGLIB subclass proxy</li>
+                <li>Spring uses <a href="https://objenesis.org">Objenesis</a> for object creation</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Aspect-Oriented Programming (AOP)</h2>
+            <ul>
+                <li>Applied via proxies at runtime</li>
+                <li>Examples:
+                    <ul>
+                        <li><code>@Transactional</code></li>
+                        <li><code>@Async</code></li>
+                        <li><code>@Cacheable</code></li>
+                    </ul>
+                </li>
+                <li><strong>AspectJ</strong> (compile-time or load-time weaving) avoids proxy issues</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Proxy Limitations</h2>
+            <ul>
+                <li>Only <strong>public</strong> method calls go through proxy</li>
+                <li><strong>Self-invocation</strong> bypasses proxy → no advice applied</li>
+                <li>Private methods are ignored</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Common Issues</h2>
+            <ul>
+                <li>Forgetting <code>@EnableAsync</code> or <code>@EnableCaching</code></li>
+                <li>Using Lombok <code>@Data</code> with JPA:
+                    <ul>
+                        <li>Breaks entity identity</li>
+                        <li>Triggers lazy loading unintentionally</li>
+                    </ul>
+                </li>
+                <li>Classpath-based autoconfiguration confusion</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Lombok Alternatives for JPA</h2>
+            <ul>
+                <li>Instead of <code>@Data</code>:
+                    <ul>
+                        <li><code>@Getter</code>, <code>@Setter</code></li>
+                        <li><code>@NoArgsConstructor</code>, <code>@AllArgsConstructor</code></li>
+                        <li><code>@ToString(exclude = {"lazyField"})</code></li>
+                        <li><code>@EqualsAndHashCode(onlyExplicitlyIncluded = true)</code></li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Alternatives to Annotation Magic</h2>
+            <ul>
+                <li><code>@Transactional</code> → <strong>TransactionTemplate</strong></li>
+                <li><code>@Async</code> → <strong>CompletableFuture</strong></li>
+                <li><code>@Retry</code> → <strong>Resilience4j</strong></li>
+                <li><code>@Cacheable</code> → <strong>Caffeine + patterns</strong></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Best Practices</h2>
+            <ul>
+                <li>Prefer constructor injection over setter injection</li>
+                <li>Explicit configuration > classpath magic</li>
+                <li>Use <code>@Configuration(proxyBeanMethods = false)</code></li>
+                <li>Understand lifecycle: <code>@PostConstruct</code> runs after DI</li>
+                <li>Debug autoconfiguration when in doubt</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Debugging Spring</h2>
+            <ul>
+                <li>Enable <code>--debug</code> mode</li>
+                <li>Spring Boot Actuator</li>
+                <li>JetBrains Spring Debugger:
+                    <a href="https://www.youtube.com/watch?v=K2tYAHG2XJ8">Watch demo</a>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Key Takeaways</h2>
+            <ul>
+                <li>Spring magic = proxies + reflection + bytecode tricks</li>
+                <li>Know limitations: self-invocation, visibility, performance</li>
+                <li>Prefer explicit APIs over hidden behavior when possible</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Questions?</h2>
         </section>
 
         <section>
