@@ -37,16 +37,15 @@
         </section>
 
         <section>
+            <h3><em>@SpringBootApplication</em></h3>
+        </section>
+
+        <section>
             <blockquote>"All non-trivial abstractions, to some degree, are leaky."</blockquote>
             <small><small>https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/</small></small>
         </section>
 
         <section>
-
-            <h3><em>@SpringBootApplication</em></h3>
-
-            <br>
-
             <p><em>What’s really happening under the hood?</em></p>
         </section>
 
@@ -66,20 +65,55 @@
         <section>
             <h2>Component Discovery</h2>
             <ul>
-                <li>Spring scans packages for components</li>
-                <li>Uses a <strong>custom classloader</strong></li>
-                <li>Inspects classes using reflection and metadata readers</li>
-                <li>Spring AOT speeds up startup by avoiding runtime reflection (experimental)</li>
+                <li class="fragment">Spring scans packages for components</li>
+                <li class="fragment">Uses a <strong>custom classloader</strong></li>
+                <li class="fragment">Inspects classes using reflection and metadata readers</li>
+                <li class="fragment">Spring AOT speeds up startup by avoiding runtime reflection (experimental)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Classpath Scanning & Reflection</h2>
+            <ul>
+                <li>Classpath scanning + reflection is <strong>slow</strong></li>
+                <li>Bytecode manipulation is used for performance</li>
             </ul>
         </section>
 
         <section>
             <h2>ClassGraph</h2>
             <ul>
-                <li>zero-dependency bytecode parser</li>
-                <li>multi-threaded</li>
-                <li>highly-optimized</li>
+                <li class="fragment">zero-dependency bytecode parser</li>
+                <li class="fragment">multi-threaded</li>
+                <li class="fragment">highly-optimized</li>
             </ul>
+        </section>
+
+        <section>
+            <h2>ASM</h2>
+            <ul>
+                <li class="fragment">bytecode manipulation and analysis</li>
+                <li class="fragment">as-low-as-it-gets</li>
+                <li class="fragment">even JDK would use it (InnerClassLambdaMetafactory)</li>
+            </ul>
+            <small class="fragment"><small>examples: https://www.baeldung.com/java-asm</small></small>
+        </section>
+
+        <section>
+            <blockquote>Enable JDK components to migrate to the standard API, and eventually remove the JDK's internal copy of the third-party ASM library.</blockquote>
+
+            <a href="https://openjdk.org/jeps/484">JEP-484: ClassFile API (JDK 24)</a>
+        </section>
+
+        <section>
+            <h2>Objenesis</h2>
+            <ul>
+                <li>Used by Spring to instantiate classes</li>
+                <li><strong>Doesn't require default constructor</strong></li>
+                <li>Spring bypasses it when not available</li>
+            </ul>
+
+            <p><a href="https://objenesis.org">link</a></p>
         </section>
 
         <section>
@@ -87,7 +121,13 @@
         </section>
 
         <section>
-            <h1>Proxy</h1>
+            <h2>Proxy</h2>
+            <blockquote class="fragment">Proxy is a structural design pattern that lets you provide a substitute or placeholder for another object. A proxy controls access to the original object, allowing you to perform something either before or after the request gets through to the original object.</blockquote>
+        </section>
+
+        <section>
+            <h2>Decorator</h2>
+            <blockquote class="fragment">Decorator is a structural design pattern that lets you attach new behaviors to objects by placing these objects inside special wrapper objects that contain the behaviors.</blockquote>
         </section>
 
         <section>
@@ -97,62 +137,10 @@
         <section>
             <h2>Dynamic Proxies</h2>
             <ul>
-                <li><code>java.lang.reflect.Proxy</code> (interfaces only)</li>
-                <li><strong>CGLIB</strong> – subclass proxy (used for classes)</li>
-                <li>If bean implements interfaces → JDK proxy</li>
-                <li>No interfaces → CGLIB subclass proxy</li>
-                <li>Spring uses <a href="https://objenesis.org">Objenesis</a> for object creation</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Classpath Scanning & Reflection</h2>
-            <ul>
-                <li>Classpath scanning + reflection is <strong>slow</strong></li>
-                <li>Bytecode manipulation is used for performance</li>
-                <li>Libraries:
-                    <ul>
-                        <li><strong>ClassGraph</strong> – scanning</li>
-                        <li><strong>ASM</strong> – bytecode manipulation</li>
-                        <li><strong>Byte Buddy</strong> – runtime code generation</li>
-                    </ul>
-                </li>
-                <li>Future: <a href="https://openjdk.org/jeps/484">JEP-484: ClassFile API</a></li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Annotation Processing</h2>
-            <ul>
-                <li>Compile-time processors (APT) do not modify classes</li>
-                <li><strong>Lombok</strong> abuses compiler internals to mutate AST</li>
-                <li>Mutating AST breaks incremental compilation</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Dynamic Proxies</h2>
-            <ul>
-                <li><code>java.lang.reflect.Proxy</code> (interfaces only)</li>
-                <li><strong>CGLIB</strong> – subclass proxy (used for classes)</li>
-                <li>If bean implements interfaces → JDK proxy</li>
-                <li>No interfaces → CGLIB subclass proxy</li>
-                <li>Spring uses <a href="https://objenesis.org">Objenesis</a> for object creation</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Aspect-Oriented Programming (AOP)</h2>
-            <ul>
-                <li>Applied via proxies at runtime</li>
-                <li>Examples:
-                    <ul>
-                        <li><code>@Transactional</code></li>
-                        <li><code>@Async</code></li>
-                        <li><code>@Cacheable</code></li>
-                    </ul>
-                </li>
-                <li><strong>AspectJ</strong> (compile-time or load-time weaving) avoids proxy issues</li>
+                <li class="fragment"><code>java.lang.reflect.Proxy</code> (interfaces only)</li>
+                <li class="fragment"><strong>CGLIB</strong> – subclass proxy (used for classes)</li>
+                <li class="fragment">If bean implements interfaces → JDK proxy</li>
+                <li class="fragment">No interfaces → CGLIB subclass proxy</li>
             </ul>
         </section>
 
@@ -162,6 +150,35 @@
                 <li>Only <strong>public</strong> method calls go through proxy</li>
                 <li><strong>Self-invocation</strong> bypasses proxy → no advice applied</li>
                 <li>Private methods are ignored</li>
+                <li>final classes can't be subclassed</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Aspect-Oriented Programming (AOP)</h2>
+            <ul>
+                <li>A programming paradigm for separating cross-cutting concerns</li>
+                <li>Examples: @Transactional, @Async, @Cacheable</li>
+                <li><strong>AspectJ</strong> (compile-time or load-time weaving) avoids proxy issues</li>
+            </ul>
+        </section>
+
+        <section>
+                <ul>
+                    <li><strong>Aspect</strong> – a module encapsulating cross-cutting logic (logging, security)</li>
+                    <li><strong>Advice</strong> – the action taken at a join point (method execution)</li>
+                    <li><strong>Pointcut</strong> – an expression that matches join points ("any method annotated with @Transactional")</li>
+                    <li><strong>Join point</strong> – a specific point during execution (method call)</li>
+                    <li><strong>Weaving</strong> – the process of applying aspects to target objects</li>
+                </ul>
+        </section>
+
+        <section>
+            <h2>Compile-time Annotation Processing</h2>
+            <ul>
+                <li>Compile-time processors (APT) do not modify classes</li>
+                <li><strong>Lombok</strong> abuses compiler internals to mutate AST</li>
+                <li>Mutating AST breaks incremental compilation</li>
             </ul>
         </section>
 
@@ -175,7 +192,6 @@
                         <li>Triggers lazy loading unintentionally</li>
                     </ul>
                 </li>
-                <li>Classpath-based autoconfiguration confusion</li>
             </ul>
         </section>
 
@@ -194,6 +210,21 @@
         </section>
 
         <section>
+            <h2>Dependency Hell</h2>
+            <h4>Common when using shared modules</h4>
+            <br>
+
+            <blockquote>
+                Dependency hell is a colloquial term for the frustration of some software users
+                who have installed software packages which have dependencies
+                on specific versions of other software packages.
+            </blockquote>
+            <small>https://en.wikipedia.org/wiki/Dependency_hell</small>
+        </section>
+
+
+
+        <section>
             <h2>Alternatives to Annotation Magic</h2>
             <ul>
                 <li><code>@Transactional</code> → <strong>TransactionTemplate</strong></li>
@@ -210,7 +241,7 @@
                 <li>Explicit configuration > classpath magic</li>
                 <li>Use <code>@Configuration(proxyBeanMethods = false)</code></li>
                 <li>Understand lifecycle: <code>@PostConstruct</code> runs after DI</li>
-                <li>Debug autoconfiguration when in doubt</li>
+                <li>Use autoconfiguration debugging tools</li>
             </ul>
         </section>
 
