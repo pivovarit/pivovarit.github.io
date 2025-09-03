@@ -345,6 +345,63 @@ func main() {
         </section>
 
         <section>
+            <h3>Pragmatic Concurrency Model</h3>
+            <h5>Goroutines and Channels</h5>
+            <blockquote class="fragment">
+                "Do not communicate by sharing memory; instead, share memory by communicating."
+            </blockquote>
+            <div class="fragment">
+                <h5>Instead of shared state, goroutines communicate through channels</h5>
+
+                <small><a href="https://go.dev/doc/effective_go#concurrency">Effective Go</a></small>
+            </div>
+        </section>
+
+        <section>
+            <img src="img/channels.svg" width="70%" alt="spotless"/>
+
+            <small><small><a href="https://how.dev/answers/what-are-channels-in-golang">https://how.dev/answers/what-are-channels-in-golang</a></small></small>
+
+        </section>
+
+        <section>
+<pre><code data-trim data-noescape class="stretch">
+func main() {
+    ch := make(chan string)
+
+    go func() {
+        ch <- "ping"
+    }()
+
+    msg := <-ch
+    fmt.Println(msg) // "ping"
+}
+</code></pre>
+            <small>when you hear "channel", think "special queue with dedicated syntax"</small>
+        </section>
+
+        <section>
+            <h3>Benefits?</h3>
+            <ul>
+                <li class="fragment">Avoids low-level locking & race conditions</li>
+                <li class="fragment">Encourages isolation of state</li>
+                <li class="fragment">Scales naturally with concurrency</li>
+                <li class="fragment">Clearer communication patterns</li>
+            </ul>
+        </section>
+
+        <section>
+            <img src="img/pc.png" width="60%" alt="spotless"/>
+            <img src="img/pc_qr.png" width="15%" alt="spotless"/>
+
+            <br>
+            <small><small><a href="https://github.com/pivovarit/parallel-collectors">https://github.com/pivovarit/parallel-collectors</a></small></small>
+            <br>
+            <small>parallel-collectors use this trick internally</small>
+        </section>
+
+
+        <section>
             <h3>Dependency Inversion by Design</h3>
             <p>
                 <small>Golang's interfaces are not what you think they are</small>
