@@ -259,7 +259,7 @@ func main() {
 
         <section>
             <pre data-id="code-animation">
-                <code class="hljs javascript stretch" data-trim data-noescape data-line-numbers="|3,9,18">
+                <code class="hljs javascript stretch" data-trim data-noescape data-line-numbers="|3,10,19">
                                     <script type="text/template">
 class Example {
 
@@ -267,6 +267,7 @@ class Example {
 
     public static void main(String[] args)
       throws InterruptedException {
+
         var thread = new Thread(() -> {
             int i = 0;
             while (!stop) {
@@ -345,8 +346,71 @@ func main() {
 
         </section>
 
+        <section data-transition="slide-in none-out">
+            <pre data-id="code-animation">
+                <code class="hljs javascript stretch" data-trim data-noescape data-line-numbers="3,10,18">
+                                    <script type="text/template">
+class Example {
+
+    private static boolean stop;
+
+    public static void main(String[] args)
+      throws InterruptedException {
+
+        var thread = new Thread(() -> {
+            int i = 0;
+            while (!stop) {
+                i++;
+                Integer.sum(i, 2); // ignore result
+            }
+        });
+        thread.start();
+        Thread.sleep(10); // play with this value
+
+        stop = true;
+    }
+}
+					</script>
+                </code></pre>
+
+        </section>
+
+        <section data-transition="none-in slide-out">
+            <pre data-id="code-animation">
+                <code class="hljs javascript stretch" data-trim data-noescape data-line-numbers="3,4,12,20">
+                                    <script type="text/template">
+class Example {
+
+    private static final AtomicBoolean stop
+      = new AtomicBoolean();
+
+
+    public static void main(String[] args)
+      throws InterruptedException {
+
+        var thread = new Thread(() -> {
+            int i = 0;
+            while (!stop.get()) {
+                i++;
+                Integer.sum(i, 2); // ignore result
+            }
+        });
+        thread.start();
+        Thread.sleep(10); // play with this value
+
+        stop.set(true);
+    }
+}
+					</script>
+                </code></pre>
+
+        </section>
+
+
         <section>
-            <h4><a href=" https://www.youtube.com/watch?v=zwZ1EZqe7NQ">The Hidden Art of Thread-Safe Programming: Exploring java.util.concurrent, Heinz Kabutz</a></h4>
+            <h4><a href="https://youtu.be/3YvufAy5uEk">Java Memory Model - Nie Tylko Dla Orłów, Krzysztof Ślusarski</a></h4>
+
+            <h4><a href="https://www.youtube.com/watch?v=zwZ1EZqe7NQ">The Hidden Art of Thread-Safe Programming: Exploring java.util.concurrent, Heinz Kabutz</a></h4>
         </section>
 
         <section>
