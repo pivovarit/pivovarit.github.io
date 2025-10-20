@@ -184,8 +184,7 @@ func main() {
 
         <section>
             <img src="img/java-invade-go.jpg" width="60%" alt="gopher"/>
-            <small><small><a
-                    href="https://www.reddit.com/r/golang/comments/pnjfg2/not_sure_which_one_describes_it_better/">https://www.reddit.com/r/golang/comments/pnjfg2/not_sure_which_one_describes_it_better/</a></small></small>
+            <small><small><a href="https://www.reddit.com/r/golang/comments/pnjfg2/not_sure_which_one_describes_it_better/">https://www.reddit.com/r/golang/comments/pnjfg2/not_sure_which_one_describes_it_better/</a></small></small>
         </section>
 
         <section data-transition="slide-in fade-out">
@@ -213,8 +212,7 @@ func main() {
         <section>
             <h3>Go Reduces Bikeshedding</h3>
             <img src="img/styles.jpg" width="60%" alt="gopher"/>
-            <small><small><a
-                    href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
+            <small><small><a href="https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/">https://www.reddit.com/r/ProgrammerHumor/comments/137drsn/i_cant_fathom_how_any_of_those_could_be_used/</a></small></small>
         </section>
 
         <section>
@@ -323,24 +321,24 @@ golang.org/x/net v0.26.0/go.mod h1:Kf8...
                                     <script type="text/template">
 class Example {
 
-private static boolean stop;
+    private static boolean stop;
 
-public static void main(String[] args)
-throws InterruptedException {
+    public static void main(String[] args)
+      throws InterruptedException {
 
-var thread = new Thread(() -> {
-int i = 0;
-while (!stop) {
-i++;
-Integer.sum(i, 2); // ignore result
-}
-});
+        var thread = new Thread(() -> {
+            int i = 0;
+            while (!stop) {
+                i++;
+                Integer.sum(i, 2); // ignore result
+            }
+        });
 
-thread.start();
-Thread.sleep(10); // play with this value
+    thread.start();
+    Thread.sleep(10); // play with this value
 
-stop = true;
-}
+    stop = true;
+    }
 }
 					</script>
                 </code></pre>
@@ -369,12 +367,10 @@ func main() {
 
         <section>
             <blockquote>
-                "Programs that modify data being simultaneously accessed by multiple goroutines must serialize such
-                access."
+                "Programs that modify data being simultaneously accessed by multiple goroutines must serialize such access."
             </blockquote>
             <blockquote class="fragment">
-                "To serialize access, protect the data with channel operations or other synchronization primitives such
-                as those in the sync and sync/atomic packages."
+                "To serialize access, protect the data with channel operations or other synchronization primitives such as those in the sync and sync/atomic packages."
             </blockquote>
         </section>
 
@@ -414,23 +410,23 @@ func main() {
                                     <script type="text/template">
 class Example {
 
-private static boolean stop;
+    private static boolean stop;
 
-public static void main(String[] args)
-throws InterruptedException {
+    public static void main(String[] args)
+      throws InterruptedException {
 
-var thread = new Thread(() -> {
-int i = 0;
-while (!stop) {
-i++;
-Integer.sum(i, 2); // ignore result
-}
-});
-thread.start();
-Thread.sleep(10); // play with this value
+        var thread = new Thread(() -> {
+            int i = 0;
+            while (!stop) {
+                i++;
+                Integer.sum(i, 2); // ignore result
+            }
+        });
+        thread.start();
+        Thread.sleep(10); // play with this value
 
-stop = true;
-}
+        stop = true;
+    }
 }
 					</script>
                 </code></pre>
@@ -443,25 +439,25 @@ stop = true;
                                     <script type="text/template">
 class Example {
 
-private static final AtomicBoolean stop
-= new AtomicBoolean();
+    private static final AtomicBoolean stop
+      = new AtomicBoolean();
 
 
-public static void main(String[] args)
-throws InterruptedException {
+    public static void main(String[] args)
+      throws InterruptedException {
 
-var thread = new Thread(() -> {
-int i = 0;
-while (!stop.get()) {
-i++;
-Integer.sum(i, 2); // ignore result
-}
-});
-thread.start();
-Thread.sleep(10); // play with this value
+        var thread = new Thread(() -> {
+            int i = 0;
+            while (!stop.get()) {
+                i++;
+                Integer.sum(i, 2); // ignore result
+            }
+        });
+        thread.start();
+        Thread.sleep(10); // play with this value
 
-stop.set(true);
-}
+        stop.set(true);
+    }
 }
 					</script>
                 </code></pre>
@@ -470,11 +466,9 @@ stop.set(true);
 
 
         <section>
-            <h4><a href="https://youtu.be/3YvufAy5uEk">Java Memory Model - Nie Tylko Dla Orłów, Krzysztof Ślusarski</a>
-            </h4>
+            <h4><a href="https://youtu.be/3YvufAy5uEk">Java Memory Model - Nie Tylko Dla Orłów, Krzysztof Ślusarski</a></h4>
 
-            <h4><a href="https://www.youtube.com/watch?v=zwZ1EZqe7NQ">The Hidden Art of Thread-Safe Programming:
-                Exploring java.util.concurrent, Heinz Kabutz</a></h4>
+            <h4><a href="https://www.youtube.com/watch?v=zwZ1EZqe7NQ">The Hidden Art of Thread-Safe Programming: Exploring java.util.concurrent, Heinz Kabutz</a></h4>
         </section>
 
         <section>
@@ -549,9 +543,9 @@ func main() {
                 <code class="hljs javascript" data-trim data-noescape>
                                     <script type="text/template">
 type MovieRentalService struct {
-rentalRepository RentalRepository
-movieDescriptionsRepository MovieDescriptionsRepository
-movieRepository MovieRepository
+    rentalRepository RentalRepository
+    movieDescriptionsRepository MovieDescriptionsRepository
+    movieRepository MovieRepository
 }
 					</script>
                 </code></pre>
@@ -562,18 +556,18 @@ movieRepository MovieRepository
                 <code class="hljs javascript" data-trim data-noescape data-line-numbers="|1|2,7,11|2-5|7-9|11-13|">
                                     <script type="text/template">
 type MovieRentalService struct {
-rentalRepository interface {
-saveRentedMovie(userID, movieId string) error
-saveReturnedMovie(userID, movieId string) error
-}
+    rentalRepository interface {
+        saveRentedMovie(userID, movieId string) error
+        saveReturnedMovie(userID, movieId string) error
+    }
 
-movieDescriptionsRepository interface {
-getMovieDescription(movieId string) (string, error)
-}
+    movieDescriptionsRepository interface {
+        getMovieDescription(movieId string) (string, error)
+    }
 
-movieRepository interface {
-getMovie(movieId string) (string, error)
-}
+    movieRepository interface {
+        getMovie(movieId string) (string, error)
+    }
 }
 					</script>
                 </code></pre>
@@ -682,14 +676,14 @@ service := MovieRentalService{
                                     <script type="text/template">
 rentalRepository := PostgresRentalRepository{db}
 descriptionsRepository := RESTMovieDescriptionsRepository{
-"https://api.example.com",
-&http.Client{}}
+    "https://api.example.com",
+    &http.Client{}}
 movieRepository := PostgresMovieRepository{db}
 
 movieRentalService := MovieRentalService{
-rentalRepository,
-descriptionsRepository,
-movieRepository
+    rentalRepository,
+    descriptionsRepository,
+    movieRepository
 }
 					</script>
                 </code></pre>
@@ -699,24 +693,6 @@ movieRepository
 
         <section>
             <h3>But how to test it without mocks?</h3>
-        </section>
-
-        <section>
-            <h2>Disclaimer: Mocks vs Fakes</h2>
-            <br>
-            <div style="text-align:left">
-                <p><strong>Fake</strong> → acts like the real thing (e.g. in-memory DB)</p>
-                <p><strong>Mock</strong> → checks calls/interactions</p>
-            </div>
-        </section>
-
-        <section>
-            <div style="text-align:left">
-                <p>
-                    If you call <code>Mockito.mock()</code> but never verify interactions,
-                    it's not a <strong>Mock</strong> - but a <strong>Fake</strong> (or even a <strong>Dummy</strong>).
-                </p>
-            </div>
         </section>
 
         <section>
@@ -871,9 +847,9 @@ type InMemoryMovieDescriptionsRepository struct {
                     loop="loop"
                     src="img/near-compile-time-sudoku.mov"
             ></video>
-            <small><small>inspired by: <a href="https://x.com/xuwei_k/status/1832381681795526846">compile-time sudoku
-                solver in Scala</a></small></small>
+            <small><small>inspired by: <a href="https://x.com/xuwei_k/status/1832381681795526846">compile-time sudoku solver in Scala</a></small></small>
         </section>
+
 
 
         <section data-transition="fade-out">
@@ -1030,20 +1006,20 @@ static final ArchRule shouldBeFreeOfCycles = slices()
             </div>
         </section>
 
-        <section>
-            <h3>Errors as Values</h3>
-        </section>
+            <section>
+                <h3>Errors as Values</h3>
+            </section>
 
-        <section>
-            <blockquote>
-                "Values can be programmed, and since errors are values, errors can be programmed. <strong>Errors are not
-                like exceptions. There’s nothing special about them</strong>, whereas an unhandled exception can crash
-                your program."
-            </blockquote>
-            <small>
-                <a href="https://blog.golang.org/errors-are-values">"Errors are values", Rob Pike</a>
-            </small>
-        </section>
+            <section>
+                <blockquote>
+                    "Values can be programmed, and since errors are values, errors can be programmed. <strong>Errors are not
+                    like exceptions. There’s nothing special about them</strong>, whereas an unhandled exception can crash
+                    your program."
+                </blockquote>
+                <small>
+                    <a href="https://blog.golang.org/errors-are-values">"Errors are values", Rob Pike</a>
+                </small>
+            </section>
 
         <section>
             <pre><code data-trim>func foo(s string) (string, error) { ... }</code></pre>
@@ -1055,18 +1031,18 @@ static final ArchRule shouldBeFreeOfCycles = slices()
             </code></pre>
         </section>
 
-        <section>
-            <img src="img/golang-devs-like.png" width="60%" alt="gopher"/>
-            <small><small><a href="https://x.com/kitarp29/status/1746515758589596139?lang=bg&mx=2">https://x.com/kitarp29/status/1746515758589596139?lang=bg&mx=2</a></small></small>
-        </section>
+            <section>
+                <img src="img/golang-devs-like.png" width="60%" alt="gopher"/>
+                <small><small><a href="https://x.com/kitarp29/status/1746515758589596139?lang=bg&mx=2">https://x.com/kitarp29/status/1746515758589596139?lang=bg&mx=2</a></small></small>
+            </section>
 
-        <section>
-            <h3>Limited Options for Java</h3>
-            <ul>
-                <li>Use Records to return errors alongside results</li>
-                <li>Use Either from Vavr</li>
-            </ul>
-        </section>
+            <section>
+                <h3>Limited Options for Java</h3>
+                <ul>
+                    <li>Use Records to return errors alongside results</li>
+                    <li>Use Either from Vavr</li>
+                </ul>
+            </section>
 
         <section>
             <blockquote>
