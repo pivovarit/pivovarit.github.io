@@ -268,6 +268,51 @@ func main() {
         </section>
 
         <section>
+            <h2>Reproducible Builds</h2>
+            <p><code>go.sum</code><br>
+                built-in guarantee of <strong>determinism and integrity</strong>.</p>
+        </section>
+
+        <section>
+  <pre><code class="go" data-trim>
+module github.com/example/project
+
+go 1.23
+
+require (
+    github.com/labstack/echo/v4 v4.11.1
+    golang.org/x/net v0.26.0
+)
+  </code></pre>
+            <p><code>go.mod</code> defines <strong>what</strong> you depend on.</p>
+        </section>
+
+        <section>
+  <pre><code data-trim>
+github.com/labstack/echo/v4 v4.11.1 h1:Xf2m...
+github.com/labstack/echo/v4 v4.11.1/go.mod h1:Dbz...
+golang.org/x/net v0.26.0 h1:YeS...
+golang.org/x/net v0.26.0/go.mod h1:Kf8...
+  </code></pre>
+            <p><code>go.sum</code> records <strong>exact cryptographic hashes</strong>
+                of every module and its <em>transitive dependencies</em></p>
+
+            <ul class="fragment">
+                <li>Ensures identical builds on every machine</li>
+                <li>Detects tampered or re-published artifacts</li>
+                <li>No extra tools or plugins required</li>
+            </ul>
+        </section>
+
+        <section>
+            <blockquote>
+                “Maven verifies downloads.<br>
+                Go verifies history.”
+            </blockquote>
+            <p><strong>Reproducibility by default</strong>, not by configuration.</p>
+        </section>
+
+        <section>
             <h3>Strong Focus on Pragmatism</h3>
             <h5>Example: Concurrency and Memory Models</h5>
         </section>
