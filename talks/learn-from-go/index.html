@@ -696,6 +696,24 @@ movieRentalService := MovieRentalService{
         </section>
 
         <section>
+            <h2>Disclaimer: Mocks vs Fakes</h2>
+            <br>
+            <div style="text-align:left">
+                <p><strong>Fake</strong> → acts like the real thing (e.g. in-memory DB)</p>
+                <p><strong>Mock</strong> → checks calls/interactions</p>
+            </div>
+        </section>
+
+        <section>
+            <div style="text-align:left">
+                <p>
+                    If you call <code>Mockito.mock()</code> but never verify interactions,
+                    it's not a <strong>Mock</strong> - but a <strong>Fake</strong> (or even a <strong>Dummy</strong>).
+                </p>
+            </div>
+        </section>
+
+        <section>
             <h5>Dependency Inversion Leverage</h5>
             <pre><code data-trim data-noescape class="stretch">
 type InMemoryRentalRepository struct {
