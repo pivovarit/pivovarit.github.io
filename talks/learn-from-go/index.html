@@ -1014,7 +1014,7 @@ func Register(login string) int {
             <pre><code data-trim data-noescape class="stretch">
 @ArchTest
 static final ArchRule shouldBeFreeOfCycles = slices()
-  .matching("com.pivovarit.(*)..")
+  .matching("com.pivovarit.(**)..")
   .should().beFreeOfCycles()
   .as("the library should be free of cycles")
   .because("cycles are bad");
