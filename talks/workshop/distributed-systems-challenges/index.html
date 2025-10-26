@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/simple.css">
+
+    <link rel="stylesheet" href="plugin/highlight/zenburn.css">
+</head>
+<body>
+<div class="reveal">
+    <div class="footer"><a href="http://twitter.com/pivovarit">@pivovarit</a></div>
+
+    <div class="slides">
+        <section>
+            <h3>Challenges of Distributed Systems</h3>
+            <br><br>
+            <h4><a href="https://pivovarit.github.io"> Grzegorz Piwowarek</a></h4>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
+        <section>
+            <h2>{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
+            <h4>WarsawJUG | Vavr | Oracle ACE</h4>
+            <h4>Independent Consultant/Trainer</h4>
+            <small>distributed systems | microservices | async | reactive | java</small>
+            <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+            <br>
+        </section>
+
+        <section>
+            <h2>CAP Theorem</h2>
+            <ul>
+                <li><strong>C</strong>onsistency</li>
+                <li><strong>A</strong>vailability</li>
+                <li><strong>P</strong>artition tolerance</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Consistency</h2>
+            <h5>every read receives the most recent write</h5>
+            <small>(a single-copy illusion)</small>
+        </section>
+
+        <section>
+            <h2>Availability</h2>
+            <h5>every request receives a non-error response</h5>
+            <small>(even if some nodes are down)</small>
+        </section>
+
+        <section>
+            <h2>Partition tolerance</h2>
+            <h5>system continues to operate even if network links are lost</h5>
+        </section>
+
+        <section>
+            <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
+                <em>Consistency</em> or <em>Availability</em>.</p>
+        </section>
+
+        <section>
+            <h2>PACELC Theorem</h2>
+            <p>
+                Daniel Abadi extended CAP to include trade-offs <em>when no partition occurs</em>:
+            </p>
+            <blockquote>
+                <strong>If P</strong> (partition) → <em>A</em> or <em>C</em><br>
+                <strong>Else</strong> (ok) → <em>Latency</em> or <em>Consistency</em>
+            </blockquote>
+        </section>
+
+
+        <section>
+            <blockquote>
+                Using common sense is the ultimate Best Practice™.
+            </blockquote>
+        </section>
+        <section>
+            <h2>Thank You!</h2>
+            <h5>Need help? Reach out! It's free.</h5>
+
+            <br><br><br><br>
+            <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
+            <small><a href="https://4comprehension.com">4comprehension.com</a></small>
+            <br>
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+<style>
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 98%;
+        color: black;
+        text-align: right;
+        padding: 10px 0px;
+        font-size: 60%;
+    }
+</style>
+</html>
