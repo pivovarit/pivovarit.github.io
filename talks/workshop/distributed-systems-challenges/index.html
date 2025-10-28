@@ -64,12 +64,12 @@
         </section>
 
         <section>
-            <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
-                <em>Consistency</em> or <em>Availability</em>.</p>
+            <h4>distributed systems are systems that communicate over unreliable channels</h4>
         </section>
 
         <section>
-            <h4>distributed systems are systems that communicate over unreliable channels</h4>
+            <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
+                <em>Consistency</em> or <em>Availability</em>.</p>
         </section>
 
         <section>
@@ -211,6 +211,78 @@
                 Our server app is a monolith, one big codebase of several million lines and a few thousand Django endpoints [1], all loaded up and served together. A few services have been split out of the monolith, but we don’t have any plans to aggressively break it up.
             </blockquote>
             <small><small><a href="https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c">https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c</a></small></small>
+        </section>
+
+        <section>
+            <h4>Reliability in an unreliable world</h4>
+        </section>
+
+        <section>
+            <h4>When sending a message over unreliable channels, how to guarantee delivery?</h4>
+        </section>
+
+        <section>
+            <h4>(...thought experiment...)</h4>
+        </section>
+
+        <section>
+            <h3>Definition</h3>
+            <p>An operation is <strong>idempotent</strong> if performing it multiple times produces the <em>same effect</em> as performing it once.</p>
+            <br>
+            <pre><code>f(f(x)) = f(x)</code></pre>
+        </section>
+
+        <section>
+            <h3>Examples</h3>
+            <ul>
+                <li>Setting a user’s status to “active” → ✅</li>
+                <li>Incrementing a counter → ❌</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>In a distributed system</h3>
+            <p>Failures and retries are inevitable.</p>
+        </section>
+
+        <section>
+            <ul>
+                <li>Network retries may cause duplicate requests</li>
+                <li>Clients or load balancers might resend operations</li>
+                <li>Idempotency prevents unwanted side effects</li>
+            </ul>
+        </section>
+
+
+
+        <section>
+            <h3>Exactly-once delivery?</h3>
+            <p><strong>A fairy tale.</strong> </p>
+            <br><br>
+            <div class="fragment">
+                <p><strong>Reality:</strong> You only ever get:</p>
+                <ul>
+                    <li><strong>at-most-once</strong> → messages may be lost</li>
+                    <li><strong>at-least-once</strong> → messages may be duplicated</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h3>Exactly-once doesn’t exist</h3>
+            <ul>
+                <li>Networks can fail between <em>send</em> and <em>acknowledge</em></li>
+                <li>Clients can retry</li>
+                <li>Servers can crash mid-processing</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Exactly-once <em>effect</em></h3>
+            <p>We can’t guarantee <em>exactly-once delivery</em>,</p>
+            <p>but we can design for <strong>exactly-once effect</strong> using idempotency.</p>
+            <br>
+            <pre><code>at-least-once delivery + idempotency = exactly-once</code></pre>
         </section>
 
         <section>
