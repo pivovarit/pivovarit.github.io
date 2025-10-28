@@ -34,6 +34,10 @@
         </section>
 
         <section>
+            <h2>What makes systems...distributed?</h2>
+        </section>
+
+        <section>
             <h2>CAP Theorem</h2>
             <ul>
                 <li><strong>C</strong>onsistency</li>
@@ -62,6 +66,151 @@
         <section>
             <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
                 <em>Consistency</em> or <em>Availability</em>.</p>
+        </section>
+
+        <section>
+            <h4>distributed systems are systems that communicate over unreliable channels</h4>
+        </section>
+
+        <section>
+            <h3>...</h3>
+        </section>
+
+        <section>
+            <img src="img/snake.jpg" width="70%"/>
+        </section>
+
+        <section data-transition="fade">
+            <img src="img/microservices.jpeg" width="80%"/>
+            <small><small><a href="https://twitter.com/ddprrt/status/1425418538257428488">https://twitter.com/ddprrt/status/1425418538257428488</a></small></small>
+        </section>
+
+        <section data-transition="fade">
+            <img src="img/microservices-2.jpeg" width="80%"/>
+            <small><small><a href="https://twitter.com/ddprrt/status/1425418538257428488">https://twitter.com/ddprrt/status/1425418538257428488</a></small></small>
+        </section>
+
+        <section>
+            <img src="img/hoare.jpg" width="30%"/>
+            <blockquote
+                    cite="https://www.infoq.com/presentations/Null-References-The-Billion-Dollar-Mistake-Tony-Hoare/">
+                "It was the invention of the null reference in 1965...I call it my billion-dollar mistake."
+            </blockquote>
+            <small><small>Tony Hoare</small></small>
+        </section>
+
+        <section>
+            <img src="img/future-null.jpg" width="60%"/>
+        </section>
+
+
+
+        <section data-transition="fade">
+            <h4>Another <em>"billion-dollar mistake":</em></h4>
+            <h3 class="fragment">Microservices</h3>
+        </section>
+
+        <section data-transition="fade">
+            <h4>Another <em>"billion-dollar mistake":</em></h4>
+            <h3>"Micro"</h3>
+        </section>
+
+        <section data-transition="fade">
+            <h4 class="fragment">Microservice vs service?</h4>
+            <h4 class="fragment">How small is "micro"?</h4>
+            <h5 class="fragment">N lines of code?</h5>
+            <h5 class="fragment">N endpoints?</h5>
+            <h5 class="fragment">N classes?</h5>
+            <h5 class="fragment">N MBs?</h5>
+            <h5 class="fragment">N responsibilities?</h5>
+            <h5 class="fragment">Rewritable in X time?</h5>
+        </section>
+
+        <section>
+            <h4>Microservices: the Main Idea</h4>
+            <h3 class="fragment">Enable scalability through independence and modularity</h3>
+        </section>
+
+        <section data-transition="fade">
+            <h4>Tight coupling - Low cohesion</h4>
+
+            <img src="img/tight-coupling.png" width="50%"/>
+            <br>
+            <small><small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small></small>
+        </section>
+        <section data-transition="fade">
+            <h4>Low coupling - High cohesion</h4>
+
+            <img src="img/loose-coupling.png" width="50%"/>
+            <br>
+            <small><small>source: <a href="https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/">https://enterprisecraftsmanship.com/posts/cohesion-coupling-difference/</a></small></small>
+        </section>
+
+        <section>
+            <h4>You can have modularity without microservices</h4>
+            <img class="fragment" src="img/modular.png" width="50%"/>
+            <small class="fragment">Naturally, you don't get all the benefits, but it's not a demanding investment</small>
+        </section>
+
+        <section>
+            <img src="img/evolution.png" width="70%"/>
+        </section>
+
+        <section>
+            <blockquote cite="Building Microservices by Sam Newman">
+                "The smaller the service, the more you maximize the benefits and downsides of microservice architecture."
+            </blockquote>
+            <small>Sam Newman</small>
+        </section>
+
+        <section>
+            <img src="img/netflix.png" width="70%"/>
+            <br>
+            <small>author: Bruce Wong</small>
+            <h3 class="fragment">Netflix: 2000 engineers</h3>
+        </section>
+
+        <section>
+            <img src="img/boat.png" width="50%"/>
+        </section>
+
+        <section>
+            <blockquote cite="'How Netflix Really Uses Java' by Paul Bakker" width="100%">
+                However, don't be fooled by the size of those microservices, because a lot of those so-called microservices at Netflix are a lot larger, just looking at the code base, than the big monoliths that I've worked at, at many other companies.
+            </blockquote>
+            <small>Paul Bakker</small>
+            <br>
+            <small><small>source: <a href="https://www.infoq.com/presentations/netflix-java/">https://www.infoq.com/presentations/netflix-java/</a></small></small>
+        </section>
+
+        <section>
+            <h5>Do not ask about the max size, but when to split</h5>
+        </section>
+
+        <section>
+            <h5>So... when do we split?</h5>
+            <br>
+            <h5 class="fragment">When it hurts too much</h5>
+            <h5 class="fragment">The #1 rule of distributed systems: don't do it until you have to</h5>
+        </section>
+
+        <section>
+            <img src="img/micro-monolith.jpg" width="70%"/>
+        </section>
+
+
+        <section>
+            <h3>The Pragmatic Default</h3>
+            <img src="img/citadel.png" width="60%"/>
+            <br>
+            <small> <small><a href="https://twitter.com/dhh/status/1247522358908215296</small">https://twitter.com/dhh/status/1247522358908215296</a></small></small>
+        </section>
+
+        <section>
+            <blockquote cite="'Static Analysis at Scale: An Instagram Story' by Benjamin Woodruff" width="100%">
+                Our server app is a monolith, one big codebase of several million lines and a few thousand Django endpoints [1], all loaded up and served together. A few services have been split out of the monolith, but we don’t have any plans to aggressively break it up.
+            </blockquote>
+            <small><small><a href="https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c">https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c</a></small></small>
         </section>
 
         <section>
