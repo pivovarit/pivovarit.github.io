@@ -296,6 +296,68 @@
             </blockquote>
         </section>
 
+        <section>
+            <p>Even without partitions, there’s another trade-off</p>
+                <strong>Waiting for consensus takes time</strong>
+            <br><br>
+            <small><p>This is the “ELC” part of PACELC.</p></small>
+        </section>
+
+        <section>
+            <h3>Imagine two coffee shops sharing an order system</h3>
+            <ul>
+                <li>network failure</strong> → choice:
+                    <em>keep taking orders (A)</em> or <em>pause until synced (C)</em></li>
+                <li>no failure</strong> → each order can be:
+                    <em>fast but maybe outdated (L)</em> or <em>slow but always accurate (C)</em></li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Real-world examples</h3>
+            <ul>
+                <li><strong>Amazon Dynamo / Cassandra</strong> → prioritize <em>Availability + Low Latency</em></li>
+                <li><strong>Google Spanner</strong> → prioritize <em>Consistency</em>, accept more latency</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>temporal coupling</h3>
+            <h4>when all your services need to responsive at the same time</h4>
+        </section>
+
+        <section>
+            <h3>False Dichotomy:</h3>
+            <h4>Consistent vs. Inconsistent</h4>
+        </section>
+
+        <section>
+            <h3>Different consistency levels</h3>
+            <ul>
+                <li><strong>Strong consistency</strong> → Data converges immediately</li>
+                <li><strong>Eventual consistency</strong> → Data converges... eventually</li>
+                <li><strong>Accidental consistency</strong> → Data converges... maybe</li>
+            </ul>
+            <p>All are “consistent” — just in different ways.</p>
+        </section>
+
+        <section>
+            <h3>Eventual consistency</h3>
+            <blockquote>
+                If no new updates occur, all replicas will <strong>eventually</strong> converge to the same state.
+            </blockquote>
+            <p>It’s a trade-off: we get <strong>availability and speed</strong> at the cost of temporary disagreement.</p>
+        </section>
+
+        <section>
+            <h3>Why this makes sense</h3>
+            <ul>
+                <li>Networks are slow and unreliable</li>
+                <li>Waiting for everyone to agree slows everything down</li>
+                <li>So we let nodes respond now and sync later</li>
+            </ul>
+            <p>→ <strong>Fast now, consistent later</strong></p>
+        </section>
 
         <section>
             <blockquote>
