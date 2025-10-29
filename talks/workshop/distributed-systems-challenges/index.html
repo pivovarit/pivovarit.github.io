@@ -592,16 +592,6 @@ public void createOrder(Order order) {
         </section>
 
         <section>
-            <h3>Outbox Table Example</h3>
-            <pre><code data-trim style="font-size:0.9em">
-| id | aggregate_id | type           | payload                  | published | created_at          |
-|----|---------------|----------------|---------------------------|------------|----------------------|
-| 1  | 42            | OrderCreated   | {"orderId":42}           | false      | 2025-10-28 10:00:00 |
-    </code></pre>
-            <p>Once published successfully, the <code>published</code> flag is set to <code>true</code>.</p>
-        </section>
-
-        <section>
             <h3>Trivial Publisher</h3>
             <pre><code data-trim>
 while (true) {
@@ -653,6 +643,243 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 <li>Possible duplication → requires idempotency</li>
             </ul>
         </section>
+
+        <!-- Distributed Transactions -->
+        <section>
+            <h2>Distributed Transactions</h2>
+            <p>When one business operation spans multiple services or databases.</p>
+            <ul>
+                <li>Each service has its own local data and transaction boundaries.</li>
+                <li>We still want <strong>atomicity</strong> across them.</li>
+            </ul>
+            <p class="fragment">But... there’s no global transaction manager in distributed systems.</p>
+        </section>
+
+        <section>
+            <h3>Example</h3>
+            <p>Booking a trip:</p>
+            <ul>
+                <li>Reserve a flight ✈️</li>
+                <li>Book a hotel 🏨</li>
+                <li>Charge a credit card 💳</li>
+            </ul>
+            <p class="fragment">If one step fails, the others must be reverted.</p>
+        </section>
+
+        <!-- Two-Phase Commit -->
+        <section>
+            <h2>Two-Phase Commit (2PC)</h2>
+            <p>Classic protocol to coordinate distributed commits.</p>
+            <ol>
+                <li><strong>Prepare phase</strong> - coordinator asks all participants if they can commit.</li>
+                <li><strong>Commit phase</strong> - if all say “yes”, everyone commits; otherwise, all roll back.</li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>2PC Pros and Cons</h3>
+            <ul>
+                <li>✅ Guarantees atomicity across systems.</li>
+                <li>❌ Introduces a single point of failure – the coordinator.</li>
+                <li>❌ Participants must lock data until the commit is decided.</li>
+                <li>❌ Doesn’t scale well under high latency or partial failures.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>When 2PC Fails</h3>
+            <p>If the coordinator crashes between phases...</p>
+            <ul>
+                <li>Some participants may have committed.</li>
+                <li>Others may still be waiting.</li>
+                <li>System enters an <strong>uncertain state</strong>.</li>
+            </ul>
+            <p class="fragment">Recovery requires manual intervention or a timeout heuristic.</p>
+        </section>
+
+        <!-- Sagas -->
+        <section>
+            <h2>The Saga Pattern</h2>
+            <p>An alternative to distributed transactions.</p>
+            <ul>
+                <li>Each step is a <strong>local transaction</strong>.</li>
+                <li>On failure, execute <strong>compensating actions</strong>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Two Saga Coordination Styles</h3>
+            <ul>
+                <li><strong>Choreography</strong> - services react to each other's events.</li>
+                <li><strong>Orchestration</strong> - a central orchestrator tells each participant what to do.</li>
+            </ul>
+            <p class="fragment">Both achieve eventual consistency, but with different trade-offs.</p>
+        </section>
+
+        <section>
+            <h3>Saga Example</h3>
+            <pre><code data-trim style="font-size: 0.8em;line-height:1.1;">
+BookTripSaga:
+  1. FlightService.reserve(flight)
+  2. HotelService.book(hotel)
+  3. PaymentService.charge(user)
+
+If step 3 fails:
+  -> HotelService.cancelBooking()
+  -> FlightService.releaseSeat()
+  </code></pre>
+        </section>
+
+        <section>
+            <h2>Transaction Isolation</h2>
+            <p>Even inside a single database, transactions can interfere with each other.</p>
+            <p>Isolation defines <strong>how visible</strong> one transaction’s changes are to others.</p>
+            <br>
+            <small><small>Remember PACELC?</small></small>
+        </section>
+
+        <section>
+            <h3>ACID Refresher</h3>
+            <ul>
+                <li><strong>A</strong>tomicity - all or nothing</li>
+                <li><strong>C</strong>onsistency - valid state transitions</li>
+                <li><strong>I</strong>solation - no interference</li>
+                <li><strong>D</strong>urability - once committed, it stays</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Why Isolation Matters</h2>
+            <p>Concurrent transactions may cause anomalies:</p>
+            <ul>
+                <li><strong>Dirty Read</strong> - see uncommitted data</li>
+                <li><strong>Non-repeatable Read</strong> - unexpected data changes</li>
+                <li><strong>Phantom Read</strong> - new rows appear unexpectedly</li>
+                <li><strong>Lost Update</strong> - two transactions overwrite each other</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Dirty Read Example</h3>
+            <pre><code data-trim>
+T1: UPDATE accounts SET balance = balance - 100 WHERE id=1;
+T2: SELECT balance FROM accounts WHERE id=1; -- sees uncommitted value
+T1: ROLLBACK;
+    </code></pre>
+            <p><em>T2 read something that never really existed.</em></p>
+        </section>
+
+        <section>
+            <h3>Non-Repeatable Read Example</h3>
+            <pre><code data-trim>
+T1: SELECT * FROM orders WHERE id = 1; -- sees "status = NEW"
+T2: UPDATE orders SET status = 'PAID' WHERE id = 1; COMMIT;
+T1: SELECT * FROM orders WHERE id = 1; -- sees "status = PAID"
+    </code></pre>
+            <p><em>Same query, different result - during one transaction.</em></p>
+        </section>
+
+        <section>
+            <h3>Phantom Read Example</h3>
+            <pre><code data-trim>
+T1: SELECT * FROM orders WHERE status = 'NEW'; -- returns 3 rows
+T2: INSERT INTO orders (status) VALUES ('NEW'); COMMIT;
+T1: SELECT * FROM orders WHERE status = 'NEW'; -- now 4 rows
+    </code></pre>
+            <p><em>New “phantom” data appears mid-transaction.</em></p>
+        </section>
+
+        <section>
+            <h2>Write Skew Anomaly</h2>
+            <p>Occurs when two concurrent transactions read overlapping data and make <strong>non-conflicting writes</strong> based on those reads.</p>
+            <p>Even though each transaction is consistent on its own, the <em>combined result</em> breaks an invariant.</p>
+        </section>
+
+        <section>
+            <h3>Classic Example</h3>
+            <p>Hospital rule: <strong>at least one doctor must be on call</strong>.</p>
+            <pre><code data-trim style="font-size:0.85em">
+CREATE TABLE doctors (
+    id INT,
+    on_call BOOLEAN
+);
+-- Initially:
+-- Dr. Alice: on_call = true
+-- Dr. Bob:   on_call = true
+    </code></pre>
+        </section>
+
+        <section>
+            <h3>Step 1 - Two Transactions Start</h3>
+            <pre><code data-trim>
+T1: SELECT * FROM doctors WHERE on_call = true;
+-- sees Alice + Bob
+
+T2: SELECT * FROM doctors WHERE on_call = true;
+-- sees Alice + Bob
+    </code></pre>
+            <p>Both see that someone else is on call.</p>
+        </section>
+
+        <section>
+            <h3>Step 2 - Both Decide to Go Off Call</h3>
+            <pre><code data-trim>
+T1: UPDATE doctors SET on_call = false WHERE name = 'Alice';
+T2: UPDATE doctors SET on_call = false WHERE name = 'Bob';
+    </code></pre>
+            <p>Each assumes the other doctor stays on call.</p>
+        </section>
+
+        <section>
+            <h3>Step 3 - Both Commit</h3>
+            <pre><code data-trim>
+T1: COMMIT;
+T2: COMMIT;
+    </code></pre>
+            <p><strong>Invariant broken:</strong> nobody is on call anymore 🚨</p>
+        </section>
+
+        <section>
+            <h3>Why It Happens</h3>
+            <ul>
+                <li>Both transactions read the same initial state</li>
+                <li>Each makes a decision that was valid at that moment</li>
+                <li>No direct conflict → no locking → no blocking</li>
+                <li>Combined result violates a business rule</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Isolation Levels and Write Skew</h3>
+            <table style="font-size:0.9em">
+                <thead>
+                <tr>
+                    <th>Isolation Level</th>
+                    <th>Prevents Write Skew?</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Read Committed</td><td>❌</td></tr>
+                <tr><td>Repeatable Read</td><td>❌ (in most DBs)</td></tr>
+                <tr><td>Serializable</td><td>✅</td></tr>
+                </tbody>
+            </table>
+            <p><small>Only Serializable prevents it, e.g. via predicate locks or SSI (Serializable Snapshot Isolation).</small></p>
+        </section>
+
+
+        <section>
+            <h2>Serializable ≠ Simple</h2>
+            <p>Serializable isolation <strong>simulates sequential execution</strong>.</p>
+            <p>But it comes at a cost:</p>
+            <ul>
+                <li>Higher contention and locking</li>
+                <li>Deadlocks</li>
+                <li>Lower throughput</li>
+            </ul>
+        </section>
+
+
 
         <section>
             <blockquote>
