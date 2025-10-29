@@ -579,6 +579,82 @@ void on(PaymentConfirmedEvent event) {
         </section>
 
         <section>
+            <h2>Transactional Outbox Pattern</h2>
+            <p>Write the event to a local <strong>outbox table</strong> as part of the same transaction.</p>
+            <pre><code data-trim>
+@Transactional
+public void createOrder(Order order) {
+    orderRepository.save(order);
+    outboxRepository.save(new OutboxEvent("OrderCreated", order.id()));
+}
+    </code></pre>
+            <p>Then a separate process reads the outbox and publishes the events.</p>
+        </section>
+
+        <section>
+            <h3>Outbox Table Example</h3>
+            <pre><code data-trim style="font-size:0.9em">
+| id | aggregate_id | type           | payload                  | published | created_at          |
+|----|---------------|----------------|---------------------------|------------|----------------------|
+| 1  | 42            | OrderCreated   | {"orderId":42}           | false      | 2025-10-28 10:00:00 |
+    </code></pre>
+            <p>Once published successfully, the <code>published</code> flag is set to <code>true</code>.</p>
+        </section>
+
+        <section>
+            <h3>Trivial Publisher</h3>
+            <pre><code data-trim>
+while (true) {
+    for (OutboxEvent event : outboxRepository.findUnpublished()) {
+        eventBus.publish(event.toDomainEvent());
+        event.markAsPublished();
+    }
+}
+    </code></pre>
+            <p>Reliable, asynchronous, and decoupled event publishing.</p>
+        </section>
+
+        <section>
+            <h2>Change Data Capture (CDC)</h2>
+            <p>Instead of polling the outbox table manually...</p>
+            <p>We can let the database <strong>stream its own changes</strong>.</p>
+        </section>
+
+        <section>
+            <h3>CDC in Action</h3>
+            <ul>
+                <li>Tools like <strong>Debezium</strong> rely on db replication protocols</li>
+                <li>Each committed change becomes an event</li>
+                <li>No need to modify application logic</li>
+            </ul>
+            <pre><code data-trim>
+-- Database change -->
+INSERT INTO outbox (...) VALUES (...)
+
+-- Debezium -->
+Produces Kafka event: OrderCreated { orderId: 42 }
+    </code></pre>
+        </section>
+
+        <section>
+            <h3>Outbox + CDC Combo</h3>
+            <p><strong>Most robust solution:</strong></p>
+            <ul>
+                <li>Use the <strong>outbox table</strong> for atomic writes</li>
+                <li>Use <strong>CDC</strong> to stream events out automatically</li>
+                <li>No dual writes, no lost events, no external transactions</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Trade-offs</h3>
+            <ul>
+                <li>Increased complexity (extra tables/processes)</li>
+                <li>Possible duplication → requires idempotency</li>
+            </ul>
+        </section>
+
+        <section>
             <blockquote>
                 Using common sense is the ultimate Best Practice™.
             </blockquote>
