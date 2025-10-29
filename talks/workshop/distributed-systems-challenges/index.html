@@ -104,7 +104,6 @@
         </section>
 
 
-
         <section data-transition="fade">
             <h4>Another <em>"billion-dollar mistake":</em></h4>
             <h3 class="fragment">Microservices</h3>
@@ -149,7 +148,8 @@
         <section>
             <h4>You can have modularity without microservices</h4>
             <img class="fragment" src="img/modular.png" width="50%"/>
-            <small class="fragment">Naturally, you don't get all the benefits, but it's not a demanding investment</small>
+            <small class="fragment">Naturally, you don't get all the benefits, but it's not a demanding
+                investment</small>
         </section>
 
         <section>
@@ -158,7 +158,8 @@
 
         <section>
             <blockquote cite="Building Microservices by Sam Newman">
-                "The smaller the service, the more you maximize the benefits and downsides of microservice architecture."
+                "The smaller the service, the more you maximize the benefits and downsides of microservice
+                architecture."
             </blockquote>
             <small>Sam Newman</small>
         </section>
@@ -176,7 +177,9 @@
 
         <section>
             <blockquote cite="'How Netflix Really Uses Java' by Paul Bakker" width="100%">
-                However, don't be fooled by the size of those microservices, because a lot of those so-called microservices at Netflix are a lot larger, just looking at the code base, than the big monoliths that I've worked at, at many other companies.
+                However, don't be fooled by the size of those microservices, because a lot of those so-called
+                microservices at Netflix are a lot larger, just looking at the code base, than the big monoliths that
+                I've worked at, at many other companies.
             </blockquote>
             <small>Paul Bakker</small>
             <br>
@@ -208,9 +211,12 @@
 
         <section>
             <blockquote cite="'Static Analysis at Scale: An Instagram Story' by Benjamin Woodruff" width="100%">
-                Our server app is a monolith, one big codebase of several million lines and a few thousand Django endpoints [1], all loaded up and served together. A few services have been split out of the monolith, but we don’t have any plans to aggressively break it up.
+                Our server app is a monolith, one big codebase of several million lines and a few thousand Django
+                endpoints [1], all loaded up and served together. A few services have been split out of the monolith,
+                but we don’t have any plans to aggressively break it up.
             </blockquote>
-            <small><small><a href="https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c">https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c</a></small></small>
+            <small><small><a
+                    href="https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c">https://instagram-engineering.com/static-analysis-at-scale-an-instagram-story-8f498ab71a0c</a></small></small>
         </section>
 
         <section>
@@ -227,7 +233,8 @@
 
         <section>
             <h3>Definition</h3>
-            <p>An operation is <strong>idempotent</strong> if performing it multiple times produces the <em>same effect</em> as performing it once.</p>
+            <p>An operation is <strong>idempotent</strong> if performing it multiple times produces the <em>same
+                effect</em> as performing it once.</p>
             <br>
             <pre><code>f(f(x)) = f(x)</code></pre>
         </section>
@@ -254,10 +261,9 @@
         </section>
 
 
-
         <section>
             <h3>Exactly-once delivery?</h3>
-            <p><strong>A fairy tale.</strong> </p>
+            <p><strong>A fairy tale.</strong></p>
             <br><br>
             <div class="fragment">
                 <p><strong>Reality:</strong> You only ever get:</p>
@@ -298,7 +304,7 @@
 
         <section>
             <p>Even without partitions, there’s another trade-off</p>
-                <strong>Waiting for consensus takes time</strong>
+            <strong>Waiting for consensus takes time</strong>
             <br><br>
             <small><p>This is the “ELC” part of PACELC.</p></small>
         </section>
@@ -346,7 +352,8 @@
             <blockquote>
                 If no new updates occur, all replicas will <strong>eventually</strong> converge to the same state.
             </blockquote>
-            <p>It’s a trade-off: we get <strong>availability and speed</strong> at the cost of temporary disagreement.</p>
+            <p>It’s a trade-off: we get <strong>availability and speed</strong> at the cost of temporary disagreement.
+            </p>
         </section>
 
         <section>
@@ -357,6 +364,125 @@
                 <li>So we let nodes respond now and sync later</li>
             </ul>
             <p>→ <strong>Fast now, consistent later</strong></p>
+        </section>
+
+        <section>
+            <h2>Time</h2>
+
+            <img src="img/time.jpg" width="60%"/>
+        </section>
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                   var first = Instant.now();
+                   var second = Instant.now();
+            </code></pre>
+
+            <h3><code>first</code> <= <code>second?</code></h3>
+        </section>
+
+        <section>
+            <p>A <strong>monotonic clock</strong> always moves forward - never backward.</p>
+            <p>But most <code>system clocks</code> are <strong>not monotonic</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Why clocks go backwards</h3>
+            <ul>
+                <li><strong>NTP</strong> (Network Time Protocol) adjustment</li>
+                <li>Virtual machines paused and resumed</li>
+                <li>Leap seconds</li>
+                <li>Manual time correction by an admin</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Monotonic clocks to the rescue</h3>
+            <ul>
+                <li>In Java: <code>System.nanoTime()</code></li>
+                <li>In Linux: <code>CLOCK_MONOTONIC</code></li>
+            </ul>
+            <p>They never go backward, but don’t represent “real” time.</p>
+
+            <br>
+            <small><a href="https://www.javaadvent.com/2019/12/measuring-time-from-java-to-kernel-and-back.html">Measuring time: from Java to kernel and back</a></small>
+
+        </section>
+
+        <section>
+            <p>In distributed systems, time is… <strong>an illusion</strong>.</p>
+        </section>
+
+        <section>
+            <h3>The problem with clocks</h3>
+            <ul>
+                <li>Each machine has its own clock</li>
+                <li>Clocks drift - even if synced</li>
+                <li>Network delays make “now” ambiguous</li>
+            </ul>
+            <p>So: there is no single, global “current time.”</p>
+        </section>
+
+        <section>
+            <h3>Example</h3>
+            <p>Two servers record an event:</p>
+            <ul>
+                <li>Server A: event at 12:00:00.100</li>
+                <li>Server B: event at 12:00:00.090</li>
+            </ul>
+            <p>Which happened first? 🤔</p>
+        </section>
+
+        <section>
+            <h3>Why this matters</h3>
+            <ul>
+                <li>Event ordering affects state changes</li>
+                <li>Conflicts appear when we can’t tell “what came first”</li>
+                <li>Replication, logs, and causality all depend on time</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Happened-before relationship</h3>
+            <p>Instead of wall-clock time, we use <strong>causal order</strong>:</p>
+            <blockquote>
+                A → B if A happened before B (causally)
+            </blockquote>
+            <p>We care about <em>ordering</em> of events, not their timestamps.</p>
+        </section>
+
+        <section>
+            <h3>Logical clocks</h3>
+            <ul>
+                <li><strong>Lamport clocks</strong> → simple counters to track causal order</li>
+                <li><strong>Vector clocks</strong> → richer structure to detect concurrent events</li>
+            </ul>
+            <p>They don’t measure real time - they measure <strong>cause and effect</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Real time vs. logical time</h3>
+            <ul>
+                <li><strong>Real time</strong> → what your watch shows</li>
+                <li><strong>Logical time</strong> → what the system can <em>prove</em> happened first</li>
+            </ul>
+            <p>Distributed systems live in <strong>logical time</strong>.</p>
+        </section>
+
+        <section>
+            <p>Google’s Spanner uses special hardware clocks (TrueTime API) ⏱️</p>
+            <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
+            </p>
+        </section>
+
+        <section>
+            <h3>Summary</h3>
+            <ul>
+                <li>Each node has its own imperfect sense of time</li>
+                <li>We can’t rely on timestamps for ordering</li>
+                <li>We use <strong>logical or causal time</strong> to reason safely</li>
+            </ul>
+            <p>Time is relative — especially in distributed systems 🌌</p>
         </section>
 
         <section>
