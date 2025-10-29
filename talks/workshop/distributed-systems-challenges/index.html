@@ -366,6 +366,58 @@
             <p>→ <strong>Fast now, consistent later</strong></p>
         </section>
 
+        <section data-transition="fade">
+            <h3>synchronous communication</h3>
+            <img src="img/sync1.png" width="80%"/>
+        </section>
+
+        <section data-transition="fade">
+            <h3>asynchronous communication</h3>
+            <img src="img/sync2.png" width="80%"/>
+        </section>
+
+        <section>
+            <h3>From HTTP calls...</h3>
+            <pre><code data-trim>
+OrderService -> PaymentService -> NotificationService
+    </code></pre>
+            <p>Each service calls another directly...</p>
+            <p><em>...tight coupling, dependencies, and failure chains.</em></p>
+        </section>
+
+        <section>
+            <h3>...to Events</h3>
+            <pre><code data-trim>
+OrderService --> publishes OrderCreatedEvent
+PaymentService --> consumes OrderCreatedEvent
+NotificationService --> consumes PaymentConfirmedEvent
+    </code></pre>
+            <p>Services react to <strong>events</strong> instead of making direct calls.</p>
+        </section>
+
+        <section>
+            <h2>Local Read Models</h2>
+            <p>Each service maintains its own <strong>local view</strong> of data it needs.</p>
+            <pre><code data-trim>
+@EventListener
+void on(PaymentConfirmedEvent event) {
+    orderReadModel.updateStatus(event.orderId(), "PAID");
+}
+    </code></pre>
+            <p>This enables fast, local reads - no cross-service queries needed</p>
+            <p>...but it eventually consistent</p>
+
+        </section>
+
+        <section>
+            <h3>Why Local Read Models?</h3>
+            <ul>
+                <li>No need to call other services for data</li>
+                <li>Improves reliability - service can operate even if others are down</li>
+            </ul>
+        </section>
+
+
         <section>
             <h2>Time</h2>
 
@@ -482,7 +534,48 @@
                 <li>We can’t rely on timestamps for ordering</li>
                 <li>We use <strong>logical or causal time</strong> to reason safely</li>
             </ul>
-            <p>Time is relative — especially in distributed systems 🌌</p>
+            <p>Time is relative - especially in distributed systems 🌌</p>
+        </section>
+
+        <section>
+            <h5>Eventual Consistency != Accidental Consistency</h5>
+        </section>
+
+        <section data-transition="fade">
+            <img src="img/dual-write.png" width="60%"/>
+        </section>
+
+        <section data-transition="fade">
+            <img src="img/dual-write-2.png" width="60%"/>
+        </section>
+
+        <section>
+
+            <pre><code class="hljs language-java" data-trim data-noescape>
+                @Transactional
+                public void createUser(CreateUserCommand command) {
+                    var user = from(command);
+
+                    persist(user);                     // 1
+                    send(UserCreatedEvent.from(user)); // 2
+                }
+            </code></pre>
+            <h4><code>@Transactional</code> won't save you in the distributed world</h4>
+        </section>
+
+        <section data-transition="fade">
+            <h4>Dual-Write (distributed transaction)</h4>
+            <img src="img/cdc3.png" width="50%"/>
+        </section>
+
+        <section data-transition="fade">
+            <h4>Singe-Write with async propagation</h4>
+            <img src="img/cdc4.png" width="50%"/>
+        </section>
+
+        <section>
+            <h4>Transactional Outbox Pattern</h4>
+            <h4>Change Data Capture</h4>
         </section>
 
         <section>
