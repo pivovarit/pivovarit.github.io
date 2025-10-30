@@ -1,0 +1,30 @@
+name: build-fantastic-frameworks
+on:
+  push:
+    paths:
+      - 'talks/learn-from-go/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        talk: [ 'learn-from-go' ]
+
+    name: Generate PDF
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Create "/slides" directory
+        run: mkdir slides && sudo chmod 777 slides
+
+      - name: Build PDF
+        run: docker run --rm -t -v `pwd`:/slides -v ~:/home/user astefanutti/decktape talks/${{ matrix.talk }}/index.html slides/gpiwowarek-${{ matrix.talk }}.pdf
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./slides
+          publish_branch: slides
+          keep_files: true
