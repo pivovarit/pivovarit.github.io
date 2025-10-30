@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        talk: [ 'workshop/distributed-systems-challenges' ]
+        talk: [ 'distributed-systems-challenges' ]
 
     name: Generate PDF
     steps:
@@ -19,7 +19,7 @@ jobs:
         run: mkdir slides && sudo chmod 777 slides
 
       - name: Build PDF
-        run: docker run --rm -t -v `pwd`:/slides -v ~:/home/user astefanutti/decktape talks/${{ matrix.talk }}/index.html slides/gpiwowarek-${{ matrix.talk }}.pdf
+        run: docker run --rm -t -v `pwd`:/slides -v ~:/home/user astefanutti/decktape talks/workshop/${{ matrix.talk }}/index.html slides/gpiwowarek-${{ matrix.talk }}.pdf
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
