@@ -588,7 +588,7 @@ public void createOrder(Order order) {
     outboxRepository.save(new OutboxEvent("OrderCreated", order.id()));
 }
     </code></pre>
-            <p>Then a separate process reads the outbox and publishes the events.</p>
+            <p>Then a separate process reads the outbox and publishes the events</p>
         </section>
 
         <section>
