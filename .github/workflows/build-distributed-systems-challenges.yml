@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        talk: [ 'distributed-systems-challenges' ]
+        talk: [ 'workshop/distributed-systems-challenges' ]
 
     name: Generate PDF
     steps:
