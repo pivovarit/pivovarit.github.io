@@ -1,4 +1,4 @@
-name: build-fantastic-frameworks
+name: build-learn-from-go
 on:
   push:
     paths:

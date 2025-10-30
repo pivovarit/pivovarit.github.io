@@ -1,4 +1,4 @@
-name: build-fantastic-frameworks
+name: build-distributed-systems-challenges
 on:
   push:
     paths:
