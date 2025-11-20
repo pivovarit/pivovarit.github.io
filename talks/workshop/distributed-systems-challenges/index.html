@@ -41,6 +41,47 @@
                                 fill: #1f5e5e;
                                 fill-opacity: 0.9;
                             }
+
+                            @keyframes p1 {
+                                0%   { opacity: 1; }
+                                10%  { opacity: 1; }
+                                20%  { opacity: 0; }
+                                55%  { opacity: 0; }
+                                70%  { opacity: 1; }
+                                100% { opacity: 1; }
+                            }
+
+                            @keyframes p2 {
+                                0%   { opacity: 1; }
+                                15%  { opacity: 1; }
+                                30%  { opacity: 0; }
+                                60%  { opacity: 0; }
+                                80%  { opacity: 1; }
+                                100% { opacity: 1; }
+                            }
+
+                            @keyframes p3 {
+                                0%   { opacity: 1; }
+                                25%  { opacity: 1; }
+                                45%  { opacity: 0; }
+                                70%  { opacity: 0; }
+                                90%  { opacity: 1; }
+                                100% { opacity: 1; }
+                            }
+
+                            @keyframes p4 {
+                                0%   { opacity: 1; }
+                                20%  { opacity: 1; }
+                                40%  { opacity: 0; }
+                                65%  { opacity: 0; }
+                                85%  { opacity: 1; }
+                                100% { opacity: 1; }
+                            }
+
+                            .p1 { animation: p1 15s linear infinite; }
+                            .p2 { animation: p2 18s linear infinite; }
+                            .p3 { animation: p3 14s linear infinite; }
+                            .p4 { animation: p4 17s linear infinite; }
                         </style>
                     </defs>
 
@@ -52,38 +93,50 @@
                     <circle cx="95" cy="200" r="20" class="node"/>
 
                     <path id="pAB" class="link" d="M115 62 L240 53"/>
-                    <path id="pBC" class="link" d="M280 53 L410 86"/>
-                    <path id="pCD" class="link" d="M419 112 L391 213"/>
+                    <path id="pBA" class="link" d="M240 53 L115 62"/>
+
+                    <path id="pBC" class="link p1" d="M280 53 L410 86"/>
+                    <path id="pCB" class="link p1" d="M410 86 L280 53"/>
+
+                    <path id="pCD" class="link p2" d="M419 112 L391 213"/>
+                    <path id="pDC" class="link p2" d="M391 213 L419 112"/>
+
                     <path id="pDE" class="link" d="M360 230 L260 245"/>
-                    <path id="pEF" class="link" d="M220 241 L115 205"/>
+                    <path id="pED" class="link" d="M260 245 L360 230"/>
+
+                    <path id="pEF" class="link p3" d="M220 241 L115 205"/>
+                    <path id="pFE" class="link p3" d="M115 205 L220 241"/>
+
                     <path id="pFA" class="link" d="M95 180 L95 85"/>
-                    <path id="pBE" class="link" d="M257 70 L243 225"/>
+                    <path id="pAF" class="link" d="M95 85 L95 180"/>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.0s" repeatCount="indefinite"><mpath href="#pAB"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pAB"/></animateMotion></circle>
+                    <path id="pBE" class="link p4" d="M257 70 L243 225"/>
+                    <path id="pEB" class="link p4" d="M243 225 L257 70"/>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.5s" repeatCount="indefinite"><mpath href="#pBC"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="4.0s" repeatCount="indefinite"><mpath href="#pBC"/></animateMotion></circle>
+                    <circle class="msg" r="4"><animateMotion dur="2.6s" begin="1.1s" repeatCount="indefinite"><mpath href="#pAB"/></animateMotion></circle>
+                    <circle class="msg" r="4"><animateMotion dur="3.9s" begin="-0.8s" repeatCount="indefinite"><mpath href="#pBA"/></animateMotion></circle>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.3s" repeatCount="indefinite"><mpath href="#pCD"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="3.8s" repeatCount="indefinite"><mpath href="#pCD"/></animateMotion></circle>
+                    <circle class="msg p1" r="4"><animateMotion dur="2.8s" begin="-1.3s" repeatCount="indefinite"><mpath href="#pBC"/></animateMotion></circle>
+                    <circle class="msg p1" r="4"><animateMotion dur="4.2s" begin="2.6s" repeatCount="indefinite"><mpath href="#pCB"/></animateMotion></circle>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.1s" repeatCount="indefinite"><mpath href="#pDE"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="3.7s" repeatCount="indefinite"><mpath href="#pDE"/></animateMotion></circle>
+                    <circle class="msg p2" r="4"><animateMotion dur="3.1s" begin="0.7s" repeatCount="indefinite"><mpath href="#pCD"/></animateMotion></circle>
+                    <circle class="msg p2" r="4"><animateMotion dur="4.4s" begin="-3.7s" repeatCount="indefinite"><mpath href="#pDC"/></animateMotion></circle>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.2s" repeatCount="indefinite"><mpath href="#pEF"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="4.1s" repeatCount="indefinite"><mpath href="#pEF"/></animateMotion></circle>
+                    <circle class="msg" r="4"><animateMotion dur="2.9s" begin="1.8s" repeatCount="indefinite"><mpath href="#pDE"/></animateMotion></circle>
+                    <circle class="msg" r="4"><animateMotion dur="4.1s" begin="-1.5s" repeatCount="indefinite"><mpath href="#pED"/></animateMotion></circle>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#pFA"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#pFA"/></animateMotion></circle>
+                    <circle class="msg p3" r="4"><animateMotion dur="3.0s" begin="-2.0s" repeatCount="indefinite"><mpath href="#pEF"/></animateMotion></circle>
+                    <circle class="msg p3" r="4"><animateMotion dur="4.5s" begin="1.2s" repeatCount="indefinite"><mpath href="#pFE"/></animateMotion></circle>
 
-                    <circle r="4" class="msg"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#pBE"/></animateMotion></circle>
-                    <circle r="4" class="msg"><animateMotion dur="4.3s" repeatCount="indefinite"><mpath href="#pBE"/></animateMotion></circle>
+                    <circle class="msg" r="4"><animateMotion dur="3.3s" begin="2.4s" repeatCount="indefinite"><mpath href="#pFA"/></animateMotion></circle>
+                    <circle class="msg" r="4"><animateMotion dur="4.6s" begin="-2.3s" repeatCount="indefinite"><mpath href="#pAF"/></animateMotion></circle>
+
+                    <circle class="msg p4" r="4"><animateMotion dur="2.7s" begin="-0.5s" repeatCount="indefinite"><mpath href="#pBE"/></animateMotion></circle>
+                    <circle class="msg p4" r="4"><animateMotion dur="4.2s" begin="3.0s" repeatCount="indefinite"><mpath href="#pEB"/></animateMotion></circle>
                 </svg>
 
             </div>
 
-            <br>
             <h4><a href="https://pivovarit.github.io">Grzegorz Piwowarek</a></h4>
             <h5><a href="https://twitter.com/pivovarit">@pivowarit</a></h5>
         </section>
