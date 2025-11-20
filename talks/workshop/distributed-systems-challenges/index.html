@@ -20,10 +20,74 @@
         <section>
             <h2>Dancing with Uncertainty</h2>
             <h4>Challenges of Distributed Systems</h4>
-            <br><br>
-            <h4><a href="https://pivovarit.github.io"> Grzegorz Piwowarek</a></h4>
+
+            <div style="margin-top: 30px;">
+
+                <svg width="550" height="300" style="max-width: 100%;">
+                    <defs>
+                        <style>
+                            .node {
+                                fill: #3aa0a0;
+                                stroke: #1f5e5e;
+                                stroke-width: 1.2;
+                                fill-opacity: 0.95;
+                            }
+                            .link {
+                                stroke: #1f5e5e;
+                                stroke-width: 1.6;
+                                stroke-opacity: 0.45;
+                            }
+                            .msg {
+                                fill: #1f5e5e;
+                                fill-opacity: 0.9;
+                            }
+                        </style>
+                    </defs>
+
+                    <circle cx="95" cy="65" r="20" class="node"/>
+                    <circle cx="260" cy="50" r="20" class="node"/>
+                    <circle cx="430" cy="95" r="20" class="node"/>
+                    <circle cx="380" cy="230" r="20" class="node"/>
+                    <circle cx="240" cy="245" r="20" class="node"/>
+                    <circle cx="95" cy="200" r="20" class="node"/>
+
+                    <path id="pAB" class="link" d="M95 65 L260 50"/>
+                    <path id="pBC" class="link" d="M260 50 L430 95"/>
+                    <path id="pCD" class="link" d="M430 95 L380 230"/>
+                    <path id="pDE" class="link" d="M380 230 L240 245"/>
+                    <path id="pEF" class="link" d="M240 245 L95 200"/>
+                    <path id="pFA" class="link" d="M95 200 L95 65"/>
+                    <path id="pBE" class="link" d="M260 50 L240 245"/>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.0s" repeatCount="indefinite"><mpath href="#pAB"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="3.4s" repeatCount="indefinite"><mpath href="#pAB"/></animateMotion></circle>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.5s" repeatCount="indefinite"><mpath href="#pBC"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="4.0s" repeatCount="indefinite"><mpath href="#pBC"/></animateMotion></circle>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.3s" repeatCount="indefinite"><mpath href="#pCD"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="3.8s" repeatCount="indefinite"><mpath href="#pCD"/></animateMotion></circle>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.1s" repeatCount="indefinite"><mpath href="#pDE"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="3.7s" repeatCount="indefinite"><mpath href="#pDE"/></animateMotion></circle>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.2s" repeatCount="indefinite"><mpath href="#pEF"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="4.1s" repeatCount="indefinite"><mpath href="#pEF"/></animateMotion></circle>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.8s" repeatCount="indefinite"><mpath href="#pFA"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="4.8s" repeatCount="indefinite"><mpath href="#pFA"/></animateMotion></circle>
+
+                    <circle r="4" class="msg"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#pBE"/></animateMotion></circle>
+                    <circle r="4" class="msg"><animateMotion dur="4.3s" repeatCount="indefinite"><mpath href="#pBE"/></animateMotion></circle>
+                </svg>
+
+            </div>
+
+            <br>
+            <h4><a href="https://pivovarit.github.io">Grzegorz Piwowarek</a></h4>
             <h5><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
         </section>
+
 
         <section>
             <h2>{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
