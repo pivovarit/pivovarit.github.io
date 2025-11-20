@@ -652,7 +652,41 @@ void on(PaymentConfirmedEvent event) {
             <h2>Time</h2>
 
             <img src="img/time.jpg" width="60%"/>
+
+            <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
+
+            <script>
+                let virtualTime = Date.now();
+                let speed = 1; // 1 = normal speed
+                const speedIncrement = 0.0005; // how much faster per ms
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2,'0');
+                    const mm = String(d.getMinutes()).padStart(2,'0');
+                    const ss = String(d.getSeconds()).padStart(2,'0');
+                    const ms = String(d.getMilliseconds()).padStart(3,'0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let last = performance.now();
+
+                function update() {
+                    const now = performance.now();
+                    const delta = now - last;
+                    last = now;
+
+                    virtualTime += delta * speed;
+                    speed += speedIncrement * delta;
+                    document.getElementById("live-time").textContent = formatWithMs(virtualTime);
+
+                    requestAnimationFrame(update);
+                }
+
+                update();
+            </script>
         </section>
+
 
         <section>
             <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
@@ -662,6 +696,86 @@ void on(PaymentConfirmedEvent event) {
 
             <h3><code>first</code> <= <code>second?</code></h3>
         </section>
+
+        <section>
+            <h2>Clocks in Distributed Systems</h2>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top: 40px; font-family: monospace; font-size: 1.8rem;">
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node A</div>
+                    <div id="clockA"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node B</div>
+                    <div id="clockB"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node C</div>
+                    <div id="clockC"></div>
+                </div>
+
+            </div>
+
+            <script>
+                const driftRates = {
+                    A: 0,
+                    B: 0.7,
+                    C: -1.2
+                };
+
+                const state = {
+                    A: Date.now(),
+                    B: Date.now() + 200,
+                    C: Date.now() - 350
+                };
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const mm = String(d.getMinutes()).padStart(2, '0');
+                    const ss = String(d.getSeconds()).padStart(2, '0');
+                    const ms = String(d.getMilliseconds()).padStart(3, '0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let lastUpdate = performance.now();
+
+                function tick() {
+                    const nowPerf = performance.now();
+                    const delta = nowPerf - lastUpdate;
+                    lastUpdate = nowPerf;
+
+                    for (const n of ["A", "B", "C"]) {
+                        state[n] += delta + (driftRates[n] * delta / 1000);
+                    }
+
+                    if (Math.random() < 0.001) {
+                        const base = Date.now();
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] = base + Math.random() * 30 - 15;
+                        }
+
+                        ["clockA", "clockB", "clockC"].forEach(id => {
+                            const el = document.getElementById(id);
+                            el.style.color = "red";
+                            setTimeout(() => el.style.color = "", 200);
+                        });
+                    }
+
+                    clockA.textContent = formatWithMs(state.A);
+                    clockB.textContent = formatWithMs(state.B);
+                    clockC.textContent = formatWithMs(state.C);
+
+                    requestAnimationFrame(tick);
+                }
+
+                tick();
+            </script>
+        </section>
+
 
         <section>
             <p>A <strong>monotonic clock</strong> always moves forward - never backward.</p>
