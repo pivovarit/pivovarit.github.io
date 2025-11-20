@@ -722,14 +722,14 @@ void on(PaymentConfirmedEvent event) {
             <script>
                 const driftRates = {
                     A: 0,
-                    B: 0.7,
-                    C: -1.2
+                    B: 17.0,
+                    C: -31.2
                 };
 
                 const state = {
                     A: Date.now(),
-                    B: Date.now() + 200,
-                    C: Date.now() - 350
+                    B: Date.now() + 20,
+                    C: Date.now() - 35
                 };
 
                 function formatWithMs(t) {
@@ -742,18 +742,26 @@ void on(PaymentConfirmedEvent event) {
                 }
 
                 let lastUpdate = performance.now();
+                let lastSync = lastUpdate;
 
                 function tick() {
                     const nowPerf = performance.now();
                     const delta = nowPerf - lastUpdate;
                     lastUpdate = nowPerf;
 
-                    for (const n of ["A", "B", "C"]) {
-                        state[n] += delta + (driftRates[n] * delta / 1000);
+                    if (performance.now() - lastSync > 3000) {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta + (driftRates[n] * delta / 1000);
+                        }
+                    } else {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta;
+                        }
                     }
 
                     if (Math.random() < 0.001) {
                         const base = Date.now();
+
                         for (const n of ["A", "B", "C"]) {
                             state[n] = base + Math.random() * 30 - 15;
                         }
@@ -761,7 +769,7 @@ void on(PaymentConfirmedEvent event) {
                         ["clockA", "clockB", "clockC"].forEach(id => {
                             const el = document.getElementById(id);
                             el.style.color = "red";
-                            setTimeout(() => el.style.color = "", 200);
+                            setTimeout(() => el.style.color = "", 300);
                         });
                     }
 
