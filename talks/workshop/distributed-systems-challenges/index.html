@@ -236,6 +236,47 @@
         <section>
             <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
                 <em>Consistency</em> or <em>Availability</em>.</p>
+
+            <svg width="500" height="200" style="max-width: 100%;">
+                <defs>
+                    <style>
+                        .node {
+                            fill: #3aa0a0;
+                            stroke: #1f5e5e;
+                            stroke-width: 1.4;
+                            fill-opacity: 0.95;
+                        }
+                        .link {
+                            stroke: #1f5e5e;
+                            stroke-width: 2;
+                            stroke-opacity: 0.45;
+                        }
+                        .msg {
+                            fill: #1f5e5e;
+                            fill-opacity: 0.9;
+                        }
+                    </style>
+                </defs>
+
+                <circle cx="120" cy="100" r="28" class="node"/>
+                <circle cx="380" cy="100" r="28" class="node"/>
+
+                <path id="linkAB" class="link" d="M148 100 L352 100"/>
+                <path id="linkBA" class="link" d="M352 100 L148 100"/>
+
+                <circle class="msg" r="5">
+                    <animateMotion dur="2.5s" repeatCount="indefinite">
+                        <mpath href="#linkAB"/>
+                    </animateMotion>
+                </circle>
+
+                <circle class="msg" r="5">
+                    <animateMotion dur="3.1s" repeatCount="indefinite">
+                        <mpath href="#linkBA"/>
+                    </animateMotion>
+                </circle>
+
+            </svg>
         </section>
 
         <section>
