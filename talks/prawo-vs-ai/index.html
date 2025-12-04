@@ -34,14 +34,189 @@
             <h5><a href="https://x.com/pivovarit">@pivovarit</a></h5>
             <br>
         </section>
-        
+
+        <section>
+            <img src="img/bubble.png" width="90%"/>
+        </section>
+
+        <section>
+            <img src="img/bubble.png" width="40%"/>
+            <ul>
+                <li>1999–2000: Dot com</li>
+                <li>2017–2018: Blockchain</li>
+                <li>2020–2021: NFT/Metaverse</li>
+                <li>2021–2023: "Everything-as-a-Service"</li>
+            </ul>
+            <aside class="notes">Dla prawników ważne: AI rozwija się w rytmie typowych baniek — wpływa to na regulacje,
+                nastroje rynkowe i presję wdrażania.
+            </aside>
+
+        </section>
+
+        <section>
+            <h2>Opóźniony Zapłon</h2>
+            <h5>"Nagła nowość" to efekt skali i popularyzacji, nie samego wynalazku</h5>
+        </section>
+
+
+        <section>
+            <ul>
+                <li>Pierwsze koncepcje AI powstały w latach 50</li>
+                <li>Modele neuronowe rozwijano już w latach 80-90</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Sztuczna "Inteligencja"?</h2>
+            <h3 class="fragment">Model:</h3>
+            <ul>
+                <li class="fragment">nie rozumie treści - operuje na statystycznych zależnościach między tokenami</li>
+                <li class="fragment">nie weryfikuje faktów - generuje zdania zgodne ze wzorcami z danych</li>
+                <li class="fragment">nie przechowuje dokumentów</li>
+            </ul>
+            <aside class="notes">Kluczowa myśl: AI to funkcja matematyczna, nie podmiot myślący. Ważne przy ocenie
+                odpowiedzialności i naruszeń oraz przy dyskusji o opt-out.
+            </aside>
+        </section>
+
+        <section>
+            <img src="img/strawberry.png" width="50%"/>
+            <small><small><a
+                    href="https://www.linkedin.com/posts/jeremynguyenphd_heres-why-chatgpt-thinks-there-are-two-rs-activity-7201708009180336130-AXcz">https://www.linkedin.com/posts/jeremynguyenphd_heres-why-chatgpt-thinks-there-are-two-rs-activity-7201708009180336130-AXcz</a></small></small>
+        </section>
+
+        <section>
+            <blockquote>
+                The plaintiff's lawyers used ChatGPT to generate a legal motion, which contained numerous fake legal
+                cases involving fictitious airlines with fabricated quotations and internal citations.
+            </blockquote>
+            <small><small><a href="https://en.wikipedia.org/wiki/Mata_v._Avianca%2C_Inc.">https://en.wikipedia.org/wiki/Mata_v._Avianca%2C_Inc.</a></small></small>
+
+        </section>
+
+        <section>
+            <h2>"Sztuczna" Inteligencja?</h2>
+            <blockquote>
+                In 2016, Bloomberg highlighted the plight of the humans spending 12 hours a day
+                pretending to be chatbots for calendar scheduling services such as X.ai and Clara.
+            </blockquote>
+            <blockquote>
+                The job was so mind-numbing that human employees said they were looking forward
+                to being replaced by bots.
+            </blockquote>
+            <small><small><a
+                    href="https://www.theguardian.com/technology/2018/jul/06/artificial-intelligence-ai-humans-bots-tech-companies">https://www.theguardian.com/technology/2018/jul/06/artificial-intelligence-ai-humans-bots-tech-companies</a></small></small>
+        </section>
+
+        <section>
+            <blockquote>
+                An accidental leak revealed that Flock, which has cameras in thousands of US communities, is using
+                workers in the Philippines to review and classify footage.
+            </blockquote>
+            <small><small><a
+                    href="https://www.wired.com/story/flock-uses-overseas-gig-workers-to-build-its-surveillance-ai">https://www.wired.com/story/flock-uses-overseas-gig-workers-to-build-its-surveillance-ai/</a></small></small>
+        </section>
+
+        <section>
+
+        </section>
+
+        <section>
+            <h2>Klauzula Opt-Out</h2>
+
+            <ul>
+                <li>Mechanizm pozwalający użytkownikom lub twórcom zrezygnować z wykorzystywania ich danych do trenowania modeli AI</li>
+                <li>Przykłady:
+                    <ul>
+                        <li>Meta/Instagram/LinkedIn</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>Text & Data Mining</h2>
+
+            <ul>
+                <li>Analiza zbiorów danych w celu wykrycia wzorców i relacji</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Jak wyłączyć indeksację/analizę stron?</h2>
+
+            <ul>
+                <li>robots.txt - plik konfiguracyjny informujący boty</li>
+                <li>meta tagi</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Przykładowy plik robots.txt</h2>
+
+            <pre>
+User-agent: *
+Disallow: /
+
+User-agent: Googlebot
+Disallow:
+
+User-agent: *
+Disallow: /private/
+
+Disallow: /sekretny-plik.html
+    </pre>
+
+        </section>
+
+        <section>
+            <h3>Oba mechanizmy działają tylko na zasadzie dobrej woli</h3>
+            <h5>Pełne zablokowanie scraping'u lub indeksowania publicznych treści jest praktycznie niemożliwe</h5>
+        </section>
+
+        <section>
+            <h2>...ale można znacznie utrudnić</h2>
+
+            <ul>
+                <li>CAPTCHA - Test Touringa</li>
+                <li>ograniczenia IP i rate limiting</li>
+                <li>dynamiczne generowanie treści / zmiana struktur strony</li>
+            </ul>
+        </section>
+
+        <section>
+            <img src="img/prompt.jpg" width="80%"/>
+            <small><small><a href="https://www.reddit.com/r/recruitinghell/comments/1lvd2zx/prompt_injection_works/">https://www.reddit.com/r/recruitinghell/comments/1lvd2zx/prompt_injection_works/</a></small></small>
+        </section>
+
+        <section>
+            <h3>Watermarking</h3>
+            <h5>wprowadzane są cechy, które powodują, że model AI ma mniejszą wartość z treści (np. trudniejsze tokenizacyjnie konstrukcje).</h5>
+        </section>
+
+
+
+        <section>
+            <h5>Gdzie kończą się prawa twórców, a zaczyna dozwolony użytek?</h5>
+
+            <blockquote>The 9th Circuit ruled that hiQ had the right to do web scraping. (...)</blockquote>
+            <blockquote>In November 2022 the U.S. District Court for the Northern District of California ruled that hiQ
+                had breached LinkedIn's User Agreement
+            </blockquote>
+            <small><small><a href="https://en.wikipedia.org/wiki/HiQ_Labs_v._LinkedIn">https://en.wikipedia.org/wiki/HiQ_Labs_v._LinkedIn</a></small></small>
+        </section>
+
         <section>
             <img src="img/opt-out-w-praktyce.png" width="80%" alt="meta-ai"/>
         </section>
 
         <section>
+            <img src="img/suicide.png" width="60%"/>
+        </section>
+
+        <section>
             <h2>Thank You!</h2>
-            <h5>Need help? Reach out! It's free.</h5>
 
             <br><br><br><br>
             <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
