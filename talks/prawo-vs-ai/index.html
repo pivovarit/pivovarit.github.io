@@ -36,7 +36,24 @@
         </section>
 
         <section>
-            <img src="img/bubble.png" width="90%"/>
+            <ul>
+                <li>Pierwsze koncepcje AI powstały w latach 50</li>
+                <small><small><a href="https://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html">https://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html</a></small></small>
+
+                <li>Modele neuronowe rozwijano już w latach 80-90</li>
+                <small><small><a href="https://robotsauthority.com/the-evolution-of-neural-networks-and-backpropagation-during-the-1980s/">https://robotsauthority.com/the-evolution-of-neural-networks-and-backpropagation-during-the-1980s</a></small></small>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Opóźniony Zapłon</h2>
+            <h5>"Nagła nowość" to efekt skali i popularyzacji, nie samego wynalazku</h5>
+        </section>
+
+
+        <section>
+            <img src="img/bubble.png" width="80%"/>
+            <h5>AI obecnie rozwija się w rytmie typowych baniek - wpływa to na regulacje, nastroje rynkowe i presję wdrażania.</h5>
         </section>
 
         <section>
@@ -47,24 +64,11 @@
                 <li>2020–2021: NFT/Metaverse</li>
                 <li>2021–2023: "Everything-as-a-Service"</li>
             </ul>
-            <aside class="notes">Dla prawników ważne: AI rozwija się w rytmie typowych baniek — wpływa to na regulacje,
-                nastroje rynkowe i presję wdrażania.
-            </aside>
-
-        </section>
-
-        <section>
-            <h2>Opóźniony Zapłon</h2>
-            <h5>"Nagła nowość" to efekt skali i popularyzacji, nie samego wynalazku</h5>
         </section>
 
 
-        <section>
-            <ul>
-                <li>Pierwsze koncepcje AI powstały w latach 50</li>
-                <li>Modele neuronowe rozwijano już w latach 80-90</li>
-            </ul>
-        </section>
+
+
 
         <section>
             <h2>Sztuczna "Inteligencja"?</h2>
@@ -74,9 +78,18 @@
                 <li class="fragment">nie weryfikuje faktów - generuje zdania zgodne ze wzorcami z danych</li>
                 <li class="fragment">nie przechowuje dokumentów</li>
             </ul>
-            <aside class="notes">Kluczowa myśl: AI to funkcja matematyczna, nie podmiot myślący. Ważne przy ocenie
-                odpowiedzialności i naruszeń oraz przy dyskusji o opt-out.
-            </aside>
+        </section>
+
+        <section>
+            <h4>Model przechowuje wagi sieci: miliardy liczb opisujących <b>statystyczne zależności</b> między tokenami</h4>
+        </section>
+
+        <section>
+            <blockquote>
+                The plaintiff's lawyers used ChatGPT to generate a legal motion, which contained numerous fake legal
+                cases involving fictitious airlines with fabricated quotations and internal citations.
+            </blockquote>
+            <small><small><a href="https://en.wikipedia.org/wiki/Mata_v._Avianca%2C_Inc.">https://en.wikipedia.org/wiki/Mata_v._Avianca%2C_Inc.</a></small></small>
         </section>
 
         <section>
@@ -86,13 +99,28 @@
         </section>
 
         <section>
-            <blockquote>
-                The plaintiff's lawyers used ChatGPT to generate a legal motion, which contained numerous fake legal
-                cases involving fictitious airlines with fabricated quotations and internal citations.
-            </blockquote>
-            <small><small><a href="https://en.wikipedia.org/wiki/Mata_v._Avianca%2C_Inc.">https://en.wikipedia.org/wiki/Mata_v._Avianca%2C_Inc.</a></small></small>
+            <h3>Retrieval-Augmented Generation</h3>
 
+            <ul>
+                <li><b>Retrieval:</b> wyszukiwanie najbardziej pasujących fragmentów z bazy wiedzy</li>
+                <li><b>Augmentation:</b> dołączenie tych fragmentów do promptu</li>
+                <li><b>Generation:</b> model generuje odpowiedź na bazie dostarczonych treści</li>
+            </ul>
+
+            <aside class="notes">
+                RAG nie zmienia specyfiki modelu — LLM dalej operuje na statystycznych wzorcach.
+                To środowisko dostarcza mu dane, których sam nie przechowuje.
+                Dzięki temu możliwe jest korzystanie z aktualnych, kontrolowanych źródeł informacji.
+            </aside>
         </section>
+
+        <section>
+            <ul>
+                <li>Model nie uczy się dokumentów z RAG</li>
+                <li>Łatwo odtworzyć jakie treści trafiły do promptu</li>
+            </ul>
+        </section>
+
 
         <section>
             <h2>"Sztuczna" Inteligencja?</h2>
