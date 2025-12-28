@@ -1257,8 +1257,28 @@ T2: COMMIT;
     // - https://revealjs.com/config/
     Reveal.initialize({
         hash: true,
+        dependencies: [
+            { src: 'plugin/spotlight/spotlight.js' },
+        ],
+        spotlight: {
+            size: 100,
+            toggleSpotlightOnMouseDown: false,
+            spotlightOnKeyPressAndHold: true,
+            presentingCursor: 'none',
+            initialPresentationMode: true,
+            fadeInAndOut: 100,
+            useAsPointer: false,
+        },
+        keyboard: {
+            // alternative to toggleSpotlightOnMouseDown:
+            // toggle spotlight by pressing key 'c'
+            67: function() { RevealSpotlight.toggleSpotlight() },
 
-        // Learn about plugins: https://revealjs.com/plugins/
+            // enter/leave presentation mode by pressing key 'p'
+            80: function() {
+                RevealSpotlight.togglePresentationMode();
+            },
+        },
         plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
     });
 </script>
