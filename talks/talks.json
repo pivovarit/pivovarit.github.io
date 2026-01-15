@@ -1,0 +1,1811 @@
+{
+  "events": [
+    {
+      "conference": "JDD 2025",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-10-21",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "Confitura 2025",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-09-19",
+      "url": "https://2025.confitura.pl",
+      "location": "@warsaw-adn"
+    },
+    {
+      "conference": "JavaZone 2025",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-09-3",
+      "url": "https://2025.javazone.no/en",
+      "location": "@oslo-nova"
+    },
+    {
+      "conference": "JCrete 2025",
+      "talk": "AI for dev productivity boost - real-life stories",
+      "date": "2025-08-4",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
+      "conference": "DevoxxPL 2025",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-06-11",
+      "url": "https://devoxx.pl/",
+      "location": "@cracow-ice"
+    },
+    {
+      "conference": "JEurope",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-06-10",
+      "url": "https://jeurope.pl",
+      "location": "@warsaw-wfc"
+    },
+    {
+      "conference": "IT Unplugged",
+      "talk": "What Can You Learn from Golang?",
+      "date": "2025-06-10",
+      "url": "https://www.it-unplugged.com",
+      "location": "@lublin-csk"
+    },
+    {
+      "conference": "WDI 2024",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-04-05",
+      "url": "https://warszawskiedniinformatyki.pl",
+      "location": "@warsaw-mini"
+    },
+    {
+      "conference": "MergeIT",
+      "talk": "JEP 485: Breathing New Life into Java Stream API",
+      "date": "2025-03-27",
+      "url": "https://merge-it.pl",
+      "location": "@katowice-strefa-centralna"
+    },
+    {
+      "conference": "VoxxedDaysTicino 2025",
+      "talk": "What Can a Java Developer Learn from Golang?",
+      "date": "2025-01-17",
+      "url": "https://ticino.voxxeddays.com",
+      "location": "@lugano-palazzo-congressi"
+    },
+    {
+      "conference": "Ya!vaConf",
+      "talk": "JEP 485: Breathing New Life into Java Stream API",
+      "date": "2024-12-11",
+      "url": "https://yavaconf.com",
+      "location": "@warsaw-cnk"
+    },
+    {
+      "conference": "Talk4Devs 2024",
+      "talk": "JEP 485: Breathing New Life into Java Stream API (extended)",
+      "date": "2024-11-28",
+      "url": "https://talk4devs.j-labs.pl/"
+    },
+    {
+      "conference": "BuildStuff 2024",
+      "talk": "Embracing Microservices",
+      "date": "2024-11-13",
+      "url": "https://www.buildstuff.events",
+      "location": "@vilnius-radissonblu"
+    },
+    {
+      "conference": "JDD 2024",
+      "talk": "JEP 485: Breathing New Life into Java Stream API",
+      "date": "2024-10-22",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "dev2next",
+      "talk": "Embracing Microservices",
+      "date": "2024-10-1",
+      "url": "https://www.dev2next.com",
+      "location": "@denver-marriott"
+    },
+    {
+      "conference": "Barcelona JUG",
+      "talk": "Embracing Microservices (Director's Cut)",
+      "date": "2024-09-17",
+      "url": "https://barcelonajug.org",
+      "location": "@barcelona-ingram"
+    },
+    {
+      "conference": "JEurope",
+      "talk": "Virtual Threads in Action",
+      "date": "2024-09-12",
+      "url": "https://jeurope.pl",
+      "location": "@warsaw-wfc"
+    },
+    {
+      "conference": "WarsawJUG",
+      "talk": "Embracing Microservices (Director's Cut)",
+      "date": "2024-09-03",
+      "url": "https://warszawa.jug.pl/",
+      "location": "@warsaw-paramount"
+    },
+    {
+      "conference": "JCrete 2024",
+      "talk": "Can Java Developer learn anything from Golang?",
+      "date": "2024-07-24",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
+      "conference": "JCrete 2024",
+      "talk": "State of the Functional Programming in Java",
+      "date": "2024-07-23",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
+      "conference": "JCrete 2024",
+      "talk": "Microservices: Lessons Learned",
+      "date": "2024-07-22",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
+      "conference": "Warsaw Ruby Users Group",
+      "talk": "Embracing Microservices",
+      "date": "2024-06-20",
+      "url": "https://www.meetup.com/pl-PL/nerdsclub/",
+      "location": "@warsaw-visuality"
+    },
+    {
+      "conference": "Craft-IT",
+      "talk": "Embracing Microservices",
+      "date": "2024-05-25",
+      "url": "https://craft-it.pl",
+      "location": "@rzeszow-bristol"
+    },
+    {
+      "conference": "GeeCON 2024",
+      "talk": "Embracing Microservices",
+      "date": "2024-05-15",
+      "url": "https://2024.geecon.org",
+      "location": "@cracow-multikino"
+    },
+    {
+      "conference": "LDI 2024",
+      "talk": "Embracing Microservices",
+      "date": "2024-04-20",
+      "url": "https://www.linkedin.com/company/lubelskie-dni-informatyki",
+      "location": "@lublin-kul"
+    },
+    {
+      "conference": "4Developers 2024",
+      "talk": "Project Loom (improvised rescue live-coding session)",
+      "date": "2024-04-16",
+      "url": "https://4developers.org.pl/4developers-2024/",
+      "location": "@warsaw-stadion-narodowy"
+    },
+    {
+      "conference": "4Developers 2024",
+      "talk": "Embracing Microservices",
+      "date": "2024-04-16",
+      "url": "https://4developers.org.pl/4developers-2024/",
+      "location": "@warsaw-stadion-narodowy"
+    },
+    {
+      "conference": "Inspiring Solutions",
+      "talk": "Discussion panel: \"Cooperation between human and AI\"",
+      "date": "2024-04-12",
+      "url": "https://www.inspiringsolutions.pl",
+      "location": "@warsaw-wse"
+    },
+    {
+      "conference": "WDI 2024",
+      "talk": "Embracing Microservices",
+      "date": "2024-04-6",
+      "url": "https://warszawskiedniinformatyki.pl/",
+      "location": "@warsaw-stadion-narodowy"
+    },
+    {
+      "conference": "PoznańJUG",
+      "talk": "Embracing Microservices",
+      "date": "2024-03-13",
+      "url": "https://www.meetup.com/pl-PL/poznan-java-user-group/events/299572243/",
+      "location": "@poznan-nowy-rynek"
+    },
+    {
+      "conference": "LublinJUG",
+      "talk": "Embracing Microservices",
+      "date": "2024-02-21",
+      "url": "https://www.meetup.com/lublin-java-user-group/events/299094970/",
+      "location": "@lublin-kul"
+    },
+    {
+      "conference": "YavaConf 2023",
+      "talk": "Embracing Microservices",
+      "date": "2023-12-9",
+      "url": "https://yavaconf.com",
+      "location": "@warsaw-mini"
+    },
+    {
+      "conference": "JDD 2023",
+      "talk": "\"Co piszczy w Javie?\" Discussion Panel",
+      "date": "2023-10-24",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "JDD 2023",
+      "talk": "Embracing Microservices",
+      "date": "2023-10-24",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "GeeCON Prague 2023",
+      "talk": "Embracing Microservices",
+      "date": "2023-10-20",
+      "url": "https://2023.geecon.cz",
+      "location": "@prague-cinestar"
+    },
+    {
+      "conference": "InfoShare 2023",
+      "talk": "Maintain Social Distance this Spring",
+      "date": "2023-05-24",
+      "url": "https://infoshare.pl/conference/",
+      "location": "@gdansk-amberexpo"
+    },
+    {
+      "conference": "WJUG #300",
+      "talk": "Czemu fajnie być prelegentem?",
+      "date": "2023-04-25",
+      "url": "https://www.meetup.com/warszawa-jug/events/292729513/",
+      "location": "@warsaw-lolek"
+    },
+    {
+      "conference": "Geecon 2023",
+      "talk": "Maintain Social Distance this Spring",
+      "date": "2023-04-19",
+      "url": "https://2023.geecon.org",
+      "location": "@cracow-multikino"
+    },
+    {
+      "conference": "Code Talks",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2023-01-10",
+      "url": "https://www.psi.pl/pl/kariera/code-talks/",
+      "location": "@poznan-concordia"
+    },
+    {
+      "conference": "J-Santa on Tour",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-12-7",
+      "url": "https://evenea.pl/pl/wydarzenie/jsanta22krakow",
+      "location": "@cracow-lubicz"
+    },
+    {
+      "conference": "RzeszówJUG",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-10-26",
+      "url": "https://www.meetup.com/Rzeszow-Java-User-Group/",
+      "location": "@rzeszow-lord-jack"
+    },
+    {
+      "conference": "GeeCON Prague 2022",
+      "talk": "The Future of Hazelcast",
+      "date": "2022-10-24",
+      "url": "https://2022.geecon.cz",
+      "location": "@prague-cinestar"
+    },
+    {
+      "conference": "GeeCON Prague 2022",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-10-24",
+      "url": "https://2022.geecon.cz",
+      "location": "@prague-cinestar"
+    },
+    {
+      "conference": "JUG Istanbul",
+      "talk": "CompletableFuture and its Quirks/The Future of Hazelcast",
+      "date": "2022-10-18",
+      "url": "https://www.linkedin.com/posts/altuga_activity-6971070599540428800-rnPJ",
+      "location": "@istanbul-ing"
+    },
+    {
+      "conference": "Barcelona JUG",
+      "talk": "CompletableFuture and its Quirks/The Future of Hazelcast",
+      "date": "2022-10-10",
+      "url": "https://www.barcelonajug.org",
+      "location": "@barcelona-dynatrace"
+    },
+    {
+      "conference": "JDD 2022",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-10-4",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "Javeloper 2022",
+      "talk": "The Future of Hazelcast",
+      "date": "2022-09-29",
+      "url": "https://javeloper.pl"
+    },
+    {
+      "conference": "YavaConf 2022",
+      "talk": "The Future of Hazelcast",
+      "date": "2022-09-28",
+      "url": "https://yavaconf.com",
+      "location": "@warsaw-mini"
+    },
+    {
+      "conference": "WrocławJUG",
+      "talk": "Hazelcast: The Journey from a Cache to Cloud-Native",
+      "date": "2022-09-13",
+      "url": "https://www.meetup.com/wroclawjug/events/288250106",
+      "location": "@wroclaw-pub-wedrowki"
+    },
+    {
+      "conference": "JBCNConf 2022",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-07-19",
+      "url": "https://www.jbcnconf.com/2022/",
+      "location": "@barcelona-ibcc"
+    },
+    {
+      "conference": "TricityJUG",
+      "talk": "Hazelcast 5.1 – The Hitchhiker's Guide",
+      "date": "2022-07-14",
+      "url": "https://www.meetup.com/trojmiasto-java-user-group/events/287056610/",
+      "location": "@gdansk-inkubator"
+    },
+    {
+      "conference": "Confitura 2022",
+      "talk": "Trzymaj Springa na Dystans!",
+      "date": "2022-06-25",
+      "url": "https://2022.confitura.pl/#home",
+      "location": "@warsaw-expo"
+    },
+    {
+      "conference": "DevoxxPL 2022",
+      "talk": "Hazelcast 5.2 - What's Next?",
+      "date": "2022-06-24",
+      "url": "https://devoxx.pl/",
+      "location": "@cracow-ice"
+    },
+    {
+      "conference": "DevoxxPL 2022",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-06-22",
+      "url": "https://devoxx.pl/",
+      "location": "@cracow-ice"
+    },
+    {
+      "conference": "ChicagoJUG",
+      "talk": "Hazelcast 5.1 – The Hitchhiker's Guide",
+      "date": "2022-06-16",
+      "url": "https://cjug.org",
+      "location": "@chicago-ibm"
+    },
+    {
+      "conference": "ChicagoJUG",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-06-16",
+      "url": "https://cjug.org",
+      "location": "@chicago-ibm"
+    },
+    {
+      "conference": "Geecon 2022",
+      "talk": "Hazelcast 5.1 – The Hitchhiker's Guide",
+      "date": "2022-05-13",
+      "url": "https://2022.geecon.org",
+      "location": "@cracow-multikino"
+    },
+    {
+      "conference": "Javeloper 2022",
+      "talk": "Hazelcast 5.1 – The Hitchhiker's Guide",
+      "date": "2022-05-12",
+      "url": "https://javeloper.pl"
+    },
+    {
+      "conference": "Geecon 2022",
+      "talk": "CompletableFuture and its Quirks",
+      "date": "2022-05-12",
+      "url": "https://2022.geecon.org",
+      "location": "@cracow-multikino"
+    },
+    {
+      "conference": "JUG Łódź",
+      "talk": "Hazelcast 5.1 – The Hitchhiker's Guide",
+      "date": "2022-04-21",
+      "url": "https://www.meetup.com/Java-User-Group-Lodz/events/285059497/",
+      "location": "@lodz-stara-drukarnia"
+    },
+    {
+      "conference": "Talk4Devs 2022",
+      "talk": "Hazelcast 5.0: Hands-on",
+      "date": "2022-02-16",
+      "url": "https://talk4devs.j-labs.pl/en/74-hazelcast-5-hands-on-2/"
+    },
+    {
+      "conference": "Doing Java Better by Segfault",
+      "talk": "Red Flags of CompletableFuture",
+      "date": "2021-12-14",
+      "url": "https://doing-java-better.konfeo.com/pl/groups"
+    },
+    {
+      "conference": "SilesiaJUG",
+      "talk": "Wprowadzenie do ekosystemu Hazelcast 5.0",
+      "date": "2021-11-18",
+      "url": "https://www.meetup.com/Silesia-JUG/events/281960824/"
+    },
+    {
+      "conference": "Luxoft TechGround",
+      "talk": "Hazelcast 5.0: The Hitchhiker's Guide",
+      "date": "2021-10-30",
+      "url": "https://www.techground.pro"
+    },
+    {
+      "conference": "BydgoszczJUG",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2021-09-23",
+      "location": "@bydgoszcz-ustb"
+    },
+    {
+      "conference": "Javeloper 2021",
+      "talk": "Wprowadzenie do ekosystemu Hazelcast 5.0",
+      "date": "2021-09-23",
+      "url": "https://javeloper.pl"
+    },
+    {
+      "conference": "BBJUG#34",
+      "talk": "Wprowadzenie do ekosystemu Hazelcast 5.0",
+      "date": "2021-09-09",
+      "url": "https://twitter.com/bielskobialajug?lang=en"
+    },
+    {
+      "conference": "Talk4Devs 2021",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2021-01-27",
+      "url": "https://app.evenea.pl/event/talk4devs65/"
+    },
+    {
+      "conference": "JFuture 2020",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2020-10-23",
+      "url": "https://jfuture.dev"
+    },
+    {
+      "conference": "British Columbia Institute of Technology",
+      "talk": "TDD - What They Forgot to Tell You",
+      "date": "2020-10-16",
+      "location": ""
+    },
+    {
+      "conference": "Click Online",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2020-10-03",
+      "url": "https://click.org.pl"
+    },
+    {
+      "conference": "4Developers",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2020-09-18",
+      "url": "https://4developers.org.pl/"
+    },
+    {
+      "conference": "Segfault Online",
+      "talk": "Fantastic Frameworks and How to Avoid Them - Director's Cut",
+      "date": "2020-06-25",
+      "url": "https://segfault.events/"
+    },
+    {
+      "conference": "DevTalks",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2020-06-10",
+      "url": "https://www.devtalks.ro"
+    },
+    {
+      "conference": "Java Fest",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2020-05-30",
+      "url": "https://javafest.com.ua/"
+    },
+    {
+      "conference": "Kielce JUG",
+      "talk": "Hazelcast: The Hitchhiker's Guide",
+      "date": "2020-04-23",
+      "url": "https://www.meetup.com/Kielce-Java-User-Group/"
+    },
+    {
+      "conference": "Dev.next Digital",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2020-03-24",
+      "url": "https://www.devdotnext.com/digital"
+    },
+    {
+      "conference": "JSession",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2020-03-18",
+      "url": "https://www.facebook.com/events/601356630451391/"
+    },
+    {
+      "conference": "RzeszówJUG",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2020-02-12",
+      "url": "https://www.meetup.com/Rzeszow-Java-User-Group/",
+      "location": "@rzeszow-apart-hotel-12"
+    },
+    {
+      "conference": "J-Santa 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-11-30",
+      "url": "https://j-santa.pl",
+      "location": "@lublin-lck"
+    },
+    {
+      "conference": "JFuture 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-11-16",
+      "url": "https://jfuture.dev",
+      "location": "@minsk-voka"
+    },
+    {
+      "conference": "DevoxxUA 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-11-1",
+      "url": "https://devoxx.com.ua/",
+      "location": "@kiev-m82"
+    },
+    {
+      "conference": "GeeCON Prague 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-10-18",
+      "url": "https://2019.geecon.cz",
+      "location": "@prague-cinestar"
+    },
+    {
+      "conference": "BaselOne 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-10-17",
+      "url": "https://baselone.ch",
+      "location": "@basel-markthalle"
+    },
+    {
+      "conference": "JDD 2019",
+      "talk": "Java, Versioning && Licensing - AMA",
+      "date": "2019-10-14",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "JDD 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-10-14",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
+      "conference": "GeekOUT 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-09-26",
+      "url": "https://2019.geekout.ee",
+      "location": "@tallinn-kultuurikatel"
+    },
+    {
+      "conference": "CasumoTechTalksBCN 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-09-19",
+      "url": "https://casumocareers.com/",
+      "location": "@barcelona-casumo"
+    },
+    {
+      "conference": "HackYeah 2019",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-09-14",
+      "url": "https://hackyeah.pl",
+      "location": "@warsaw-ptak"
+    },
+    {
+      "conference": "JCrete 2019",
+      "talk": "Scaling Leadership in \"flat\" organizations",
+      "date": "2019-07-16",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
+      "conference": "CoffeeJUG Lviv",
+      "talk": "Purely Dysfunctional Data Structures",
+      "date": "2019-07-11",
+      "url": "https://coffeejug-july-19.2event.com",
+      "location": "@lviv-panorama-hotel"
+    },
+    {
+      "conference": "CoffeeJUG Lviv",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2019-07-11",
+      "location": "@lviv-panorama-hotel"
+    },
+    {
+      "conference": "Vattenfall Tech Talks #3",
+      "talk": "The Dark Side of Java 8",
+      "date": "2019-06-18",
+      "url": "https://www.meetup.com/TechTalks-Vattenfall/events/261896689/",
+      "location": "@katowice-vattenfall"
+    },
+    {
+      "conference": "BruJUG",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2019-06-04",
+      "url": "https://www.meetup.com/BruJUG/",
+      "location": "@brussels-he2b"
+    },
+    {
+      "conference": "GeeCON 2019",
+      "talk": "Purely Functional Data Structures",
+      "date": "2019-05-16",
+      "url": "https://geecon.org",
+      "location": "@cracow-multikino"
+    },
+    {
+      "conference": "JEEConf 2019",
+      "talk": "The Dark Side of Java 8",
+      "date": "2019-04-26",
+      "url": "https://jeeconf.com",
+      "location": "@kiev-mercure"
+    },
+    {
+      "conference": "SFI 2019",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2019-03-23",
+      "url": "https://sfi.pl",
+      "location": "@cracow-agh"
+    },
+    {
+      "conference": "JavaLand 2019",
+      "talk": "The Dark Side of Java 8",
+      "date": "2019-03-20",
+      "location": "@bruhl-phantasialand"
+    },
+    {
+      "conference": "VoxxedDaysZurich 2019",
+      "talk": "The Dark Side of Java 8",
+      "date": "2019-03-19",
+      "url": "https://voxxeddays.com/zurich/",
+      "location": "@zurich-sihlcity"
+    },
+    {
+      "conference": "Kielce JUG",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2019-01-31",
+      "url": "https://www.meetup.com/Kielce-Java-User-Group/",
+      "location": "@kielce-bohomass"
+    },
+    {
+      "conference": "J-Santa 2018",
+      "talk": "Discussion Panel: Architecture vs Technology",
+      "date": "2018-12-08",
+      "url": "https://j-santa.pl",
+      "location": "@lublin-lck"
+    },
+    {
+      "conference": "J-Santa 2018",
+      "talk": "The Dark Side of Java 8",
+      "date": "2018-12-08",
+      "url": "https://j-santa.pl",
+      "location": "@lublin-lck"
+    },
+    {
+      "conference": "CoreDump Cracow 2018",
+      "talk": "Fantastic Frameworks and How to Avoid Them",
+      "date": "2018-11-26",
+      "url": "https://coredump.events/2018/",
+      "location": "@cracow-galaxy"
+    },
+    {
+      "conference": "DevoxxBE 2018",
+      "talk": "Functional Exception Handling in Java with Vavr [TiA]",
+      "date": "2018-11-13",
+      "url": "https://devoxx.be",
+      "location": "@antwerp-kinepolis"
+    },
+    {
+      "conference": "OracleCodeOne 2018",
+      "talk": "Functional Exception Handling in Java",
+      "date": "2018-10-25",
+      "url": "https://www.oracle.com/code-one/index.html",
+      "location": "@san-francisco-moscone"
+    },
+    {
+      "conference": "JDD 2018",
+      "talk": "The Dark Side of Java 8",
+      "date": "2018-10-8",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-nck"
+    },
+    {
+      "conference": "Casumo Tech Meetup #1",
+      "talk": "The Dark Side of Java 8",
+      "date": "2018-10-2",
+      "url": "https://www.eventbrite.com/e/casumo-tech-meetup-1-event-sourced-architectures-java-8-postmortem-tickets-50436487893?aff=CasumoTechMeetup",
+      "location": "@malta-casumo"
+    },
+    {
+      "conference": "Rockstar Night: The Dark Side of Java 2018",
+      "talk": "The Dark Side of Java 8",
+      "date": "2018-08-30",
+      "url": "https://2event.com/events/1497848",
+      "location": "@kiev-depo"
+    },
+    {
+      "conference": "DevoxxPL 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-06-20",
+      "url": "https://devoxx.pl",
+      "location": "@cracow-ice"
+    },
+    {
+      "conference": "JBCNConf 2018",
+      "talk": "The Dark Side of Java 8",
+      "date": "2018-06-12",
+      "url": "https://www.jbcnconf.com/2018/",
+      "location": "@barcelona-cinesa"
+    },
+    {
+      "conference": "RigaDevDays 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-05-29",
+      "url": "https://rigadevdays.lv",
+      "location": "@riga-forum"
+    },
+    {
+      "conference": "Developers Conference 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-05-18",
+      "url": "https://conference.mscc.mu",
+      "location": "@mauritius-voila-hotel"
+    },
+    {
+      "conference": "Developers Conference 2018",
+      "talk": "Vavr By Example",
+      "date": "2018-05-18",
+      "url": "https://conference.mscc.mu",
+      "location": "@mauritius-voila-hotel"
+    },
+    {
+      "conference": "GeeCON 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-05-10",
+      "url": "https://geecon.org",
+      "location": "@cracow-multikino"
+    },
+    {
+      "conference": "VoxxedDaysZurich 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-03-08",
+      "url": "https://voxxeddays.com/zurich18/",
+      "location": "@zurich-sihlcity"
+    },
+    {
+      "conference": "VoxxedDaysZurich 2018",
+      "talk": "Functional Java 8+ [HOL]",
+      "date": "2018-03-07",
+      "url": "https://voxxeddays.com/zurich18/",
+      "location": "@zurich-digicomp"
+    },
+    {
+      "conference": "OracleCode LA 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-02-27",
+      "url": "https://developer.oracle.com/code/losangeles",
+      "location": "@los-angeles-westin"
+    },
+    {
+      "conference": "SnowCamp 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-01-26",
+      "url": "https://snowcamp.io/en/",
+      "location": "@grenoble-minatec"
+    },
+    {
+      "conference": "SnowCamp 2018",
+      "talk": "Introduction to Functional Java [HOL]",
+      "date": "2018-01-24",
+      "url": "https://snowcamp.io/en/",
+      "location": "@grenoble-minatec"
+    },
+    {
+      "conference": "Lublin JUG 2018",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2018-01-09",
+      "url": "https://www.meetup.com/Lublin-Java-User-Group/events/245133338/",
+      "location": "@lublin-umcs"
+    },
+    {
+      "conference": "StacjaIT 2017",
+      "talk": "Wprowadzenie do programowania funkcyjnego w Javie",
+      "date": "2017-12-09",
+      "url": "https://stacja.it",
+      "location": "@warsaw-sages"
+    },
+    {
+      "conference": "jSession 2017",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2017-12-06",
+      "url": "https://jsession.pl",
+      "location": "@bialystok-explorer"
+    },
+    {
+      "conference": "JavaDay 2017",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2017-11-04",
+      "url": "https://javaday.org.ua/kyiv/",
+      "location": "@kiev-parkovy"
+    },
+    {
+      "conference": "JDD 2017",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2017-10-03",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-expo"
+    },
+    {
+      "conference": "JUG Lviv 2017",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2017-09-14",
+      "url": "https://www.jug.lviv.ua",
+      "location": "@lviv-symphony"
+    },
+    {
+      "conference": "JCrete 2017",
+      "talk": "Functional Java - Discussion Panel",
+      "date": "2017-07-17",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
+      "conference": "Confitura 2017",
+      "talk": "A Hitchhiker's Guide to the Functional Exception Handling in Java",
+      "date": "2017-07-01",
+      "url": "https://2017.confitura.pl",
+      "location": "@warsaw-bobrowiecka"
+    },
+    {
+      "conference": "DevoxxPL 2017",
+      "talk": "Vavr by Example",
+      "date": "2017-06-21",
+      "url": "https://devoxx.pl",
+      "location": "@cracow-ice"
+    },
+    {
+      "conference": "JBCNConf 2017",
+      "talk": "Vavr - Functional Java Done Right",
+      "date": "2017-06-19",
+      "url": "https://www.jbcnconf.com/2017/",
+      "location": "@barcelona-gran-via-2"
+    },
+    {
+      "conference": "RigaDevDays 2017",
+      "talk": "Vavr - Functional Java Done Right",
+      "date": "2017-05-15",
+      "url": "https://rigadevdays.lv",
+      "location": "@riga-forum"
+    },
+    {
+      "conference": "VoxxedDaysTicino 2017",
+      "talk": "Vavr - Functional Java Done Right",
+      "date": "2017-05-06",
+      "url": "https://voxxeddays.com/ticino17/",
+      "location": "@lugano-palazzo-congressi"
+    },
+    {
+      "conference": "JUG Łódź 2017",
+      "talk": "Javaslang - livecoding session",
+      "date": "2017-03-23",
+      "url": "https://www.juglodz.pl",
+      "location": "@lodz-lut"
+    },
+    {
+      "conference": "VoxxedDaysZurich 2017",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2017-02-23",
+      "url": "https://voxxeddays.com/zurich17/",
+      "location": "@zurich-sihlcity"
+    },
+    {
+      "conference": "Morning@Lohika 2017",
+      "talk": "Functional Java - livecoding session",
+      "date": "2017-02-11",
+      "url": "https://morning.lohika.com",
+      "location": "@lviv-lohika"
+    },
+    {
+      "conference": "Warsaw JUG #194",
+      "talk": "Java 9 Stream/Optional API Additions",
+      "date": "2017-01-10",
+      "url": "https://warszawa.jug.pl/",
+      "location": "@warsaw-mim"
+    },
+    {
+      "conference": "ToruńJUG 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-11-30",
+      "url": "https://torun.jug.pl",
+      "location": "@poznan-umk"
+    },
+    {
+      "conference": "BuildStuffUA 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-11-22",
+      "url": "https://www.buildstuff.com.ua/kiev/",
+      "location": "@kiev-olympiyskiy"
+    },
+    {
+      "conference": "BuildStuffLT 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-11-16",
+      "url": "https://buildstuff.lt",
+      "location": "@vilnius-radissonblu"
+    },
+    {
+      "conference": "DevoxxBE 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-11-08",
+      "url": "https://devoxx.be",
+      "location": "@antwerp-kinepolis"
+    },
+    {
+      "conference": "DevoxxMA 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-11-01",
+      "url": "https://devoxx.ma",
+      "location": "@morocco-studio-des-arts-vivants"
+    },
+    {
+      "conference": "JavaDay 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-10-14",
+      "url": "https://javaday.org.ua/kyiv/",
+      "location": "@kiev-parkovy"
+    },
+    {
+      "conference": "JDD 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-10-10",
+      "url": "https://16.jdd.org.pl",
+      "location": "@cracow-holiday-inn"
+    },
+    {
+      "conference": "WarsawJUG #185",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-09-27",
+      "url": "https://warszawa.jug.pl",
+      "location": "@warsaw-mim"
+    },
+    {
+      "conference": "JDayLviv 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-09-03",
+      "url": "https://www.jday.com.ua",
+      "location": "@lviv-arena"
+    },
+    {
+      "conference": "BuildStuff Odessa 2016",
+      "talk": "Functional Programming tools in Java8 Workshop",
+      "date": "2016-07-08",
+      "url": "https://www.buildstuff.com.ua/odessa/",
+      "location": "@odessa-otrada"
+    },
+    {
+      "conference": "Confitura 2016",
+      "talk": "Javaslang - Functional Java Done Right",
+      "date": "2016-07-02",
+      "url": "https://2016.confitura.pl",
+      "location": "@warsaw-bobrowiecka"
+    },
+    {
+      "conference": "Kariera IT Rzeszów 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-06-18",
+      "url": "https://careercon.pl/en/conference/kariera-it-rzeszow-18-06-2015/",
+      "location": "@rzeszow-hotel"
+    },
+    {
+      "conference": "JavaDayBY 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-06-11",
+      "url": "https://javaday.by",
+      "location": "@minsk-verh"
+    },
+    {
+      "conference": "JEEConf 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-05-20",
+      "url": "https://jeeconf.com",
+      "location": "@kiev-parkovy"
+    },
+    {
+      "conference": "DevCrowd 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-04-23",
+      "url": "https://devcrowd.pl",
+      "location": "@szczecin-wput"
+    },
+    {
+      "conference": "Kariera IT Wrocław 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-04-16",
+      "url": "https://careercon.pl/konferencja/kariera-it-wroclaw-16-04-2016/",
+      "location": "@wroclaw-mercure"
+    },
+    {
+      "conference": "4Developers 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-04-11",
+      "url": "https://2016.4developers.org.pl/en/",
+      "location": "@warsaw-gromada"
+    },
+    {
+      "conference": "Kariera IT Cracow 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-04-09",
+      "url": "https://careercon.pl/en/conference/kariera-it-krakow-09-04-2016/",
+      "location": "@cracow-holiday-inn"
+    },
+    {
+      "conference": "WarsawJUG #178",
+      "talk": "Java 8 vs. Checked Exceptions",
+      "date": "2016-03-29",
+      "location": "@warsaw-mim"
+    },
+    {
+      "conference": "Kariera IT Warsaw 2016",
+      "talk": "Java Wars VIII: The Function Awakens",
+      "date": "2016-03-05",
+      "url": "https://careercon.pl/konferencja/kariera-it-warszawa-05-03-2016/",
+      "location": "@warsaw-stadion-narodowy"
+    },
+    {
+      "conference": "JDayLviv 2015",
+      "talk": "Functional programming concepts in Java 8",
+      "date": "2015-09-19",
+      "location": "@lviv-arena"
+    },
+    {
+      "conference": "Confitura 2015",
+      "talk": "Java 8: Lambdas && Monads",
+      "date": "2015-07-04",
+      "location": "@warsaw-uw"
+    },
+    {
+      "conference": "Jinkubator #29",
+      "talk": "Java 8: Lambdas, Monads and Java Collections",
+      "date": "2015-05-12",
+      "url": "https://jinkubator.pl/#/meeting/29",
+      "location": "@warsaw-mim"
+    },
+    {
+      "conference": "TouK Weekly Workshops 2014",
+      "talk": "Intellij IDEA Advanced Code Folding",
+      "date": "2014-03-28",
+      "url": "https://touk.pl",
+      "location": "@warsaw-touk"
+    }
+  ],
+  "locations": {
+    "mauritius-voila-hotel": {
+      "location": {
+        "city": "Port Louis",
+        "country": "Mauritius"
+      },
+      "coordinates": "-20.223476, 57.495376",
+      "place": "Voila Hotel"
+    },
+    "morocco-studio-des-arts-vivants": {
+      "location": {
+        "city": "Casablanca",
+        "country": "Morocco"
+      },
+      "coordinates": "33.574322,-7.683728",
+      "place": "Studio Des Arts Vivants"
+    },
+    "los-angeles-westin": {
+      "location": {
+        "city": "Los Angeles",
+        "country": "USA"
+      },
+      "coordinates": "34.052873,-118.255685",
+      "place": "The Westin Bonaventure Hotel"
+    },
+    "crete-oac": {
+      "location": {
+        "city": "Kolymvari",
+        "country": "Greece"
+      },
+      "coordinates": "35.552030,23.777177",
+      "place": "Orthodox Academy of Crete"
+    },
+    "malta-casumo": {
+      "location": {
+        "country": "Malta"
+      },
+      "coordinates": "35.922822,14.474884",
+      "place": "Casumo Office"
+    },
+    "san-francisco-moscone": {
+      "location": {
+        "city": "San Francisco",
+        "country": "USA"
+      },
+      "coordinates": "37.784567,-122.400669",
+      "place": "Moscone Center"
+    },
+    "denver-marriott": {
+      "location": {
+        "city": "Denver",
+        "country": "USA"
+      },
+      "coordinates": "39.54156776974858, -104.87029498578751",
+      "place": "Denver Marriott South"
+    },
+    "istanbul-ing": {
+      "location": {
+        "city": "Istanbul",
+        "country": "Turkey"
+      },
+      "coordinates": "41.10822749515926, 29.016460108128253",
+      "place": "ING Türkiye"
+    },
+    "barcelona-gran-via-2": {
+      "location": {
+        "city": "Barcelona",
+        "country": "Spain"
+      },
+      "coordinates": "41.359554,2.129277",
+      "place": "Gran Via 2"
+    },
+    "barcelona-casumo": {
+      "location": {
+        "city": "Barcelona",
+        "country": "Spain"
+      },
+      "coordinates": "41.396508, 2.201906",
+      "place": "Casumo Bcn Office"
+    },
+    "barcelona-dynatrace": {
+      "location": {
+        "city": "Barcelona",
+        "country": "Spain"
+      },
+      "coordinates": "41.40340897796727, 2.1894392443785713",
+      "place": "Dynatrace Office"
+    },
+    "barcelona-ibcc": {
+      "location": {
+        "city": "Barcelona",
+        "country": "Spain"
+      },
+      "coordinates": "41.40927967363553, 2.2197463141279963",
+      "place": "International Barcelona Convention Center"
+    },
+    "barcelona-ingram": {
+      "location": {
+        "city": "Barcelona",
+        "country": "Spain"
+      },
+      "coordinates": "41.412068619461316, 2.220495284533813",
+      "place": "Ingram"
+    },
+    "barcelona-cinesa": {
+      "location": {
+        "city": "Barcelona",
+        "country": "Spain"
+      },
+      "coordinates": "41.435020, 2.181185",
+      "place": "Cinesa Heron City"
+    },
+    "chicago-ibm": {
+      "location": {
+        "city": "Chicago",
+        "country": "USA"
+      },
+      "coordinates": "41.881066190676684, -87.63519375025176",
+      "place": "IBM Conference Center"
+    },
+    "grenoble-minatec": {
+      "location": {
+        "city": "Grenoble",
+        "country": "France"
+      },
+      "coordinates": "45.195714,5.708412",
+      "place": "Minatec"
+    },
+    "lugano-palazzo-congressi": {
+      "location": {
+        "city": "Lugano",
+        "country": "Switzerland"
+      },
+      "coordinates": "46.005145,8.956409",
+      "place": "Palazzo Congressi"
+    },
+    "odessa-otrada": {
+      "location": {
+        "city": "Odessa",
+        "country": "Ukraine"
+      },
+      "coordinates": "46.467029,30.762330",
+      "place": "Otrada Beach Club"
+    },
+    "zurich-sihlcity": {
+      "location": {
+        "city": "Zurich",
+        "country": "Switzerland"
+      },
+      "coordinates": "47.358192,8.523817",
+      "place": "Sihlcity"
+    },
+    "zurich-digicomp": {
+      "location": {
+        "city": "Zurich",
+        "country": "Switzerland"
+      },
+      "coordinates": "47.381980,8.535409",
+      "place": "Digicomp"
+    },
+    "basel-markthalle": {
+      "location": {
+        "city": "Basel",
+        "country": "Switzerland"
+      },
+      "coordinates": "47.549067, 7.587486",
+      "place": "Markthalle Basel"
+    },
+    "lviv-arena": {
+      "location": {
+        "city": "Lviv",
+        "country": "Ukraine"
+      },
+      "coordinates": "49.774878,24.030280",
+      "place": "Arena Lviv"
+    },
+    "lviv-symphony": {
+      "location": {
+        "city": "Lviv",
+        "country": "Ukraine"
+      },
+      "coordinates": "49.802881,24.011409",
+      "place": "Symphony Solutions Office"
+    },
+    "lviv-panorama-hotel": {
+      "location": {
+        "city": "Lviv",
+        "country": "Ukraine"
+      },
+      "coordinates": "49.843717, 24.025646",
+      "place": "Lviv Panorama Hotel"
+    },
+    "lviv-lohika": {
+      "location": {
+        "city": "Lviv",
+        "country": "Ukraine"
+      },
+      "coordinates": "49.853299,24.024658",
+      "place": "Lohika Office"
+    },
+    "cracow-metropolo": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.012639, 19.924074",
+      "place": "Hotel Metropolo"
+    },
+    "rzeszow-apart-hotel-12": {
+      "location": {
+        "city": "Rzeszów",
+        "country": "Poland"
+      },
+      "coordinates": "50.028506, 22.001869",
+      "place": "Apart Hotel 12"
+    },
+    "rzeszow-lord-jack": {
+      "location": {
+        "city": "Rzeszów",
+        "country": "Poland"
+      },
+      "coordinates": "50.03700544883105, 22.004168519004615",
+      "place": "Lord Jack"
+    },
+    "rzeszow-bristol": {
+      "location": {
+        "city": "Rzeszow",
+        "country": "Poland"
+      },
+      "coordinates": "50.03827607851486, 22.00459989816584",
+      "place": "Hotel Bristol"
+    },
+    "rzeszow-hotel": {
+      "location": {
+        "city": "Rzeszów",
+        "country": "Poland"
+      },
+      "coordinates": "50.041927,21.998888",
+      "place": "Hotel Rzeszow"
+    },
+    "cracow-ice": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.048165,19.931766",
+      "place": "ICE Cracow"
+    },
+    "cracow-galaxy": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.053351,19.958609",
+      "place": "Hotel Galaxy Cracow"
+    },
+    "cracow-double-tree": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.059208,19.943648",
+      "place": "DoubleTree Cracow"
+    },
+    "cracow-holiday-inn": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.059208,19.943648",
+      "place": "Holiday Inn Krakow City Centre"
+    },
+    "cracow-expo": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.059749,20.008963",
+      "place": "EXPO Cracow"
+    },
+    "cracow-lubicz": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.06463451523371, 19.949919178463688",
+      "place": "Browar Lubicz"
+    },
+    "cracow-agh": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.068028, 19.912689",
+      "place": "AGH D-17"
+    },
+    "cracow-nck": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.070264, 20.036788",
+      "place": "NCK Cracow"
+    },
+    "cracow-multikino": {
+      "location": {
+        "city": "Cracow",
+        "country": "Poland"
+      },
+      "coordinates": "50.088853, 19.984622",
+      "place": "Multikino Cracow"
+    },
+    "prague-cinestar": {
+      "location": {
+        "city": "Prague",
+        "country": "Czech Republic"
+      },
+      "coordinates": "50.108958, 14.585599",
+      "place": "CineStar Prague"
+    },
+    "katowice-vattenfall": {
+      "location": {
+        "city": "Katowice",
+        "country": "Poland"
+      },
+      "coordinates": "50.250099, 19.027050",
+      "place": "Vattenfall"
+    },
+    "katowice-strefa-centralna": {
+      "location": {
+        "city": "Katowice",
+        "country": "Poland"
+      },
+      "coordinates": "50.25292207906272, 19.023493147612825",
+      "place": "Strefa Centralna"
+    },
+    "kiev-depo": {
+      "location": {
+        "city": "Kiev",
+        "country": "Ukraine"
+      },
+      "coordinates": "50.431597,30.513165",
+      "place": "DEPO"
+    },
+    "kiev-olympiyskiy": {
+      "location": {
+        "city": "Kiev",
+        "country": "Ukraine"
+      },
+      "coordinates": "50.433394,30.520315",
+      "place": "National Sports Complex “Olympiyskiy”"
+    },
+    "kiev-parkovy": {
+      "location": {
+        "city": "Kiev",
+        "country": "Ukraine"
+      },
+      "coordinates": "50.448875,30.540683",
+      "place": "Parkovy Conference Center"
+    },
+    "kiev-mercure": {
+      "location": {
+        "city": "Kiev",
+        "country": "Ukraine"
+      },
+      "coordinates": "50.450033, 30.443045",
+      "place": "Mercure Kyiv Congress"
+    },
+    "kiev-m82": {
+      "location": {
+        "city": "Kiev",
+        "country": "Ukraine"
+      },
+      "coordinates": "50.476675, 30.500365",
+      "place": "M82"
+    },
+    "bruhl-phantasialand": {
+      "location": {
+        "city": "Bruhl",
+        "country": "Germany"
+      },
+      "coordinates": "50.800784, 6.876390",
+      "place": "PhantasiaLand"
+    },
+    "brussels-he2b": {
+      "location": {
+        "city": "Brussels",
+        "country": "Belgium"
+      },
+      "coordinates": "50.849583, 4.364083",
+      "place": "HE2B - ESI - Ecole Supérieure d'Informatique"
+    },
+    "kielce-bohomass": {
+      "location": {
+        "city": "Kielce",
+        "country": "Poland"
+      },
+      "coordinates": "50.870255, 20.628023",
+      "place": "Bohomass Lab"
+    },
+    "wroclaw-pub-wedrowki": {
+      "location": {
+        "city": "Wrocław",
+        "country": "Poland"
+      },
+      "coordinates": "51.1043131772483, 17.029854451107067",
+      "place": "Pub Wędrówki"
+    },
+    "wroclaw-mercure": {
+      "location": {
+        "city": "Wroclaw",
+        "country": "Poland"
+      },
+      "coordinates": "51.108534,17.039074",
+      "place": "Hotel Mercure"
+    },
+    "lublin-umcs": {
+      "location": {
+        "city": "Lublin",
+        "country": "Poland"
+      },
+      "coordinates": "51.245200,22.540561",
+      "place": "UMCS University"
+    },
+    "antwerp-kinepolis": {
+      "location": {
+        "city": "Antwerp",
+        "country": "Belgium"
+      },
+      "coordinates": "51.246126,4.418441",
+      "place": "Kinepolis Antwerp"
+    },
+    "lublin-csk": {
+      "location": {
+        "city": "Lublin",
+        "country": "Poland"
+      },
+      "coordinates": "51.24688436621264, 22.548454825780833",
+      "place": "Centrum Spotkan Kultur"
+    },
+    "lublin-lck": {
+      "location": {
+        "city": "Lublin",
+        "country": "Poland"
+      },
+      "coordinates": "51.247313,22.549545",
+      "place": "Lubelskie Centrum Konferencyjne"
+    },
+    "lublin-kul": {
+      "location": {
+        "city": "Lublin",
+        "country": "Poland"
+      },
+      "coordinates": "51.24738520595246, 22.543708248686208",
+      "place": "KUL"
+    },
+    "lodz-lut": {
+      "location": {
+        "city": "Lodz",
+        "country": "Poland"
+      },
+      "coordinates": "51.746946,19.453665",
+      "place": "Lodz University of Technology"
+    },
+    "lodz-stara-drukarnia": {
+      "location": {
+        "city": "Łódź",
+        "country": "Poland"
+      },
+      "coordinates": "51.759786, 19.451467",
+      "place": "Stara Drukarnia"
+    },
+    "warsaw-ptak": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.107376, 20.832667",
+      "place": "Ptak EXPO"
+    },
+    "warsaw-gromada": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.181330,20.971640",
+      "place": "Hotel Gromada"
+    },
+    "warsaw-visuality": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.20024017242721, 21.012849872489294",
+      "place": "Visuality"
+    },
+    "warsaw-bobrowiecka": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.200727,21.045776",
+      "place": "Bobrowiecka Conference Center"
+    },
+    "warsaw-mim": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.211838,20.982262",
+      "place": "MiM University of Warsaw"
+    },
+    "warsaw-lolek": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.212239876870925, 21.005043569189716",
+      "place": "Pub Lolek"
+    },
+    "warsaw-touk": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.212833,20.959682",
+      "place": "TouK Office"
+    },
+    "warsaw-paramount": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.22047605952363, 21.01816733451072",
+      "place": "Paramount"
+    },
+    "warsaw-mini": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.22270422499571, 21.006949415482094",
+      "place": "MiNI"
+    },
+    "warsaw-expo": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.22493469540039, 20.96212373563191",
+      "place": "Warsaw Expo XXI"
+    },
+    "warsaw-sages": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.226501,20.999614",
+      "place": "Sages"
+    },
+    "warsaw-wse": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.23018544156033, 21.023449897930536",
+      "place": "Warsaw Stock Exchange"
+    },
+    "warsaw-wfc": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.23363895794495, 21.0019294111386",
+      "place": "WFC"
+    },
+    "warsaw-adn": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.235243764109576, 20.987984590000636",
+      "place": "ADN Conference Center"
+    },
+    "warsaw-stadion-narodowy": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.239186022279604, 21.045004980170685",
+      "place": "Stadion Narodowy"
+    },
+    "warsaw-uw": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.240929,21.018974",
+      "place": "University of Warsaw"
+    },
+    "warsaw-cnk": {
+      "location": {
+        "city": "Warsaw",
+        "country": "Poland"
+      },
+      "coordinates": "52.24161484245933, 21.028687500632525",
+      "place": "CNK"
+    },
+    "poznan-nowy-rynek": {
+      "location": {
+        "city": "Poznań",
+        "country": "Poland"
+      },
+      "coordinates": "52.400185, 16.920849",
+      "place": "Nowy Rynek"
+    },
+    "poznan-concordia": {
+      "location": {
+        "city": "Poznań",
+        "country": "Poland"
+      },
+      "coordinates": "52.40746430234642, 16.911205324043184",
+      "place": "Concordia Design"
+    },
+    "poznan-umk": {
+      "location": {
+        "city": "Torun",
+        "country": "Poland"
+      },
+      "coordinates": "53.010468,18.594269",
+      "place": "UMK Toruń"
+    },
+    "bialystok-explorer": {
+      "location": {
+        "city": "Bialystok",
+        "country": "Poland"
+      },
+      "coordinates": "53.131693,23.160579",
+      "place": "Explorer HQ"
+    },
+    "bydgoszcz-ustb": {
+      "location": {
+        "country": "Bydgoszcz"
+      },
+      "coordinates": "53.14310869846268, 18.130762337675296",
+      "place": "University of Sciences and Technology in Bydgoszcz"
+    },
+    "szczecin-wput": {
+      "location": {
+        "city": "Szczecin",
+        "country": "Poland"
+      },
+      "coordinates": "53.448489,14.491266",
+      "place": "West Pomeranian University of Technology"
+    },
+    "minsk-verh": {
+      "location": {
+        "city": "Minsk",
+        "country": "Belarus"
+      },
+      "coordinates": "53.915288,27.571242",
+      "place": "VERH"
+    },
+    "minsk-voka": {
+      "location": {
+        "city": "Minsk",
+        "country": "Belarus"
+      },
+      "coordinates": "53.934067, 27.653719",
+      "place": "VOKA Cinema"
+    },
+    "gdansk-amberexpo": {
+      "location": {
+        "city": "Gdańsk",
+        "country": "Poland"
+      },
+      "coordinates": "54.38653036882682, 18.634909329105568",
+      "place": "AmberExpo"
+    },
+    "gdansk-inkubator": {
+      "location": {
+        "city": "Gdańsk",
+        "country": "Poland"
+      },
+      "coordinates": "54.40513371189296, 18.578249197739353",
+      "place": "Inkubator STARTER"
+    },
+    "vilnius-radissonblu": {
+      "location": {
+        "city": "Vilnius",
+        "country": "Lithuania"
+      },
+      "coordinates": "54.696440, 25.275527",
+      "place": "RadissonBlu Vilnius"
+    },
+    "riga-forum": {
+      "location": {
+        "city": "Riga",
+        "country": "Latvia"
+      },
+      "coordinates": "56.946354, 24.116537",
+      "place": "Forum Cinemas"
+    },
+    "tallinn-kultuurikatel": {
+      "location": {
+        "city": "Tallinn",
+        "country": "Estonia"
+      },
+      "coordinates": "59.444370, 24.751092",
+      "place": "Kultuurikatel"
+    },
+    "oslo-nova": {
+      "location": {
+        "city": "Oslo",
+        "country": "Norway"
+      },
+      "coordinates": "59.950481960858255, 11.05043708447923",
+      "place": "NOVA Spektrum"
+    }
+  }
+}
