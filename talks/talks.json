@@ -149,6 +149,16 @@
   },
   {
     "year": "2024",
+    "conference": "Barcelona JUG",
+    "talk": "Embracing Microservices (Director's Cut)",
+    "date": "17.09.2024",
+    "location": "Barcelona/Spain",
+    "coordinates": "41.412068619461316, 2.220495284533813",
+    "place": "Ingram",
+    "url": "https://barcelonajug.org"
+  },
+  {
+    "year": "2024",
     "conference": "JEurope",
     "talk": "Virtual Threads in Action",
     "date": "12.09.2024",
