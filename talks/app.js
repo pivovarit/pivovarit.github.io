@@ -98,7 +98,10 @@ function createInfoWindowContent(location, coords, talksAtLocation) {
     const root = el("div");
     root.style.maxWidth = "250px";
 
-    root.appendChild(el("strong", { text: `${location?.place} in ${location.location.city}(${location.location.country})` ?? "" }));
+    const city = location?.location?.city ?? "";
+    const country = location?.location?.country ?? "";
+    const place = location?.place ?? "";
+    root.appendChild(el("strong", { text: `${place} in ${city} (${country})` }));
 
     const lat = coords?.lat;
     const lng = coords?.lng;
@@ -147,6 +150,8 @@ async function getAllYearsFromTalks() {
 
 async function buildYearPicker() {
     const select = document.getElementById("yearSelect");
+    if (!select) return;
+
     const years = await getAllYearsFromTalks();
     const selectedYear = getSelectedYear();
 
@@ -189,69 +194,96 @@ async function loadTalks() {
     const todayTs = today().getTime();
     const includeUpcomingPast = selectedYear == null;
 
-    let insertedUpcoming = false;
-    let insertedPast = false;
+    const upcomingTalks = talks.filter((t) => t._ts >= todayTs);
+    const pastTalks = talks.filter((t) => t._ts < todayTs);
+
     let currentYear = null;
 
-    for (const t of talks) {
-        const y = t._year;
+    if (includeUpcomingPast && upcomingTalks.length > 0) {
+        tbody.appendChild(makeHeaderRow("UPCOMING", "upcoming"));
+    }
 
+    for (const t of upcomingTalks) {
+        const y = t._year;
         if (y !== currentYear) {
             currentYear = y;
             tbody.appendChild(makeHeaderRow(String(y), "year-header"));
         }
-
-        if (includeUpcomingPast) {
-            if (!insertedUpcoming && t._ts >= todayTs) {
-                tbody.appendChild(makeHeaderRow("UPCOMING"));
-                insertedUpcoming = true;
-            }
-            if (!insertedPast && t._ts < todayTs) {
-                tbody.appendChild(makeHeaderRow("PAST"));
-                insertedPast = true;
-            }
-        }
-
-        const key = normalizeLocationId(t.location);
-        const location = key ? data.locations?.[key] : null;
-
-        const tr = el("tr");
-        tr.dataset.date = t.date ?? "";
-
-        tr.appendChild(el("td", { className: "seq", text: `${seqFromBottom--}.` }));
-
-        const tdConf = el("td");
-        const url = safeHttpUrl(t.url);
-        if (url) {
-            const a = el("a", {
-                text: t.conference ?? "",
-                attrs: { href: url, target: "_blank", rel: "noopener noreferrer" },
-            });
-            tdConf.appendChild(a);
-        } else {
-            tdConf.textContent = t.conference ?? "";
-        }
-        tr.appendChild(tdConf);
-
-        const tdTalk = el("td");
-        const talkSpan = el("span", { text: t.talk ?? "" });
-        talkSpan.style.fontSize = "0.9em";
-        tdTalk.appendChild(talkSpan);
-        tr.appendChild(tdTalk);
-
-        tr.appendChild(el("td", { text: formatDateFromTs(t._ts) }));
-
-        const tdLoc = el("td");
-        if (location) {
-            tdLoc.appendChild(el("div", { className: "venue", text: location.place ?? "" }));
-            tdLoc.appendChild(el("div", { className: "city", text: `${location.location.city}/${location.location.country}` ?? "" }));
-        } else {
-            tdLoc.appendChild(el("div", { className: "city online", text: "Online" }));
-        }
-        tr.appendChild(tdLoc);
-
-        tbody.appendChild(tr);
+        appendTalkRow(tbody, t, data, seqFromBottom--);
     }
+
+    currentYear = null;
+    if (includeUpcomingPast && pastTalks.length > 0) {
+        tbody.appendChild(makeHeaderRow("PAST", "past"));
+    }
+
+    for (const t of pastTalks) {
+        const y = t._year;
+        if (y !== currentYear) {
+            currentYear = y;
+            tbody.appendChild(makeHeaderRow(String(y), "year-header"));
+        }
+        appendTalkRow(tbody, t, data, seqFromBottom--);
+    }
+
+    if (selectedYear != null) {
+        tbody.textContent = "";
+        seqFromBottom = talks.length;
+        currentYear = null;
+
+        for (const t of talks) {
+            const y = t._year;
+            if (y !== currentYear) {
+                currentYear = y;
+                tbody.appendChild(makeHeaderRow(String(y), "year-header"));
+            }
+            appendTalkRow(tbody, t, data, seqFromBottom--);
+        }
+    }
+}
+
+function appendTalkRow(tbody, t, data, seq) {
+    const key = normalizeLocationId(t.location);
+    const location = key ? data.locations?.[key] : null;
+
+    const tr = el("tr");
+    tr.dataset.date = t.date ?? "";
+
+    tr.appendChild(el("td", { className: "seq", text: `${seq}.` }));
+
+    const tdConf = el("td");
+    const url = safeHttpUrl(t.url);
+    if (url) {
+        const a = el("a", {
+            text: t.conference ?? "",
+            attrs: { href: url, target: "_blank", rel: "noopener noreferrer" },
+        });
+        tdConf.appendChild(a);
+    } else {
+        tdConf.textContent = t.conference ?? "";
+    }
+    tr.appendChild(tdConf);
+
+    const tdTalk = el("td");
+    const talkSpan = el("span", { text: t.talk ?? "" });
+    talkSpan.style.fontSize = "0.9em";
+    tdTalk.appendChild(talkSpan);
+    tr.appendChild(tdTalk);
+
+    tr.appendChild(el("td", { text: formatDateFromTs(t._ts) }));
+
+    const tdLoc = el("td");
+    if (location) {
+        tdLoc.appendChild(el("div", { className: "venue", text: location.place ?? "" }));
+        const city = location.location?.city ?? "";
+        const country = location.location?.country ?? "";
+        tdLoc.appendChild(el("div", { className: "city", text: `${city}/${country}` }));
+    } else {
+        tdLoc.appendChild(el("div", { className: "city online", text: "Online" }));
+    }
+    tr.appendChild(tdLoc);
+
+    tbody.appendChild(tr);
 }
 
 let mapInstance = null;
@@ -388,13 +420,23 @@ async function buildYearChart() {
     const maxCount = Math.max(...Object.values(yearCounts), 1);
 
     const chart = document.getElementById('yearChart');
-    chart.innerHTML = '';
+    chart.textContent = '';
 
     for (const year of years) {
         const count = yearCounts[year];
         const height = Math.max((count / maxCount) * 80, 8);
+        const isActive = selectedYear === year;
 
-        const bar = el('div', { className: `year-bar${selectedYear === year ? ' active' : ''}` });
+        const bar = el('div', {
+            className: `year-bar${isActive ? ' active' : ''}`,
+            attrs: {
+                role: 'button',
+                tabindex: '0',
+                'aria-label': `${year}: ${count} talk${count !== 1 ? 's' : ''}${isActive ? ' (selected)' : ''}`,
+                'aria-pressed': isActive ? 'true' : 'false',
+            },
+        });
+
         const fill = el('div', { className: 'year-bar-fill' });
         fill.style.height = '0px';
         fill.dataset.count = count;
@@ -405,13 +447,21 @@ async function buildYearChart() {
         bar.appendChild(fill);
         bar.appendChild(label);
 
-        bar.onclick = () => {
+        const handleSelect = () => {
             if (selectedYear === year) {
                 setSelectedYearInUrl(null);
             } else {
                 setSelectedYearInUrl(year);
             }
             refreshUI();
+        };
+
+        bar.onclick = handleSelect;
+        bar.onkeydown = (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleSelect();
+            }
         };
 
         chart.appendChild(bar);
@@ -531,23 +581,94 @@ async function initMap() {
 
 window.initMap = initMap;
 
+function debounce(fn, delay) {
+    let timeoutId;
+    return (...args) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn(...args), delay);
+    };
+}
+
 async function refreshUI() {
     await Promise.all([
         loadTalks(),
         updateStats(),
         buildYearChart(),
+        buildYearPicker(),
     ]);
     await initMap();
 }
 
-async function initPage() {
-    await Promise.all([
-        loadTalks(),
-        updateStats(),
-        updateCountdown(),
-        buildYearChart(),
-    ]);
+function showLoading() {
+    const loading = document.getElementById('loadingState');
+    const error = document.getElementById('errorState');
+    const stats = document.getElementById('statsDashboard');
+    const countdown = document.getElementById('countdownSection');
+    const map = document.getElementById('map');
+    const chart = document.getElementById('yearChart');
+    const table = document.getElementById('talksTable');
+
+    if (loading) loading.style.display = 'flex';
+    if (error) error.style.display = 'none';
+    if (stats) stats.style.visibility = 'hidden';
+    if (countdown) countdown.style.display = 'none';
+    if (map) map.style.visibility = 'hidden';
+    if (chart) chart.style.visibility = 'hidden';
+    if (table) table.style.visibility = 'hidden';
 }
 
-document.addEventListener("DOMContentLoaded", initPage);
-window.addEventListener("popstate", () => refreshUI());
+function hideLoading() {
+    const loading = document.getElementById('loadingState');
+    const stats = document.getElementById('statsDashboard');
+    const map = document.getElementById('map');
+    const chart = document.getElementById('yearChart');
+    const table = document.getElementById('talksTable');
+
+    if (loading) loading.style.display = 'none';
+    if (stats) stats.style.visibility = 'visible';
+    if (map) map.style.visibility = 'visible';
+    if (chart) chart.style.visibility = 'visible';
+    if (table) table.style.visibility = 'visible';
+}
+
+function showError(message) {
+    const loading = document.getElementById('loadingState');
+    const error = document.getElementById('errorState');
+    const errorMsg = document.querySelector('.error-message');
+
+    if (loading) loading.style.display = 'none';
+    if (error) error.style.display = 'flex';
+    if (errorMsg) errorMsg.textContent = message || 'Failed to load talks data.';
+}
+
+async function initPage() {
+    showLoading();
+
+    try {
+        await Promise.all([
+            loadTalks(),
+            updateStats(),
+            updateCountdown(),
+            buildYearChart(),
+            buildYearPicker(),
+        ]);
+        hideLoading();
+    } catch (err) {
+        console.error('Failed to initialize page:', err);
+        showError(err.message || 'Failed to load talks data.');
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    initPage();
+
+    const retryBtn = document.getElementById('retryBtn');
+    if (retryBtn) {
+        retryBtn.addEventListener('click', () => {
+            getData({ forceReload: true });
+            initPage();
+        });
+    }
+});
+
+window.addEventListener("popstate", debounce(() => refreshUI(), 100));

@@ -2,22 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Grzegorz Piwowarek</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Conference talks and speaking engagements by Grzegorz Piwowarek - Java Champion, software engineer, and international conference speaker.">
+    <title>Grzegorz Piwowarek - Conference Talks</title>
     <link href="index.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109711864-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HB1PH886Z"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-        gtag('config', 'UA-109711864-1');
+        gtag('config', 'G-3HB1PH886Z');
     </script>
 </head>
 
@@ -25,22 +23,33 @@
 
 <div>
     <main class="content">
-        <div id="statsDashboard" class="stats-dashboard">
-            <div class="stat-card" id="statTalks">
-                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
-                <div class="stat-label">Talks Given</div>
+        <div id="loadingState" class="loading-state" role="status" aria-live="polite">
+            <div class="loading-spinner" aria-hidden="true"></div>
+            <span>Loading talks...</span>
+        </div>
+
+        <div id="errorState" class="error-state" role="alert" style="display: none;">
+            <div class="error-icon" aria-hidden="true">!</div>
+            <p class="error-message">Failed to load talks data.</p>
+            <button id="retryBtn" class="retry-btn">Try Again</button>
+        </div>
+
+        <div id="statsDashboard" class="stats-dashboard" role="region" aria-label="Speaking statistics">
+            <div class="stat-card" id="statTalks" aria-labelledby="statTalksLabel">
+                <div class="stat-value"><span class="counter" data-target="0" aria-live="polite">0</span></div>
+                <div class="stat-label" id="statTalksLabel">Talks Given</div>
             </div>
-            <div class="stat-card" id="statCountries">
-                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
-                <div class="stat-label">Countries</div>
+            <div class="stat-card" id="statCountries" aria-labelledby="statCountriesLabel">
+                <div class="stat-value"><span class="counter" data-target="0" aria-live="polite">0</span></div>
+                <div class="stat-label" id="statCountriesLabel">Countries</div>
             </div>
-            <div class="stat-card" id="statCities">
-                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
-                <div class="stat-label">Cities</div>
+            <div class="stat-card" id="statCities" aria-labelledby="statCitiesLabel">
+                <div class="stat-value"><span class="counter" data-target="0" aria-live="polite">0</span></div>
+                <div class="stat-label" id="statCitiesLabel">Cities</div>
             </div>
-            <div class="stat-card" id="statYears">
-                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
-                <div class="stat-label">Years Speaking</div>
+            <div class="stat-card" id="statYears" aria-labelledby="statYearsLabel">
+                <div class="stat-value"><span class="counter" data-target="0" aria-live="polite">0</span></div>
+                <div class="stat-label" id="statYearsLabel">Years Speaking</div>
             </div>
         </div>
 
@@ -68,29 +77,28 @@
             </div>
         </div>
 
-        <div id="map"></div>
+        <div id="map" role="region" aria-label="Map of conference locations"></div>
 
-        <div id="yearChart" class="year-chart"></div>
+        <div id="yearChart" class="year-chart" role="navigation" aria-label="Filter by year"></div>
 
-        <table id="talksTable">
+        <table id="talksTable" aria-describedby="tableCaption">
+            <caption id="tableCaption" class="visually-hidden">List of conference talks</caption>
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Conference</th>
-                <th>Talk</th>
-                <th>When</th>
-                <th>Where</th>
+                <th scope="col">#</th>
+                <th scope="col">Conference</th>
+                <th scope="col">Talk</th>
+                <th scope="col">Date</th>
+                <th scope="col">Location</th>
             </tr>
             </thead>
             <tbody id="talks"></tbody>
         </table>
     </main>
-    <footer class="site-footer">
+    <footer class="site-footer" role="contentinfo">
         <small>© <span id="copyrightYear"></span> Grzegorz Piwowarek. All rights reserved.</small>
     </footer>
 </div>
-
-<br>
 
 <script type="module" src="./app.js"></script>
 
