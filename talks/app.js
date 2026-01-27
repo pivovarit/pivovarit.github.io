@@ -257,6 +257,174 @@ async function loadTalks() {
 let mapInstance = null;
 let markers = [];
 let activeInfoWindow = null;
+let countdownInterval = null;
+
+function animateCounter(element, target, duration = 1500) {
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (target - start) * easeOut);
+        element.textContent = current;
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            element.textContent = target;
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+async function updateStats() {
+    const data = await getData();
+    const selectedYear = getSelectedYear();
+    let talks = data.events;
+
+    const allYears = new Set(data.events.map((t) => t._year));
+
+    if (selectedYear != null) {
+        talks = talks.filter((t) => t._year === selectedYear);
+    }
+
+    const countries = new Set();
+    const cities = new Set();
+
+    for (const t of talks) {
+        const key = normalizeLocationId(t.location);
+        const location = key ? data.locations?.[key] : null;
+        if (location?.location) {
+            if (location.location.country) countries.add(location.location.country);
+            if (location.location.city) cities.add(location.location.city);
+        }
+    }
+
+    const statTalks = document.querySelector('#statTalks .counter');
+    const statCountries = document.querySelector('#statCountries .counter');
+    const statCities = document.querySelector('#statCities .counter');
+    const statYears = document.querySelector('#statYears .counter');
+
+    const talksLabel = document.querySelector('#statTalks .stat-label');
+    const countriesLabel = document.querySelector('#statCountries .stat-label');
+    const citiesLabel = document.querySelector('#statCities .stat-label');
+
+    if (selectedYear != null) {
+        if (talksLabel) talksLabel.textContent = `Talks in ${selectedYear}`;
+        if (countriesLabel) countriesLabel.textContent = `Countries in ${selectedYear}`;
+        if (citiesLabel) citiesLabel.textContent = `Cities in ${selectedYear}`;
+    } else {
+        if (talksLabel) talksLabel.textContent = 'Talks Given';
+        if (countriesLabel) countriesLabel.textContent = 'Countries';
+        if (citiesLabel) citiesLabel.textContent = 'Cities';
+    }
+
+    if (statTalks) animateCounter(statTalks, talks.length);
+    if (statCountries) animateCounter(statCountries, countries.size);
+    if (statCities) animateCounter(statCities, cities.size);
+    if (statYears) animateCounter(statYears, allYears.size);
+}
+
+async function updateCountdown() {
+    const data = await getData();
+    const todayTs = today().getTime();
+    const upcoming = data.events
+        .filter((t) => t._ts >= todayTs)
+        .sort((a, b) => a._ts - b._ts);
+
+    const section = document.getElementById('countdownSection');
+    if (!upcoming.length) {
+        section.style.display = 'none';
+        if (countdownInterval) clearInterval(countdownInterval);
+        return;
+    }
+
+    const next = upcoming[0];
+    section.style.display = 'block';
+    document.getElementById('nextTalkTitle').textContent = next.talk || '';
+    document.getElementById('nextTalkConf').textContent = next.conference || '';
+
+    function tick() {
+        const now = Date.now();
+        const diff = next._ts - now;
+
+        if (diff <= 0) {
+            document.getElementById('countdownDays').textContent = '00';
+            document.getElementById('countdownHours').textContent = '00';
+            document.getElementById('countdownMins').textContent = '00';
+            document.getElementById('countdownSecs').textContent = '00';
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('countdownDays').textContent = String(days).padStart(2, '0');
+        document.getElementById('countdownHours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('countdownMins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('countdownSecs').textContent = String(secs).padStart(2, '0');
+    }
+
+    tick();
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = setInterval(tick, 1000);
+}
+
+async function buildYearChart() {
+    const data = await getData();
+    const selectedYear = getSelectedYear();
+
+    const yearCounts = {};
+    for (const t of data.events) {
+        yearCounts[t._year] = (yearCounts[t._year] || 0) + 1;
+    }
+
+    const years = Object.keys(yearCounts).map(Number).sort((a, b) => a - b);
+    const maxCount = Math.max(...Object.values(yearCounts), 1);
+
+    const chart = document.getElementById('yearChart');
+    chart.innerHTML = '';
+
+    for (const year of years) {
+        const count = yearCounts[year];
+        const height = Math.max((count / maxCount) * 80, 8);
+
+        const bar = el('div', { className: `year-bar${selectedYear === year ? ' active' : ''}` });
+        const fill = el('div', { className: 'year-bar-fill' });
+        fill.style.height = '0px';
+        fill.dataset.count = count;
+        fill.dataset.targetHeight = `${height}px`;
+
+        const label = el('div', { className: 'year-bar-label', text: String(year) });
+
+        bar.appendChild(fill);
+        bar.appendChild(label);
+
+        bar.onclick = () => {
+            if (selectedYear === year) {
+                setSelectedYearInUrl(null);
+            } else {
+                setSelectedYearInUrl(year);
+            }
+            refreshUI();
+        };
+
+        chart.appendChild(bar);
+    }
+
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            document.querySelectorAll('.year-bar-fill').forEach((fill) => {
+                fill.style.height = fill.dataset.targetHeight;
+            });
+        }, 100);
+    });
+}
 
 function clearMarkers() {
     for (const m of markers) {
@@ -364,13 +532,21 @@ async function initMap() {
 window.initMap = initMap;
 
 async function refreshUI() {
-    await loadTalks();
+    await Promise.all([
+        loadTalks(),
+        updateStats(),
+        buildYearChart(),
+    ]);
     await initMap();
 }
 
 async function initPage() {
-    await buildYearPicker();
-    await loadTalks();
+    await Promise.all([
+        loadTalks(),
+        updateStats(),
+        updateCountdown(),
+        buildYearChart(),
+    ]);
 }
 
 document.addEventListener("DOMContentLoaded", initPage);

@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <title>Grzegorz Piwowarek</title>
     <link href="index.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-109711864-1"></script>
     <script>
@@ -20,21 +23,54 @@
 
 <body>
 
-<header class="toolbar">
-    <div class="toolbar-inner">
-        <div class="toolbar-title"></div>
-        <div class="toolbar-controls">
-            <label class="field" for="yearSelect">
-                <span class="field-label">Year</span>
-                <select id="yearSelect" class="select"></select>
-            </label>
-        </div>
-    </div>
-</header>
-
 <div>
     <main class="content">
+        <div id="statsDashboard" class="stats-dashboard">
+            <div class="stat-card" id="statTalks">
+                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
+                <div class="stat-label">Talks Given</div>
+            </div>
+            <div class="stat-card" id="statCountries">
+                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat-card" id="statCities">
+                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
+                <div class="stat-label">Cities</div>
+            </div>
+            <div class="stat-card" id="statYears">
+                <div class="stat-value"><span class="counter" data-target="0">0</span></div>
+                <div class="stat-label">Years Speaking</div>
+            </div>
+        </div>
+
+        <div id="countdownSection" class="countdown-section" style="display: none;">
+            <div class="countdown-label">Next Talk</div>
+            <div class="countdown-title" id="nextTalkTitle"></div>
+            <div class="countdown-conf" id="nextTalkConf"></div>
+            <div class="countdown-timer">
+                <div class="countdown-unit">
+                    <span id="countdownDays">00</span>
+                    <small>days</small>
+                </div>
+                <div class="countdown-unit">
+                    <span id="countdownHours">00</span>
+                    <small>hours</small>
+                </div>
+                <div class="countdown-unit">
+                    <span id="countdownMins">00</span>
+                    <small>mins</small>
+                </div>
+                <div class="countdown-unit">
+                    <span id="countdownSecs">00</span>
+                    <small>secs</small>
+                </div>
+            </div>
+        </div>
+
         <div id="map"></div>
+
+        <div id="yearChart" class="year-chart"></div>
 
         <table id="talksTable">
             <thead>
