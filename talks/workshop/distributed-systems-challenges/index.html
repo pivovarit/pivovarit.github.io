@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>reveal.js</title>
+    <title>Dancing with Uncertainty - Challenges of Distributed Systems</title>
 
     <link rel="stylesheet" href="dist/reset.css">
     <link rel="stylesheet" href="dist/reveal.css">
@@ -222,7 +222,7 @@
 
         <section>
             <h4>Network is unreliable</h4>
-            <small><small>as of 2025</small></small>
+            <small><small>as of 2026</small></small>
             <br>
             <img src="img/sharks.jpg" width="40%"/>
 
@@ -542,9 +542,9 @@
         <section>
             <h3>Imagine two coffee shops sharing an order system</h3>
             <ul>
-                <li>network failure</strong> → choice:
+                <li><strong>network failure</strong> → choice:
                     <em>keep taking orders (A)</em> or <em>pause until synced (C)</em></li>
-                <li>no failure</strong> → each order can be:
+                <li><strong>no failure</strong> → each order can be:
                     <em>fast but maybe outdated (L)</em> or <em>slow but always accurate (C)</em></li>
             </ul>
         </section>
@@ -559,7 +559,7 @@
 
         <section>
             <h3>temporal coupling</h3>
-            <h4>when all your services need to responsive at the same time</h4>
+            <h4>when all your services need to be responsive at the same time</h4>
         </section>
 
         <section>
@@ -921,7 +921,7 @@ void on(PaymentConfirmedEvent event) {
         </section>
 
         <section data-transition="fade">
-            <h4>Singe-Write with async propagation</h4>
+            <h4>Single-Write with async propagation</h4>
             <img src="img/cdc4.png" width="50%"/>
         </section>
 
