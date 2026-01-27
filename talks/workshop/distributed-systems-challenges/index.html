@@ -59,7 +59,6 @@
                         }
                     });
 
-                    // Failure phases (staggered timing)
                     const failureCycles = [47, 53, 59, 61, 67];
 
                     function getNodePos(node, time) {
@@ -89,7 +88,6 @@
                         // Calculate current node positions
                         const pos = nodes.map(n => getNodePos(n, t));
 
-                        // Draw links
                         links.forEach(([from, to, phase], i) => {
                             const opacity = getLinkOpacity(phase, t);
                             ctx.beginPath();
@@ -100,7 +98,6 @@
                             ctx.stroke();
                         });
 
-                        // Draw messages
                         messages.forEach(msg => {
                             const [from, to, phase] = links[msg.link];
                             const opacity = getLinkOpacity(phase, t);
@@ -121,11 +118,10 @@
                             if (msg.t > 1) { msg.t = 0; msg.dir *= -1; }
                         });
 
-                        // Draw nodes
                         pos.forEach(p => {
                             ctx.beginPath();
                             ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
-                            ctx.fillStyle = 'rgba(58, 160, 160, 0.95)';
+                            ctx.fillStyle = '#3aa0a0';
                             ctx.fill();
                             ctx.strokeStyle = '#1f5e5e';
                             ctx.lineWidth = 1.2;

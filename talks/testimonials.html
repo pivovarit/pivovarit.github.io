@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Testimonials from companies where Grzegorz Piwowarek delivered workshops and consulting services.">
+    <title>Testimonials - Grzegorz Piwowarek</title>
+    <link href="testimonials.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HB1PH886Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-3HB1PH886Z');
+    </script>
+</head>
+
+<body>
+
+<div>
+    <main class="content">
+        <header class="page-header">
+            <h1 class="page-title">Testimonials</h1>
+            <p class="page-subtitle">Feedback from workshops and consulting engagements</p>
+        </header>
+
+        <div id="testimonialsGrid" class="testimonials-grid" role="region" aria-label="Testimonials">
+        </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+        <small>&copy; <span id="copyrightYear"></span> Grzegorz Piwowarek. All rights reserved.</small>
+    </footer>
+</div>
+
+<script>
+    document.getElementById("copyrightYear").textContent = new Date().getFullYear();
+
+    const grid = document.getElementById('testimonialsGrid');
+    let testimonials = [];
+
+    function getInitials(name) {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
+
+    function renderTestimonials() {
+        if (testimonials.length === 0) {
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">&#128172;</div>
+                    <p>No testimonials found.</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = testimonials.map(t => `
+            <article class="testimonial-card">
+                <blockquote class="testimonial-quote">${t.quote}</blockquote>
+                <div class="testimonial-author">
+                    <div class="author-avatar">${getInitials(t.author)}</div>
+                    <div class="author-info">
+                        <p class="author-name">${t.author}</p>
+                        <p class="author-title">${t.title}, <span class="author-company">${t.company}</span></p>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+
+    fetch('testimonials.json')
+        .then(res => res.json())
+        .then(data => {
+            testimonials = data;
+            renderTestimonials();
+        })
+        .catch(err => {
+            console.error('Failed to load testimonials:', err);
+            grid.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">!</div>
+                    <p>Failed to load testimonials.</p>
+                </div>
+            `;
+        });
+</script>
+
+</body>
+</html>
