@@ -22,155 +22,122 @@
             <h4>Challenges of Distributed Systems</h4>
 
             <div style="margin-top: 30px;">
+                <canvas id="networkCanvas" width="550" height="300" style="max-width: 100%;"></canvas>
+                <script>
+                (function() {
+                    const canvas = document.getElementById('networkCanvas');
+                    const ctx = canvas.getContext('2d');
+                    const W = canvas.width, H = canvas.height;
 
-                <svg width="550" height="300" style="max-width: 100%;">
-                    <defs>
-                        <style>
-                            .node {
-                                fill: #3aa0a0;
-                                stroke: #1f5e5e;
-                                stroke-width: 1.2;
-                                fill-opacity: 0.95;
-                            }
-                            .link {
-                                stroke: #1f5e5e;
-                                stroke-width: 1.6;
-                                stroke-opacity: 0.45;
-                            }
-                            .msg {
-                                fill: #1f5e5e;
-                                fill-opacity: 0.9;
-                            }
+                    // Node definitions with drift parameters
+                    const nodes = [
+                        { x: 95, y: 65, dx: 2.3, dy: 1.9, px: 0.7, py: 1.1 },
+                        { x: 260, y: 50, dx: 1.8, dy: 2.4, px: 1.3, py: 0.6 },
+                        { x: 430, y: 95, dx: 2.1, dy: 1.7, px: 0.9, py: 1.4 },
+                        { x: 380, y: 230, dx: 1.6, dy: 2.2, px: 1.5, py: 0.8 },
+                        { x: 240, y: 245, dx: 2.5, dy: 1.5, px: 0.5, py: 1.2 },
+                        { x: 95, y: 200, dx: 1.9, dy: 2.0, px: 1.1, py: 0.9 }
+                    ];
 
-                            @keyframes p1 {0%,12%{opacity:1}17%,42%{opacity:1}47%,57%{opacity:0}62%,100%{opacity:1}}
-                            @keyframes p2 {0%,18%{opacity:1}23%,52%{opacity:1}57%,70%{opacity:0}75%,100%{opacity:1}}
-                            @keyframes p3 {0%,22%{opacity:1}27%,60%{opacity:1}65%,78%{opacity:0}83%,100%{opacity:1}}
-                            @keyframes p4 {0%,28%{opacity:1}33%,68%{opacity:1}73%,88%{opacity:0}93%,100%{opacity:1}}
-                            @keyframes p5 {0%,30%{opacity:1}34%,52%{opacity:1}57%,70%{opacity:0}75%,100%{opacity:1}}
+                    // Links between nodes [fromIdx, toIdx, failPhase]
+                    const links = [
+                        [0, 1, 0], [1, 2, 1], [2, 3, 2],
+                        [3, 4, 3], [4, 5, 4], [5, 0, 1], [1, 4, 2]
+                    ];
 
+                    // Messages: [linkIdx, progress (0-1), speed, direction (1 or -1)]
+                    const messages = [];
+                    links.forEach((_, i) => {
+                        const count = 2 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < count; j++) {
+                            messages.push({
+                                link: i,
+                                t: Math.random(),
+                                speed: 0.15 + Math.random() * 0.2,
+                                dir: Math.random() > 0.5 ? 1 : -1
+                            });
+                        }
+                    });
 
-                            .p1 { animation: p1 58s linear infinite; }
-                            .p2 { animation: p2 62s linear infinite; }
-                            .p3 { animation: p3 66s linear infinite; }
-                            .p4 { animation: p4 70s linear infinite; }
-                            .p5 { animation: p5 57s linear infinite; }
-                        </style>
-                    </defs>
+                    // Failure phases (staggered timing)
+                    const failureCycles = [47, 53, 59, 61, 67];
 
-                    <circle cx="95" cy="65" r="20" class="node"/>
-                    <circle cx="260" cy="50" r="20" class="node"/>
-                    <circle cx="430" cy="95" r="20" class="node"/>
-                    <circle cx="380" cy="230" r="20" class="node"/>
-                    <circle cx="240" cy="245" r="20" class="node"/>
-                    <circle cx="95" cy="200" r="20" class="node"/>
+                    function getNodePos(node, time) {
+                        return {
+                            x: node.x + Math.sin(time * node.px) * node.dx,
+                            y: node.y + Math.cos(time * node.py) * node.dy
+                        };
+                    }
 
-                    <path id="pAB" class="link p2" d="M115 62 L240 53"/>
-                    <path id="pBA" class="link p2" d="M240 53 L115 62"/>
+                    function getLinkOpacity(phase, time) {
+                        const cycle = failureCycles[phase % failureCycles.length];
+                        const t = (time * 0.5) % cycle;
+                        const failStart = cycle * 0.6;
+                        const failEnd = cycle * 0.85;
+                        if (t > failStart && t < failEnd) {
+                            const mid = (failStart + failEnd) / 2;
+                            const dist = Math.abs(t - mid) / ((failEnd - failStart) / 2);
+                            return 0.15 + dist * 0.3;
+                        }
+                        return 0.45;
+                    }
 
-                    <path id="pBC" class="link p1" d="M280 53 L410 86"/>
-                    <path id="pCB" class="link p1" d="M410 86 L280 53"/>
+                    function draw(time) {
+                        ctx.clearRect(0, 0, W, H);
+                        const t = time / 1000;
 
-                    <path id="pCD" class="link p2" d="M419 112 L391 213"/>
-                    <path id="pDC" class="link p2" d="M391 213 L419 112"/>
+                        // Calculate current node positions
+                        const pos = nodes.map(n => getNodePos(n, t));
 
-                    <path id="pDE" class="link p5" d="M360 230 L260 245"/>
-                    <path id="pED" class="link p5" d="M260 245 L360 230"/>
+                        // Draw links
+                        links.forEach(([from, to, phase], i) => {
+                            const opacity = getLinkOpacity(phase, t);
+                            ctx.beginPath();
+                            ctx.moveTo(pos[from].x, pos[from].y);
+                            ctx.lineTo(pos[to].x, pos[to].y);
+                            ctx.strokeStyle = `rgba(31, 94, 94, ${opacity})`;
+                            ctx.lineWidth = 1.6;
+                            ctx.stroke();
+                        });
 
-                    <path id="pEF" class="link p3" d="M220 241 L115 205"/>
-                    <path id="pFE" class="link p3" d="M115 205 L220 241"/>
+                        // Draw messages
+                        messages.forEach(msg => {
+                            const [from, to, phase] = links[msg.link];
+                            const opacity = getLinkOpacity(phase, t);
+                            if (opacity < 0.3) return; // Hide during failures
 
-                    <path id="pFA" class="link p1" d="M95 180 L95 85"/>
-                    <path id="pAF" class="link p1" d="M95 85 L95 180"/>
+                            const p1 = pos[from], p2 = pos[to];
+                            const progress = msg.dir > 0 ? msg.t : 1 - msg.t;
+                            const x = p1.x + (p2.x - p1.x) * progress;
+                            const y = p1.y + (p2.y - p1.y) * progress;
 
-                    <path id="pBE" class="link p4" d="M257 70 L243 225"/>
-                    <path id="pEB" class="link p4" d="M243 225 L257 70"/>
+                            ctx.beginPath();
+                            ctx.arc(x, y, 4, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(31, 94, 94, 0.9)`;
+                            ctx.fill();
 
-                    <circle class="msg p2" r="4">
-                        <animateMotion dur="2.6s" begin="0.1s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pAB"/>
-                        </animateMotion>
-                    </circle>
+                            // Update message position
+                            msg.t += msg.speed * 0.016;
+                            if (msg.t > 1) { msg.t = 0; msg.dir *= -1; }
+                        });
 
-                    <circle class="msg p2" r="4">
-                        <animateMotion dur="3.9s" begin="0.42s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pBA"/>
-                        </animateMotion>
-                    </circle>
+                        // Draw nodes
+                        pos.forEach(p => {
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
+                            ctx.fillStyle = 'rgba(58, 160, 160, 0.95)';
+                            ctx.fill();
+                            ctx.strokeStyle = '#1f5e5e';
+                            ctx.lineWidth = 1.2;
+                            ctx.stroke();
+                        });
 
-                    <circle class="msg p1" r="4">
-                        <animateMotion dur="2.8s" begin="0.75s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pBC"/>
-                        </animateMotion>
-                    </circle>
+                        requestAnimationFrame(draw);
+                    }
 
-                    <circle class="msg p1" r="4">
-                        <animateMotion dur="4.2s" begin="1.1s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pCB"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p2" r="4">
-                        <animateMotion dur="3.1s" begin="0.5s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pCD"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p2" r="4">
-                        <animateMotion dur="4.4s" begin="0.9s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pDC"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p5" r="4">
-                        <animateMotion dur="2.9s" begin="0.33s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pDE"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p5" r="4">
-                        <animateMotion dur="4.1s" begin="1.4s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pED"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p3" r="4">
-                        <animateMotion dur="3.0s" begin="0.2s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pEF"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p3" r="4">
-                        <animateMotion dur="4.5s" begin="1.0s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pFE"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p1" r="4">
-                        <animateMotion dur="3.3s" begin="0.67s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pFA"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p1" r="4">
-                        <animateMotion dur="4.6s" begin="1.3s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pAF"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p4" r="4">
-                        <animateMotion dur="2.7s" begin="0.48s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pBE"/>
-                        </animateMotion>
-                    </circle>
-
-                    <circle class="msg p4" r="4">
-                        <animateMotion dur="4.2s" begin="1.6s" repeatCount="indefinite" fill="freeze">
-                            <mpath href="#pEB"/>
-                        </animateMotion>
-                    </circle>
-
-                </svg>
-
+                    requestAnimationFrame(draw);
+                })();
+                </script>
             </div>
 
             <h4><a href="https://pivovarit.github.io">Grzegorz Piwowarek</a></h4>
@@ -1898,7 +1865,7 @@ message User {
             size: 100,
             toggleSpotlightOnMouseDown: false,
             spotlightOnKeyPressAndHold: true,
-            presentingCursor: 'none',
+            presentingCursor: 'default',
             initialPresentationMode: true,
             fadeInAndOut: 100,
             useAsPointer: false,
