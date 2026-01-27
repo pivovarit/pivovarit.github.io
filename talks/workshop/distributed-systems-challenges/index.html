@@ -515,10 +515,230 @@
 
         <section>
             <h3>Exactly-once <em>effect</em></h3>
-            <p>We can’t guarantee <em>exactly-once delivery</em>,</p>
+            <p>We can't guarantee <em>exactly-once delivery</em>,</p>
             <p>but we can design for <strong>exactly-once effect</strong> using idempotency.</p>
             <br>
             <pre><code>at-least-once delivery + idempotency = exactly-once</code></pre>
+        </section>
+
+        <!-- RESILIENCE PATTERNS SECTION -->
+        <section>
+            <h2>Resilience Patterns</h2>
+            <p>When failures are inevitable, design for graceful degradation.</p>
+        </section>
+
+        <section>
+            <h2>Circuit Breaker</h2>
+            <p>Prevent cascading failures by <strong>failing fast</strong>.</p>
+            <ul>
+                <li><strong>Closed</strong> → requests pass through normally</li>
+                <li><strong>Open</strong> → requests fail immediately (no calls to failing service)</li>
+                <li><strong>Half-Open</strong> → test if service recovered</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Circuit Breaker States</h3>
+            <svg width="500" height="200" style="max-width: 100%;">
+                <defs>
+                    <style>
+                        .cb-state { fill: #3aa0a0; stroke: #1f5e5e; stroke-width: 2; }
+                        .cb-arrow { stroke: #1f5e5e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+                        .cb-text { font-size: 14px; text-anchor: middle; }
+                    </style>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1f5e5e"/>
+                    </marker>
+                </defs>
+                <circle cx="80" cy="100" r="40" class="cb-state"/>
+                <text x="80" y="105" class="cb-text" fill="white">Closed</text>
+
+                <circle cx="250" cy="100" r="40" class="cb-state" style="fill: #cc5555;"/>
+                <text x="250" y="105" class="cb-text" fill="white">Open</text>
+
+                <circle cx="420" cy="100" r="40" class="cb-state" style="fill: #ccaa55;"/>
+                <text x="420" y="105" class="cb-text" fill="white">Half-Open</text>
+
+                <path class="cb-arrow" d="M125 85 Q165 50 205 85"/>
+                <path class="cb-arrow" d="M295 85 Q335 50 375 85"/>
+                <path class="cb-arrow" d="M375 115 Q335 150 295 115"/>
+                <path class="cb-arrow" d="M420 145 Q250 200 80 145"/>
+            </svg>
+            <small>Failures trigger opening; timeout triggers half-open; success closes.</small>
+        </section>
+
+        <section>
+            <h3>Circuit Breaker Example</h3>
+            <pre><code class="hljs language-java" data-trim>
+@CircuitBreaker(name = "paymentService",
+                fallbackMethod = "fallbackPayment")
+public Payment processPayment(Order order) {
+    return paymentClient.charge(order);
+}
+
+public Payment fallbackPayment(Order order, Exception e) {
+    return Payment.pending(order.id()); // graceful degradation
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Retry with Exponential Backoff</h2>
+            <p>Don't hammer a failing service - back off gradually.</p>
+            <pre><code data-trim>
+Attempt 1: wait 100ms
+Attempt 2: wait 200ms
+Attempt 3: wait 400ms
+Attempt 4: wait 800ms
+...
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Add Jitter</h3>
+            <p>Without jitter, retries synchronize → <strong>thundering herd</strong>.</p>
+            <pre><code class="hljs language-java" data-trim>
+long backoff = (long) Math.pow(2, attempt) * baseDelay;
+long jitter = random.nextLong(backoff / 2);
+long delay = backoff + jitter;
+            </code></pre>
+            <p>Jitter spreads retries over time, reducing load spikes.</p>
+        </section>
+
+        <section>
+            <h3>Thundering Herd Problem</h3>
+            <p>When many clients retry at the same time:</p>
+            <ul>
+                <li>Service just recovered</li>
+                <li>All clients retry simultaneously</li>
+                <li>Service overwhelmed again</li>
+                <li>Cycle repeats</li>
+            </ul>
+            <p><strong>Solution:</strong> exponential backoff + jitter</p>
+        </section>
+
+        <section>
+            <h2>Bulkhead Pattern</h2>
+            <p>Isolate failures to prevent total system collapse.</p>
+            <p>Named after ship compartments that contain flooding.</p>
+        </section>
+
+        <section>
+            <h3>Bulkhead Strategies</h3>
+            <ul>
+                <li><strong>Thread pool isolation</strong> → separate pools per dependency</li>
+                <li><strong>Semaphore isolation</strong> → limit concurrent calls</li>
+                <li><strong>Connection pool limits</strong> → prevent resource exhaustion</li>
+            </ul>
+            <pre><code class="hljs language-java" data-trim>
+@Bulkhead(name = "inventoryService",
+          type = Bulkhead.Type.THREADPOOL)
+public Inventory checkStock(String productId) {
+    return inventoryClient.getStock(productId);
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Timeout Strategies</h2>
+            <p>How long should you wait?</p>
+            <p class="fragment"><strong>It's harder than it looks.</strong></p>
+        </section>
+
+        <section>
+            <h3>Timeout Considerations</h3>
+            <ul>
+                <li>Too short → false failures, wasted work</li>
+                <li>Too long → resource exhaustion, cascading delays</li>
+                <li>p99 latency ≠ typical latency</li>
+                <li>Downstream timeouts should be shorter than upstream</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Timeout Budget</h3>
+            <pre><code data-trim>
+Client timeout: 3000ms
+  └─ Service A timeout: 2000ms
+       └─ Service B timeout: 1000ms
+            └─ Database timeout: 500ms
+            </code></pre>
+            <p>Each layer must complete within its budget.</p>
+        </section>
+
+        <section>
+            <h3>Combining Patterns</h3>
+            <pre><code class="hljs language-java" data-trim>
+@CircuitBreaker(name = "backend")
+@Bulkhead(name = "backend")
+@Retry(name = "backend")
+@TimeLimiter(name = "backend")
+public CompletableFuture&lt;Result&gt; callBackend() {
+    return backendClient.fetch();
+}
+            </code></pre>
+            <p>Order matters: Retry → CircuitBreaker → Bulkhead → TimeLimiter</p>
+        </section>
+
+        <!-- OBSERVABILITY SECTION -->
+        <section>
+            <h2>Observability</h2>
+            <p>You can't fix what you can't see.</p>
+        </section>
+
+        <section>
+            <h3>The Three Pillars</h3>
+            <ul>
+                <li><strong>Metrics</strong> → aggregated numerical data (counters, gauges, histograms)</li>
+                <li><strong>Logs</strong> → discrete events with context</li>
+                <li><strong>Traces</strong> → request flow across services</li>
+            </ul>
+            <p>You need all three for full visibility.</p>
+        </section>
+
+        <section>
+            <h2>Distributed Tracing</h2>
+            <p>Follow a request as it travels through multiple services.</p>
+        </section>
+
+        <section>
+            <h3>Trace Anatomy</h3>
+            <pre><code data-trim>
+Trace ID: abc-123
+├─ Span: API Gateway (50ms)
+│  └─ Span: OrderService (120ms)
+│     ├─ Span: InventoryService (45ms)
+│     └─ Span: PaymentService (60ms)
+│        └─ Span: Database (15ms)
+            </code></pre>
+            <p>Each span represents one unit of work.</p>
+        </section>
+
+        <section>
+            <h3>Correlation IDs</h3>
+            <p>Propagate a unique ID through all services:</p>
+            <pre><code class="hljs language-java" data-trim>
+// Incoming request
+String traceId = request.getHeader("X-Trace-Id");
+if (traceId == null) {
+    traceId = UUID.randomUUID().toString();
+}
+MDC.put("traceId", traceId);
+
+// Outgoing request
+httpClient.setHeader("X-Trace-Id", traceId);
+            </code></pre>
+            <p>Now you can correlate logs across all services.</p>
+        </section>
+
+        <section>
+            <h3>What Tracing Reveals</h3>
+            <ul>
+                <li>Which service is the bottleneck?</li>
+                <li>Where did the request fail?</li>
+                <li>What's the actual call graph?</li>
+                <li>Are there unexpected dependencies?</li>
+            </ul>
         </section>
 
         <section>
@@ -594,6 +814,96 @@
                 <li>So we let nodes respond now and sync later</li>
             </ul>
             <p>→ <strong>Fast now, consistent later</strong></p>
+        </section>
+
+        <!-- CONFLICT RESOLUTION SECTION -->
+        <section>
+            <h2>Conflict Resolution</h2>
+            <p>When replicas diverge, how do we reconcile?</p>
+        </section>
+
+        <section>
+            <h3>Last-Write-Wins (LWW)</h3>
+            <p>Simplest approach: highest timestamp wins.</p>
+            <pre><code data-trim>
+Node A: set("key", "A", t=100)
+Node B: set("key", "B", t=105)
+
+Result: "B" wins (higher timestamp)
+            </code></pre>
+            <p class="fragment"><strong>Problem:</strong> Relies on synchronized clocks. Data can be silently lost.</p>
+        </section>
+
+        <section>
+            <h3>Application-Level Resolution</h3>
+            <p>Let the application decide how to merge:</p>
+            <ul>
+                <li>Shopping cart → union of items</li>
+                <li>Counter → sum of increments</li>
+                <li>Document → show conflict to user</li>
+            </ul>
+            <p>Requires domain knowledge.</p>
+        </section>
+
+        <section>
+            <h2>CRDTs</h2>
+            <h4>Conflict-free Replicated Data Types</h4>
+            <p>Data structures that <strong>automatically merge</strong> without conflicts.</p>
+        </section>
+
+        <section>
+            <h3>CRDT Properties</h3>
+            <ul>
+                <li>Replicas can be updated independently</li>
+                <li>Updates always converge to the same state</li>
+                <li>No coordination required during updates</li>
+                <li>Mathematically guaranteed to be conflict-free</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>CRDT Examples</h3>
+            <ul>
+                <li><strong>G-Counter</strong> → grow-only counter (each node tracks its own count)</li>
+                <li><strong>PN-Counter</strong> → counter with increments and decrements</li>
+                <li><strong>G-Set</strong> → grow-only set (add-only)</li>
+                <li><strong>OR-Set</strong> → observed-remove set (add and remove)</li>
+                <li><strong>LWW-Register</strong> → last-writer-wins register</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>G-Counter Example</h3>
+            <pre><code data-trim>
+Node A: {A: 5, B: 0, C: 0}  // A incremented 5 times
+Node B: {A: 0, B: 3, C: 0}  // B incremented 3 times
+Node C: {A: 0, B: 0, C: 2}  // C incremented 2 times
+
+Merge: {A: 5, B: 3, C: 2}   // take max of each
+Total: 5 + 3 + 2 = 10
+            </code></pre>
+            <p>No conflicts possible - just take the maximum per node.</p>
+        </section>
+
+        <section>
+            <h3>CRDTs in Practice</h3>
+            <ul>
+                <li><strong>Redis</strong> → CRDT-based active-active replication</li>
+                <li><strong>Riak</strong> → built-in CRDT support</li>
+                <li><strong>Cassandra</strong> → counter columns</li>
+                <li><strong>Collaborative editing</strong> → Google Docs, Figma</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>CRDT Trade-offs</h3>
+            <ul>
+                <li>✅ Always available, always convergent</li>
+                <li>✅ No coordination overhead</li>
+                <li>❌ Limited to specific data structures</li>
+                <li>❌ Can grow unbounded (tombstones, version vectors)</li>
+                <li>❌ Eventual consistency only</li>
+            </ul>
         </section>
 
         <section data-transition="fade">
@@ -883,10 +1193,150 @@ void on(PaymentConfirmedEvent event) {
             <h3>Summary</h3>
             <ul>
                 <li>Each node has its own imperfect sense of time</li>
-                <li>We can’t rely on timestamps for ordering</li>
+                <li>We can't rely on timestamps for ordering</li>
                 <li>We use <strong>logical or causal time</strong> to reason safely</li>
             </ul>
             <p>Time is relative - especially in distributed systems 🌌</p>
+        </section>
+
+        <!-- CONSENSUS & COORDINATION SECTION -->
+        <section>
+            <h2>Consensus & Coordination</h2>
+            <p>Getting distributed nodes to agree on something.</p>
+        </section>
+
+        <section>
+            <h2>Leader Election</h2>
+            <p>Many distributed systems need a single leader:</p>
+            <ul>
+                <li>Database primary replica</li>
+                <li>Distributed lock manager</li>
+                <li>Kafka partition leader</li>
+                <li>Scheduler coordination</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Why Leader Election Is Hard</h3>
+            <ul>
+                <li>Network partitions → multiple nodes think they're leader</li>
+                <li>Clock skew → lease expiration disagreements</li>
+                <li>Process pauses → GC, VM migrations</li>
+                <li>Failures during election → stuck state</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Consensus Algorithms</h3>
+            <ul>
+                <li><strong>Paxos</strong> → the original (and notoriously hard to understand)</li>
+                <li><strong>Raft</strong> → designed for understandability</li>
+                <li><strong>Zab</strong> → ZooKeeper's protocol</li>
+            </ul>
+            <p>All solve the same fundamental problem: agreement despite failures.</p>
+        </section>
+
+        <section>
+            <h3>Raft in a Nutshell</h3>
+            <ol>
+                <li>Nodes start as <strong>followers</strong></li>
+                <li>If no heartbeat from leader → become <strong>candidate</strong></li>
+                <li>Request votes from other nodes</li>
+                <li>Majority votes → become <strong>leader</strong></li>
+                <li>Leader replicates log entries to followers</li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>Practical Leader Election</h3>
+            <p>Don't implement consensus yourself. Use:</p>
+            <ul>
+                <li><strong>ZooKeeper</strong> → battle-tested, ephemeral nodes</li>
+                <li><strong>etcd</strong> → Kubernetes' choice, Raft-based</li>
+                <li><strong>Consul</strong> → service mesh + KV store</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Distributed Locking</h2>
+            <p>Mutual exclusion across multiple nodes.</p>
+            <p class="fragment">Spoiler: it's <strong>really hard</strong> to get right.</p>
+        </section>
+
+        <section>
+            <h3>The Redlock Controversy</h3>
+            <p>Redis proposed Redlock algorithm for distributed locks.</p>
+            <p class="fragment">Martin Kleppmann (DDIA author) argued it's <strong>unsafe</strong>.</p>
+            <ul class="fragment">
+                <li>Clock assumptions are unrealistic</li>
+                <li>Process pauses can violate safety</li>
+                <li>GC can cause lock to expire while holding it</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Fencing Tokens</h3>
+            <p>Safer approach: use monotonically increasing tokens.</p>
+            <pre><code data-trim>
+Lock acquired with token: 42
+
+// Later, when using the lock:
+storage.write(data, fencingToken=42)
+
+// Storage rejects writes with old tokens
+if (requestToken < currentToken) reject();
+            </code></pre>
+            <p>The resource itself validates the lock.</p>
+        </section>
+
+        <section>
+            <h3>When You Need Distributed Locks</h3>
+            <ul>
+                <li><strong>Efficiency</strong> → prevent duplicate work (lock loss is OK)</li>
+                <li><strong>Correctness</strong> → prevent data corruption (lock loss is NOT OK)</li>
+            </ul>
+            <p class="fragment">For correctness, use proper consensus (ZooKeeper, etcd) or fencing tokens.</p>
+        </section>
+
+        <section>
+            <h2>Split Brain Problem</h2>
+            <p>When network partition creates two groups, each thinking they're the authority.</p>
+        </section>
+
+        <section>
+            <h3>Split Brain Scenario</h3>
+            <pre><code data-trim>
+         [Network Partition]
+              |       |
+    +---------+     +---------+
+    | Node A  |     | Node C  |
+    | Node B  |     | Node D  |
+    +---------+     +---------+
+    "We're the     "We're the
+     cluster!"      cluster!"
+            </code></pre>
+            <p>Both sides accept writes → data divergence.</p>
+        </section>
+
+        <section>
+            <h3>Preventing Split Brain</h3>
+            <ul>
+                <li><strong>Quorum</strong> → require majority (N/2 + 1) for decisions</li>
+                <li><strong>STONITH</strong> → "Shoot The Other Node In The Head" (force restart)</li>
+                <li><strong>Fencing</strong> → isolate the minority partition</li>
+                <li><strong>Witness node</strong> → odd number of voters</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Quorum Math</h3>
+            <pre><code data-trim>
+3 nodes: need 2 to agree (can lose 1)
+5 nodes: need 3 to agree (can lose 2)
+7 nodes: need 4 to agree (can lose 3)
+            </code></pre>
+            <p>Only one partition can ever have a majority.</p>
+            <p><small>This is why ZooKeeper/etcd recommend odd numbers.</small></p>
         </section>
 
         <section>
@@ -1228,7 +1678,191 @@ T2: COMMIT;
             </ul>
         </section>
 
+        <!-- DATA MANAGEMENT SECTION -->
+        <section>
+            <h2>Data Partitioning</h2>
+            <p>When one database isn't enough.</p>
+        </section>
 
+        <section>
+            <h3>Sharding Strategies</h3>
+            <ul>
+                <li><strong>Range-based</strong> → partition by key ranges (A-M, N-Z)</li>
+                <li><strong>Hash-based</strong> → hash(key) mod N</li>
+                <li><strong>Directory-based</strong> → lookup table maps keys to shards</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Range-Based Sharding</h3>
+            <pre><code data-trim>
+Shard 1: users A-F
+Shard 2: users G-M
+Shard 3: users N-S
+Shard 4: users T-Z
+            </code></pre>
+            <ul>
+                <li>✅ Range queries are efficient</li>
+                <li>❌ Hot spots if data isn't uniform ("Smith" problem)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Hash-Based Sharding</h3>
+            <pre><code data-trim>
+shard = hash(userId) % numShards
+
+hash("alice") % 4 = 2  → Shard 2
+hash("bob")   % 4 = 0  → Shard 0
+hash("carol") % 4 = 2  → Shard 2
+            </code></pre>
+            <ul>
+                <li>✅ Even distribution</li>
+                <li>❌ Range queries require scatter-gather</li>
+                <li>❌ Adding shards = rehash everything</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Consistent Hashing</h3>
+            <p>Minimize data movement when adding/removing nodes.</p>
+            <pre><code data-trim>
+Ring: 0 ────────────────────── 2^32
+      │    │         │    │
+    Node A  Key1   Node B  Key2
+            </code></pre>
+            <p>Keys move to the next node on the ring.</p>
+            <p>Adding a node only affects its neighbors.</p>
+        </section>
+
+        <section>
+            <h2>Rebalancing</h2>
+            <p>What happens when you add or remove nodes?</p>
+        </section>
+
+        <section>
+            <h3>Rebalancing Challenges</h3>
+            <ul>
+                <li>Data must move between nodes</li>
+                <li>System should remain available during rebalancing</li>
+                <li>Rebalancing consumes network and disk I/O</li>
+                <li>Hot spots can form during migration</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Rebalancing Strategies</h3>
+            <ul>
+                <li><strong>Fixed partitions</strong> → more partitions than nodes, just reassign</li>
+                <li><strong>Dynamic partitioning</strong> → split/merge partitions as needed</li>
+                <li><strong>Proportional partitioning</strong> → partitions per node scales with data</li>
+            </ul>
+            <p><small>Kafka, Cassandra, MongoDB each have different approaches.</small></p>
+        </section>
+
+        <section>
+            <h3>Cross-Shard Queries</h3>
+            <p>The hardest problem in sharding:</p>
+            <pre><code data-trim>
+SELECT * FROM orders
+WHERE user_id = 123
+AND product_category = 'electronics'
+            </code></pre>
+            <p>If sharded by user_id, category queries hit all shards.</p>
+            <p><strong>Solution:</strong> denormalize, or use secondary indexes.</p>
+        </section>
+
+        <!-- API EVOLUTION SECTION -->
+        <section>
+            <h2>API Evolution</h2>
+            <p>How to change APIs without breaking consumers.</p>
+        </section>
+
+        <section>
+            <h3>The Challenge</h3>
+            <ul>
+                <li>Multiple services with independent deployment</li>
+                <li>Can't update all consumers simultaneously</li>
+                <li>Old and new versions must coexist</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Versioning Strategies</h3>
+            <ul>
+                <li><strong>URL versioning</strong> → /api/v1/users, /api/v2/users</li>
+                <li><strong>Header versioning</strong> → Accept: application/vnd.api.v2+json</li>
+                <li><strong>Query parameter</strong> → /api/users?version=2</li>
+            </ul>
+            <p>Each has trade-offs in discoverability and complexity.</p>
+        </section>
+
+        <section>
+            <h3>Backward Compatibility</h3>
+            <p>New version can read old data:</p>
+            <pre><code data-trim>
+// Old format
+{ "name": "Alice" }
+
+// New code handles both
+String fullName = json.has("fullName")
+    ? json.getString("fullName")
+    : json.getString("name");  // fallback
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Forward Compatibility</h3>
+            <p>Old version can read new data:</p>
+            <pre><code data-trim>
+// New format with extra field
+{ "name": "Alice", "middleName": "Marie" }
+
+// Old code ignores unknown fields
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User {
+    private String name;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Schema Evolution</h3>
+            <p>Binary formats with built-in compatibility:</p>
+            <ul>
+                <li><strong>Avro</strong> → schema registry, reader/writer schemas</li>
+                <li><strong>Protocol Buffers</strong> → field numbers, optional fields</li>
+                <li><strong>Thrift</strong> → similar to Protobuf</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Protobuf Evolution Rules</h3>
+            <pre><code data-trim>
+message User {
+  string name = 1;
+  // int32 age = 2;        // removed - don't reuse!
+  string email = 3;        // added - new field number
+  optional string phone = 4; // optional for compatibility
+}
+            </code></pre>
+            <ul>
+                <li>Never change field numbers</li>
+                <li>Never reuse deleted field numbers</li>
+                <li>Add fields as optional or with defaults</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Consumer-Driven Contracts</h3>
+            <p>Let consumers define what they need:</p>
+            <ul>
+                <li>Consumers write contract tests</li>
+                <li>Provider verifies contracts before release</li>
+                <li>Tools: Pact, Spring Cloud Contract</li>
+            </ul>
+            <p>Prevents accidental breaking changes.</p>
+        </section>
 
         <section>
             <blockquote>
