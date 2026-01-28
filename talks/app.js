@@ -88,8 +88,6 @@ function makeHeaderRow(label, className = "") {
     const tr = el("tr", { className });
     const td = el("td", { text: label });
     td.colSpan = 5;
-    td.style.background = "#fff";
-    td.style.textAlign = "center";
     tr.appendChild(td);
     return tr;
 }

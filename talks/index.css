@@ -3,8 +3,8 @@ body {
   line-height: 1.5;
   margin: 0;
   padding: 0;
-  background: #f8f8f8;
-  color: #666666;
+  background: #1a1a2e;
+  color: #a0a0b0;
   min-height: 100vh;
 }
 
@@ -15,15 +15,40 @@ a {
 }
 
 a:hover {
-  color: #b9301c;
+  color: #ff6b5b;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.page-header {
+  text-align: center;
+  padding: 50px 20px 40px;
+}
+
+.page-title {
+  font-family: "Roboto Slab", serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: #ffffff;
+  margin: 0 0 12px;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #6a6a7a;
+  margin: 0;
 }
 
 #map {
   margin: 10px auto;
   height: 600px;
   max-width: 1200px;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
+  border: 1px solid #2a2a40;
+  border-radius: 8px;
 }
 
 #talksTable {
@@ -33,9 +58,9 @@ a:hover {
   width: 100%;
   max-width: 1200px;
   margin: 30px auto;
-  background: #fff;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 30px rgba(0,0,0,0.04);
+  background: #16162a;
+  border-radius: 8px;
+  border: 1px solid #2a2a40;
   overflow: hidden;
 }
 
@@ -45,7 +70,7 @@ a:hover {
   font-weight: 300;
   margin: .5em 0 .75em;
   text-align: center;
-  color: #333333;
+  color: #ffffff;
 }
 
 #talksTable th,
@@ -54,7 +79,7 @@ a:hover {
   text-align: left;
   word-wrap: break-word;
   vertical-align: middle;
-  border-right: 1px solid #e8e8e8;
+  border-right: 1px solid #2a2a40;
 }
 
 #talksTable th:last-child,
@@ -89,7 +114,7 @@ a:hover {
 }
 
 #talksTable thead {
-  background: linear-gradient(135deg, #e25440 0%, #d4453a 100%);
+  background: linear-gradient(135deg, #e25440 0%, #ff6b5b 100%);
 }
 
 #talksTable th {
@@ -103,13 +128,13 @@ a:hover {
 }
 
 #talksTable tbody tr {
-  background: #fff;
-  border-bottom: 1px solid #e0e0e0;
+  background: #16162a;
+  border-bottom: 1px solid #2a2a40;
   transition: all 0.2s ease;
 }
 
 #talksTable tbody tr:nth-child(even) {
-  background: #fafafa;
+  background: #1a1a2e;
 }
 
 #talksTable tbody tr:last-child {
@@ -117,16 +142,16 @@ a:hover {
 }
 
 #talksTable tbody tr:hover {
-  background: linear-gradient(135deg, #fdf6f5 0%, #fff 100%);
+  background: #1f1f35;
   transform: scale(1.002);
 }
 
 #talksTable tbody tr:hover td {
-  color: #333;
+  color: #d0d0e0;
 }
 
 #talksTable tbody tr.year-header {
-  background: #f8f8f8 !important;
+  background: #1a1a2e !important;
   border-top: 3px solid #e25440;
   transform: none;
 }
@@ -147,10 +172,10 @@ a:hover {
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #999;
+  color: #6a6a7a;
   padding: 0.6em 1em;
   text-align: center;
-  background: #fafafa;
+  background: #1a1a2e;
 }
 
 .seq {
@@ -162,7 +187,7 @@ a:hover {
 
 #talksTable td:nth-child(2) a {
   font-weight: 600;
-  color: #333;
+  color: #ffffff;
   transition: color 0.2s;
 }
 
@@ -171,26 +196,26 @@ a:hover {
 }
 
 #talksTable td:nth-child(3) span {
-  color: #555;
+  color: #d0d0e0;
   line-height: 1.4;
 }
 
 #talksTable td:nth-child(4) {
   font-size: 0.9em;
-  color: #888;
+  color: #6a6a7a;
   font-variant-numeric: tabular-nums;
 }
 
 .venue {
   font-size: 0.8em;
-  color: #999999;
+  color: #6a6a7a;
   margin-bottom: 3px;
 }
 
 .city {
   font-weight: 600;
   font-size: 0.9em;
-  color: #333333;
+  color: #ffffff;
 }
 
 .city.online {
@@ -202,8 +227,7 @@ a:hover {
 @media screen and (max-width: 768px) {
   #talksTable {
     margin: 20px 10px;
-    box-shadow: none;
-    border: 1px solid #eee;
+    border: 1px solid #2a2a40;
   }
 
   #talksTable thead {
@@ -214,7 +238,7 @@ a:hover {
     display: block;
     margin-bottom: 0;
     padding: 1em;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #2a2a40;
   }
 
   #talksTable tbody tr:hover {
@@ -251,19 +275,19 @@ a:hover {
   #talksTable td:nth-child(3) span {
     font-size: 1em;
     font-weight: 600;
-    color: #333;
+    color: #ffffff;
   }
 
   #talksTable td:nth-child(4) {
     order: 3;
     font-size: 0.8em;
-    color: #999;
+    color: #6a6a7a;
   }
 
   #talksTable td:nth-child(5) {
     order: 4;
     padding-top: 0.5em;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid #2a2a40;
     margin-top: 0.5em;
   }
 }
@@ -281,7 +305,7 @@ table a {
 }
 
 table a:hover {
-  color: #b9301c;
+  color: #ff6b5b;
 }
 
 div {
@@ -293,9 +317,9 @@ div {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255,255,255,0.95);
+  background: rgba(26,26,46,0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #2a2a40;
 }
 
 .toolbar-inner {
@@ -312,7 +336,7 @@ div {
   font-weight: 300;
   letter-spacing: 0.5px;
   margin-right: auto;
-  color: #333333;
+  color: #ffffff;
 }
 
 .toolbar-controls {
@@ -326,15 +350,15 @@ div {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border: 1px solid #dddddd;
-  border-radius: 3px;
-  background: #fff;
+  border: 1px solid #2a2a40;
+  border-radius: 6px;
+  background: #16162a;
 }
 
 .field-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #999999;
+  color: #6a6a7a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -348,7 +372,7 @@ div {
   outline: none;
   cursor: pointer;
   min-width: 120px;
-  color: #333333;
+  color: #ffffff;
 }
 
 .field:focus-within {
@@ -371,7 +395,7 @@ div {
   align-items: center;
   justify-content: center;
   padding: 24px 12px;
-  color: #c7c7c7;
+  color: #4a4a5a;
   font-size: 0.8em;
 }
 
@@ -385,21 +409,22 @@ div {
 }
 
 .stat-card {
-  background: #fff;
-  border: 1px solid #eeeeee;
-  border-radius: 3px;
+  background: #16162a;
+  border: 1px solid #2a2a40;
+  border-radius: 8px;
   padding: 24px 16px;
   text-align: center;
   transform: translateY(20px);
   opacity: 0;
   animation: slideUp 0.5s ease forwards;
   position: relative;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  border-color: #3a3a50;
 }
 
 .stat-card:nth-child(1) { animation-delay: 0.1s; }
@@ -419,7 +444,7 @@ div {
   left: 0;
   right: 0;
   height: 3px;
-  border-radius: 0 0 3px 3px;
+  border-radius: 0 0 8px 8px;
 }
 
 .stat-card:nth-child(1)::after { background: #e25440; }
@@ -445,7 +470,7 @@ div {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #999999;
+  color: #6a6a7a;
   margin-top: 12px;
 }
 
@@ -453,9 +478,9 @@ div {
   max-width: 700px;
   margin: 30px auto;
   padding: 30px;
-  background: #fff;
-  border: 1px solid #eeeeee;
-  border-radius: 3px;
+  background: #16162a;
+  border: 1px solid #2a2a40;
+  border-radius: 8px;
   text-align: center;
   position: relative;
 }
@@ -467,14 +492,15 @@ div {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #e25440, #5ba4e5);
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(90deg, #e25440, #ff6b5b);
 }
 
 .countdown-label {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #c7c7c7;
+  color: #6a6a7a;
   margin-bottom: 8px;
 }
 
@@ -482,13 +508,13 @@ div {
   font-family: "Roboto Slab", serif;
   font-size: 1.4rem;
   font-weight: 300;
-  color: #333333;
+  color: #ffffff;
   margin-bottom: 4px;
 }
 
 .countdown-conf {
   font-size: 0.9rem;
-  color: #999999;
+  color: #6a6a7a;
   margin-bottom: 24px;
 }
 
@@ -515,7 +541,7 @@ div {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #c7c7c7;
+  color: #6a6a7a;
   margin-top: 4px;
 }
 
@@ -528,9 +554,9 @@ div {
   justify-content: center;
   gap: 8px;
   min-height: 140px;
-  background: #fff;
-  border: 1px solid #eeeeee;
-  border-radius: 3px;
+  background: #16162a;
+  border: 1px solid #2a2a40;
+  border-radius: 8px;
 }
 
 .year-bar {
@@ -548,14 +574,14 @@ div {
 .year-bar-fill {
   width: 36px;
   background: #e25440;
-  border-radius: 3px 3px 0 0;
+  border-radius: 6px 6px 0 0;
   transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.3s;
   position: relative;
   min-height: 4px;
 }
 
 .year-bar:hover .year-bar-fill {
-  background: #b9301c;
+  background: #ff6b5b;
 }
 
 .year-bar-fill::after {
@@ -577,7 +603,7 @@ div {
 
 .year-bar-label {
   font-size: 0.7rem;
-  color: #999999;
+  color: #6a6a7a;
   margin-top: 8px;
   font-weight: 600;
 }
@@ -647,7 +673,21 @@ table tbody tr:nth-child(10) { animation-delay: 0.2s; }
   }
 }
 
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+}
+
 @media (max-width: 480px) {
+  .page-header {
+    padding: 30px 16px 20px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
   .stats-dashboard {
     grid-template-columns: 1fr 1fr;
     gap: 10px;
@@ -684,7 +724,7 @@ table tbody tr:nth-child(10) { animation-delay: 0.2s; }
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: #999;
+  color: #6a6a7a;
   font-size: 0.9rem;
   gap: 16px;
 }
@@ -692,7 +732,7 @@ table tbody tr:nth-child(10) { animation-delay: 0.2s; }
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #eee;
+  border: 3px solid #2a2a40;
   border-top-color: #e25440;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -715,7 +755,7 @@ table tbody tr:nth-child(10) { animation-delay: 0.2s; }
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #fef2f2;
+  background: rgba(226, 84, 64, 0.15);
   color: #e25440;
   font-size: 1.5rem;
   font-weight: 700;
@@ -726,24 +766,25 @@ table tbody tr:nth-child(10) { animation-delay: 0.2s; }
 }
 
 .error-message {
-  color: #666;
+  color: #a0a0b0;
   margin: 0 0 20px;
 }
 
 .retry-btn {
-  background: #e25440;
+  background: linear-gradient(135deg, #e25440, #ff6b5b);
   color: #fff;
   border: none;
   padding: 10px 24px;
-  border-radius: 3px;
+  border-radius: 6px;
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .retry-btn:hover {
-  background: #b9301c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(226, 84, 64, 0.4);
 }
 
 .retry-btn:focus {
