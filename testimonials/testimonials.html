@@ -79,6 +79,7 @@
                         <p class="author-title">${t.title}, <span class="author-company">${t.company}</span></p>
                     </div>
                 </div>
+                ${t.tags && t.tags.length ? `<div class="testimonial-tags">${t.tags.map(tag => `<span class="testimonial-tag">${tag}</span>`).join('')}</div>` : ''}
             </article>
         `).join('');
     }
