@@ -113,13 +113,14 @@
             return;
         }
         opinionCount.textContent = `(${opinions.length})`;
-        opinionsContainer.innerHTML = opinions.map(o => `
+        opinionsContainer.innerHTML = opinions.map((o, i) => `
             <article class="opinion-card">
                 <div class="opinion-meta">
                     <span class="opinion-workshop">${o.workshop}</span>
                     <span class="opinion-date">${o.date}</span>
                 </div>
-                <p class="opinion-text">${o.opinion}</p>
+                <p class="opinion-text" data-translated="${o.opinion}"${o.original ? ` data-original="${o.original.replace(/"/g, '&quot;')}"` : ''}>${o.opinion}</p>
+                ${o.original ? `<button class="lang-toggle-btn" data-index="${i}" aria-pressed="false">translated</button>` : ''}
             </article>
         `).join('') + '<button class="scroll-top-btn" aria-label="Scroll to top">↑ Back to top</button>';
     }
@@ -127,6 +128,21 @@
     opinionsContainer.addEventListener('click', (e) => {
         if (e.target.classList.contains('scroll-top-btn')) {
             opinionsContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (e.target.classList.contains('lang-toggle-btn')) {
+            const btn = e.target;
+            const card = btn.closest('.opinion-card');
+            const textEl = card.querySelector('.opinion-text');
+            const isShowingOriginal = btn.getAttribute('aria-pressed') === 'true';
+            if (isShowingOriginal) {
+                textEl.textContent = textEl.dataset.translated;
+                btn.textContent = 'translated';
+                btn.setAttribute('aria-pressed', 'false');
+            } else {
+                textEl.textContent = textEl.dataset.original;
+                btn.textContent = 'original';
+                btn.setAttribute('aria-pressed', 'true');
+            }
         }
     });
 

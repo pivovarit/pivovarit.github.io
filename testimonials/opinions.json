@@ -17,7 +17,8 @@
   {
     "workshop": "Distributed Systems Patterns",
     "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable.",
+    "original": "Warsztat dostarczył głębokich spostrzeżeń na temat równoległych strumieni..."
   },
   {
     "workshop": "Advanced Java Concurrency",
