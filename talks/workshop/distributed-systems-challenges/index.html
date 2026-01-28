@@ -29,23 +29,20 @@
                     const ctx = canvas.getContext('2d');
                     const W = canvas.width, H = canvas.height;
 
-                    // Node definitions with drift parameters
                     const nodes = [
-                        { x: 95, y: 65, dx: 2.3, dy: 1.9, px: 0.7, py: 1.1 },
-                        { x: 260, y: 50, dx: 1.8, dy: 2.4, px: 1.3, py: 0.6 },
-                        { x: 430, y: 95, dx: 2.1, dy: 1.7, px: 0.9, py: 1.4 },
-                        { x: 380, y: 230, dx: 1.6, dy: 2.2, px: 1.5, py: 0.8 },
-                        { x: 240, y: 245, dx: 2.5, dy: 1.5, px: 0.5, py: 1.2 },
-                        { x: 95, y: 200, dx: 1.9, dy: 2.0, px: 1.1, py: 0.9 }
+                        { x: 95, y: 65, dx: 5.0, dy: 4.2, px: 0.7, py: 1.1 },
+                        { x: 260, y: 50, dx: 4.0, dy: 5.2, px: 1.3, py: 0.6 },
+                        { x: 430, y: 95, dx: 4.6, dy: 3.8, px: 0.9, py: 1.4 },
+                        { x: 380, y: 230, dx: 3.6, dy: 4.8, px: 1.5, py: 0.8 },
+                        { x: 240, y: 245, dx: 5.5, dy: 3.4, px: 0.5, py: 1.2 },
+                        { x: 95, y: 200, dx: 4.2, dy: 4.4, px: 1.1, py: 0.9 }
                     ];
 
-                    // Links between nodes [fromIdx, toIdx, failPhase]
                     const links = [
                         [0, 1, 0], [1, 2, 1], [2, 3, 2],
                         [3, 4, 3], [4, 5, 4], [5, 0, 1], [1, 4, 2]
                     ];
 
-                    // Messages: [linkIdx, progress (0-1), speed, direction (1 or -1)]
                     const messages = [];
                     links.forEach((_, i) => {
                         const count = 2 + Math.floor(Math.random() * 2);
@@ -85,7 +82,6 @@
                         ctx.clearRect(0, 0, W, H);
                         const t = time / 1000;
 
-                        // Calculate current node positions
                         const pos = nodes.map(n => getNodePos(n, t));
 
                         links.forEach(([from, to, phase], i) => {
@@ -113,7 +109,6 @@
                             ctx.fillStyle = `rgba(31, 94, 94, 0.9)`;
                             ctx.fill();
 
-                            // Update message position
                             msg.t += msg.speed * 0.016;
                             if (msg.t > 1) { msg.t = 0; msg.dir *= -1; }
                         });
@@ -202,46 +197,187 @@
             <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
                 <em>Consistency</em> or <em>Availability</em>.</p>
 
-            <svg width="500" height="200" style="max-width: 100%;">
-                <defs>
-                    <style>
-                        .node {
-                            fill: #3aa0a0;
-                            stroke: #1f5e5e;
-                            stroke-width: 1.4;
-                            fill-opacity: 0.95;
+            <canvas id="partitionCanvas" width="550" height="220" style="max-width: 100%;"></canvas>
+            <script>
+            (function() {
+                const canvas = document.getElementById('partitionCanvas');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width, H = canvas.height;
+
+                const nodeA = { x: 100, y: 100, label: 'A', value: 42 };
+                const nodeB = { x: 450, y: 100, label: 'B', value: 42 };
+                const messages = [];
+
+                let partitioned = false;
+                let partitionTimer = 0;
+                const partitionDuration = 320;
+                const normalDuration = 280;
+
+                function spawnSyncMessage(from, to) {
+                    messages.push({
+                        from, to,
+                        value: from.value,
+                        progress: 0,
+                        speed: 0.004 + Math.random() * 0.001,
+                        opacity: 1,
+                        blocked: false
+                    });
+                }
+
+                // Increment value on node A periodically
+                setInterval(() => {
+                    nodeA.value++;
+                    if (!partitioned) spawnSyncMessage(nodeA, nodeB);
+                }, 1400);
+
+                function draw(time) {
+                    ctx.clearRect(0, 0, W, H);
+
+                    // Update partition state
+                    partitionTimer++;
+                    if (!partitioned && partitionTimer > normalDuration) {
+                        partitioned = true;
+                        partitionTimer = 0;
+                    } else if (partitioned && partitionTimer > partitionDuration) {
+                        partitioned = false;
+                        partitionTimer = 0;
+                    }
+
+                    const midX = W / 2;
+                    const valuesMatch = nodeA.value === nodeB.value;
+
+                    // Draw connection line
+                    if (partitioned) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x + 32, nodeA.y);
+                        ctx.lineTo(midX - 35, nodeA.y);
+                        ctx.strokeStyle = 'rgba(31, 94, 94, 0.35)';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.moveTo(midX + 35, nodeB.y);
+                        ctx.lineTo(nodeB.x - 32, nodeB.y);
+                        ctx.stroke();
+
+                        // Lightning bolt
+                        ctx.save();
+                        ctx.strokeStyle = '#b45050';
+                        ctx.lineWidth = 2.5;
+                        ctx.beginPath();
+                        ctx.moveTo(midX - 10, nodeA.y - 16);
+                        ctx.lineTo(midX + 3, nodeA.y - 2);
+                        ctx.lineTo(midX - 5, nodeA.y + 2);
+                        ctx.lineTo(midX + 10, nodeA.y + 16);
+                        ctx.stroke();
+                        ctx.restore();
+                    } else {
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x + 32, nodeA.y);
+                        ctx.lineTo(nodeB.x - 32, nodeB.y);
+                        ctx.strokeStyle = 'rgba(31, 94, 94, 0.45)';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+
+                    // Update and draw messages
+                    for (let i = messages.length - 1; i >= 0; i--) {
+                        const m = messages[i];
+                        const fromX = m.from.x + 32;
+                        const toX = m.to.x - 32;
+
+                        if (!m.blocked) {
+                            m.progress += m.speed;
+
+                            if (partitioned) {
+                                const msgX = fromX + (toX - fromX) * m.progress;
+                                if ((m.from === nodeA && msgX >= midX - 25) ||
+                                    (m.from === nodeB && msgX <= midX + 25)) {
+                                    m.blocked = true;
+                                }
+                            }
                         }
-                        .link {
-                            stroke: #1f5e5e;
-                            stroke-width: 2;
-                            stroke-opacity: 0.45;
+
+                        if (m.blocked) {
+                            m.opacity -= 0.02;
                         }
-                        .msg {
-                            fill: #1f5e5e;
-                            fill-opacity: 0.9;
+
+                        // Message delivered - sync value
+                        if (m.progress >= 1 && !m.blocked) {
+                            m.to.value = Math.max(m.to.value, m.value);
+                            messages.splice(i, 1);
+                            continue;
                         }
-                    </style>
-                </defs>
 
-                <circle cx="120" cy="100" r="28" class="node"/>
-                <circle cx="380" cy="100" r="28" class="node"/>
+                        if (m.opacity <= 0) {
+                            messages.splice(i, 1);
+                            continue;
+                        }
 
-                <path id="linkAB" class="link" d="M148 100 L352 100"/>
-                <path id="linkBA" class="link" d="M352 100 L148 100"/>
+                        const x = fromX + (toX - fromX) * m.progress;
+                        const y = m.from.y;
 
-                <circle class="msg" r="5">
-                    <animateMotion dur="2.5s" repeatCount="indefinite">
-                        <mpath href="#linkAB"/>
-                    </animateMotion>
-                </circle>
+                        // Draw message with value
+                        ctx.beginPath();
+                        ctx.roundRect(x - 14, y - 10, 28, 20, 4);
+                        ctx.fillStyle = m.blocked
+                            ? `rgba(180, 80, 80, ${m.opacity})`
+                            : `rgba(31, 94, 94, ${m.opacity * 0.85})`;
+                        ctx.fill();
 
-                <circle class="msg" r="5">
-                    <animateMotion dur="3.1s" repeatCount="indefinite">
-                        <mpath href="#linkBA"/>
-                    </animateMotion>
-                </circle>
+                        ctx.fillStyle = `rgba(255, 255, 255, ${m.opacity})`;
+                        ctx.font = '11px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(m.value, x, y + 4);
+                    }
 
-            </svg>
+                    // Draw nodes
+                    [nodeA, nodeB].forEach(node => {
+                        // Node circle
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, 30, 0, Math.PI * 2);
+                        ctx.fillStyle = '#3aa0a0';
+                        ctx.fill();
+                        ctx.strokeStyle = '#1f5e5e';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+
+                        // Node label
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 13px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(node.label, node.x, node.y - 6);
+
+                        // Node value
+                        ctx.font = 'bold 15px monospace';
+                        ctx.fillText(node.value, node.x, node.y + 12);
+                    });
+
+                    // Draw status and drift indicator
+                    ctx.font = '13px sans-serif';
+                    ctx.textAlign = 'center';
+                    if (partitioned) {
+                        ctx.fillStyle = '#b45050';
+                        ctx.fillText('PARTITION', midX, 195);
+                        if (!valuesMatch) {
+                            ctx.font = '12px sans-serif';
+                            ctx.fillText('values drifting...', midX, 212);
+                        }
+                    } else {
+                        ctx.fillStyle = '#3aa0a0';
+                        ctx.fillText('connected', midX, 195);
+                        if (valuesMatch) {
+                            ctx.font = '12px sans-serif';
+                            ctx.fillText('in sync', midX, 212);
+                        }
+                    }
+
+                    requestAnimationFrame(draw);
+                }
+
+                requestAnimationFrame(draw);
+            })();
+            </script>
         </section>
 
         <section>
