@@ -145,6 +145,44 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+.opinion-count {
+  font-size: 0.9rem;
+  color: #6a6a7a;
+  font-weight: 400;
+  margin-left: 12px;
+}
+
+.scroll-top-btn {
+  position: sticky;
+  bottom: 0;
+  align-self: center;
+  margin-top: 8px;
+  padding: 10px 20px;
+  font-family: "Raleway", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #e25440, #ff6b5b);
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
+  box-shadow: 0 4px 12px rgba(226, 84, 64, 0.4);
+}
+
+.scroll-top-btn.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scroll-top-btn:hover {
+  transform: translateY(-2px);
 }
 
 .opinion-card {

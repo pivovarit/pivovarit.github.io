@@ -32,7 +32,7 @@
         <div id="opinionsModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 id="modalTitle" class="modal-title">Participant Opinions</h2>
+                    <h2 id="modalTitle" class="modal-title">Participant Opinions<span id="opinionCount" class="opinion-count"></span></h2>
                     <button id="closeModal" class="modal-close" aria-label="Close modal">&times;</button>
                 </div>
                 <div id="opinionsContainer" class="opinions-container"></div>
@@ -103,12 +103,15 @@
     const opinionsBtn = document.getElementById('opinionsBtn');
     const closeModal = document.getElementById('closeModal');
     const opinionsContainer = document.getElementById('opinionsContainer');
+    const opinionCount = document.getElementById('opinionCount');
 
     function renderOpinions(opinions) {
         if (!opinions || opinions.length === 0) {
+            opinionCount.textContent = '';
             opinionsContainer.innerHTML = '<p class="no-opinions">No participant opinions available.</p>';
             return;
         }
+        opinionCount.textContent = `(${opinions.length})`;
         opinionsContainer.innerHTML = opinions.map(o => `
             <article class="opinion-card">
                 <div class="opinion-meta">
@@ -117,13 +120,31 @@
                 </div>
                 <p class="opinion-text">${o.opinion}</p>
             </article>
-        `).join('');
+        `).join('') + '<button class="scroll-top-btn" aria-label="Scroll to top">↑ Back to top</button>';
     }
+
+    opinionsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('scroll-top-btn')) {
+            opinionsContainer.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+
+    opinionsContainer.addEventListener('scroll', () => {
+        const btn = opinionsContainer.querySelector('.scroll-top-btn');
+        if (btn) {
+            if (opinionsContainer.scrollTop > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        }
+    });
 
     function openModal() {
         modal.classList.add('active');
         modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        opinionsContainer.scrollTop = 0;
     }
 
     function closeModalFn() {
