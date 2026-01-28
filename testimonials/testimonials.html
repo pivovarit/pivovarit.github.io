@@ -26,7 +26,18 @@
         <header class="page-header">
             <h1 class="page-title">Testimonials</h1>
             <p class="page-subtitle">Feedback from workshops and consulting engagements</p>
+            <button id="opinionsBtn" class="opinions-btn">View Participant Opinions</button>
         </header>
+
+        <div id="opinionsModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle" class="modal-title">Participant Opinions</h2>
+                    <button id="closeModal" class="modal-close" aria-label="Close modal">&times;</button>
+                </div>
+                <div id="opinionsContainer" class="opinions-container"></div>
+            </div>
+        </div>
 
         <div id="testimonialsGrid" class="testimonials-grid" role="region" aria-label="Testimonials">
         </div>
@@ -87,6 +98,61 @@
                 </div>
             `;
         });
+
+    const modal = document.getElementById('opinionsModal');
+    const opinionsBtn = document.getElementById('opinionsBtn');
+    const closeModal = document.getElementById('closeModal');
+    const opinionsContainer = document.getElementById('opinionsContainer');
+
+    function renderOpinions(opinions) {
+        if (!opinions || opinions.length === 0) {
+            opinionsContainer.innerHTML = '<p class="no-opinions">No participant opinions available.</p>';
+            return;
+        }
+        opinionsContainer.innerHTML = opinions.map(o => `
+            <article class="opinion-card">
+                <div class="opinion-meta">
+                    <span class="opinion-workshop">${o.workshop}</span>
+                    <span class="opinion-date">${o.date}</span>
+                </div>
+                <p class="opinion-text">${o.opinion}</p>
+            </article>
+        `).join('');
+    }
+
+    function openModal() {
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalFn() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    opinionsBtn.addEventListener('click', () => {
+        fetch('opinions.json')
+            .then(res => res.json())
+            .then(data => {
+                renderOpinions(data);
+                openModal();
+            })
+            .catch(err => {
+                console.error('Failed to load opinions:', err);
+                opinionsContainer.innerHTML = '<p class="no-opinions">Failed to load opinions.</p>';
+                openModal();
+            });
+    });
+
+    closeModal.addEventListener('click', closeModalFn);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModalFn();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModalFn();
+    });
 </script>
 
 </body>
