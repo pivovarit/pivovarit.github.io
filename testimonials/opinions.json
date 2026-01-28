@@ -1,0 +1,17 @@
+[
+  {
+    "workshop": "Advanced Java Concurrency",
+    "date": "2024-11-15",
+    "opinion": "The workshop provided deep insights into parallel streams and virtual threads. Highly practical examples that I could immediately apply to our production code."
+  },
+  {
+    "workshop": "Distributed Systems Patterns",
+    "date": "2024-10-22",
+    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+  },
+  {
+    "workshop": "Advanced Java Concurrency",
+    "date": "2024-09-18",
+    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+  }
+]
