@@ -12,7 +12,7 @@
         h1 { font-size: 20px; margin: 0; }
         .sub { font-size: 13px; opacity: .75; }
         .pill { font-size: 12px; padding: 4px 8px; border-radius:999px; background:#eef2ff; }
-        .card { background:#fff; border-radius:14px; padding:16px; box-shadow: 0 6px 20px rgba(0,0,0,.06); }
+        .card { background:#fff; border-radius:14px; padding:16px; box-shadow: 0 6px 20px rgba(0,0,0,.06); transition: opacity .15s ease; }
         .topGrid { display:grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
         .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
         @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
@@ -21,6 +21,7 @@
         .row { display:flex; gap:10px; margin-top: 12px; flex-wrap: wrap; }
         input[type="number"]{ width: 140px; padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; }
         input[type="text"]{ flex:1; min-width: 220px; padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; }
+        input:disabled { background:#f3f4f6; color:#6b7280; }
         button { padding:10px 12px; border-radius:10px; border:0; background:#111827; color:#fff; cursor:pointer; font-weight:600; }
         button.secondary { background:#e5e7eb; color:#111; }
         button.danger { background:#ef4444; }
@@ -37,6 +38,13 @@
         .swatch { width: 14px; height: 14px; border-radius: 4px; background: #000; }
         .hidden { display:none !important; }
         .win { outline: 2px solid #22c55e33; }
+
+        /* === Turn indicator === */
+        .activeTurn {
+            outline: 2px solid rgba(17, 24, 39, 0.18);
+            box-shadow: 0 10px 28px rgba(0,0,0,.08);
+            opacity: 1 !important;
+        }
 
         .modalBackdrop {
             position: fixed; inset: 0;
@@ -221,7 +229,7 @@
 </div>
 
 <script>
-    const STORAGE_KEY = "scrabble_tracker_v5";
+    const STORAGE_KEY = "scrabble_tracker_v6_turns";
     const PLAYER_KEYS = ["player1","player2","player3","player4"];
     const COLORS = { player1: "#2563eb", player2: "#db2777", player3: "#16a34a", player4: "#f59e0b" };
 
@@ -233,10 +241,58 @@
             player4: { name: "", total: 0, enabled: false }
         },
         turns: [],
-        namesLocked: false
+        namesLocked: false,
+        currentPlayerKey: "player1"
     };
 
     const el = (id) => document.getElementById(id);
+
+    function enabledPlayers() {
+        return PLAYER_KEYS.filter(k => state.players[k].enabled);
+    }
+
+    function displayName(k) {
+        const n = (state.players[k].name || "").trim();
+        if (n) return n;
+        return k === "player1" ? "Player 1" : k === "player2" ? "Player 2" : k === "player3" ? "Player 3" : "Player 4";
+    }
+
+    function turnOrder() {
+        const keys = enabledPlayers();
+        return keys.length ? keys : ["player1","player2"];
+    }
+
+    function clampCurrentPlayer() {
+        const keys = turnOrder();
+        if (!keys.includes(state.currentPlayerKey)) state.currentPlayerKey = keys[0];
+    }
+
+    function nextPlayerKey(fromKey) {
+        const keys = turnOrder();
+        const idx = keys.indexOf(fromKey);
+        if (idx === -1) return keys[0];
+        return keys[(idx + 1) % keys.length];
+    }
+
+    function focusPlayer(k) {
+        const scoreEl = el(`score-${k}`);
+        if (!scoreEl) return;
+        setTimeout(() => {
+            scoreEl.focus();
+            if (typeof scoreEl.select === "function") scoreEl.select();
+        }, 0);
+    }
+
+    function updateStatusPillNow() {
+        clampCurrentPlayer();
+        el("statusPill").textContent = `Turn: ${displayName(state.currentPlayerKey)}`;
+    }
+
+    function setStatus(msg) {
+        el("statusPill").textContent = msg;
+        window.clearTimeout(setStatus._t);
+        setStatus._t = window.setTimeout(() => updateStatusPillNow(), 1500);
+    }
 
     function load() {
         try {
@@ -255,23 +311,20 @@
 
             state.turns = Array.isArray(parsed.turns) ? parsed.turns : [];
             state.namesLocked = Boolean(parsed.namesLocked);
+            if (typeof parsed.currentPlayerKey === "string") state.currentPlayerKey = parsed.currentPlayerKey;
 
             for (const k of PLAYER_KEYS) state.players[k].total = 0;
             for (const t of state.turns) {
                 const k = t.playerKey;
                 if (state.players[k]) state.players[k].total += Number(t.delta) || 0;
             }
+
+            clampCurrentPlayer();
         } catch (_) {}
     }
 
     function save() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function setStatus(msg) {
-        el("statusPill").textContent = msg;
-        window.clearTimeout(setStatus._t);
-        setStatus._t = window.setTimeout(() => el("statusPill").textContent = "Ready", 1500);
     }
 
     function fmtTime(ts) {
@@ -288,20 +341,29 @@
             .replaceAll("'", "&#039;");
     }
 
-    function enabledPlayers() {
-        return PLAYER_KEYS.filter(k => state.players[k].enabled);
-    }
-
-    function displayName(k) {
-        const n = (state.players[k].name || "").trim();
-        if (n) return n;
-        return k === "player1" ? "Player 1" : k === "player2" ? "Player 2" : k === "player3" ? "Player 3" : "Player 4";
-    }
-
     function applyPlayersToUI() {
+        clampCurrentPlayer();
+
         for (const k of PLAYER_KEYS) {
             el(`label-${k}`).textContent = displayName(k);
-            el(`card-${k}`).classList.toggle("hidden", !state.players[k].enabled);
+
+            const enabled = state.players[k].enabled;
+            const isActive = enabled && state.currentPlayerKey === k;
+
+            el(`card-${k}`).classList.toggle("hidden", !enabled);
+            el(`card-${k}`).classList.toggle("activeTurn", isActive);
+
+            const score = el(`score-${k}`);
+            const note = el(`note-${k}`);
+            const btn = el(`add-${k}`);
+
+            const disabled = !isActive;
+
+            score.disabled = disabled;
+            note.disabled = disabled;
+            btn.disabled = disabled;
+
+            el(`card-${k}`).style.opacity = enabled ? (isActive ? "1" : "0.65") : "1";
         }
 
         const legend = el("legend");
@@ -352,6 +414,12 @@
     }
 
     function addTurn(playerKey) {
+        if (playerKey !== state.currentPlayerKey) {
+            setStatus(`It's ${displayName(state.currentPlayerKey)}'s turn`);
+            focusPlayer(state.currentPlayerKey);
+            return;
+        }
+
         if (!state.players[playerKey]?.enabled) return;
 
         const scoreEl = el(`score-${playerKey}`);
@@ -379,20 +447,30 @@
 
         scoreEl.value = "";
         noteEl.value = "";
-        scoreEl.focus();
+
+        const next = nextPlayerKey(playerKey);
+        state.currentPlayerKey = next;
 
         save();
         render();
+
         setStatus(`Added ${displayName(playerKey)} +${delta}`);
+        focusPlayer(next);
     }
 
     function undo() {
         const t = state.turns.pop();
         if (!t) return;
+
         if (state.players[t.playerKey]) state.players[t.playerKey].total -= t.delta;
+
+        state.currentPlayerKey = t.playerKey;
+        clampCurrentPlayer();
+
         save();
         render();
         setStatus("Undid last turn");
+        focusPlayer(state.currentPlayerKey);
     }
 
     function resetGame() {
@@ -400,6 +478,7 @@
         state.turns = [];
         for (const k of PLAYER_KEYS) state.players[k].total = 0;
         state.namesLocked = false;
+        state.currentPlayerKey = "player1";
         save();
         render();
         openPlayersModal(true);
@@ -450,12 +529,14 @@
         state.players.player4.name = (el("name-player4").value || "").trim();
 
         normalizeEnabledPlayers();
+        clampCurrentPlayer();
 
         state.namesLocked = true;
         save();
         render();
         closePlayersModal();
         setStatus("Players saved");
+        focusPlayer(state.currentPlayerKey);
     }
 
     function useDefaultsAndLock() {
@@ -463,12 +544,16 @@
         state.players.player2.enabled = true;
         state.players.player3.enabled = false;
         state.players.player4.enabled = false;
+
         normalizeEnabledPlayers();
+        clampCurrentPlayer();
+
         state.namesLocked = true;
         save();
         render();
         closePlayersModal();
         setStatus("Using defaults");
+        focusPlayer(state.currentPlayerKey);
     }
 
     el("nameModalBackdrop").addEventListener("click", (e) => {
@@ -499,13 +584,10 @@
             const pk = t.playerKey;
             if (totals[pk] == null) continue;
             totals[pk] += Number(t.delta) || 0;
-
             for (const k of keys) y[k].push(totals[k]);
         }
 
-        if (n === 0) {
-            for (const k of keys) y[k] = [0];
-        }
+        if (n === 0) for (const k of keys) y[k] = [0];
 
         return { x, y, n, keys };
     }
@@ -633,18 +715,19 @@
             state.turns.forEach((t, idx) => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
-            <td>${idx + 1}</td>
-            <td>${escapeHtml(displayName(t.playerKey))}</td>
-            <td>+${t.delta}</td>
-            <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>—</span>"}</td>
-            <td class="muted">${fmtTime(t.ts)}</td>
-          `;
+          <td>${idx + 1}</td>
+          <td>${escapeHtml(displayName(t.playerKey))}</td>
+          <td>+${t.delta}</td>
+          <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>—</span>"}</td>
+          <td class="muted">${fmtTime(t.ts)}</td>
+        `;
                 body.appendChild(tr);
             });
         }
 
         updateLeadersUI();
         drawChart();
+        updateStatusPillNow();
     }
 
     function wire() {
@@ -652,6 +735,14 @@
             el(`add-${k}`).addEventListener("click", () => addTurn(k));
             el(`score-${k}`).addEventListener("keydown", (e) => { if (e.key === "Enter") addTurn(k); });
             el(`note-${k}`).addEventListener("keydown", (e) => { if (e.key === "Enter") addTurn(k); });
+
+            el(`card-${k}`).addEventListener("click", () => {
+                if (!state.players[k].enabled) return;
+                state.currentPlayerKey = k;
+                save();
+                render();
+                focusPlayer(k);
+            });
         }
 
         el("undoBtn").addEventListener("click", undo);
@@ -688,6 +779,8 @@
     render();
 
     if (!state.namesLocked) openPlayersModal(true);
+
+    focusPlayer(state.currentPlayerKey);
 </script>
 </body>
 </html>
