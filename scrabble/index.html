@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Scrabble Score Tracker</title>
+    <style>
+        :root {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f6f7fb;
+            color: #111;
+        }
+
+        .wrap {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .sub {
+            font-size: 13px;
+            opacity: .75;
+        }
+
+        .pill {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #eef2ff;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .name {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .total {
+            font-size: 44px;
+            font-weight: 750;
+            margin: 8px 0 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"] {
+            width: 140px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 0;
+            background: #111827;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button.secondary {
+            background: #e5e7eb;
+            color: #111;
+        }
+
+        button.danger {
+            background: #ef4444;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef0f6;
+            font-size: 14px;
+        }
+
+        th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            opacity: .7;
+        }
+
+        .muted {
+            opacity: .7;
+        }
+
+        .footer {
+            margin-top: 18px;
+            font-size: 12px;
+            opacity: .7;
+        }
+
+        .win {
+            outline: 2px solid #22c55e33;
+        }
+
+        .topGrid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 260px;
+            display: block;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .legendItem {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            background: #000;
+        }
+
+        /* Modal */
+        .modalBackdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .modalBackdrop.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(680px, 100%);
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .25);
+            padding: 16px;
+        }
+
+        .modalHeader {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .modalHeader strong {
+            font-size: 16px;
+        }
+
+        .modalGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 12px;
+            opacity: .75;
+        }
+
+        .modalActions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .hint {
+            font-size: 12px;
+            opacity: .75;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div>
+            <h1>Scrabble Score Tracker</h1>
+            <div class="sub">Track turns, totals, and a score progression chart. Saves locally in your browser.</div>
+        </div>
+        <div class="pill" id="statusPill">Ready</div>
+    </header>
+
+    <section class="topGrid" aria-label="Chart">
+        <div class="card">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <strong>Score progression</strong>
+                <span class="muted" id="chartMeta">—</span>
+            </div>
+            <div style="margin-top: 10px;">
+                <canvas id="chart" width="1200" height="520" aria-label="Line chart of cumulative scores"></canvas>
+            </div>
+            <div class="legend" aria-label="Chart legend">
+                <div class="legendItem"><span class="swatch" id="swatch-player1"></span><span id="legend-player1">Player 1</span>
+                </div>
+                <div class="legendItem"><span class="swatch" id="swatch-player2"></span><span id="legend-player2">Player 2</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="grid" aria-label="Scorecards">
+        <div class="card" id="card-player1">
+            <div class="name">
+                <strong id="label-player1">Player 1</strong>
+                <span class="pill" id="lead-player1">—</span>
+            </div>
+            <div class="total" id="total-player1">0</div>
+
+            <div class="row">
+                <input id="score-player1" type="number" inputmode="numeric" placeholder="+ points"/>
+                <input id="note-player1" type="text" placeholder="note (optional) e.g., QUIZ +50"/>
+                <button id="add-player1">Add turn</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-player2">
+            <div class="name">
+                <strong id="label-player2">Player 2</strong>
+                <span class="pill" id="lead-player2">—</span>
+            </div>
+            <div class="total" id="total-player2">0</div>
+
+            <div class="row">
+                <input id="score-player2" type="number" inputmode="numeric" placeholder="+ points"/>
+                <input id="note-player2" type="text" placeholder="note (optional) e.g., JAZZ +64"/>
+                <button id="add-player2">Add turn</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" style="margin-top:16px;" aria-label="Turn history">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <strong>Turn history</strong>
+            <span class="muted" id="turnCount">0 turns</span>
+        </div>
+
+        <div class="controls">
+            <button class="secondary" id="undoBtn" disabled>Undo last turn</button>
+            <button class="secondary" id="exportBtn">Export JSON</button>
+            <button class="secondary" id="editNamesBtn" title="Shows the name chooser again">Edit player names</button>
+            <button class="danger" id="resetBtn">Reset game</button>
+        </div>
+
+        <div style="overflow:auto; margin-top:10px;">
+            <table>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>Note</th>
+                    <th class="muted">Time</th>
+                </tr>
+                </thead>
+                <tbody id="historyBody">
+                <tr>
+                    <td colspan="5" class="muted">No turns yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            Tip: This page saves the game in your browser (localStorage). Different devices/browsers won’t share state.
+        </div>
+    </section>
+</div>
+
+<!-- Name chooser modal: shown only at the beginning (unless you click "Edit player names") -->
+<div class="modalBackdrop" id="nameModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="nameModalTitle">
+    <div class="modal">
+        <div class="modalHeader">
+            <strong id="nameModalTitle">Choose player names</strong>
+            <span class="pill muted" id="modalBadge">One-time setup</span>
+        </div>
+
+        <div class="modalGrid">
+            <div class="field">
+                <label for="name-player1">Player 1</label>
+                <input id="name-player1" type="text" value="Grzegorz"/>
+            </div>
+            <div class="field">
+                <label for="name-player2">Player 2</label>
+                <input id="name-player2" type="text" value="Paulina"/>
+            </div>
+        </div>
+
+        <div class="hint">These names will be used across the app. You can change them later via “Edit player names”.
+        </div>
+
+        <div class="modalActions">
+            <button class="secondary" id="modalUseDefaultsBtn" type="button">Use defaults</button>
+            <button id="modalSaveBtn" type="button">Start game</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = "scrabble_tracker_v4";
+
+    const state = {
+        players: {
+            player1: {name: "Grzegorz", total: 0},
+            player2: {name: "Paulina", total: 0}
+        },
+        turns: [],
+        namesLocked: false
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    function load() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== "object") return;
+
+            if (parsed.players?.player1?.name) state.players.player1.name = String(parsed.players.player1.name);
+            if (parsed.players?.player2?.name) state.players.player2.name = String(parsed.players.player2.name);
+
+            state.turns = Array.isArray(parsed.turns) ? parsed.turns : [];
+            state.namesLocked = Boolean(parsed.namesLocked);
+
+            state.players.player1.total = 0;
+            state.players.player2.total = 0;
+            for (const t of state.turns) {
+                const k = t.playerKey;
+                if (state.players[k]) state.players[k].total += Number(t.delta) || 0;
+            }
+        } catch (_) {
+        }
+    }
+
+    function save() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function setStatus(msg) {
+        el("statusPill").textContent = msg;
+        window.clearTimeout(setStatus._t);
+        setStatus._t = window.setTimeout(() => el("statusPill").textContent = "Ready", 1500);
+    }
+
+    function fmtTime(ts) {
+        const d = new Date(ts);
+        return d.toLocaleString(undefined, {
+            hour: "2-digit", minute: "2-digit",
+            year: "numeric", month: "short", day: "2-digit"
+        });
+    }
+
+    function escapeHtml(str) {
+        return String(str)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+    function applyNamesToUI() {
+        el("label-player1").textContent = state.players.player1.name;
+        el("label-player2").textContent = state.players.player2.name;
+        el("legend-player1").textContent = state.players.player1.name;
+        el("legend-player2").textContent = state.players.player2.name;
+
+        el("name-player1").value = state.players.player1.name;
+        el("name-player2").value = state.players.player2.name;
+    }
+
+    function updateLeaderUI() {
+        const a = state.players.player1.total;
+        const b = state.players.player2.total;
+
+        const leadA = el("lead-player1");
+        const leadB = el("lead-player2");
+
+        const cardA = el("card-player1");
+        const cardB = el("card-player2");
+
+        cardA.classList.remove("win");
+        cardB.classList.remove("win");
+
+        if (a === b) {
+            leadA.textContent = "Tied";
+            leadB.textContent = "Tied";
+        } else if (a > b) {
+            const diff = a - b;
+            leadA.textContent = `Leading by ${diff}`;
+            leadB.textContent = `Behind by ${diff}`;
+            cardA.classList.add("win");
+        } else {
+            const diff = b - a;
+            leadB.textContent = `Leading by ${diff}`;
+            leadA.textContent = `Behind by ${diff}`;
+            cardB.classList.add("win");
+        }
+    }
+
+    function addTurn(playerKey) {
+        const scoreEl = el(`score-${playerKey}`);
+        const noteEl = el(`note-${playerKey}`);
+
+        const delta = Number(scoreEl.value);
+        if (!Number.isFinite(delta) || delta <= 0) {
+            setStatus("Enter a positive score");
+            scoreEl.focus();
+            return;
+        }
+
+        const note = noteEl.value.trim();
+
+        const turn = {
+            id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+            playerKey,
+            delta,
+            note,
+            ts: Date.now()
+        };
+
+        state.turns.push(turn);
+        state.players[playerKey].total += delta;
+
+        scoreEl.value = "";
+        noteEl.value = "";
+        scoreEl.focus();
+
+        save();
+        render();
+        setStatus(`Added ${state.players[playerKey].name} +${delta}`);
+    }
+
+    function undo() {
+        const t = state.turns.pop();
+        if (!t) return;
+        if (state.players[t.playerKey]) state.players[t.playerKey].total -= t.delta;
+        save();
+        render();
+        setStatus("Undid last turn");
+    }
+
+    function resetGame() {
+        if (!confirm("Reset the game? This clears scores and history.")) return;
+        state.turns = [];
+        state.players.player1.total = 0;
+        state.players.player2.total = 0;
+        state.namesLocked = false;
+        save();
+        render();
+        openNameModal(true);
+        setStatus("Game reset");
+    }
+
+    function exportJson() {
+        const data = JSON.stringify(state, null, 2);
+        const blob = new Blob([data], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `scrabble-game-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus("Exported JSON");
+    }
+
+    function openNameModal(isInitial = false) {
+        applyNamesToUI();
+        el("nameModalBackdrop").classList.add("show");
+        el("modalBadge").textContent = isInitial ? "One-time setup" : "Edit names";
+        setTimeout(() => el("name-player1").focus(), 0);
+    }
+
+    function closeNameModal() {
+        el("nameModalBackdrop").classList.remove("show");
+    }
+
+    function saveNamesAndLock() {
+        const n1 = el("name-player1").value.trim() || "Player 1";
+        const n2 = el("name-player2").value.trim() || "Player 2";
+        state.players.player1.name = n1;
+        state.players.player2.name = n2;
+        state.namesLocked = true;
+        save();
+        render();
+        closeNameModal();
+        setStatus("Names saved");
+    }
+
+    function useDefaultsAndLock() {
+        state.namesLocked = true;
+        save();
+        render();
+        closeNameModal();
+        setStatus("Using default names");
+    }
+
+    el("nameModalBackdrop").addEventListener("click", (e) => {
+        if (e.target !== el("nameModalBackdrop")) return;
+        if (!state.namesLocked) return;
+        closeNameModal();
+    });
+
+    window.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        if (!el("nameModalBackdrop").classList.contains("show")) return;
+        if (!state.namesLocked) return;
+        closeNameModal();
+    });
+
+    const CHART_COLORS = {player1: "#2563eb", player2: "#db2777"};
+
+    function buildSeries() {
+        const n = state.turns.length;
+        const x = Array.from({length: n + 1}, (_, i) => i);
+
+        const y = {player1: [0], player2: [0]};
+        let a = 0, b = 0;
+        for (const t of state.turns) {
+            if (t.playerKey === "player1") a += t.delta;
+            if (t.playerKey === "player2") b += t.delta;
+            y.player1.push(a);
+            y.player2.push(b);
+        }
+        return {x, y, n};
+    }
+
+    function drawChart() {
+        const canvas = el("chart");
+        const ctx = canvas.getContext("2d");
+
+        const cssW = canvas.clientWidth;
+        const cssH = canvas.clientHeight;
+        const dpr = window.devicePixelRatio || 1;
+        const targetW = Math.round(cssW * dpr);
+        const targetH = Math.round(cssH * dpr);
+        if (canvas.width !== targetW || canvas.height !== targetH) {
+            canvas.width = targetW;
+            canvas.height = targetH;
+        }
+
+        const W = canvas.width;
+        const H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        const pad = {l: 56, r: 18, t: 18, b: 44};
+        const plotW = W - pad.l - pad.r;
+        const plotH = H - pad.t - pad.b;
+
+        const {x, y, n} = buildSeries();
+
+        const maxY = Math.max(10, ...y.player1, ...y.player2);
+        const minY = 0;
+
+        const xToPx = (xi) => pad.l + (plotW * (n === 0 ? 0 : (xi / n)));
+        const yToPx = (yv) => pad.t + plotH * (1 - (yv - minY) / (maxY - minY));
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.strokeStyle = "#eef0f6";
+        ctx.lineWidth = 1;
+
+        const yTicks = 5;
+        for (let i = 0; i <= yTicks; i++) {
+            const val = minY + (i * (maxY - minY)) / yTicks;
+            const py = yToPx(val);
+
+            ctx.beginPath();
+            ctx.moveTo(pad.l, py);
+            ctx.lineTo(W - pad.r, py);
+            ctx.stroke();
+
+            ctx.fillStyle = "#6b7280";
+            ctx.font = `${Math.round(12 * dpr)}px system-ui`;
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            ctx.fillText(String(Math.round(val)), pad.l - 10, py);
+        }
+
+        ctx.strokeStyle = "#e3e6ef";
+        ctx.beginPath();
+        ctx.moveTo(pad.l, H - pad.b);
+        ctx.lineTo(W - pad.r, H - pad.b);
+        ctx.stroke();
+
+        const labelPoints = n <= 2 ? x : [0, Math.round(n / 2), n];
+        ctx.fillStyle = "#6b7280";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.font = `${Math.round(12 * dpr)}px system-ui`;
+        for (const lp of labelPoints) {
+            const px = xToPx(lp);
+            ctx.fillText(lp === 0 ? "Start" : `Turn ${lp}`, px, H - pad.b + 10);
+        }
+
+        function drawLine(series, color) {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3 * dpr;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            series.forEach((val, i) => {
+                const px = xToPx(x[i]);
+                const py = yToPx(val);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            });
+            ctx.stroke();
+
+            ctx.fillStyle = color;
+            for (let i = 0; i < series.length; i++) {
+                const px = xToPx(x[i]);
+                const py = yToPx(series[i]);
+                ctx.beginPath();
+                ctx.arc(px, py, 4.5 * dpr, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        drawLine(y.player1, CHART_COLORS.player1);
+        drawLine(y.player2, CHART_COLORS.player2);
+
+        el("chartMeta").textContent = n === 0
+            ? "No turns yet"
+            : `Showing ${n} turn${n === 1 ? "" : "s"} (cumulative totals)`;
+
+        el("swatch-player1").style.background = CHART_COLORS.player1;
+        el("swatch-player2").style.background = CHART_COLORS.player2;
+    }
+
+    function render() {
+        applyNamesToUI();
+
+        el("total-player1").textContent = state.players.player1.total;
+        el("total-player2").textContent = state.players.player2.total;
+
+        el("turnCount").textContent = `${state.turns.length} turn${state.turns.length === 1 ? "" : "s"}`;
+        el("undoBtn").disabled = state.turns.length === 0;
+
+        const body = el("historyBody");
+        body.innerHTML = "";
+
+        if (state.turns.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="5" class="muted">No turns yet.</td>`;
+            body.appendChild(tr);
+        } else {
+            state.turns.forEach((t, idx) => {
+                const playerName = state.players[t.playerKey]?.name ?? t.playerKey;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${escapeHtml(playerName)}</td>
+            <td>+${t.delta}</td>
+            <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>—</span>"}</td>
+            <td class="muted">${fmtTime(t.ts)}</td>
+          `;
+                body.appendChild(tr);
+            });
+        }
+
+        updateLeaderUI();
+        drawChart();
+    }
+
+    el("add-player1").addEventListener("click", () => addTurn("player1"));
+    el("add-player2").addEventListener("click", () => addTurn("player2"));
+    el("undoBtn").addEventListener("click", undo);
+    el("resetBtn").addEventListener("click", resetGame);
+    el("exportBtn").addEventListener("click", exportJson);
+
+    el("editNamesBtn").addEventListener("click", () => openNameModal(false));
+
+    el("modalSaveBtn").addEventListener("click", saveNamesAndLock);
+    el("modalUseDefaultsBtn").addEventListener("click", useDefaultsAndLock);
+
+    ["name-player1", "name-player2"].forEach(id => {
+        el(id).addEventListener("keydown", (e) => {
+            if (e.key === "Enter") saveNamesAndLock();
+        });
+    });
+
+    ["player1", "player2"].forEach(k => {
+        el(`score-${k}`).addEventListener("keydown", (e) => {
+            if (e.key === "Enter") addTurn(k);
+        });
+        el(`note-${k}`).addEventListener("keydown", (e) => {
+            if (e.key === "Enter") addTurn(k);
+        });
+    });
+
+    window.addEventListener("resize", () => drawChart());
+
+    load();
+    render();
+
+    if (!state.namesLocked) openNameModal(true);
+</script>
+</body>
+</html>
