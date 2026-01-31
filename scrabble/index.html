@@ -21,6 +21,7 @@
         .row { display:flex; gap:10px; margin-top: 12px; flex-wrap: wrap; }
         input[type="number"]{ width: 140px; padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; }
         input[type="text"]{ flex:1; min-width: 220px; padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; }
+        select{ padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; background:#fff; }
         input:disabled { background:#f3f4f6; color:#6b7280; }
         button { padding:10px 12px; border-radius:10px; border:0; background:#111827; color:#fff; cursor:pointer; font-weight:600; }
         button.secondary { background:#e5e7eb; color:#111; }
@@ -67,7 +68,19 @@
         .modalActions { display:flex; gap:10px; justify-content:flex-end; flex-wrap: wrap; margin-top: 14px; }
         .hint { font-size: 12px; opacity: .75; margin-top: 10px; }
         .checkline { display:flex; gap:8px; align-items:center; font-size: 12px; opacity: .85; }
-        select{ padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; background:#fff; }
+        .roundRow td{
+            background:#f3f4f6;
+            border-bottom: 1px solid #e5e7eb;
+            border-top: 2px solid #e5e7eb;
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+        .roundRow td span{
+            font-weight: 600;
+            opacity: .7;
+            margin-left: 8px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -739,12 +752,25 @@
         const body = el("historyBody");
         body.innerHTML = "";
 
+        const keys = enabledPlayers();
+        const perRound = Math.max(1, keys.length);
+
         if (state.turns.length === 0) {
             const tr = document.createElement("tr");
             tr.innerHTML = `<td colspan="5" class="muted">No turns yet.</td>`;
             body.appendChild(tr);
         } else {
             state.turns.forEach((t, idx) => {
+                if (idx % perRound === 0) {
+                    const roundNum = Math.floor(idx / perRound) + 1;
+                    const trRound = document.createElement("tr");
+                    trRound.className = "roundRow";
+                    const startIdx = idx + 1;
+                    const endIdx = Math.min(idx + perRound, state.turns.length);
+                    trRound.innerHTML = `<td colspan="5">Round ${roundNum}<span>Turns ${startIdx}–${endIdx}</span></td>`;
+                    body.appendChild(trRound);
+                }
+
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
           <td>${idx + 1}</td>
