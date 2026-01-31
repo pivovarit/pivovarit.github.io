@@ -67,6 +67,7 @@
         .modalActions { display:flex; gap:10px; justify-content:flex-end; flex-wrap: wrap; margin-top: 14px; }
         .hint { font-size: 12px; opacity: .75; margin-top: 10px; }
         .checkline { display:flex; gap:8px; align-items:center; font-size: 12px; opacity: .85; }
+        select{ padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; background:#fff; }
     </style>
 </head>
 <body>
@@ -214,6 +215,11 @@
                 </label>
                 <input id="name-player4" type="text" value="" placeholder="Optional" />
             </div>
+
+            <div class="field" style="grid-column: 1 / -1;">
+                <label for="startingPlayerSelect">Starting player</label>
+                <select id="startingPlayerSelect"></select>
+            </div>
         </div>
 
         <div class="hint">Names are shown in the UI and history. Players 3–4 are hidden unless enabled.</div>
@@ -226,7 +232,7 @@
 </div>
 
 <script>
-    const STORAGE_KEY = "scrabble_tracker_v6_turns";
+    const STORAGE_KEY = "scrabble_tracker_v7_turns";
     const PLAYER_KEYS = ["player1","player2","player3","player4"];
     const COLORS = { player1: "#2563eb", player2: "#db2777", player3: "#16a34a", player4: "#f59e0b" };
 
@@ -338,6 +344,20 @@
             .replaceAll("'", "&#039;");
     }
 
+    function syncStartingPlayerSelect(preferKey) {
+        const sel = el("startingPlayerSelect");
+        const keys = enabledPlayers();
+        const prev = sel.value || preferKey || state.currentPlayerKey || "player1";
+        sel.innerHTML = "";
+        for (const k of keys) {
+            const opt = document.createElement("option");
+            opt.value = k;
+            opt.textContent = displayName(k);
+            sel.appendChild(opt);
+        }
+        sel.value = keys.includes(prev) ? prev : (keys[0] || "player1");
+    }
+
     function applyPlayersToUI() {
         clampCurrentPlayer();
 
@@ -384,6 +404,8 @@
         el("name-player4").value = state.players.player4.name;
         el("enable-player3").checked = state.players.player3.enabled;
         el("enable-player4").checked = state.players.player4.enabled;
+
+        syncStartingPlayerSelect(state.currentPlayerKey);
     }
 
     function updateLeadersUI() {
@@ -507,6 +529,7 @@
         applyPlayersToUI();
         el("nameModalBackdrop").classList.add("show");
         el("modalBadge").textContent = isInitial ? "One-time setup" : "Edit players";
+        syncStartingPlayerSelect(state.currentPlayerKey);
         setTimeout(() => el("name-player1").focus(), 0);
     }
 
@@ -533,7 +556,10 @@
         state.players.player4.name = (el("name-player4").value || "").trim();
 
         normalizeEnabledPlayers();
-        clampCurrentPlayer();
+
+        const chosenStart = el("startingPlayerSelect").value;
+        const keys = enabledPlayers();
+        state.currentPlayerKey = keys.includes(chosenStart) ? chosenStart : (keys[0] || "player1");
 
         state.namesLocked = true;
         save();
@@ -550,7 +576,9 @@
         state.players.player4.enabled = false;
 
         normalizeEnabledPlayers();
-        clampCurrentPlayer();
+
+        const keys = enabledPlayers();
+        state.currentPlayerKey = keys[0] || "player1";
 
         state.namesLocked = true;
         save();
@@ -764,11 +792,17 @@
         el("enable-player3").addEventListener("change", () => {
             el("name-player3").disabled = !el("enable-player3").checked;
             if (!el("enable-player3").checked) el("name-player3").value = "";
+            syncStartingPlayerSelect(el("startingPlayerSelect").value);
         });
 
         el("enable-player4").addEventListener("change", () => {
             el("name-player4").disabled = !el("enable-player4").checked;
             if (!el("enable-player4").checked) el("name-player4").value = "";
+            syncStartingPlayerSelect(el("startingPlayerSelect").value);
+        });
+
+        ["name-player1","name-player2","name-player3","name-player4"].forEach(id => {
+            el(id).addEventListener("input", () => syncStartingPlayerSelect(el("startingPlayerSelect").value));
         });
 
         window.addEventListener("resize", () => drawChart());
