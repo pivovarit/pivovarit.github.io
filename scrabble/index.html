@@ -38,14 +38,11 @@
         .swatch { width: 14px; height: 14px; border-radius: 4px; background: #000; }
         .hidden { display:none !important; }
         .win { outline: 2px solid #22c55e33; }
-
-        /* === Turn indicator === */
         .activeTurn {
             outline: 2px solid rgba(17, 24, 39, 0.18);
             box-shadow: 0 10px 28px rgba(0,0,0,.08);
             opacity: 1 !important;
         }
-
         .modalBackdrop {
             position: fixed; inset: 0;
             background: rgba(17,24,39,.55);
@@ -425,9 +422,16 @@
         const scoreEl = el(`score-${playerKey}`);
         const noteEl = el(`note-${playerKey}`);
 
-        const delta = Number(scoreEl.value);
-        if (!Number.isFinite(delta) || delta <= 0) {
-            setStatus("Enter a positive score");
+        const raw = String(scoreEl.value ?? "").trim();
+        if (raw === "") {
+            setStatus("Enter a score (0 allowed)");
+            scoreEl.focus();
+            return;
+        }
+
+        const delta = Number(raw);
+        if (!Number.isFinite(delta) || delta < 0) {
+            setStatus("Enter a non-negative score");
             scoreEl.focus();
             return;
         }
