@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Monopoly Cash Manager</title>
+    <style>
+        :root {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f6f7fb;
+            color: #111;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .sub {
+            font-size: 13px;
+            opacity: .75;
+        }
+
+        .pill {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #eef2ff;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
+            transition: opacity .15s ease;
+        }
+
+        .topGrid {
+            display: grid;
+            grid-template-columns:1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns:1fr;
+            }
+        }
+
+        .name {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .total {
+            font-size: 44px;
+            font-weight: 750;
+            margin: 8px 0 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"] {
+            width: 140px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+        }
+
+        select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        input:disabled, select:disabled {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        button {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 0;
+            background: #111827;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button.secondary {
+            background: #e5e7eb;
+            color: #111;
+        }
+
+        button.danger {
+            background: #ef4444;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef0f6;
+            font-size: 14px;
+        }
+
+        th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            opacity: .7;
+        }
+
+        .muted {
+            opacity: .7;
+        }
+
+        .footer {
+            margin-top: 18px;
+            font-size: 12px;
+            opacity: .7;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .activeTurn {
+            outline: 2px solid rgba(17, 24, 39, .18);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
+            opacity: 1 !important;
+        }
+
+        .win {
+            outline: 2px solid #22c55e33;
+        }
+
+        .modalBackdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+
+        .modalBackdrop.show {
+            display: flex;
+        }
+
+        .modal {
+            width: min(760px, 100%);
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .25);
+            padding: 16px;
+        }
+
+        .modalHeader {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .modalHeader strong {
+            font-size: 16px;
+        }
+
+        .modalGrid {
+            display: grid;
+            grid-template-columns:1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 700px) {
+            .modalGrid {
+                grid-template-columns:1fr;
+            }
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 12px;
+            opacity: .75;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .modalActions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .hint {
+            font-size: 12px;
+            opacity: .75;
+            margin-top: 10px;
+        }
+
+        .checkline {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+            opacity: .85;
+        }
+
+        .tagline {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .tag {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #f3f4f6;
+        }
+
+        .kpis {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .kpi {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+
+        .kpi b {
+            display: block;
+            font-size: 12px;
+            opacity: .75;
+            font-weight: 650;
+            letter-spacing: .02em;
+        }
+
+        .kpi span {
+            display: block;
+            font-size: 18px;
+            font-weight: 750;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header>
+        <div>
+            <h1>Monopoly Cash Manager</h1>
+            <div class="sub">Replacement for in-game cash. Track balances, transfers, bank payments/receipts, and
+                history. Saves locally.
+            </div>
+        </div>
+        <div class="pill" id="statusPill">Ready</div>
+    </header>
+
+    <section class="topGrid" aria-label="Quick actions">
+        <div class="card">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <strong>Transaction</strong>
+                <span class="muted" id="txnMeta">—</span>
+            </div>
+
+            <div class="tagline" aria-label="Mode">
+                <span class="tag" id="modeTag">Mode: Payment</span>
+                <span class="tag" id="turnTag">Turn: —</span>
+                <span class="tag muted" id="rulesTag">No overdrafts: off</span>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+                <select id="typeSelect">
+                    <option value="pay">Payment (decrease)</option>
+                    <option value="receive">Receive (increase)</option>
+                    <option value="transfer">Transfer (player → player)</option>
+                    <option value="set">Set balance</option>
+                </select>
+
+                <select id="fromSelect"></select>
+                <select id="toSelect"></select>
+
+                <input id="amountInput" type="number" inputmode="numeric" placeholder="amount"/>
+                <input id="noteInput" type="text" placeholder="note (optional) e.g., Rent / Chance / Pass Go"/>
+                <button id="applyBtn">Apply</button>
+            </div>
+
+            <div class="kpis" aria-label="Stats">
+                <div class="kpi"><b>Total cash in play</b><span id="kpiTotal">0</span></div>
+                <div class="kpi"><b>Transactions</b><span id="kpiTxns">0</span></div>
+                <div class="kpi"><b>Last change</b><span id="kpiLast">—</span></div>
+            </div>
+
+            <div class="controls">
+                <button class="secondary" id="undoBtn" disabled>Undo last</button>
+                <button class="secondary" id="exportBtn">Export JSON</button>
+                <button class="secondary" id="editPlayersBtn">Edit players</button>
+                <button class="secondary" id="toggleNoOverdraftBtn">Toggle no overdrafts</button>
+                <button class="danger" id="resetBtn">Reset game</button>
+            </div>
+
+            <div class="footer">Tip: Tap a player card to make it their turn. Different devices/browsers won’t share
+                state.
+            </div>
+        </div>
+    </section>
+
+    <section class="grid" aria-label="Players">
+        <div class="card" id="card-player1">
+            <div class="name">
+                <strong id="label-player1">Player 1</strong>
+                <span class="pill" id="lead-player1">—</span>
+            </div>
+            <div class="total" id="total-player1">1500</div>
+            <div class="row">
+                <input id="quick-player1" type="number" inputmode="numeric" placeholder="± amount"/>
+                <input id="quicknote-player1" type="text" placeholder="note (optional)"/>
+                <button id="quickbtn-player1">Apply to player</button>
+            </div>
+        </div>
+
+        <div class="card" id="card-player2">
+            <div class="name">
+                <strong id="label-player2">Player 2</strong>
+                <span class="pill" id="lead-player2">—</span>
+            </div>
+            <div class="total" id="total-player2">1500</div>
+            <div class="row">
+                <input id="quick-player2" type="number" inputmode="numeric" placeholder="± amount"/>
+                <input id="quicknote-player2" type="text" placeholder="note (optional)"/>
+                <button id="quickbtn-player2">Apply to player</button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="card-player3">
+            <div class="name">
+                <strong id="label-player3">Player 3</strong>
+                <span class="pill" id="lead-player3">—</span>
+            </div>
+            <div class="total" id="total-player3">1500</div>
+            <div class="row">
+                <input id="quick-player3" type="number" inputmode="numeric" placeholder="± amount"/>
+                <input id="quicknote-player3" type="text" placeholder="note (optional)"/>
+                <button id="quickbtn-player3">Apply to player</button>
+            </div>
+        </div>
+
+        <div class="card hidden" id="card-player4">
+            <div class="name">
+                <strong id="label-player4">Player 4</strong>
+                <span class="pill" id="lead-player4">—</span>
+            </div>
+            <div class="total" id="total-player4">1500</div>
+            <div class="row">
+                <input id="quick-player4" type="number" inputmode="numeric" placeholder="± amount"/>
+                <input id="quicknote-player4" type="text" placeholder="note (optional)"/>
+                <button id="quickbtn-player4">Apply to player</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" style="margin-top:16px;" aria-label="History">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+            <strong>History</strong>
+            <span class="muted" id="historyCount">0 transactions</span>
+        </div>
+
+        <div style="overflow:auto; margin-top:10px;">
+            <table>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Type</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Amount</th>
+                    <th>Note</th>
+                    <th class="muted">Time</th>
+                </tr>
+                </thead>
+                <tbody id="historyBody">
+                <tr>
+                    <td colspan="7" class="muted">No transactions yet.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<div class="modalBackdrop" id="playerModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="playerModalTitle">
+    <div class="modal">
+        <div class="modalHeader">
+            <strong id="playerModalTitle">Choose players</strong>
+            <span class="pill muted" id="modalBadge">One-time setup</span>
+        </div>
+
+        <div class="modalGrid">
+            <div class="field">
+                <label for="name-player1">Player 1</label>
+                <input id="name-player1" type="text" value=""/>
+            </div>
+            <div class="field">
+                <label for="name-player2">Player 2</label>
+                <input id="name-player2" type="text" value=""/>
+            </div>
+
+            <div class="field">
+                <label for="name-player3">Player 3 <span class="checkline"><input id="enable-player3" type="checkbox"/> Enable</span></label>
+                <input id="name-player3" type="text" value="" placeholder="Optional"/>
+            </div>
+            <div class="field">
+                <label for="name-player4">Player 4 <span class="checkline"><input id="enable-player4" type="checkbox"/> Enable</span></label>
+                <input id="name-player4" type="text" value="" placeholder="Optional"/>
+            </div>
+
+            <div class="field">
+                <label for="startCashInput">Starting cash (per player)</label>
+                <input id="startCashInput" type="number" inputmode="numeric" value="1500"/>
+            </div>
+
+            <div class="field">
+                <label for="startingPlayerSelect">Starting player</label>
+                <select id="startingPlayerSelect"></select>
+            </div>
+        </div>
+
+        <div class="hint">Starting cash is applied only when starting a new game (or after reset). You can still set
+            balances anytime.
+        </div>
+
+        <div class="modalActions">
+            <button class="secondary" id="modalUseDefaultsBtn" type="button">Use defaults</button>
+            <button id="modalSaveBtn" type="button">Start game</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = "monopoly_cash_manager_v1";
+    const PLAYER_KEYS = ["player1", "player2", "player3", "player4"];
+    const state = {
+        players: {
+            player1: {name: "", enabled: true, balance: 1500},
+            player2: {name: "", enabled: true, balance: 1500},
+            player3: {name: "", enabled: false, balance: 1500},
+            player4: {name: "", enabled: false, balance: 1500}
+        },
+        txns: [],
+        namesLocked: false,
+        currentPlayerKey: "player1",
+        noOverdrafts: false,
+        startingCash: 1500
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    function enabledPlayers() {
+        return PLAYER_KEYS.filter(k => state.players[k].enabled);
+    }
+
+    function displayName(k) {
+        const n = (state.players[k].name || "").trim();
+        if (n) return n;
+        return k === "player1" ? "Player 1" : k === "player2" ? "Player 2" : k === "player3" ? "Player 3" : "Player 4";
+    }
+
+    function modalName(k) {
+        const input = el(`name-${k}`);
+        const n = input ? (input.value || "").trim() : "";
+        if (n) return n;
+        return k === "player1" ? "Player 1" : k === "player2" ? "Player 2" : k === "player3" ? "Player 3" : "Player 4";
+    }
+
+    function modalEnabledKeys() {
+        const keys = ["player1", "player2"];
+        if (el("enable-player3")?.checked) keys.push("player3");
+        if (el("enable-player4")?.checked) keys.push("player4");
+        return keys;
+    }
+
+    function clampCurrentPlayer() {
+        const keys = enabledPlayers();
+        const fallback = keys[0] || "player1";
+        if (!keys.includes(state.currentPlayerKey)) state.currentPlayerKey = fallback;
+    }
+
+    function fmtTime(ts) {
+        const d = new Date(ts);
+        return d.toLocaleString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            year: "numeric",
+            month: "short",
+            day: "2-digit"
+        });
+    }
+
+    function escapeHtml(str) {
+        return String(str).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+    }
+
+    function setStatus(msg) {
+        el("statusPill").textContent = msg;
+        window.clearTimeout(setStatus._t);
+        setStatus._t = window.setTimeout(() => updateStatusPillNow(), 1500);
+    }
+
+    function updateStatusPillNow() {
+        clampCurrentPlayer();
+        el("turnTag").textContent = `Turn: ${displayName(state.currentPlayerKey)}`;
+        el("rulesTag").textContent = `No overdrafts: ${state.noOverdrafts ? "on" : "off"}`;
+        el("statusPill").textContent = `Active: ${displayName(state.currentPlayerKey)}`;
+    }
+
+    function syncSelectors() {
+        const type = el("typeSelect").value;
+        const fromSel = el("fromSelect");
+        const toSel = el("toSelect");
+
+        const keys = enabledPlayers();
+        const mkOpt = (k) => {
+            const o = document.createElement("option");
+            o.value = k;
+            o.textContent = displayName(k);
+            return o;
+        };
+
+        const prevFrom = fromSel.value;
+        const prevTo = toSel.value;
+
+        fromSel.innerHTML = "";
+        toSel.innerHTML = "";
+
+        const bankOpt = document.createElement("option");
+        bankOpt.value = "bank";
+        bankOpt.textContent = "Bank";
+        fromSel.appendChild(bankOpt.cloneNode(true));
+        toSel.appendChild(bankOpt.cloneNode(true));
+
+        for (const k of keys) {
+            fromSel.appendChild(mkOpt(k));
+            toSel.appendChild(mkOpt(k));
+        }
+
+        const defaultPlayer = state.currentPlayerKey;
+        if (type === "pay") {
+            fromSel.value = keys.includes(prevFrom) ? prevFrom : defaultPlayer;
+            toSel.value = "bank";
+            toSel.disabled = true;
+            fromSel.disabled = false;
+        } else if (type === "receive") {
+            fromSel.value = "bank";
+            toSel.value = keys.includes(prevTo) ? prevTo : defaultPlayer;
+            fromSel.disabled = true;
+            toSel.disabled = false;
+        } else if (type === "transfer") {
+            fromSel.disabled = false;
+            toSel.disabled = false;
+            fromSel.value = keys.includes(prevFrom) ? prevFrom : defaultPlayer;
+            toSel.value = keys.includes(prevTo) ? prevTo : (keys.find(k => k !== fromSel.value) || defaultPlayer);
+            if (toSel.value === fromSel.value) toSel.value = keys.find(k => k !== fromSel.value) || defaultPlayer;
+        } else {
+            fromSel.disabled = false;
+            toSel.disabled = true;
+            fromSel.value = keys.includes(prevFrom) ? prevFrom : defaultPlayer;
+            toSel.value = "bank";
+        }
+
+        el("modeTag").textContent = type === "pay" ? "Mode: Payment" : type === "receive" ? "Mode: Receive" : type === "transfer" ? "Mode: Transfer" : "Mode: Set balance";
+        el("txnMeta").textContent = type === "transfer" ? "Player → Player" : type === "set" ? "Adjust to exact amount" : "Player ↔ Bank";
+    }
+
+    function totalCashInPlay() {
+        return enabledPlayers().reduce((sum, k) => sum + (Number(state.players[k].balance) || 0), 0);
+    }
+
+    function leaderInfo() {
+        const keys = enabledPlayers();
+        const balances = keys.map(k => Number(state.players[k].balance) || 0);
+        const max = Math.max(...balances, 0);
+        const leaders = keys.filter(k => (Number(state.players[k].balance) || 0) === max);
+        return {keys, max, leaders};
+    }
+
+    function updateLeadersUI() {
+        for (const k of PLAYER_KEYS) {
+            el(`lead-${k}`).textContent = "—";
+            el(`card-${k}`).classList.remove("win");
+        }
+        const {keys, max, leaders} = leaderInfo();
+        for (const k of keys) {
+            const v = Number(state.players[k].balance) || 0;
+            const pill = el(`lead-${k}`);
+            if (leaders.length > 1) {
+                pill.textContent = leaders.includes(k) ? "Tied for most cash" : `Behind by ${max - v}`;
+            } else {
+                pill.textContent = leaders[0] === k ? "Most cash" : `Behind by ${max - v}`;
+            }
+        }
+        for (const k of leaders) el(`card-${k}`).classList.add("win");
+    }
+
+    function applyPlayersToUI() {
+        clampCurrentPlayer();
+        for (const k of PLAYER_KEYS) {
+            el(`label-${k}`).textContent = displayName(k);
+            const enabled = state.players[k].enabled;
+            const isActive = enabled && state.currentPlayerKey === k;
+            el(`card-${k}`).classList.toggle("hidden", !enabled);
+            el(`card-${k}`).classList.toggle("activeTurn", isActive);
+            el(`card-${k}`).style.opacity = enabled ? (isActive ? "1" : "0.65") : "1";
+        }
+    }
+
+    function renderBalances() {
+        for (const k of PLAYER_KEYS) el(`total-${k}`).textContent = Math.round(Number(state.players[k].balance) || 0);
+    }
+
+    function renderHistory() {
+        const body = el("historyBody");
+        body.innerHTML = "";
+        el("historyCount").textContent = `${state.txns.length} transaction${state.txns.length === 1 ? "" : "s"}`;
+        el("undoBtn").disabled = state.txns.length === 0;
+        if (state.txns.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="7" class="muted">No transactions yet.</td>`;
+            body.appendChild(tr);
+            return;
+        }
+        state.txns.slice().reverse().forEach((t, revIdx) => {
+            const idx = state.txns.length - revIdx;
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+        <td>${idx}</td>
+        <td>${escapeHtml(t.typeLabel)}</td>
+        <td>${escapeHtml(t.fromLabel)}</td>
+        <td>${escapeHtml(t.toLabel)}</td>
+        <td>${t.amountLabel}</td>
+        <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>—</span>"}</td>
+        <td class="muted">${fmtTime(t.ts)}</td>
+      `;
+            body.appendChild(tr);
+        });
+    }
+
+    function renderKpis() {
+        el("kpiTotal").textContent = Math.round(totalCashInPlay());
+        el("kpiTxns").textContent = String(state.txns.length);
+        const last = state.txns[state.txns.length - 1];
+        el("kpiLast").textContent = last ? last.short : "—";
+    }
+
+    function save() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function load() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== "object") return;
+
+            if (typeof parsed.noOverdrafts === "boolean") state.noOverdrafts = parsed.noOverdrafts;
+            if (typeof parsed.startingCash === "number" && Number.isFinite(parsed.startingCash)) state.startingCash = parsed.startingCash;
+
+            for (const k of PLAYER_KEYS) {
+                if (parsed.players?.[k]) {
+                    const p = parsed.players[k];
+                    if (typeof p.name === "string") state.players[k].name = p.name;
+                    if (typeof p.enabled === "boolean") state.players[k].enabled = p.enabled;
+                    if (typeof p.balance === "number" && Number.isFinite(p.balance)) state.players[k].balance = p.balance;
+                }
+            }
+
+            state.txns = Array.isArray(parsed.txns) ? parsed.txns : [];
+            state.namesLocked = Boolean(parsed.namesLocked);
+            if (typeof parsed.currentPlayerKey === "string") state.currentPlayerKey = parsed.currentPlayerKey;
+            clampCurrentPlayer();
+        } catch (_) {
+        }
+    }
+
+    function openPlayersModal(isInitial) {
+        el("playerModalBackdrop").classList.add("show");
+        el("modalBadge").textContent = isInitial ? "One-time setup" : "Edit players";
+        el("name-player1").value = state.players.player1.name;
+        el("name-player2").value = state.players.player2.name;
+        el("name-player3").value = state.players.player3.name;
+        el("name-player4").value = state.players.player4.name;
+        el("enable-player3").checked = state.players.player3.enabled;
+        el("enable-player4").checked = state.players.player4.enabled;
+        el("name-player3").disabled = !el("enable-player3").checked;
+        el("name-player4").disabled = !el("enable-player4").checked;
+        el("startCashInput").value = String(Math.round(Number(state.startingCash) || 1500));
+        syncStartingPlayerSelect(state.currentPlayerKey, true);
+        setTimeout(() => el("name-player1").focus(), 0);
+    }
+
+    function closePlayersModal() {
+        el("playerModalBackdrop").classList.remove("show");
+    }
+
+    function syncStartingPlayerSelect(preferKey, useModal) {
+        const sel = el("startingPlayerSelect");
+        const keys = useModal ? modalEnabledKeys() : enabledPlayers();
+        const prev = sel.value || preferKey || state.currentPlayerKey || "player1";
+        sel.innerHTML = "";
+        for (const k of keys) {
+            const opt = document.createElement("option");
+            opt.value = k;
+            opt.textContent = useModal ? modalName(k) : displayName(k);
+            sel.appendChild(opt);
+        }
+        sel.value = keys.includes(prev) ? prev : (keys[0] || "player1");
+    }
+
+    function normalizeEnabledPlayers() {
+        state.players.player1.enabled = true;
+        state.players.player2.enabled = true;
+    }
+
+    function setStartingCashForEnabledPlayers(amount) {
+        for (const k of enabledPlayers()) state.players[k].balance = amount;
+    }
+
+    function savePlayersAndLock(applyStartingCash) {
+        state.players.player1.name = (el("name-player1").value || "").trim();
+        state.players.player2.name = (el("name-player2").value || "").trim();
+        state.players.player3.enabled = Boolean(el("enable-player3").checked);
+        state.players.player4.enabled = Boolean(el("enable-player4").checked);
+        state.players.player3.name = (el("name-player3").value || "").trim();
+        state.players.player4.name = (el("name-player4").value || "").trim();
+        normalizeEnabledPlayers();
+
+        const startCash = Number(String(el("startCashInput").value || "").trim());
+        if (Number.isFinite(startCash) && startCash >= 0) state.startingCash = startCash;
+
+        const chosenStart = el("startingPlayerSelect").value;
+        const keys = enabledPlayers();
+        state.currentPlayerKey = keys.includes(chosenStart) ? chosenStart : (keys[0] || "player1");
+
+        if (applyStartingCash) {
+            const amount = Number.isFinite(state.startingCash) ? state.startingCash : 1500;
+            setStartingCashForEnabledPlayers(Math.round(amount));
+        }
+
+        state.namesLocked = true;
+        save();
+        render();
+        closePlayersModal();
+        setStatus("Players saved");
+        focusMainAmount();
+    }
+
+    function useDefaultsAndLock() {
+        el("name-player1").value = "";
+        el("name-player2").value = "";
+        el("enable-player3").checked = false;
+        el("enable-player4").checked = false;
+        el("name-player3").value = "";
+        el("name-player4").value = "";
+        el("name-player3").disabled = true;
+        el("name-player4").disabled = true;
+        el("startCashInput").value = "1500";
+        syncStartingPlayerSelect("player1", true);
+        savePlayersAndLock(true);
+    }
+
+    function focusMainAmount() {
+        setTimeout(() => {
+            el("amountInput").focus();
+            if (typeof el("amountInput").select === "function") el("amountInput").select();
+        }, 0);
+    }
+
+    function assertCanAfford(playerKey, amount) {
+        if (!state.noOverdrafts) return true;
+        const bal = Number(state.players[playerKey]?.balance) || 0;
+        return bal - amount >= 0;
+    }
+
+    function applyTxn() {
+        clampCurrentPlayer();
+        const type = el("typeSelect").value;
+        const from = el("fromSelect").value;
+        const to = el("toSelect").value;
+        const rawAmt = String(el("amountInput").value ?? "").trim();
+        if (rawAmt === "") {
+            setStatus("Enter an amount (0 allowed)");
+            focusMainAmount();
+            return;
+        }
+        const amt = Number(rawAmt);
+        if (!Number.isFinite(amt) || amt < 0) {
+            setStatus("Enter a non-negative amount");
+            focusMainAmount();
+            return;
+        }
+        const note = (el("noteInput").value || "").trim();
+        const enabled = enabledPlayers();
+        const isPlayer = (k) => enabled.includes(k);
+        const now = Date.now();
+
+        if (type === "pay") {
+            if (!isPlayer(from)) {
+                setStatus("Choose a player to pay");
+                return;
+            }
+            if (!assertCanAfford(from, amt)) {
+                setStatus(`${displayName(from)} can't afford that`);
+                return;
+            }
+            state.players[from].balance = (Number(state.players[from].balance) || 0) - amt;
+            const t = {
+                id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+                type,
+                ts: now,
+                note,
+                from,
+                to: "bank",
+                typeLabel: "Payment",
+                fromLabel: displayName(from),
+                toLabel: "Bank",
+                amount: amt,
+                amountLabel: `-${Math.round(amt)}`,
+                short: `${displayName(from)} -${Math.round(amt)}`
+            };
+            state.txns.push(t);
+            state.currentPlayerKey = from;
+            save();
+            render();
+            el("amountInput").value = "";
+            el("noteInput").value = "";
+            setStatus(`Paid -${Math.round(amt)} from ${displayName(from)}`);
+            focusMainAmount();
+            return;
+        }
+
+        if (type === "receive") {
+            if (!isPlayer(to)) {
+                setStatus("Choose a player to receive");
+                return;
+            }
+            state.players[to].balance = (Number(state.players[to].balance) || 0) + amt;
+            const t = {
+                id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+                type,
+                ts: now,
+                note,
+                from: "bank",
+                to,
+                typeLabel: "Receive",
+                fromLabel: "Bank",
+                toLabel: displayName(to),
+                amount: amt,
+                amountLabel: `+${Math.round(amt)}`,
+                short: `${displayName(to)} +${Math.round(amt)}`
+            };
+            state.txns.push(t);
+            state.currentPlayerKey = to;
+            save();
+            render();
+            el("amountInput").value = "";
+            el("noteInput").value = "";
+            setStatus(`Received +${Math.round(amt)} for ${displayName(to)}`);
+            focusMainAmount();
+            return;
+        }
+
+        if (type === "transfer") {
+            if (!isPlayer(from) || !isPlayer(to) || from === to) {
+                setStatus("Choose two different players");
+                return;
+            }
+            if (!assertCanAfford(from, amt)) {
+                setStatus(`${displayName(from)} can't afford that`);
+                return;
+            }
+            state.players[from].balance = (Number(state.players[from].balance) || 0) - amt;
+            state.players[to].balance = (Number(state.players[to].balance) || 0) + amt;
+            const t = {
+                id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+                type,
+                ts: now,
+                note,
+                from,
+                to,
+                typeLabel: "Transfer",
+                fromLabel: displayName(from),
+                toLabel: displayName(to),
+                amount: amt,
+                amountLabel: `${Math.round(amt)}`,
+                short: `${displayName(from)} → ${displayName(to)} ${Math.round(amt)}`
+            };
+            state.txns.push(t);
+            state.currentPlayerKey = to;
+            save();
+            render();
+            el("amountInput").value = "";
+            el("noteInput").value = "";
+            setStatus(`Transferred ${Math.round(amt)} to ${displayName(to)}`);
+            focusMainAmount();
+            return;
+        }
+
+        if (type === "set") {
+            if (!isPlayer(from)) {
+                setStatus("Choose a player to set");
+                return;
+            }
+            const prev = Number(state.players[from].balance) || 0;
+            state.players[from].balance = amt;
+            const delta = amt - prev;
+            const sign = delta >= 0 ? "+" : "-";
+            const abs = Math.round(Math.abs(delta));
+            const t = {
+                id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+                type,
+                ts: now,
+                note,
+                from,
+                to: "bank",
+                typeLabel: "Set balance",
+                fromLabel: displayName(from),
+                toLabel: "—",
+                amount: amt,
+                amountLabel: `=${Math.round(amt)} (${sign}${abs})`,
+                short: `${displayName(from)} =${Math.round(amt)}`
+            };
+            state.txns.push(t);
+            state.currentPlayerKey = from;
+            save();
+            render();
+            el("amountInput").value = "";
+            el("noteInput").value = "";
+            setStatus(`Set ${displayName(from)} to ${Math.round(amt)}`);
+            focusMainAmount();
+        }
+    }
+
+    function quickApply(playerKey) {
+        if (!state.players[playerKey]?.enabled) return;
+        const amtRaw = String(el(`quick-${playerKey}`).value ?? "").trim();
+        if (amtRaw === "") {
+            setStatus("Enter an amount (can be negative)");
+            el(`quick-${playerKey}`).focus();
+            return;
+        }
+        const amt = Number(amtRaw);
+        if (!Number.isFinite(amt)) {
+            setStatus("Enter a valid number");
+            el(`quick-${playerKey}`).focus();
+            return;
+        }
+        const note = (el(`quicknote-${playerKey}`).value || "").trim();
+        if (state.noOverdrafts && amt < 0 && (Number(state.players[playerKey].balance) || 0) + amt < 0) {
+            setStatus(`${displayName(playerKey)} can't afford that`);
+            el(`quick-${playerKey}`).focus();
+            return;
+        }
+
+        state.players[playerKey].balance = (Number(state.players[playerKey].balance) || 0) + amt;
+        const now = Date.now();
+        const t = {
+            id: crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2),
+            type: "adjust",
+            ts: now,
+            note,
+            from: amt < 0 ? playerKey : "bank",
+            to: amt < 0 ? "bank" : playerKey,
+            typeLabel: "Adjust",
+            fromLabel: amt < 0 ? displayName(playerKey) : "Bank",
+            toLabel: amt < 0 ? "Bank" : displayName(playerKey),
+            amount: Math.abs(amt),
+            amountLabel: `${amt >= 0 ? "+" : "-"}${Math.round(Math.abs(amt))}`,
+            short: `${displayName(playerKey)} ${amt >= 0 ? "+" : "-"}${Math.round(Math.abs(amt))}`
+        };
+        state.txns.push(t);
+        state.currentPlayerKey = playerKey;
+
+        el(`quick-${playerKey}`).value = "";
+        el(`quicknote-${playerKey}`).value = "";
+        save();
+        render();
+        setStatus(`Applied ${amt >= 0 ? "+" : "-"}${Math.round(Math.abs(amt))} to ${displayName(playerKey)}`);
+        el("amountInput").focus();
+    }
+
+    function undo() {
+        const t = state.txns.pop();
+        if (!t) return;
+        const enabled = enabledPlayers();
+        const isPlayer = (k) => enabled.includes(k);
+
+        if (t.typeLabel === "Payment") {
+            if (isPlayer(t.from)) state.players[t.from].balance = (Number(state.players[t.from].balance) || 0) + (Number(t.amount) || 0);
+            state.currentPlayerKey = t.from;
+        } else if (t.typeLabel === "Receive") {
+            if (isPlayer(t.to)) state.players[t.to].balance = (Number(state.players[t.to].balance) || 0) - (Number(t.amount) || 0);
+            state.currentPlayerKey = t.to;
+        } else if (t.typeLabel === "Transfer") {
+            if (isPlayer(t.from)) state.players[t.from].balance = (Number(state.players[t.from].balance) || 0) + (Number(t.amount) || 0);
+            if (isPlayer(t.to)) state.players[t.to].balance = (Number(state.players[t.to].balance) || 0) - (Number(t.amount) || 0);
+            state.currentPlayerKey = t.from;
+        } else if (t.typeLabel === "Set balance") {
+            const m = String(t.amountLabel || "");
+            const match = m.match(/^=(\d+)\s+\(([+-])(\d+)\)$/);
+            if (isPlayer(t.from) && match) {
+                const setTo = Number(match[1]);
+                const sign = match[2];
+                const delta = Number(match[3]);
+                const prev = sign === "+" ? setTo - delta : setTo + delta;
+                state.players[t.from].balance = prev;
+                state.currentPlayerKey = t.from;
+            } else {
+                state.currentPlayerKey = t.from || state.currentPlayerKey;
+            }
+        } else {
+            const amt = Number(t.amount) || 0;
+            if (isPlayer(t.to) && t.to !== "bank" && String(t.amountLabel || "").startsWith("+")) state.players[t.to].balance = (Number(state.players[t.to].balance) || 0) - amt;
+            if (isPlayer(t.from) && t.from !== "bank" && String(t.amountLabel || "").startsWith("-")) state.players[t.from].balance = (Number(state.players[t.from].balance) || 0) + amt;
+        }
+
+        clampCurrentPlayer();
+        save();
+        render();
+        setStatus("Undid last transaction");
+        focusMainAmount();
+    }
+
+    function exportJson() {
+        const data = JSON.stringify(state, null, 2);
+        const blob = new Blob([data], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `monopoly-cash-${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus("Exported JSON");
+    }
+
+    function resetGame() {
+        if (!confirm("Reset the game? This clears balances and history.")) return;
+
+        state.txns = [];
+        state.players.player1.enabled = true;
+        state.players.player2.enabled = true;
+        state.players.player3.enabled = false;
+        state.players.player4.enabled = false;
+
+        state.players.player1.name = "";
+        state.players.player2.name = "";
+        state.players.player3.name = "";
+        state.players.player4.name = "";
+
+        state.currentPlayerKey = "player1";
+        state.namesLocked = false;
+        state.startingCash = 1500;
+
+        setStartingCashForEnabledPlayers(1500);
+        save();
+        render();
+        openPlayersModal(true);
+        setStatus("Game reset");
+    }
+
+    function toggleNoOverdrafts() {
+        state.noOverdrafts = !state.noOverdrafts;
+        save();
+        render();
+        setStatus(`No overdrafts ${state.noOverdrafts ? "on" : "off"}`);
+    }
+
+    function render() {
+        applyPlayersToUI();
+        renderBalances();
+        updateLeadersUI();
+        renderHistory();
+        renderKpis();
+        updateStatusPillNow();
+        syncSelectors();
+    }
+
+    function isInteractiveTarget(target) {
+        if (!target) return false;
+        return Boolean(target.closest("input, button, select, textarea, a, label"));
+    }
+
+    function wire() {
+        el("typeSelect").addEventListener("change", syncSelectors);
+        el("fromSelect").addEventListener("change", () => {
+            if (el("typeSelect").value === "transfer") {
+                const from = el("fromSelect").value;
+                if (el("toSelect").value === from) {
+                    const keys = enabledPlayers();
+                    el("toSelect").value = keys.find(k => k !== from) || from;
+                }
+            }
+        });
+
+        el("applyBtn").addEventListener("click", applyTxn);
+        el("amountInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") applyTxn();
+        });
+        el("noteInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") applyTxn();
+        });
+
+        el("undoBtn").addEventListener("click", undo);
+        el("exportBtn").addEventListener("click", exportJson);
+        el("resetBtn").addEventListener("click", resetGame);
+        el("toggleNoOverdraftBtn").addEventListener("click", toggleNoOverdrafts);
+
+        el("editPlayersBtn").addEventListener("click", () => openPlayersModal(false));
+
+        el("modalSaveBtn").addEventListener("click", () => {
+            const isInitial = !state.namesLocked;
+            savePlayersAndLock(isInitial);
+        });
+        el("modalUseDefaultsBtn").addEventListener("click", useDefaultsAndLock);
+
+        el("enable-player3").addEventListener("change", () => {
+            el("name-player3").disabled = !el("enable-player3").checked;
+            if (!el("enable-player3").checked) el("name-player3").value = "";
+            syncStartingPlayerSelect(el("startingPlayerSelect").value, true);
+        });
+        el("enable-player4").addEventListener("change", () => {
+            el("name-player4").disabled = !el("enable-player4").checked;
+            if (!el("enable-player4").checked) el("name-player4").value = "";
+            syncStartingPlayerSelect(el("startingPlayerSelect").value, true);
+        });
+
+        ["name-player1", "name-player2", "name-player3", "name-player4"].forEach(id => {
+            el(id).addEventListener("input", () => syncStartingPlayerSelect(el("startingPlayerSelect").value, true));
+            el(id).addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    const isInitial = !state.namesLocked;
+                    savePlayersAndLock(isInitial);
+                }
+            });
+        });
+
+        el("startCashInput").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                const isInitial = !state.namesLocked;
+                savePlayersAndLock(isInitial);
+            }
+        });
+
+        el("playerModalBackdrop").addEventListener("click", (e) => {
+            if (e.target !== el("playerModalBackdrop")) return;
+            if (!state.namesLocked) return;
+            closePlayersModal();
+        });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key !== "Escape") return;
+            if (!el("playerModalBackdrop").classList.contains("show")) return;
+            if (!state.namesLocked) return;
+            closePlayersModal();
+        });
+
+        for (const k of PLAYER_KEYS) {
+            el(`quickbtn-${k}`).addEventListener("click", (e) => {
+                e.stopPropagation();
+                quickApply(k);
+            });
+            el(`quick-${k}`).addEventListener("click", (e) => e.stopPropagation());
+            el(`quicknote-${k}`).addEventListener("click", (e) => e.stopPropagation());
+            el(`quick-${k}`).addEventListener("keydown", (e) => {
+                if (e.key === "Enter") quickApply(k);
+            });
+            el(`quicknote-${k}`).addEventListener("keydown", (e) => {
+                if (e.key === "Enter") quickApply(k);
+            });
+
+            el(`card-${k}`).addEventListener("click", (e) => {
+                if (!state.players[k].enabled) return;
+                if (isInteractiveTarget(e.target)) return;
+                state.currentPlayerKey = k;
+                save();
+                render();
+            });
+        }
+    }
+
+    load();
+    wire();
+    render();
+    if (!state.namesLocked) openPlayersModal(true);
+    focusMainAmount();
+</script>
+</body>
+</html>
