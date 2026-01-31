@@ -1,81 +1,322 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>Scrabble Score Tracker</title>
     <style>
-        :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
-        body { margin: 0; background: #f6f7fb; color: #111; }
-        .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
-        header { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap: wrap; }
-        h1 { font-size: 20px; margin: 0; }
-        .sub { font-size: 13px; opacity: .75; }
-        .pill { font-size: 12px; padding: 4px 8px; border-radius:999px; background:#eef2ff; }
-        .card { background:#fff; border-radius:14px; padding:16px; box-shadow: 0 6px 20px rgba(0,0,0,.06); transition: opacity .15s ease; }
-        .topGrid { display:grid; grid-template-columns: 1fr; gap: 16px; margin-top: 16px; }
-        .grid { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
-        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
-        .name { display:flex; align-items:center; justify-content:space-between; gap: 8px; }
-        .total { font-size: 44px; font-weight: 750; margin: 8px 0 0; }
-        .row { display:flex; gap:10px; margin-top: 12px; flex-wrap: wrap; }
-        input[type="number"]{ width: 140px; padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; }
-        input[type="text"]{ flex:1; min-width: 220px; padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; }
-        select{ padding:10px 12px; border-radius:10px; border:1px solid #e3e6ef; font-size:14px; background:#fff; }
-        input:disabled { background:#f3f4f6; color:#6b7280; }
-        button { padding:10px 12px; border-radius:10px; border:0; background:#111827; color:#fff; cursor:pointer; font-weight:600; }
-        button.secondary { background:#e5e7eb; color:#111; }
-        button.danger { background:#ef4444; }
-        button:disabled { opacity:.5; cursor:not-allowed; }
-        .controls { display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
-        table { width:100%; border-collapse: collapse; }
-        th, td { text-align:left; padding:10px 8px; border-bottom:1px solid #eef0f6; font-size:14px; }
-        th { font-size:12px; text-transform: uppercase; letter-spacing:.06em; opacity:.7; }
-        .muted { opacity:.7; }
-        .footer { margin-top: 18px; font-size: 12px; opacity: .7; }
-        canvas { width: 100%; height: 260px; display:block; }
-        .legend { display:flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
-        .legendItem { display:flex; gap:8px; align-items: center; font-size: 13px; }
-        .swatch { width: 14px; height: 14px; border-radius: 4px; background: #000; }
-        .hidden { display:none !important; }
-        .win { outline: 2px solid #22c55e33; }
+        :root {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f6f7fb;
+            color: #111;
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .sub {
+            font-size: 13px;
+            opacity: .75;
+        }
+
+        .pill {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: #eef2ff;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .06);
+            transition: opacity .15s ease;
+        }
+
+        .topGrid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .name {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .total {
+            font-size: 44px;
+            font-weight: 750;
+            margin: 8px 0 0;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"] {
+            width: 140px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+        }
+
+        select {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #e3e6ef;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        input:disabled {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        button {
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 0;
+            background: #111827;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button.secondary {
+            background: #e5e7eb;
+            color: #111;
+        }
+
+        button.danger {
+            background: #ef4444;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 10px 8px;
+            border-bottom: 1px solid #eef0f6;
+            font-size: 14px;
+        }
+
+        th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            opacity: .7;
+        }
+
+        .muted {
+            opacity: .7;
+        }
+
+        .footer {
+            margin-top: 18px;
+            font-size: 12px;
+            opacity: .7;
+        }
+
+        canvas {
+            width: 100%;
+            height: 260px;
+            display: block;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .legendItem {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            background: #000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .win {
+            outline: 2px solid #22c55e33;
+        }
+
         .activeTurn {
             outline: 2px solid rgba(17, 24, 39, 0.18);
-            box-shadow: 0 10px 28px rgba(0,0,0,.08);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, .08);
             opacity: 1 !important;
         }
+
         .modalBackdrop {
-            position: fixed; inset: 0;
-            background: rgba(17,24,39,.55);
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, .55);
             display: none;
-            align-items: center; justify-content: center;
+            align-items: center;
+            justify-content: center;
             padding: 18px;
         }
-        .modalBackdrop.show { display:flex; }
+
+        .modalBackdrop.show {
+            display: flex;
+        }
+
         .modal {
             width: min(760px, 100%);
             background: #fff;
             border-radius: 16px;
-            box-shadow: 0 24px 60px rgba(0,0,0,.25);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .25);
             padding: 16px;
         }
-        .modalHeader { display:flex; align-items:baseline; justify-content:space-between; gap: 12px; flex-wrap: wrap; }
-        .modalHeader strong { font-size: 16px; }
-        .modalGrid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-        @media (max-width: 700px) { .modalGrid { grid-template-columns: 1fr; } }
-        .field { display:flex; flex-direction: column; gap:6px; }
-        .field label { font-size: 12px; opacity: .75; display:flex; gap:8px; align-items:center; }
-        .modalActions { display:flex; gap:10px; justify-content:flex-end; flex-wrap: wrap; margin-top: 14px; }
-        .hint { font-size: 12px; opacity: .75; margin-top: 10px; }
-        .checkline { display:flex; gap:8px; align-items:center; font-size: 12px; opacity: .85; }
-        .roundRow td{
-            background:#f3f4f6;
+
+        .modalHeader {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .modalHeader strong {
+            font-size: 16px;
+        }
+
+        .modalGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 700px) {
+            .modalGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .field label {
+            font-size: 12px;
+            opacity: .75;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .modalActions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .hint {
+            font-size: 12px;
+            opacity: .75;
+            margin-top: 10px;
+        }
+
+        .checkline {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-size: 12px;
+            opacity: .85;
+        }
+
+        .roundRow td {
+            background: #f3f4f6;
             border-bottom: 1px solid #e5e7eb;
             border-top: 2px solid #e5e7eb;
             font-weight: 700;
             letter-spacing: .02em;
         }
-        .roundRow td span{
+
+        .roundRow td span {
             font-weight: 600;
             opacity: .7;
             margin-left: 8px;
@@ -88,7 +329,9 @@
     <header>
         <div>
             <h1>Scrabble Score Tracker</h1>
-            <div class="sub">Up to 4 players (players 3–4 optional). Tracks turns, totals, and a score progression chart. Saves locally.</div>
+            <div class="sub">Up to 4 players (players 3–4 optional). Tracks turns, totals, and a score progression
+                chart. Saves locally.
+            </div>
         </div>
         <div class="pill" id="statusPill">Ready</div>
     </header>
@@ -114,8 +357,8 @@
             </div>
             <div class="total" id="total-player1">0</div>
             <div class="row">
-                <input id="score-player1" type="number" inputmode="numeric" placeholder="+ points" />
-                <input id="note-player1" type="text" placeholder="note (optional) e.g., QUIZ +50" />
+                <label for="score-player1"></label><input id="score-player1" type="number" inputmode="numeric" placeholder="+ points"/>
+                <label for="note-player1"></label><input id="note-player1" type="text" placeholder="note (optional) e.g., QUIZ +50"/>
                 <button id="add-player1">Add turn</button>
             </div>
         </div>
@@ -127,8 +370,8 @@
             </div>
             <div class="total" id="total-player2">0</div>
             <div class="row">
-                <input id="score-player2" type="number" inputmode="numeric" placeholder="+ points" />
-                <input id="note-player2" type="text" placeholder="note (optional) e.g., JAZZ +64" />
+                <label for="score-player2"></label><input id="score-player2" type="number" inputmode="numeric" placeholder="+ points"/>
+                <label for="note-player2"></label><input id="note-player2" type="text" placeholder="note (optional) e.g., JAZZ +64"/>
                 <button id="add-player2">Add turn</button>
             </div>
         </div>
@@ -140,8 +383,8 @@
             </div>
             <div class="total" id="total-player3">0</div>
             <div class="row">
-                <input id="score-player3" type="number" inputmode="numeric" placeholder="+ points" />
-                <input id="note-player3" type="text" placeholder="note (optional)" />
+                <label for="score-player3"></label><input id="score-player3" type="number" inputmode="numeric" placeholder="+ points"/>
+                <label for="note-player3"></label><input id="note-player3" type="text" placeholder="note (optional)"/>
                 <button id="add-player3">Add turn</button>
             </div>
         </div>
@@ -153,8 +396,8 @@
             </div>
             <div class="total" id="total-player4">0</div>
             <div class="row">
-                <input id="score-player4" type="number" inputmode="numeric" placeholder="+ points" />
-                <input id="note-player4" type="text" placeholder="note (optional)" />
+                <label for="score-player4"></label><input id="score-player4" type="number" inputmode="numeric" placeholder="+ points"/>
+                <label for="note-player4"></label><input id="note-player4" type="text" placeholder="note (optional)"/>
                 <button id="add-player4">Add turn</button>
             </div>
         </div>
@@ -185,7 +428,9 @@
                 </tr>
                 </thead>
                 <tbody id="historyBody">
-                <tr><td colspan="5" class="muted">No turns yet.</td></tr>
+                <tr>
+                    <td colspan="5" class="muted">No turns yet.</td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -206,27 +451,27 @@
         <div class="modalGrid">
             <div class="field">
                 <label for="name-player1">Player 1</label>
-                <input id="name-player1" type="text" value="" />
+                <input id="name-player1" type="text" value=""/>
             </div>
             <div class="field">
                 <label for="name-player2">Player 2</label>
-                <input id="name-player2" type="text" value="" />
+                <input id="name-player2" type="text" value=""/>
             </div>
 
             <div class="field">
                 <label for="name-player3">
                     Player 3
-                    <span class="checkline"><input id="enable-player3" type="checkbox" /> Enable</span>
+                    <span class="checkline"><input id="enable-player3" type="checkbox"/> Enable</span>
                 </label>
-                <input id="name-player3" type="text" value="" placeholder="Optional" />
+                <input id="name-player3" type="text" value="" placeholder="Optional"/>
             </div>
 
             <div class="field">
                 <label for="name-player4">
                     Player 4
-                    <span class="checkline"><input id="enable-player4" type="checkbox" /> Enable</span>
+                    <span class="checkline"><input id="enable-player4" type="checkbox"/> Enable</span>
                 </label>
-                <input id="name-player4" type="text" value="" placeholder="Optional" />
+                <input id="name-player4" type="text" value="" placeholder="Optional"/>
             </div>
 
             <div class="field" style="grid-column: 1 / -1;">
@@ -246,15 +491,15 @@
 
 <script>
     const STORAGE_KEY = "scrabble_tracker_v7_turns";
-    const PLAYER_KEYS = ["player1","player2","player3","player4"];
-    const COLORS = { player1: "#2563eb", player2: "#db2777", player3: "#16a34a", player4: "#f59e0b" };
+    const PLAYER_KEYS = ["player1", "player2", "player3", "player4"];
+    const COLORS = {player1: "#2563eb", player2: "#db2777", player3: "#16a34a", player4: "#f59e0b"};
 
     const state = {
         players: {
-            player1: { name: "", total: 0, enabled: true },
-            player2: { name: "", total: 0, enabled: true },
-            player3: { name: "", total: 0, enabled: false },
-            player4: { name: "", total: 0, enabled: false }
+            player1: {name: "", total: 0, enabled: true},
+            player2: {name: "", total: 0, enabled: true},
+            player3: {name: "", total: 0, enabled: false},
+            player4: {name: "", total: 0, enabled: false}
         },
         turns: [],
         namesLocked: false,
@@ -273,9 +518,23 @@
         return k === "player1" ? "Player 1" : k === "player2" ? "Player 2" : k === "player3" ? "Player 3" : "Player 4";
     }
 
+    function modalName(k) {
+        const input = el(`name-${k}`);
+        const n = input ? (input.value || "").trim() : "";
+        if (n) return n;
+        return k === "player1" ? "Player 1" : k === "player2" ? "Player 2" : k === "player3" ? "Player 3" : "Player 4";
+    }
+
+    function modalEnabledKeys() {
+        const keys = ["player1", "player2"];
+        if (el("enable-player3")?.checked) keys.push("player3");
+        if (el("enable-player4")?.checked) keys.push("player4");
+        return keys;
+    }
+
     function turnOrder() {
         const keys = enabledPlayers();
-        return keys.length ? keys : ["player1","player2"];
+        return keys.length ? keys : ["player1", "player2"];
     }
 
     function clampCurrentPlayer() {
@@ -336,7 +595,8 @@
             }
 
             clampCurrentPlayer();
-        } catch (_) {}
+        } catch (_) {
+        }
     }
 
     function save() {
@@ -345,7 +605,13 @@
 
     function fmtTime(ts) {
         const d = new Date(ts);
-        return d.toLocaleString(undefined, { hour: "2-digit", minute: "2-digit", year: "numeric", month: "short", day: "2-digit" });
+        return d.toLocaleString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            year: "numeric",
+            month: "short",
+            day: "2-digit"
+        });
     }
 
     function escapeHtml(str) {
@@ -357,15 +623,15 @@
             .replaceAll("'", "&#039;");
     }
 
-    function syncStartingPlayerSelect(preferKey) {
+    function syncStartingPlayerSelect(preferKey, useModal) {
         const sel = el("startingPlayerSelect");
-        const keys = enabledPlayers();
+        const keys = useModal ? modalEnabledKeys() : enabledPlayers();
         const prev = sel.value || preferKey || state.currentPlayerKey || "player1";
         sel.innerHTML = "";
         for (const k of keys) {
             const opt = document.createElement("option");
             opt.value = k;
-            opt.textContent = displayName(k);
+            opt.textContent = useModal ? modalName(k) : displayName(k);
             sel.appendChild(opt);
         }
         sel.value = keys.includes(prev) ? prev : (keys[0] || "player1");
@@ -418,7 +684,8 @@
         el("enable-player3").checked = state.players.player3.enabled;
         el("enable-player4").checked = state.players.player4.enabled;
 
-        syncStartingPlayerSelect(state.currentPlayerKey);
+        el("name-player3").disabled = !el("enable-player3").checked;
+        el("name-player4").disabled = !el("enable-player4").checked;
     }
 
     function updateLeadersUI() {
@@ -514,10 +781,19 @@
 
     function resetGame() {
         if (!confirm("Reset the game? This clears scores and history.")) return;
+
         state.turns = [];
         for (const k of PLAYER_KEYS) state.players[k].total = 0;
+        for (const k of PLAYER_KEYS) state.players[k].name = "";
+
+        state.players.player1.enabled = true;
+        state.players.player2.enabled = true;
+        state.players.player3.enabled = false;
+        state.players.player4.enabled = false;
+
         state.namesLocked = false;
         state.currentPlayerKey = "player1";
+
         save();
         render();
         openPlayersModal(true);
@@ -526,11 +802,11 @@
 
     function exportJson() {
         const data = JSON.stringify(state, null, 2);
-        const blob = new Blob([data], { type: "application/json" });
+        const blob = new Blob([data], {type: "application/json"});
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `scrabble-game-${new Date().toISOString().slice(0,10)}.json`;
+        a.download = `scrabble-game-${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -542,7 +818,7 @@
         applyPlayersToUI();
         el("nameModalBackdrop").classList.add("show");
         el("modalBadge").textContent = isInitial ? "One-time setup" : "Edit players";
-        syncStartingPlayerSelect(state.currentPlayerKey);
+        syncStartingPlayerSelect(state.currentPlayerKey, true);
         setTimeout(() => el("name-player1").focus(), 0);
     }
 
@@ -553,14 +829,11 @@
     function normalizeEnabledPlayers() {
         state.players.player1.enabled = true;
         state.players.player2.enabled = true;
-
-        if (state.players.player3.enabled && !state.players.player3.name.trim()) state.players.player3.name = "Player 3";
-        if (state.players.player4.enabled && !state.players.player4.name.trim()) state.players.player4.name = "Player 4";
     }
 
     function savePlayersAndLock() {
-        state.players.player1.name = (el("name-player1").value || "").trim() || "Player 1";
-        state.players.player2.name = (el("name-player2").value || "").trim() || "Player 2";
+        state.players.player1.name = (el("name-player1").value || "").trim();
+        state.players.player2.name = (el("name-player2").value || "").trim();
 
         state.players.player3.enabled = Boolean(el("enable-player3").checked);
         state.players.player4.enabled = Boolean(el("enable-player4").checked);
@@ -583,22 +856,16 @@
     }
 
     function useDefaultsAndLock() {
-        state.players.player1.enabled = true;
-        state.players.player2.enabled = true;
-        state.players.player3.enabled = false;
-        state.players.player4.enabled = false;
-
-        normalizeEnabledPlayers();
-
-        const keys = enabledPlayers();
-        state.currentPlayerKey = keys[0] || "player1";
-
-        state.namesLocked = true;
-        save();
-        render();
-        closePlayersModal();
-        setStatus("Using defaults");
-        focusPlayer(state.currentPlayerKey);
+        el("name-player1").value = "";
+        el("name-player2").value = "";
+        el("enable-player3").checked = false;
+        el("enable-player4").checked = false;
+        el("name-player3").value = "";
+        el("name-player4").value = "";
+        el("name-player3").disabled = true;
+        el("name-player4").disabled = true;
+        syncStartingPlayerSelect("player1", true);
+        savePlayersAndLock();
     }
 
     el("nameModalBackdrop").addEventListener("click", (e) => {
@@ -617,7 +884,7 @@
     function buildSeries() {
         const keys = enabledPlayers();
         const n = state.turns.length;
-        const x = Array.from({ length: n + 1 }, (_, i) => i);
+        const x = Array.from({length: n + 1}, (_, i) => i);
 
         const y = {};
         for (const k of keys) y[k] = [0];
@@ -634,7 +901,7 @@
 
         if (n === 0) for (const k of keys) y[k] = [0];
 
-        return { x, y, n, keys };
+        return {x, y, n, keys};
     }
 
     function drawChart() {
@@ -655,11 +922,11 @@
         const H = canvas.height;
         ctx.clearRect(0, 0, W, H);
 
-        const pad = { l: 56, r: 18, t: 18, b: 44 };
+        const pad = {l: 56, r: 18, t: 18, b: 44};
         const plotW = W - pad.l - pad.r;
         const plotH = H - pad.t - pad.b;
 
-        const { x, y, n, keys } = buildSeries();
+        const {x, y, n, keys} = buildSeries();
 
         const allVals = keys.flatMap(k => y[k] || []);
         const maxY = Math.max(10, ...allVals);
@@ -791,8 +1058,12 @@
     function wire() {
         for (const k of PLAYER_KEYS) {
             el(`add-${k}`).addEventListener("click", () => addTurn(k));
-            el(`score-${k}`).addEventListener("keydown", (e) => { if (e.key === "Enter") addTurn(k); });
-            el(`note-${k}`).addEventListener("keydown", (e) => { if (e.key === "Enter") addTurn(k); });
+            el(`score-${k}`).addEventListener("keydown", (e) => {
+                if (e.key === "Enter") addTurn(k);
+            });
+            el(`note-${k}`).addEventListener("keydown", (e) => {
+                if (e.key === "Enter") addTurn(k);
+            });
 
             el(`card-${k}`).addEventListener("click", () => {
                 if (!state.players[k].enabled) return;
@@ -811,24 +1082,23 @@
         el("modalSaveBtn").addEventListener("click", savePlayersAndLock);
         el("modalUseDefaultsBtn").addEventListener("click", useDefaultsAndLock);
 
-        ["name-player1","name-player2","name-player3","name-player4"].forEach(id => {
-            el(id).addEventListener("keydown", (e) => { if (e.key === "Enter") savePlayersAndLock(); });
+        ["name-player1", "name-player2", "name-player3", "name-player4"].forEach(id => {
+            el(id).addEventListener("keydown", (e) => {
+                if (e.key === "Enter") savePlayersAndLock();
+            });
+            el(id).addEventListener("input", () => syncStartingPlayerSelect(el("startingPlayerSelect").value, true));
         });
 
         el("enable-player3").addEventListener("change", () => {
             el("name-player3").disabled = !el("enable-player3").checked;
             if (!el("enable-player3").checked) el("name-player3").value = "";
-            syncStartingPlayerSelect(el("startingPlayerSelect").value);
+            syncStartingPlayerSelect(el("startingPlayerSelect").value, true);
         });
 
         el("enable-player4").addEventListener("change", () => {
             el("name-player4").disabled = !el("enable-player4").checked;
             if (!el("enable-player4").checked) el("name-player4").value = "";
-            syncStartingPlayerSelect(el("startingPlayerSelect").value);
-        });
-
-        ["name-player1","name-player2","name-player3","name-player4"].forEach(id => {
-            el(id).addEventListener("input", () => syncStartingPlayerSelect(el("startingPlayerSelect").value));
+            syncStartingPlayerSelect(el("startingPlayerSelect").value, true);
         });
 
         window.addEventListener("resize", () => drawChart());
@@ -836,14 +1106,8 @@
 
     load();
     wire();
-
-    el("name-player3").disabled = !el("enable-player3").checked;
-    el("name-player4").disabled = !el("enable-player4").checked;
-
     render();
-
     if (!state.namesLocked) openPlayersModal(true);
-
     focusPlayer(state.currentPlayerKey);
 </script>
 </body>
