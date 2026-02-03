@@ -39,6 +39,17 @@
             justify-content: center;
             padding: 2rem;
             line-height: 1.6;
+            overflow: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .container {
@@ -176,6 +187,8 @@
 </head>
 <body>
 
+<canvas id="bg-canvas"></canvas>
+
 <div class="container">
     <img src="/images/profile.jpg" alt="Grzegorz Piwowarek" class="profile-image">
 
@@ -183,7 +196,7 @@
     <p class="tagline">Java Champion</p>
 
     <div class="links">
-        <a href="http://4comprehension.com" class="link" target="_blank"><span class="arrow">&lt;-</span>Blog</a>
+        <a href="https://4comprehension.com" class="link" target="_blank"><span class="arrow">&lt;-</span>Blog</a>
     </div>
 
     <div class="divider"></div>
@@ -202,6 +215,96 @@
         <a href="https://buymeacoffee.com/pivovarit" target="_blank">Buy me a coffee</a>
     </div>
 </div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        let animationId;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    baseX: 0,
+                    baseY: 0,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    size: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random() * 0.3 + 0.1
+                });
+                particles[i].baseX = particles[i].x;
+                particles[i].baseY = particles[i].y;
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.baseX += p.vx;
+                p.baseY += p.vy;
+
+                if (p.baseX < 0) { p.baseX = canvas.width; p.x = canvas.width; }
+                if (p.baseX > canvas.width) { p.baseX = 0; p.x = 0; }
+                if (p.baseY < 0) { p.baseY = canvas.height; p.y = canvas.height; }
+                if (p.baseY > canvas.height) { p.baseY = 0; p.y = 0; }
+
+                let targetX = p.baseX;
+                let targetY = p.baseY;
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = p.baseX - mouse.x;
+                    const dy = p.baseY - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < mouse.radius) {
+                        const force = (mouse.radius - dist) / mouse.radius;
+                        const angle = Math.atan2(dy, dx);
+                        targetX = p.baseX + Math.cos(angle) * force * 30;
+                        targetY = p.baseY + Math.sin(angle) * force * 30;
+                    }
+                }
+
+                p.x += (targetX - p.x) * 0.1;
+                p.y += (targetY - p.y) * 0.1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+            });
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        resize();
+        animate();
+    })();
+</script>
 
 <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
