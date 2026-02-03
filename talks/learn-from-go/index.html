@@ -13,6 +13,7 @@
     <!-- Theme used for syntax highlighted code -->
     <link rel="stylesheet" href="plugin/highlight/zenburn.css">
 
+    <script src="https://pivovarit.github.io/qr/qr.js"></script>
     <!--    <link rel="stylesheet" href="plugin/highlight/monokai.css">-->
 </head>
 <body>
@@ -1077,7 +1078,14 @@ static final ArchRule shouldBeFreeOfCycles = slices()
             <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
             <small><a href="https://4comprehension.com">4comprehension.com</a></small>
             <br>
-            <img src="img/qrcode_pivovarit.github.io.png" width="30%"/>
+            <div id="qrcode"></div>
+            <script>
+                new QRCode(document.getElementById('qrcode'), {
+                    text: 'https://pivovarit.github.io/talks/learn-from-go',
+                    width: 1024,
+                    height: 1024
+                }).style.cssText = 'width: 200px; height: 200px; padding: 8px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);border-radius: 8px;';
+            </script>
             <br>
             <small><a href="https://pivovarit.github.io/talks/learn-from-go">https://pivovarit.github.io/talks/learn-from-go</a></small>
         </section>
