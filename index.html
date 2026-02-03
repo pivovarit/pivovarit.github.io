@@ -223,7 +223,7 @@
         let particles = [];
         let mouse = { x: null, y: null, radius: 150 };
         let animationId;
-        const connectionDistance = 120;
+        const baseConnectionDistance = 120;
 
         function resize() {
             canvas.width = window.innerWidth;
@@ -233,37 +233,47 @@
 
         function initParticles() {
             particles = [];
-            const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
+            const particleCount = Math.floor((canvas.width * canvas.height) / 12000);
             for (let i = 0; i < particleCount; i++) {
+                const depth = Math.random() * 0.7 + 0.3;
+                const baseVelocity = (Math.random() - 0.5) * 0.4;
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
                     baseX: 0,
                     baseY: 0,
-                    vx: (Math.random() - 0.5) * 0.3,
-                    vy: (Math.random() - 0.5) * 0.3,
-                    size: Math.random() * 1.5 + 0.5,
-                    alpha: Math.random() * 0.3 + 0.1
+                    vx: baseVelocity * depth,
+                    vy: ((Math.random() - 0.5) * 0.4) * depth,
+                    size: (Math.random() * 1.5 + 0.5) * depth,
+                    alpha: (Math.random() * 0.25 + 0.1) * depth,
+                    depth: depth
                 });
                 particles[i].baseX = particles[i].x;
                 particles[i].baseY = particles[i].y;
             }
+            particles.sort((a, b) => a.depth - b.depth);
         }
 
         function drawConnections() {
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
+                    const depthDiff = Math.abs(particles[i].depth - particles[j].depth);
+                    if (depthDiff > 0.25) continue;
+
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < connectionDistance) {
-                        const opacity = (1 - dist / connectionDistance) * 0.15;
+                    const avgDepth = (particles[i].depth + particles[j].depth) / 2;
+                    const connectionDist = baseConnectionDistance * avgDepth;
+
+                    if (dist < connectionDist) {
+                        const opacity = (1 - dist / connectionDist) * 0.12 * avgDepth;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.lineWidth = 0.5 * avgDepth;
                         ctx.stroke();
                     }
                 }
@@ -290,11 +300,12 @@
                     const dy = p.baseY - mouse.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < mouse.radius) {
-                        const force = (mouse.radius - dist) / mouse.radius;
+                    const effectiveRadius = mouse.radius * p.depth;
+                    if (dist < effectiveRadius) {
+                        const force = (effectiveRadius - dist) / effectiveRadius;
                         const angle = Math.atan2(dy, dx);
-                        targetX = p.baseX + Math.cos(angle) * force * 30;
-                        targetY = p.baseY + Math.sin(angle) * force * 30;
+                        targetX = p.baseX + Math.cos(angle) * force * 30 * p.depth;
+                        targetY = p.baseY + Math.sin(angle) * force * 30 * p.depth;
                     }
                 }
 
