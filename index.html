@@ -223,6 +223,7 @@
         let particles = [];
         let mouse = { x: null, y: null, radius: 150 };
         let animationId;
+        const connectionDistance = 120;
 
         function resize() {
             canvas.width = window.innerWidth;
@@ -246,6 +247,26 @@
                 });
                 particles[i].baseX = particles[i].x;
                 particles[i].baseY = particles[i].y;
+            }
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDistance) {
+                        const opacity = (1 - dist / connectionDistance) * 0.15;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
             }
         }
 
@@ -279,7 +300,11 @@
 
                 p.x += (targetX - p.x) * 0.1;
                 p.y += (targetY - p.y) * 0.1;
+            });
 
+            drawConnections();
+
+            particles.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
