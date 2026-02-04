@@ -243,8 +243,8 @@
                     baseY: 0,
                     vx: baseVelocity * depth,
                     vy: ((Math.random() - 0.5) * 0.4) * depth,
-                    size: (Math.random() * 1.5 + 0.5) * depth,
-                    alpha: (Math.random() * 0.25 + 0.1) * depth,
+                    size: (Math.random() * 2 + 1) * depth,
+                    alpha: (Math.random() * 0.4 + 0.25) * depth,
                     depth: depth
                 });
                 particles[i].baseX = particles[i].x;
@@ -267,12 +267,12 @@
                     const connectionDist = baseConnectionDistance * avgDepth;
 
                     if (dist < connectionDist) {
-                        const opacity = (1 - dist / connectionDist) * 0.12 * avgDepth;
+                        const opacity = (1 - dist / connectionDist) * 0.2 * avgDepth;
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
-                        ctx.lineWidth = 0.5 * avgDepth;
+                        ctx.lineWidth = 0.8 * avgDepth;
                         ctx.stroke();
                     }
                 }
