@@ -5,5 +5,19 @@
     "title": "Team Lead",
     "company": "Volt.io",
     "tags": ["masterclass"]
+  },
+  {
+    "quote": "I contacted Grzegorz because I needed someone trusted to vet a high-profile candidate (Co-Founder/CTO/Architect). Grzegorz tailored a custom strategy and executed it, which gave me a new perspective by uncovering details I overlooked, allowing me to make an informed decision. I'll definitely reach out again if I need similar help again.",
+    "author": "Peter Chabros",
+    "title": "CEO",
+    "company": "BespokeSoft",
+    "tags": ["consulting"]
+  },
+  {
+    "quote": "Grzegorz is one of those rare individuals who combines people leadership with excellent technical aptitude. At Hazelcast, he was the chief architect for the company's managed service. He led the transformation of a project with sizeable technical debt. The result was that the team scaled to double the size and was deploying to production ten times as frequently as before with higher quality. All this resulted in an agile product that quickly met the customer's needs. During this transformation, he used his technical skills to focus on areas that needed the most help and showed great people leadership by leading by example and always getting the buy-in from the team before introducing any systemic changes.",
+    "author": "Can Gencer",
+    "title": "Director of Engineering",
+    "company": "Hazelcast",
+    "tags": ["contract"]
   }
 ]
