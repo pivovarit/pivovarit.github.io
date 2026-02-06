@@ -473,6 +473,12 @@ function clearMarkers() {
     }
 }
 
+function createPinElement() {
+    const div = document.createElement("div");
+    div.className = "map-pin";
+    return div;
+}
+
 function createMarkerElement(count) {
     const div = document.createElement("div");
     div.className = "map-marker";
@@ -592,9 +598,8 @@ async function initMap() {
 
         if (useClusters) {
             markerOpts.content = createMarkerElement(ts.length);
-        }
-
-        if (!useClusters) {
+        } else {
+            markerOpts.content = createPinElement();
             markerOpts.map = mapInstance;
         }
 
@@ -630,6 +635,9 @@ async function initMap() {
                 },
             },
         });
+    }
+
+    if (markers.length > 0) {
         buildTravelPath(talks, data);
     }
 
