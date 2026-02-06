@@ -93,46 +93,22 @@ function makeHeaderRow(label, className = "") {
 }
 
 function createInfoWindowContent(location, coords, talksAtLocation) {
-    const root = el("div");
-    root.style.maxWidth = "250px";
+    const root = el("div", { className: "iw" });
 
     const city = location?.location?.city ?? "";
     const country = location?.location?.country ?? "";
     const place = location?.place ?? "";
-    root.appendChild(el("strong", { text: `${place} in ${city} (${country})` }));
 
-    const lat = coords?.lat;
-    const lng = coords?.lng;
-    if (Number.isFinite(lat) && Number.isFinite(lng)) {
-        const coordLine = el("div", { text: `${lat.toFixed(4)}, ${lng.toFixed(4)}` });
-        coordLine.style.opacity = "0.55";
-        coordLine.style.fontSize = "0.85em";
-        coordLine.style.marginTop = "2px";
-        root.appendChild(coordLine);
-    }
+    root.appendChild(el("div", { className: "iw-place", text: place }));
+    root.appendChild(el("div", { className: "iw-location", text: `${city}, ${country}` }));
 
-    const ul = el("ul");
-    ul.style.paddingLeft = "18px";
-    ul.style.margin = "8px 0 0 0";
-
+    const ul = el("ul", { className: "iw-talks" });
     const sorted = talksAtLocation.slice().sort((a, b) => b._ts - a._ts);
 
     for (const t of sorted) {
         const li = el("li");
-        li.style.margin = "6px 0";
-
-        li.appendChild(el("strong", { text: t.talk ?? "" }));
-        li.appendChild(document.createElement("br"));
-
-        const conf = el("div", { text: t.conference ?? "" });
-        conf.style.opacity = "0.85";
-        li.appendChild(conf);
-
-        const date = el("div", { text: formatDateFromTs(t._ts) });
-        date.style.opacity = "0.6";
-        date.style.fontSize = "0.9em";
-        li.appendChild(date);
-
+        li.appendChild(el("div", { className: "iw-talk", text: t.talk ?? "" }));
+        li.appendChild(el("div", { className: "iw-meta", text: `${t.conference ?? ""} · ${formatDateFromTs(t._ts)}` }));
         ul.appendChild(li);
     }
 
@@ -288,6 +264,9 @@ let mapInstance = null;
 let markers = [];
 let activeInfoWindow = null;
 let countdownInterval = null;
+let clusterer = null;
+let travelLines = [];
+let mapMode = "pins"; // "pins" | "clusters"
 
 function animateCounter(element, target, duration = 1500) {
     const start = 0;
@@ -475,15 +454,81 @@ async function buildYearChart() {
 }
 
 function clearMarkers() {
+    if (clusterer) {
+        clusterer.clearMarkers();
+        clusterer = null;
+    }
     for (const m of markers) {
-        try {
-            m.map = null;
-        } catch {}
-        try {
-            m.setMap?.(null);
-        } catch {}
+        try { m.map = null; } catch {}
+        try { m.setMap?.(null); } catch {}
     }
     markers = [];
+    for (const line of travelLines) {
+        line.setMap(null);
+    }
+    travelLines = [];
+    if (activeInfoWindow) {
+        activeInfoWindow.close();
+        activeInfoWindow = null;
+    }
+}
+
+function createMarkerElement(count) {
+    const div = document.createElement("div");
+    div.className = "map-marker";
+    div.textContent = count;
+    const size = Math.max(26, Math.min(26 + (count - 1) * 3, 46));
+    div.style.width = `${size}px`;
+    div.style.height = `${size}px`;
+    return div;
+}
+
+function createClusterElement(count) {
+    const div = document.createElement("div");
+    div.className = "cluster-marker";
+    div.textContent = count;
+    return div;
+}
+
+function buildTravelPath(talks, data) {
+    for (const line of travelLines) {
+        line.setMap(null);
+    }
+    travelLines = [];
+
+    const warsaw = { lat: 52.2297, lng: 21.0122 };
+
+    const seen = new Set();
+    const destinations = [];
+
+    for (const t of talks) {
+        const key = normalizeLocationId(t.location);
+        if (!key || seen.has(key)) continue;
+        const loc = data.locations?.[key];
+        if (!loc?.coordinates) continue;
+
+        const [lat, lng] = String(loc.coordinates).split(",").map(Number);
+        if (!Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+
+        const dist = Math.abs(lat - warsaw.lat) + Math.abs(lng - warsaw.lng);
+        if (dist < 0.05) continue;
+
+        seen.add(key);
+        destinations.push({ lat, lng });
+    }
+
+    for (const dest of destinations) {
+        travelLines.push(
+            new google.maps.Polyline({
+                path: [warsaw, dest],
+                geodesic: true,
+                strokeColor: "#e25440",
+                strokeOpacity: 0.5,
+                strokeWeight: 1.5,
+                map: mapInstance,
+            })
+        );
+    }
 }
 
 async function initMap() {
@@ -524,31 +569,36 @@ async function initMap() {
             zoom: 4,
             center: { lat: 50, lng: 15 },
             mapId: "talksMapId",
+            colorScheme: "DARK",
         });
     } else {
         clearMarkers();
-        if (activeInfoWindow) {
-            activeInfoWindow.close();
-            activeInfoWindow = null;
-        }
     }
 
     const bounds = new google.maps.LatLngBounds();
+    const useClusters = mapMode === "clusters" && typeof markerClusterer !== "undefined";
 
     for (const [key, { lat, lng, talks: ts }] of locationsMap.entries()) {
         const location = key ? data.locations?.[key] : null;
         if (!location) continue;
 
-        const conferences = [...new Set(ts.map((t) => t.conference).filter(Boolean))].join(" | ");
-        const title = `${location.place ?? ""}${conferences ? `: ${conferences}` : ""}`;
-
         const position = { lat, lng };
+        const title = `${location.place ?? ""} (${ts.length} talk${ts.length !== 1 ? "s" : ""})`;
 
-        const marker = new AdvancedMarkerElement({
-            map: mapInstance,
+        const markerOpts = {
             position,
             title,
-        });
+        };
+
+        if (useClusters) {
+            markerOpts.content = createMarkerElement(ts.length);
+        }
+
+        if (!useClusters) {
+            markerOpts.map = mapInstance;
+        }
+
+        const marker = new AdvancedMarkerElement(markerOpts);
 
         markers.push(marker);
         bounds.extend(position);
@@ -564,6 +614,23 @@ async function initMap() {
             infoWindow.open({ map: mapInstance, anchor: marker });
             activeInfoWindow = infoWindow;
         });
+    }
+
+    if (useClusters && markers.length > 0) {
+        const { AdvancedMarkerElement: ClusterMarker } = await google.maps.importLibrary("marker");
+        clusterer = new markerClusterer.MarkerClusterer({
+            map: mapInstance,
+            markers,
+            renderer: {
+                render: ({ count, position }) => {
+                    return new ClusterMarker({
+                        position,
+                        content: createClusterElement(count),
+                    });
+                },
+            },
+        });
+        buildTravelPath(talks, data);
     }
 
     if (markers.length === 1) {
@@ -657,8 +724,25 @@ async function initPage() {
     }
 }
 
+function syncToggleButton() {
+    const btn = document.getElementById("mapModeToggle");
+    if (!btn) return;
+    btn.textContent = mapMode === "clusters" ? "Clusters" : "Pins";
+    btn.classList.toggle("active", mapMode === "clusters");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     initPage();
+    syncToggleButton();
+
+    const toggleBtn = document.getElementById("mapModeToggle");
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", () => {
+            mapMode = mapMode === "pins" ? "clusters" : "pins";
+            syncToggleButton();
+            initMap();
+        });
+    }
 
     const retryBtn = document.getElementById('retryBtn');
     if (retryBtn) {

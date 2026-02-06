@@ -77,7 +77,10 @@
             </div>
         </div>
 
-        <div id="map" role="region" aria-label="Map of conference locations"></div>
+        <div class="map-wrapper">
+            <div id="map" role="region" aria-label="Map of conference locations"></div>
+            <button id="mapModeToggle" class="map-mode-toggle" aria-label="Toggle map view mode">Clusters</button>
+        </div>
 
         <div id="yearChart" class="year-chart" role="navigation" aria-label="Filter by year"></div>
 
@@ -101,6 +104,8 @@
 </div>
 
 <script type="module" src="./app.js"></script>
+
+<script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js" defer></script>
 
 <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi4kCXAt5WEgr_4Zc7fmo_TrHM5PD-1z0&loading=async&callback=initMap&v=weekly"

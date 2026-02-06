@@ -43,12 +43,171 @@ a:hover {
   margin: 0;
 }
 
-#map {
-  margin: 10px auto;
-  height: 600px;
+.map-wrapper {
+  position: relative;
   max-width: 1200px;
+  margin: 10px auto;
+}
+
+#map {
+  height: 600px;
   border: 1px solid #2a2a40;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-mode-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  background: #16162a;
+  color: #a0a0b0;
+  border: 1px solid #2a2a40;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: "Raleway", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.map-mode-toggle:hover {
+  background: #1f1f35;
+  color: #e25440;
+  border-color: #e25440;
+}
+
+.map-mode-toggle.active {
+  background: #e25440;
+  color: #fff;
+  border-color: #e25440;
+}
+
+.map-mode-toggle.active:hover {
+  background: #ff6b5b;
+}
+
+.map-marker {
+  background: linear-gradient(135deg, #e25440, #ff6b5b);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(226, 84, 64, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.map-marker:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 20px rgba(226, 84, 64, 0.7);
+}
+
+.cluster-marker {
+  background: #1a1a2e;
+  color: #e25440;
+  border: 2px solid #e25440;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 2px 14px rgba(226, 84, 64, 0.4);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cluster-marker:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 20px rgba(226, 84, 64, 0.6);
+}
+
+.iw {
+  max-width: 280px;
+  font-family: "Raleway", sans-serif;
+}
+
+.iw-place {
+  font-family: "Roboto Slab", serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #e25440;
+  margin-bottom: 2px;
+}
+
+.iw-location {
+  font-size: 12px;
+  color: #8a8a9a;
+  margin-bottom: 10px;
+}
+
+.iw-talks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.iw-talks li {
+  padding: 8px 0;
+  border-top: 1px solid #2a2a40;
+}
+
+.iw-talks li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.iw-talk {
+  font-weight: 600;
+  font-size: 13px;
+  color: #d0d0e0;
+  margin-bottom: 2px;
+}
+
+.iw-meta {
+  font-size: 11px;
+  color: #6a6a7a;
+}
+
+.gm-style .gm-style-iw-c {
+  background: #16162a !important;
+  border: 1px solid #2a2a40 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6) !important;
+  padding: 12px !important;
+}
+
+.gm-style .gm-style-iw-d {
+  overflow: auto !important;
+}
+
+.gm-style .gm-style-iw-tc::after {
+  background: #16162a !important;
+}
+
+.gm-style .gm-style-iw-t::after {
+  background: linear-gradient(45deg, #16162a 50%, transparent 50%, transparent) !important;
+  box-shadow: none !important;
+}
+
+.gm-style .gm-ui-hover-effect > span {
+  background-color: #6a6a7a !important;
+}
+
+.gm-style .gm-ui-hover-effect:hover > span {
+  background-color: #e25440 !important;
 }
 
 #talksTable {
