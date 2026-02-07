@@ -1,258 +1,224 @@
 [
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-11-15",
-    "opinion": "The workshop provided deep insights into parallel streams and virtual threads. Highly practical examples that I could immediately apply to our production code."
+    "workshop": "Effective Programming in Java",
+    "date": "2018-09-26",
+    "opinion": "Grzegorz is a true enthusiast - such people are always great to listen to, always great to learn from, and it gives you a nice motivational kick. Besides, you can see he was well prepared for the training - both in terms of the course material and in the sense that he clearly trains in teaching methodology and strives for participants to take away as much as possible.",
+    "original": "Grzegorz jest naprawdę pasjonatą - takich ludzi zawsze dobrze się słucha, od takich ludzi zawsze dobrze się uczy i to daje też fajnego motywacyjnego kopa. Poza tym widać, że był też przygotowany do prowadzenia szkolenia - zarówno jeśli chodzi o przygotowanie do zajęć, jak i to że widać, że szkoli się w zakresie dydaktyki i stara się aby ludzie wynieśli jak najwiecej."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2019-03-13",
+    "opinion": "You can tell he's a person with vast knowledge and passion for what he does. He conveyed an enormous amount of knowledge through lectures, practical exercises, whiteboard diagrams, and even a quiz. A very practical training from which I learned a lot.",
+    "original": "Widać, że człowiek z ogromną wiedzą i pasją do tego co robi. Przekazał ogromną ilość wiedzy w formie wykładów, praktycznych zadań, rozrysowywał na tablicy i nawet przeprowadził quiz. Bardzo praktyczne szkolenie z którego dużo wyniosłem."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2019-03-13",
+    "opinion": "Once again: the best training I've ever attended! :) I hope I'll get the chance to attend another training with you!",
+    "original": "Po raz kolejny: najlepsze szkolenie, na jakim byłem! :) Mam nadzieję, że będę miał okazję na kolejne szkolenie z Tobą!"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable.",
-    "original": "Warsztat dostarczył głębokich spostrzeżeń na temat równoległych strumieni..."
+    "workshop": "Effective Reactive Programming in Java",
+    "date": "2023-11-09",
+    "opinion": "Openness to questions asked during the training, even when they weren't necessarily related to the main topic, as well as the ability to jump between these threads and carefully close emerging digressions in a way that's understandable to everyone.",
+    "original": "Otwartość na pytania zadawane w trakcie prowadzenia szkolenia, gdzie pytania niekoniecznie były związane z głównym wątkiem, jak również umiejętność przeskakiwania między tymi wątkami i staranne zamykanie pojawiających się dygresji w sposób zrozumiały dla każdego"
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Spring",
+    "date": "2023-12-08",
+    "opinion": "A very valuable training, presented in an accessible way. I managed to better understand the hexagonal approach to system architecture and to watch out for the pitfalls of \"Spring magic\". Thanks :)",
+    "original": "Bardzo wartościowe szkolenie, przedstawione w przystępny sposób. Udało mi się lepiej zrozumieć heksagonalne podejście do architektury systemów i zwracać uwagę na pułapki \"Springowej magii\". Dzięki :)"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "RESTful Microservices",
+    "date": "2024-01-17",
+    "opinion": "You had me from the first slide. I envy your efficiency, experience, and effective application of pragmatic thinking. It was a pure pleasure to watch you work.",
+    "original": "Kupiłeś mnie od pierwszego slajdu. Zazdroszczę Ci sprawności, doświadczenia i skutecznego aplikowania pragmatycznego myślenia. To była czysta przyjemność widzieć jak pracujesz."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-05-10",
+    "opinion": "I took away a lot from this training, one of the most enjoyably delivered lectures I've had the pleasure of attending.",
+    "original": "Bardzo dużo wyniosłem z tego szkolenia, jeden z fajniej poprowadzonych wykładów jakich miałem przyjemność posłuchać."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-05-10",
+    "opinion": "One of the best trainings I've attended. Well-chosen and interesting topics. A good ratio of breaks to active training. Perfect pace. Plenty of interesting facts.",
+    "original": "Jedno z najlepszych w jakich brałem udział. Dobrze dobrane i ciekawe tematy. Odpowiedni stosunek przerw do aktywnego szkolenia. Idealne tempo. Sporo ciekawostek."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-09-24",
+    "opinion": "The pace of the training; frequent breaks; discussions with the team, but without forcing answers from participants. Creating a safe space :)",
+    "original": "Tempo prowadzenia szkolenia; częste przerwy; dyskusje z zespołem, ale bez wymuszania odpowiedzi od uczestników. Tworzenie safe space :)"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-11-25",
+    "opinion": "Openness, high personal culture, high level of expertise, adapting to the group's level.",
+    "original": "Otwartość, wysoka kultura osobista, wysoki poziom merytoryczny, dostosowywanie się do poziomu grupy"
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2021-05-07",
+    "opinion": "Friendly and with vast knowledge, you can tell he's someone who really knows his stuff. He also knows how to run trainings, knows when to take breaks, provides a separate room for consultations, very good organization.",
+    "original": "Sympatyczny i z ogromną wiedzą, widać, że jest to ktoś, kto zna się na rzeczy. Potrafi też prowadzić szkolenia, wie kiedy robić przerwy, wydziela osobny pokój do konsultacji, bardzo dobra organizacja"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2021-05-07",
+    "opinion": "Congratulations on the knowledge, experience, and skills. Grzegorz is one of those people who creates knowledge (I've browsed his blog and Stack Overflow contributions).",
+    "original": "Gratuluję wiedzy, doświadczenia oraz umiejętności. Grzegorz jest jedną z tych osób, która tworzy wiedzę (przeglądałem jego blog czy stack overflow)"
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2024-10-29",
+    "opinion": "Great theoretical and practical knowledge, communication skills (clear transfer of ideas, beautiful Polish language), energy - the training was conducted dynamically (which is super important in online trainings!).",
+    "original": "Duża wiedza teoretyczna i praktyczna, komunikatywność (czytelne przekazywanie myśli, ładny język polski), energia - szkolenie było prowadzone dynamicznie (a to turboważne w szkoleniach online!)."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2024-10-29",
+    "opinion": "Very good knowledge of the subject, but also of programming logic in general, willingly and patiently answered many questions about both the topic and related technical matters.",
+    "original": "bardzo dobra znajomość tematu, ale i ogólnie logiki programowania, odpowiadał chętnie i cierpliwie na mnóstwo pytań dotyczących zarówno tematu jak i około technicznych rzeczy."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2024-10-29",
+    "opinion": "Coding proficiency, ease of transferring knowledge through clear explanations with examples, matter-of-factness.",
+    "original": "Sprawność kodowania, łatwość przekazywania wiedzy poprzez jasne tłumaczenie z przykładami, rzeczowość."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2024-10-29",
+    "opinion": "Thank you very much for the patience in answering questions and for igniting the joy of programming, which will now be killed by the \"prose of life\".",
+    "original": "Dziękuje bardzo za cierpliwość w odpowiedziach na pytania i za rozpalenie radości z programowania, która to będzie teraz zabijana w \"prozie życia\""
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2025-02-21",
+    "opinion": "Very well explained topics related to reactivity and virtual threads.",
+    "original": "Bardzo dobrze wytłumaczone zagadnienia związane z reaktywnością oraz wątkami wirtualnymi"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2025-08-22",
+    "opinion": "Persistence, always tried to get to the root cause of why something wasn't working.",
+    "original": "Upor, zawsze staral sie dojsc do powodu czemu cos nie dzialalo."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2025-08-22",
+    "opinion": "Vast knowledge, which he conveyed with equally great ease. Very friendly attitude towards participants and a tremendous willingness to help.",
+    "original": "Duża wiedza, którą z podobnie dużą łatwością przekazywał. Bardzo przyjazne nastawienie do uczestników i ogromna chęć pomocy."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2021-01-22",
+    "opinion": "Very good subject-matter preparation of the instructor, ability to convey knowledge in a clear and simple way.",
+    "original": "Bardzo dobre przygotowanie merytoryczne prowadzącego, umiejętność przekazywania wiedzy w sposób klarowny i prosty."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2021-01-22",
+    "opinion": "Explaining through examples and diagrams. Extensive experience and knowledge from working on various projects. Communication skills and the ability to convey knowledge in an engaging way.",
+    "original": "Tłumaczenie na przykładach i diagramach. Spore doświadczenie i wiedza w pracy w różnych projektach. Umiejętności komunikacyjne i sposób przekazywania wiedzy w ciekawy sposób."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2021-01-22",
+    "opinion": "Engaging training delivery, ability to hold attention, broad knowledge, ability to convey knowledge in an interesting way, additional exercises for those who finished the basic tasks.",
+    "original": "Ciekawe prowadzenie szkolenia, umiejętność utrzymywania uwagi, szeroka wiedza, umiejętność przekazywania wiedzy w ciekawy sposób, dodatkowe ćwiczenia dla osób, które skończyły podstawowe zadania"
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2023-10-04",
+    "opinion": "Excellent teaching skills - examples shown from scratch, step by step. Vast knowledge and a very warm approach to participants.",
+    "original": "Bardzo dobry warsztat nauczycielski - przykłady pokazywane od 0, krok po kroku. Ogromna wiedza i bardzo serdeczne podejscie do kursantów."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Functional Programming in Java",
+    "date": "2022-01-11",
+    "opinion": "He could quickly come up with examples off the top of his head, and if the theory wasn't on the slides, he demonstrated it with live-coded examples. You could tell the guy knows what he's doing and really knows his stuff.",
+    "original": "Potrafił z głowy na szybko podać przykłady, teorię też jeżeli nie była na slajdach pokazywał na bieżąco pisanym kodzie. Widać było, że ziomek wie co robi i zna się na rzeczy."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Spring",
+    "date": "2021-10-13",
+    "opinion": "I have very positive impressions. I expected a straightforward training, but received a wealth of knowledge along with best practices and knowledge of what to avoid. The large amount of hands-on practice made it much easier for me to organize the acquired knowledge.",
+    "original": "Mam bardzo pozytywne wrażenia. Spodziewałem się prostego szkolenia, a otrzymałem masę wiedzy wraz z dobrymi praktykami i wiedzą czego unikać. Przez dużą ilość praktyki znacznie łatwiej mi było uporządkować zdobytą wiedzę."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2023-08-04",
+    "opinion": "Vast knowledge and willingness to share it. Lots of valuable tips plus side tips (e.g., pro tips for working in IntelliJ IDEA).",
+    "original": "Ogromna wiedza i chęć dzielenia się nią. Dużo cennych wskazówek + tych pobocznych (np. protipy do pracy w IntelliJ IDEA)."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2023-08-04",
+    "opinion": "You could tell he has broad knowledge on many topics, he ran the training in an engaging way, lots of practice, gave individual attention to those who needed it.",
+    "original": "Było widać że ma dużą wiedzę na wiele tematów, prowadził szkolenie w ciekawy sposób, dużo praktyki, podchodził indywidualnie do osób które tego potrzebowały"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2023-08-04",
+    "opinion": "People like Grzesiek - with passion for their work - are my motivation.",
+    "original": "Tacy ludzie jak Grzesiek - z pasją do swojej pracy - są dla mnie motywacją."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Modern Application Architecture in Practice",
+    "date": "2023-08-04",
+    "opinion": "I rate the training very highly. The workflow really appealed to me because there was a lot of independent work. It was also very valuable that as we progressed through each stage of the program, we experienced the discussed problems firsthand - it was easier to then understand WHY we applied a given solution.",
+    "original": "Szkolenie oceniam bardzo dobrze. Schemat pracy bardzo przypadł mi do gustu, ponieważ było dużo pracy samodzielnej. Bardzo cenne było również to, że przechodząc przez kolejne etapy programu, na własnej skórze doświadczaliśmy omawianych problemów - łatwiej było potem zrozumieć DLACZEGO zastosowaliśmy dane rozwiązanie."
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2023-06-23",
+    "opinion": "He should have a second job in radio.",
+    "original": "Powinien miec kolejny etat w radiu"
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2023-06-23",
+    "opinion": "Thanks for presenting the topic of threads in such a vivid and understandable way. It finally allowed me to understand the basics and even sparked my interest :)",
+    "original": "Dzięki że przedstawiłeś w sposob obrazowy i zrozumiały temat wątków. Pozwolił mi to w końcu zrozumieć ich podstawy a nawet wzbudziło moje zainteresowanie :)"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2023-06-23",
+    "opinion": "Thank you very much for a great training, it's great that there were lots of exercises. I honestly admit this was one of the best-run trainings I've ever attended, and I've been to quite a few. Excellent knowledge and, importantly, the ability to convey it are at the highest level. I'm very glad I could be a participant of this course!",
+    "original": "dziękuję bardzo za super szkolenie, super sprawa że było dużo ćwiczeń, przyznam szczerze, że jest było to jedno z najlepiej prowadzonych szkoleń w jakichkolwiek uczestniczyłem a przyznam że trochę ich miałem. Świetna wiedza i co ważne predyspozycje do jej przekazania są na najwyższym poziomie. Cieszę się bardzo że mogłem być uczestnikiem tego kursu!!."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-11-24",
+    "opinion": "A true enthusiast, vast knowledge, a stress-free way of conducting training with a huge dose of new knowledge.",
+    "original": "Prawdziwy pasjonat, ogromna wiedza, bezstresowy sposób prowadzenia szkolenia z wielką pigułą nowej wiedzy"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-11-24",
+    "opinion": "Truly thorough knowledge of the presented topics, even when a topic beyond the scope of the training came up, he could quickly analyze the source code and answer the question.",
+    "original": "Naprawde dokładna wiedza na prezentowane tematy, nawet jeśli pojawił sie jakiś temat wybiegający poza tematykę szkolenia bądź zadania szybko potrafił przeanalizować kod źródłowy i odpowiedzieć na pytanie."
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-11-24",
+    "opinion": "I've been to several trainings and this is the first one I can recommend to others.",
+    "original": "Byłem na kilku szkoleniach i to jest pierwsze szkolenie, które mogę polecić innym"
   },
   {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-11-24",
+    "opinion": "I'm glad it was you who led this training. Working with you on a team must be a pure pleasure :D",
+    "original": "Ciesze sie, ze to akuraty Ty prowadziles to szkolenie. Praca z Toba w zespole to musi byc sama przyjemnosc :D"
   },
   {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
-  },
-  {
-    "workshop": "Distributed Systems Patterns",
-    "date": "2080-10-22",
-    "opinion": "Excellent coverage of resilience patterns. The hands-on exercises with circuit breakers and retry mechanisms were particularly valuable."
-  },
-  {
-    "workshop": "Advanced Java Concurrency",
-    "date": "2080-09-18",
-    "opinion": "Finally understood the nuances of CompletableFuture! The real-world scenarios made complex concepts much easier to grasp."
+    "workshop": "Effective Programming in Java",
+    "date": "2024-11-24",
+    "opinion": "Full professionalism in every aspect.",
+    "original": "Pełen profesjonalizm w każdym aspekcie."
   }
 ]
