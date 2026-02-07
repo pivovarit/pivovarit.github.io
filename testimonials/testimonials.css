@@ -292,6 +292,8 @@ a:hover {
   opacity: 0;
   animation: slideUp 0.5s ease forwards;
   transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .testimonial-card:hover {
@@ -338,6 +340,7 @@ a:hover {
   margin: 0 0 24px;
   position: relative;
   z-index: 1;
+  flex: 1;
 }
 
 .testimonial-author {
