@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio - Grzegorz Piwowarek</title>
+    <meta name="description" content="Speaker bios for CFP submissions">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 3rem 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .bio-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: border-color 0.2s ease;
+        }
+
+        .bio-card:hover {
+            border-color: #333;
+        }
+
+        .bio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bio-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: #555;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .bio-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #ccc;
+        }
+
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #888;
+            font-family: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            border-color: #555;
+            color: #ccc;
+        }
+
+        .copy-btn.copied {
+            border-color: #4a9;
+            color: #4a9;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #999;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/" class="back-link">&larr; Back</a>
+
+    <header>
+        <h1>Speaker Bio</h1>
+        <p class="subtitle">Copy-paste ready for CFP forms</p>
+    </header>
+
+    <div id="bios"></div>
+</div>
+
+<script>
+    const bios = [
+        {
+            label: 'Standard',
+            text: 'Grzegorz Piwowarek is an independent trainer and consultant, Java Champion, and Oracle ACE. He is the lead of the Vavr project and the Warsaw Java User Group, and a long-time contributor to the Java ecosystem as a speaker, OSS author, and blogger at 4comprehension.com.\n\nThere are persistent rumors that he only exists at compile time.'
+        }
+    ];
+
+    const container = document.getElementById('bios');
+
+    container.innerHTML = bios.map((bio, i) => `
+        <div class="bio-card">
+            <div class="bio-header">
+                <span class="bio-label">${bio.label}</span>
+                <span class="char-count">${bio.text.length} chars</span>
+            </div>
+            <p class="bio-text">${bio.text.replace(/\n/g, '<br>')}</p>
+            <button class="copy-btn" data-index="${i}">Copy</button>
+        </div>
+    `).join('');
+
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const bio = bios[btn.dataset.index];
+            navigator.clipboard.writeText(bio.text).then(() => {
+                btn.textContent = 'Copied';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 1500);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
