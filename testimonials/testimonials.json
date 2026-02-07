@@ -35,6 +35,13 @@
     "tags": ["contract"]
   },
   {
+    "quote": "Grzegorz is simply brilliant. He not only has amazing technical knowledge and skills, but he is also very capable at design and has a gift for explaining even very complicated concepts in a very simple manner. <br><br>In addition, he is friendly and easy-going, and other engineers tend to follow him naturally just because he goes for facts, not words.",
+    "author": "Bruno Fratini",
+    "title": "Senior Engineering Manager",
+    "company": "Casumo",
+    "tags": ["contract"]
+  },
+  {
     "quote": "Grzegorz Piwowarek led workshops at e-point S.A. for 12 programmers about functional programming in Java 8. <br><br> He was well prepared, used appropriate exercises and supported participants at their own laptops. All participants upvoted the workshop and wish another one.",
     "author": "Marek Berkan",
     "title": "Team Leader",
@@ -42,3 +49,4 @@
     "tags": ["workshop"]
   }
 ]
+
