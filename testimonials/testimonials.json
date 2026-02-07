@@ -28,7 +28,14 @@
     "tags": ["contract"]
   },
   {
-    "quote": "Grzegorz Piwowarek led workshops at e-point S.A. for 12 programmers about functional programming in Java 8. He was well prepared, used appropriate exercises and supported participants at their own laptops. All participants upvoted the workshop and wish another one.",
+    "quote": "Grzegorz is a passionate software architect and engineer who can jump straight into the deep end, make an impact, and tackle tough problems. <br><br>At the same time, he's the type of engineer who brings a broad perspective (...) This perspective is rare and valuable as great ideas come from many sources. <br><br>He's also able to recruit great talent.",
+    "author": "John DesJardins",
+    "title": "CTO",
+    "company": "Hazelcast",
+    "tags": ["contract"]
+  },
+  {
+    "quote": "Grzegorz Piwowarek led workshops at e-point S.A. for 12 programmers about functional programming in Java 8. <br><br> He was well prepared, used appropriate exercises and supported participants at their own laptops. All participants upvoted the workshop and wish another one.",
     "author": "Marek Berkan",
     "title": "Team Leader",
     "company": "e-point SA",
