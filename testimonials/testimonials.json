@@ -19,5 +19,19 @@
     "title": "Director of Engineering",
     "company": "Hazelcast",
     "tags": ["contract"]
+  },
+  {
+    "quote": "I've been working with Grzegorz for a while now and continue to see some clear and consistent things. <br>The phrase \"going the extra mile\" is a bit overused today, but it certainly fits well here. <br><br> Grzegorz is consistently handling the extra details that most people skip over. That coupled with a open way of collaborating with me and with the team has made our work highly productive.",
+    "author": "Eugen Paraschiv",
+    "title": "CEO",
+    "company": "Baeldung",
+    "tags": ["contract"]
+  },
+  {
+    "quote": "Grzegorz Piwowarek led workshops at e-point S.A. for 12 programmers about functional programming in Java 8. He was well prepared, used appropriate exercises and supported participants at their own laptops. All participants upvoted the workshop and wish another one.",
+    "author": "Marek Berkan",
+    "title": "Team Leader",
+    "company": "e-point SA",
+    "tags": ["workshop"]
   }
 ]
