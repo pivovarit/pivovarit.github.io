@@ -121,6 +121,40 @@
             color: #4a9;
         }
 
+        .lang-toggle {
+            display: inline-flex;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .lang-btn {
+            padding: 0.35rem 0.9rem;
+            background: transparent;
+            border: none;
+            color: #555;
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.03em;
+        }
+
+        .lang-btn:not(:last-child) {
+            border-right: 1px solid #2a2a2a;
+        }
+
+        .lang-btn.active {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .lang-btn:hover:not(.active) {
+            color: #999;
+        }
+
         .back-link {
             display: inline-block;
             margin-bottom: 2rem;
@@ -153,45 +187,72 @@
     <header>
         <h1>Speaker Bio</h1>
         <p class="subtitle">Copy-paste ready for CFP forms</p>
+        <div class="lang-toggle" style="margin-top: 1.5rem;">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="pl">PL</button>
+        </div>
     </header>
 
     <div id="bios"></div>
 </div>
 
 <script>
-    const bios = [
-        {
-            label: 'Standard',
-            text: 'Grzegorz Piwowarek is an independent trainer and consultant, Java Champion, and Oracle ACE. He is the lead of the Vavr project and the Warsaw Java User Group, and a long-time contributor to the Java ecosystem as a speaker, OSS author, and blogger at 4comprehension.com.\n\nThere are persistent rumors that he only exists at compile time.'
-        }
-    ];
+    const bios = {
+        en: [
+            {
+                label: 'Standard',
+                text: 'Grzegorz Piwowarek is an independent trainer and consultant, Java Champion, and Oracle ACE. He is the lead of the Vavr project and the Warsaw Java User Group, and a long-time contributor to the Java ecosystem as a speaker, OSS author, and blogger at 4comprehension.com.\n\nThere are persistent rumors that he only exists at compile time.'
+            }
+        ],
+        pl: [
+            {
+                label: 'Standard',
+                text: 'Grzegorz Piwowarek jest niezależnym trenerem i konsultantem, Java Championem oraz Oracle ACE. Jest liderem projektu Vavr i Warszawskiego JUG-a oraz wieloletnim kontrybutorem ekosystemu Java jako prelegent, autor projektów open-source i bloger na 4comprehension.com.\n\nKrążą uporczywe pogłoski, że istnieje tylko w czasie kompilacji.'
+            }
+        ]
+    };
 
+    let currentLang = 'en';
     const container = document.getElementById('bios');
 
-    container.innerHTML = bios.map((bio, i) => `
-        <div class="bio-card">
-            <div class="bio-header">
-                <span class="bio-label">${bio.label}</span>
-                <span class="char-count">${bio.text.length} chars</span>
+    function renderBios() {
+        const langBios = bios[currentLang];
+        container.innerHTML = langBios.map((bio, i) => `
+            <div class="bio-card">
+                <div class="bio-header">
+                    <span class="bio-label">${bio.label}</span>
+                    <span class="char-count">${bio.text.length} chars</span>
+                </div>
+                <p class="bio-text">${bio.text.replace(/\n/g, '<br>')}</p>
+                <button class="copy-btn" data-index="${i}">Copy</button>
             </div>
-            <p class="bio-text">${bio.text.replace(/\n/g, '<br>')}</p>
-            <button class="copy-btn" data-index="${i}">Copy</button>
-        </div>
-    `).join('');
+        `).join('');
 
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const bio = bios[btn.dataset.index];
-            navigator.clipboard.writeText(bio.text).then(() => {
-                btn.textContent = 'Copied';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = 'Copy';
-                    btn.classList.remove('copied');
-                }, 1500);
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const bio = langBios[btn.dataset.index];
+                navigator.clipboard.writeText(bio.text).then(() => {
+                    btn.textContent = 'Copied';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 1500);
+                });
             });
         });
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentLang = btn.dataset.lang;
+            renderBios();
+        });
     });
+
+    renderBios();
 </script>
 
 </body>
