@@ -92,6 +92,16 @@
             </li>
               {% endif %}
 
+                {% if site.author.bluesky_url %}
+                <!-- Bluesky -->
+                <li class="navigation__item">
+                  <a href="{{ site.author.bluesky_url }}" title="Bluesky" target="_blank">
+                    <i class="icon icon-link"></i>
+                      <span class="label">Bluesky</span>
+                  </a>
+                </li>
+                {% endif %}
+
                 {% if site.author.stack-overflow-id %}
                 <!-- Stack Overflow -->
                 <li class="navigation__item">
