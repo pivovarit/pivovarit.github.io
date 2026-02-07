@@ -547,6 +547,32 @@
     letter-spacing: -0.01em;
   }
 
+  .install-card-header .copy-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .install-card-header .copy-btn:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+    background: var(--accent-glow);
+  }
+
+  .install-card-header .copy-btn.copied {
+    color: var(--accent);
+    border-color: var(--accent-dim);
+  }
+
   .install-card-header .version {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -856,7 +882,10 @@ urls<span class="op">.</span><span class="mt">stream</span>().<span class="mt">c
       <div class="install-card">
         <div class="install-card-header">
           <h3>Maven</h3>
-          <span class="version">JDK 21+</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="version">JDK 21+</span>
+            <button class="copy-btn" onclick="copyInstall(this)">copy</button>
+          </div>
         </div>
 <pre><code><span class="xml-tag">&lt;dependency&gt;</span>
   <span class="xml-tag">&lt;groupId&gt;</span><span class="xml-content">com.pivovarit</span><span class="xml-tag">&lt;/groupId&gt;</span>
@@ -867,7 +896,10 @@ urls<span class="op">.</span><span class="mt">stream</span>().<span class="mt">c
       <div class="install-card">
         <div class="install-card-header">
           <h3>Gradle</h3>
-          <span class="version">JDK 21+</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="version">JDK 21+</span>
+            <button class="copy-btn" onclick="copyInstall(this)">copy</button>
+          </div>
         </div>
 <pre><code><span class="mt">implementation</span> <span class="st">'com.pivovarit:parallel-collectors:3.4.0'</span></code></pre>
       </div>
@@ -876,7 +908,10 @@ urls<span class="op">.</span><span class="mt">stream</span>().<span class="mt">c
       <div class="install-card">
         <div class="install-card-header">
           <h3>Maven</h3>
-          <span class="version" style="color:var(--text-secondary);background:rgba(255,255,255,0.04);border-color:var(--border)">JDK 8+</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="version" style="color:var(--text-secondary);background:rgba(255,255,255,0.04);border-color:var(--border)">JDK 8+</span>
+            <button class="copy-btn" onclick="copyInstall(this)">copy</button>
+          </div>
         </div>
 <pre><code><span class="xml-tag">&lt;dependency&gt;</span>
   <span class="xml-tag">&lt;groupId&gt;</span><span class="xml-content">com.pivovarit</span><span class="xml-tag">&lt;/groupId&gt;</span>
@@ -887,7 +922,10 @@ urls<span class="op">.</span><span class="mt">stream</span>().<span class="mt">c
       <div class="install-card">
         <div class="install-card-header">
           <h3>Gradle</h3>
-          <span class="version" style="color:var(--text-secondary);background:rgba(255,255,255,0.04);border-color:var(--border)">JDK 8+</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="version" style="color:var(--text-secondary);background:rgba(255,255,255,0.04);border-color:var(--border)">JDK 8+</span>
+            <button class="copy-btn" onclick="copyInstall(this)">copy</button>
+          </div>
         </div>
 <pre><code><span class="mt">implementation</span> <span class="st">'com.pivovarit:parallel-collectors:2.6.1'</span></code></pre>
       </div>
@@ -931,6 +969,20 @@ urls<span class="op">.</span><span class="mt">stream</span>().<span class="mt">c
       setTimeout(() => {
         el.classList.remove('copied');
         el.querySelector('.copy-hint').textContent = 'click to copy';
+      }, 2000);
+    });
+  }
+
+  // Copy install snippet
+  function copyInstall(btn) {
+    const card = btn.closest('.install-card');
+    const text = card.querySelector('pre').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.textContent = 'copied!';
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.textContent = 'copy';
       }, 2000);
     });
   }
