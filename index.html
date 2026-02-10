@@ -12,17 +12,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grzegorz Piwowarek</title>
-    <meta name="description" content="Java Champion">
+    <meta name="description" content="Java Champion — independent consultant and trainer helping teams deliver robust distributed systems">
     <meta name="author" content="Grzegorz Piwowarek">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Grzegorz Piwowarek">
-    <meta name="twitter:description" content="Java Champion">
+    <meta name="twitter:description" content="Java Champion — independent consultant and trainer helping teams deliver robust distributed systems">
     <meta name="twitter:creator" content="@pivovarit">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Grzegorz Piwowarek">
-    <meta property="og:description" content="Java Champion">
+    <meta property="og:description" content="Java Champion — independent consultant and trainer helping teams deliver robust distributed systems">
 
     <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
@@ -47,7 +47,7 @@
             justify-content: center;
             padding: 2rem;
             line-height: 1.6;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         #bg-canvas {
@@ -109,7 +109,7 @@
         .tagline {
             font-size: 1.35rem;
             color: #999;
-            margin-bottom: 2rem;
+            margin-bottom: 0.75rem;
             font-weight: 300;
             line-height: 1.5;
         }
@@ -203,6 +203,61 @@
             margin: 0 0.5rem;
         }
 
+        .subtitle {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .trusted-by {
+            margin-bottom: 2.5rem;
+        }
+
+        .trusted-label {
+            font-size: 0.7rem;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            display: block;
+            margin-bottom: 0.75rem;
+        }
+
+        .trusted-companies {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem 1.25rem;
+            color: #555;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .testimonial {
+            margin: 1.5rem 0;
+            padding: 1.25rem 1.5rem;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .testimonial blockquote {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .testimonial cite {
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+        }
+
         @media (max-width: 480px) {
             h1 {
                 font-size: 1.6rem;
@@ -215,6 +270,14 @@
             .profile-image {
                 width: 120px;
                 height: 120px;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+            }
+
+            .trusted-companies {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -234,6 +297,7 @@
         <span class="tag">WarsawJUG</span>
     </div>
     <p class="tagline">I help teams deliver <em>robust</em> and <em>reliable</em> distributed systems</p>
+    <p class="subtitle">Consulting · Mentoring · Workshops</p>
 
     <div class="links">
         <a href="mailto:contact@4comprehension.com" class="link"><span class="arrow">&lt;-</span>Get in Touch</a>
