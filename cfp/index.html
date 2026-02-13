@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio - Grzegorz Piwowarek</title>
+    <meta name="description" content="Speaker bios for CFP submissions">
+    <meta name="robots" content="noindex">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 3rem 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .bio-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: border-color 0.2s ease;
+        }
+
+        .bio-card:hover {
+            border-color: #333;
+        }
+
+        .bio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .bio-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .char-count {
+            font-size: 0.75rem;
+            color: #555;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .bio-text {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #ccc;
+        }
+
+        .copy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #888;
+            font-family: inherit;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            border-color: #555;
+            color: #ccc;
+        }
+
+        .copy-btn.copied {
+            border-color: #4a9;
+            color: #4a9;
+        }
+
+        .lang-toggle {
+            display: inline-flex;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .lang-btn {
+            padding: 0.35rem 0.9rem;
+            background: transparent;
+            border: none;
+            color: #555;
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.03em;
+        }
+
+        .lang-btn:not(:last-child) {
+            border-right: 1px solid #2a2a2a;
+        }
+
+        .lang-btn.active {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+
+        .lang-btn:hover:not(.active) {
+            color: #999;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #999;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid #1e1e1e;
+            letter-spacing: -0.02em;
+        }
+
+        .talk-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .talk-card:hover {
+            border-color: #333;
+        }
+
+        .talk-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .talk-abstract {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #ccc;
+        }
+
+        .talk-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .photo-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.2s ease;
+        }
+
+        .photo-card:hover {
+            border-color: #333;
+        }
+
+        .photo-card img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-info {
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .photo-label {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            background: transparent;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #888;
+            font-family: inherit;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .download-btn:hover {
+            border-color: #555;
+            color: #ccc;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .photos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/" class="back-link">&larr; Back</a>
+
+    <header>
+        <h1>Speaker Bio</h1>
+        <p class="subtitle">Copy-paste ready for CFP forms</p>
+        <div class="lang-toggle" style="margin-top: 1.5rem;">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="pl">PL</button>
+        </div>
+    </header>
+
+    <div id="bios"></div>
+
+    <section id="talks-section">
+        <h2 class="section-title">Talks</h2>
+        <div id="talks"></div>
+    </section>
+
+    <section id="photos-section">
+        <h2 class="section-title">Photos</h2>
+        <div id="photos" class="photos-grid"></div>
+    </section>
+</div>
+
+<script>
+    const bios = {
+        en: [
+            {
+                label: 'Standard',
+                text: 'Grzegorz Piwowarek is an independent trainer and consultant, Java Champion, and Oracle ACE. He is the lead of the Vavr project and the Warsaw Java User Group, and a long-time contributor to the Java ecosystem as a speaker, OSS author, and blogger at 4comprehension.com.\n\nThere are persistent rumors that he only exists at compile time.'
+            }
+        ],
+        pl: [
+            {
+                label: 'Standard',
+                text: 'Grzegorz Piwowarek jest niezależnym trenerem i konsultantem, Java Championem oraz Oracle ACE. Jest liderem projektu Vavr i Warszawskiego JUG-a oraz wieloletnim kontrybutorem ekosystemu Java jako prelegent, autor projektów open-source i bloger na 4comprehension.com.\n\nKrążą uporczywe pogłoski, że istnieje tylko w czasie kompilacji.'
+            }
+        ]
+    };
+
+    const talks = {
+        en: [
+            {
+                title: 'Dancing with Uncertainty: Challenges of Distributed Systems',
+                abstract: 'You adopted microservices… and now networks fail, clocks drift, messages arrive out of order, and data goes out of sync, while you\'re just trying to survive. This talk walks through the fundamental challenges of distributed systems helping you make informed decisions.'
+            },
+        ],
+        pl: [
+            {
+                title: 'Dancing with Uncertainty: Fundamentalne Wyzwania Systemów Rozproszonych',
+                abstract: 'Zmigrowaliście się na mikroserwisy… i nagle zaczyna się jazda: sieć się wysypuje, zegary się rozjeżdżają, wiadomości docierają w innej kolejności niż powinny, dane przestają być spójne a Ty próbujesz po prostu dowozić.\n' +
+                    '\n' +
+                    'W tej prezentacji omówimy fundamentalne wyzwania systemów rozproszonych, co pomoże Ci podejmować decyzje z pełną świadomością ich konsekwencji.'
+            },
+        ]
+    };
+
+    const photos = [
+        { src: 'img/1.jpg', label: 'Headshot' },
+        { src: 'img/2.jpg', label: 'Devoxx' },
+        { src: 'img/3.jpg', label: 'JDD' },
+    ];
+
+    let currentLang = 'en';
+    const biosContainer = document.getElementById('bios');
+    const talksContainer = document.getElementById('talks');
+    const talksSection = document.getElementById('talks-section');
+    const photosContainer = document.getElementById('photos');
+    const photosSection = document.getElementById('photos-section');
+
+    function copyText(btn, text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const original = btn.textContent;
+            btn.textContent = 'Copied';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = original;
+                btn.classList.remove('copied');
+            }, 1500);
+        });
+    }
+
+    function renderBios() {
+        const langBios = bios[currentLang];
+        biosContainer.innerHTML = langBios.map((bio, i) => `
+            <div class="bio-card">
+                <div class="bio-header">
+                    <span class="bio-label">${bio.label}</span>
+                    <span class="char-count">${bio.text.length} chars</span>
+                </div>
+                <p class="bio-text">${bio.text.replace(/\n/g, '<br>')}</p>
+                <button class="copy-btn" data-type="bio" data-index="${i}">Copy</button>
+            </div>
+        `).join('');
+
+        biosContainer.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => copyText(btn, langBios[btn.dataset.index].text));
+        });
+    }
+
+    function renderTalks() {
+        const langTalks = talks[currentLang];
+        talksSection.style.display = langTalks.length ? '' : 'none';
+
+        talksContainer.innerHTML = langTalks.map((talk, i) => `
+            <div class="talk-card">
+                <div class="bio-header">
+                    <span class="talk-title">${talk.title}</span>
+                    <span class="char-count">${talk.abstract.length} chars</span>
+                </div>
+                <p class="talk-abstract">${talk.abstract.replace(/\n/g, '<br>')}</p>
+                <div class="talk-actions">
+                    <button class="copy-btn" data-talk-part="title" data-index="${i}">Copy Title</button>
+                    <button class="copy-btn" data-talk-part="abstract" data-index="${i}">Copy Abstract</button>
+                    <button class="copy-btn" data-talk-part="both" data-index="${i}">Copy All</button>
+                </div>
+            </div>
+        `).join('');
+
+        talksContainer.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const talk = langTalks[btn.dataset.index];
+                const part = btn.dataset.talkPart;
+                const text = part === 'title' ? talk.title
+                           : part === 'abstract' ? talk.abstract
+                           : talk.title + '\n\n' + talk.abstract;
+                copyText(btn, text);
+            });
+        });
+    }
+
+    function renderPhotos() {
+        photosSection.style.display = photos.length ? '' : 'none';
+
+        photosContainer.innerHTML = photos.map(photo => `
+            <div class="photo-card">
+                <img src="${photo.src}" alt="${photo.label}" loading="lazy">
+                <div class="photo-info">
+                    <span class="photo-label">${photo.label}</span>
+                    <a class="download-btn" href="${photo.src}" download>Download</a>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function render() {
+        renderBios();
+        renderTalks();
+        renderPhotos();
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentLang = btn.dataset.lang;
+            render();
+        });
+    });
+
+    render();
+</script>
+
+</body>
+</html>
