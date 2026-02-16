@@ -1,6 +1,13 @@
 {
   "events": [
     {
+      "conference": "JEurope 2026",
+      "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
+      "date": "2026-03-24",
+      "url": "https://jeurope.pl",
+      "location": "@warsaw-wfc"
+    },
+    {
       "conference": "JDD 2025",
       "talk": "What Can a Java Developer Learn from Golang?",
       "date": "2025-10-21",
