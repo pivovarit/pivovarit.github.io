@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work with Grzegorz Piwowarek</title>
+    <meta name="description" content="Java Champion and independent consultant helping teams deliver robust distributed systems. Consulting, workshops, mentoring, and AI consultation.">
+    <meta name="author" content="Grzegorz Piwowarek">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Work with Grzegorz Piwowarek">
+    <meta name="twitter:description" content="Java Champion - independent consultant helping teams deliver robust distributed systems">
+    <meta name="twitter:creator" content="@pivovarit">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Work with Grzegorz Piwowarek">
+    <meta property="og:description" content="Java Champion - independent consultant helping teams deliver robust distributed systems">
+    <meta property="og:url" content="https://pivovarit.com/offer/services">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        /* Back link */
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            margin-bottom: 3rem;
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .back-link:hover {
+            color: #999;
+        }
+
+        /* Header */
+
+        .header {
+            margin-bottom: 3.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .tagline {
+            font-size: 1.35rem;
+            color: #999;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .tagline em {
+            font-style: normal;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* Sections */
+
+        .section {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1.25rem;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: #1a1a1a;
+            margin-bottom: 3.5rem;
+        }
+
+        /* Intro */
+
+        .intro {
+            font-size: 1rem;
+            color: #888;
+            line-height: 1.8;
+            max-width: 640px;
+        }
+
+        .intro strong {
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        /* Services grid */
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .service-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .service-card:hover {
+            border-color: #333;
+        }
+
+        .service-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .service-card p {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        /* Track record */
+
+        .stats-row {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #555;
+            font-weight: 400;
+            margin-top: 0.2rem;
+        }
+
+        .companies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 1rem;
+            align-items: center;
+        }
+
+        .companies-label {
+            font-size: 0.7rem;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-right: 0.5rem;
+        }
+
+        .company-name {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 400;
+        }
+
+        /* Testimonials */
+
+        .testimonials {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .testimonial {
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .testimonial blockquote {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .testimonial cite {
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+        }
+
+        .testimonial cite strong {
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* CTA */
+
+        .cta {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: #e25440;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-button:hover {
+            background: #ff6b5b;
+            transform: translateY(-1px);
+        }
+
+        .cta-note {
+            font-size: 0.75rem;
+            color: #444;
+            margin-top: 0.75rem;
+        }
+
+        .cta-alt {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .cta-alt a {
+            color: #999;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .cta-alt a:hover {
+            color: #fff;
+            border-color: #666;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #999;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+            .page {
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .tagline {
+                font-size: 1.15rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                gap: 1.25rem;
+            }
+
+            .stat-value {
+                font-size: 1.25rem;
+            }
+
+            .companies {
+                gap: 0.3rem 0.75rem;
+            }
+        }
+
+        /* Print-friendly */
+
+        @media print {
+            body {
+                background: #fff;
+                color: #333;
+            }
+
+            .back-link {
+                display: none;
+            }
+
+            .header h1, .service-card h3, .stat-value {
+                color: #111;
+            }
+
+            .tagline, .tagline em {
+                color: #333;
+            }
+
+            .tag {
+                background: #f5f5f5;
+                border-color: #ddd;
+                color: #666;
+            }
+
+            .service-card {
+                background: #fafafa;
+                border-color: #e0e0e0;
+            }
+
+            .testimonial {
+                background: #fafafa;
+                border-color: #e0e0e0;
+            }
+
+            .cta-button {
+                background: #333;
+            }
+
+            .footer, .cta-note {
+                color: #999;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <a href="/" class="back-link">&larr; pivovarit.com</a>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Grzegorz Piwowarek</h1>
+        <div class="tags">
+            <span class="tag">Java Champion</span>
+            <span class="tag">Oracle ACE</span>
+            <span class="tag">OSS Creator</span>
+            <span class="tag">WarsawJUG</span>
+        </div>
+        <p class="tagline">I help teams deliver <em>robust</em> and <em>reliable</em> distributed systems</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- What I Do -->
+    <div class="section">
+        <p class="section-label">What I Do</p>
+        <p class="intro">
+            I work with engineering teams to <strong>design, build, and scale distributed systems</strong> that hold up under real-world pressure. Whether you're making foundational architecture decisions, leveling up your team's skills, or navigating AI adoption - I bring hands-on experience from years of building systems in production.
+        </p>
+    </div>
+
+    <!-- Services -->
+    <div class="section">
+        <p class="section-label">Services</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Consulting</h3>
+                <p>Architecture reviews, system design, and production readiness assessments. I help teams make the right technical decisions before they become expensive to change.</p>
+            </div>
+            <div class="service-card">
+                <h3>Workshops</h3>
+                <p>Hands-on technical workshops on Java, functional programming, and distributed systems. Tailored to your team's experience level and delivered on-site or remotely.</p>
+            </div>
+            <div class="service-card">
+                <h3>Mentoring</h3>
+                <p>Ongoing technical guidance for engineering teams and leaders. Level up your team's practices, code quality, and architectural thinking over time.</p>
+            </div>
+            <div class="service-card">
+                <h3>AI Consultation</h3>
+                <p>Strategic guidance on AI adoption, LLM integration, and building AI-powered features into existing systems. Pragmatic, production-focused approach.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Track Record -->
+    <div class="section">
+        <p class="section-label">Track Record</p>
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-value">100+</div>
+                <div class="stat-label">Talks</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">20+</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">10+</div>
+                <div class="stat-label">Years</div>
+            </div>
+        </div>
+        <div class="companies">
+            <span class="companies-label">Trusted by</span>
+            <span class="company-name">Hazelcast</span>
+            <span class="company-name">Baeldung</span>
+            <span class="company-name">Casumo</span>
+            <span class="company-name">Volt.io</span>
+            <span class="company-name">e-point</span>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="section">
+        <p class="section-label">What Others Say</p>
+        <div class="testimonials">
+            <div class="testimonial">
+                <blockquote>"The team scaled to double the size and was deploying to production ten times as frequently as before with higher quality."</blockquote>
+                <cite><strong>Can Gencer</strong>, Director of Engineering at Hazelcast</cite>
+            </div>
+            <div class="testimonial">
+                <blockquote>"Grzegorz is simply brilliant. He not only has amazing technical knowledge and skills, but he is also very capable at design and has a gift for explaining even very complicated concepts in a very simple manner."</blockquote>
+                <cite><strong>Bruno Fratini</strong>, Senior Engineering Manager at Casumo</cite>
+            </div>
+            <div class="testimonial">
+                <blockquote>"He helped us focus on the hard parts of building Java-based distributed systems and gave us pragmatic guidance on which choices actually matter in production."</blockquote>
+                <cite><strong>Mateusz Jackiewicz</strong>, Team Lead at Volt.io</cite>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <a href="mailto:contact@4comprehension.com" class="cta-button">Let's Talk</a>
+        <p class="cta-note">Usually responds within 24 hours</p>
+        <p class="cta-alt">Not sure where to start? <a href="mailto:contact@4comprehension.com?subject=Quick%20intro%20call&body=Hi%20Grzegorz%2C%0A%0AI'd%20like%20to%20schedule%20a%20quick%20intro%20call%20to%20see%20if%20there's%20a%20fit.%0A%0A">Book a free 20-minute intro call</a> - no pitch, just an honest assessment.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="/">pivovarit.com</a>
+            <a href="https://linkedin.com/in/gpiwowarek" target="_blank">LinkedIn</a>
+            <a href="/testimonials/">Testimonials</a>
+            <a href="https://4comprehension.com" target="_blank">Blog</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

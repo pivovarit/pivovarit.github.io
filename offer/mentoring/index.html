@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentoring - Grzegorz Piwowarek</title>
+    <meta name="description" content="Technical mentoring for software engineers - distributed systems, public speaking, open source, and career growth.">
+    <meta name="author" content="Grzegorz Piwowarek">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Mentoring - Grzegorz Piwowarek">
+    <meta name="twitter:description" content="Technical mentoring for software engineers from a Java Champion">
+    <meta name="twitter:creator" content="@pivovarit">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mentoring - Grzegorz Piwowarek">
+    <meta property="og:description" content="Technical mentoring for software engineers from a Java Champion">
+    <meta property="og:url" content="https://pivovarit.com/offer/mentoring/">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        /* Back link */
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            margin-bottom: 3rem;
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .back-link:hover {
+            color: #999;
+        }
+
+        /* Header */
+
+        .header {
+            margin-bottom: 3.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: #777;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* Sections */
+
+        .section {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1.25rem;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: #1a1a1a;
+            margin-bottom: 3.5rem;
+        }
+
+        /* Prose */
+
+        .prose {
+            font-size: 0.95rem;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .prose strong {
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        .prose p + p {
+            margin-top: 1rem;
+        }
+
+        /* Topic cards */
+
+        .topics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .topic-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .topic-card:hover {
+            border-color: #333;
+        }
+
+        .topic-card h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+
+        .topic-card p {
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* How it works */
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #151515;
+            border: 1px solid #252525;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #e25440;
+            margin-top: 0.1rem;
+        }
+
+        .step-content h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.01em;
+        }
+
+        .step-content p {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        /* Who it's for */
+
+        .audience-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .audience-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: baseline;
+        }
+
+        .audience-marker {
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            background: #e25440;
+            border-radius: 50%;
+            margin-top: 0.5rem;
+        }
+
+        .audience-item p {
+            font-size: 0.9rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .audience-item strong {
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        /* Testimonials */
+
+        .testimonials {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .testimonial {
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .testimonial blockquote {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .testimonial cite {
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+        }
+
+        .testimonial cite strong {
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* CTA */
+
+        .cta {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: #e25440;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-button:hover {
+            background: #ff6b5b;
+            transform: translateY(-1px);
+        }
+
+        .cta-note {
+            font-size: 0.75rem;
+            color: #444;
+            margin-top: 0.75rem;
+        }
+
+        .cta-alt {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .cta-alt a {
+            color: #999;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .cta-alt a:hover {
+            color: #fff;
+            border-color: #666;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #999;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+            .page {
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .topics {
+                grid-template-columns: 1fr;
+            }
+
+            .step {
+                gap: 1rem;
+            }
+        }
+
+        /* Print-friendly */
+
+        @media print {
+            body {
+                background: #fff;
+                color: #333;
+            }
+
+            .back-link {
+                display: none;
+            }
+
+            .header h1, .topic-card h3, .step-content h3 {
+                color: #111;
+            }
+
+            .header-subtitle {
+                color: #555;
+            }
+
+            .tag {
+                background: #f5f5f5;
+                border-color: #ddd;
+                color: #666;
+            }
+
+            .topic-card {
+                background: #fafafa;
+                border-color: #e0e0e0;
+            }
+
+            .step-number {
+                background: #f5f5f5;
+                border-color: #ddd;
+                color: #c0392b;
+            }
+
+            .audience-marker {
+                background: #c0392b;
+            }
+
+            .testimonial {
+                background: #fafafa;
+                border-color: #e0e0e0;
+            }
+
+            .cta-button {
+                background: #333;
+            }
+
+            .footer, .cta-note {
+                color: #999;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <a href="/offer/" class="back-link">&larr; All services</a>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="tags">
+            <span class="tag">Java Champion</span>
+            <span class="tag">Oracle ACE</span>
+        </div>
+        <h1>Mentoring</h1>
+        <p class="header-subtitle">Technical guidance for software engineers - distributed systems, public speaking, open source, and career growth.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- What this is -->
+    <div class="section">
+        <p class="section-label">What This Is</p>
+        <div class="prose">
+            <p>Sometimes you need a <strong>single focused session</strong> to unblock a decision or get a second opinion. Other times, you want someone in your corner over weeks or months - pairing on hard problems and helping you grow. <strong>Both work.</strong></p>
+            <p>The goal is always the same: <strong>transfer knowledge</strong> so you become more self-sufficient in areas where you currently struggle.</p>
+        </div>
+    </div>
+
+    <!-- Topics -->
+    <div class="section">
+        <p class="section-label">What We Can Work On</p>
+        <div class="topics">
+            <div class="topic-card">
+                <h3>Distributed Systems</h3>
+                <p>Architecture decisions, trade-off analysis, and designing systems that hold up under real-world conditions.</p>
+            </div>
+            <div class="topic-card">
+                <h3>Public Speaking</h3>
+                <p>Crafting talks, building confidence on stage, and getting accepted at conferences. From first CFP to keynote.</p>
+            </div>
+            <div class="topic-card">
+                <h3>Open Source</h3>
+                <p>Starting and maintaining OSS projects, building a contributor community, and navigating the ecosystem.</p>
+            </div>
+            <div class="topic-card">
+                <h3>Career &amp; Rates</h3>
+                <p>Positioning yourself, commanding higher rates, and making the right career moves as a senior engineer or independent consultant.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Who it's for -->
+    <div class="section">
+        <p class="section-label">Who This Is For</p>
+        <div class="audience-list">
+            <div class="audience-item">
+                <div class="audience-marker"></div>
+                <p><strong>Engineers</strong> who want to sharpen their distributed systems skills with someone who's done it before.</p>
+            </div>
+            <div class="audience-item">
+                <div class="audience-marker"></div>
+                <p><strong>Aspiring speakers</strong> who want to break into conference speaking or get better at it.</p>
+            </div>
+            <div class="audience-item">
+                <div class="audience-marker"></div>
+                <p><strong>Engineers growing their career</strong> - whether that means commanding higher rates, launching an OSS project, or stepping into technical leadership.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it works -->
+    <div class="section">
+        <p class="section-label">How It Works</p>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Initial conversation</h3>
+                    <p>We discuss where you are today, what challenges you face, and what "better" looks like for you.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Tailored format</h3>
+                    <p>A single deep-dive session, a few focused calls, or an ongoing cadence with async reviews. Whatever fits your situation.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>We get to work</h3>
+                    <p>Whether it's one session or many, I adapt to what you actually need. No long-term commitment required.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <a href="mailto:contact@4comprehension.com" class="cta-button">Let's Talk</a>
+        <p class="cta-note">Usually responds within 24 hours</p>
+        <p class="cta-alt">Not sure if mentoring is the right format? <a href="mailto:contact@4comprehension.com?subject=Mentoring%20%E2%80%93%20quick%20question&body=Hi%20Grzegorz%2C%0A%0AI'm%20considering%20mentoring%20and%20have%20a%20few%20questions.%0A%0A">Let's figure it out together</a> in a quick call.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Testimonials -->
+    <div class="section">
+        <p class="section-label">What Others Say</p>
+        <div class="testimonials">
+            <div class="testimonial">
+                <blockquote>"Grzegorz is simply brilliant. He not only has amazing technical knowledge and skills, but he is also very capable at design and has a gift for explaining even very complicated concepts in a very simple manner. Other engineers tend to follow him naturally just because he goes for facts, not words."</blockquote>
+                <cite><strong>Bruno Fratini</strong>, Senior Engineering Manager at Casumo</cite>
+            </div>
+            <div class="testimonial">
+                <blockquote>"Grzegorz is consistently handling the extra details that most people skip over. That coupled with an open way of collaborating with me and with the team has made our work highly productive."</blockquote>
+                <cite><strong>Eugen Paraschiv</strong>, CEO at Baeldung</cite>
+            </div>
+            <div class="testimonial">
+                <blockquote>"He helped us focus on the hard parts of building Java-based distributed systems and gave us pragmatic guidance on which choices actually matter in production."</blockquote>
+                <cite><strong>Mateusz Jackiewicz</strong>, Team Lead at Volt.io</cite>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="/">pivovarit.com</a>
+            <a href="/offer/">All Services</a>
+            <a href="/testimonials/">Testimonials</a>
+            <a href="https://4comprehension.com" target="_blank">Blog</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

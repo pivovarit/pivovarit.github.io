@@ -340,7 +340,7 @@
         <div class="card">
             <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                 <strong>Score progression</strong>
-                <span class="muted" id="chartMeta">—</span>
+                <span class="muted" id="chartMeta">-</span>
             </div>
             <div style="margin-top: 10px;">
                 <canvas id="chart" width="1200" height="520" aria-label="Line chart of cumulative scores"></canvas>
@@ -353,7 +353,7 @@
         <div class="card" id="card-player1">
             <div class="name">
                 <strong id="label-player1">Player 1</strong>
-                <span class="pill" id="lead-player1">—</span>
+                <span class="pill" id="lead-player1">-</span>
             </div>
             <div class="total" id="total-player1">0</div>
             <div class="row">
@@ -368,7 +368,7 @@
         <div class="card" id="card-player2">
             <div class="name">
                 <strong id="label-player2">Player 2</strong>
-                <span class="pill" id="lead-player2">—</span>
+                <span class="pill" id="lead-player2">-</span>
             </div>
             <div class="total" id="total-player2">0</div>
             <div class="row">
@@ -383,7 +383,7 @@
         <div class="card hidden" id="card-player3">
             <div class="name">
                 <strong id="label-player3">Player 3</strong>
-                <span class="pill" id="lead-player3">—</span>
+                <span class="pill" id="lead-player3">-</span>
             </div>
             <div class="total" id="total-player3">0</div>
             <div class="row">
@@ -397,7 +397,7 @@
         <div class="card hidden" id="card-player4">
             <div class="name">
                 <strong id="label-player4">Player 4</strong>
-                <span class="pill" id="lead-player4">—</span>
+                <span class="pill" id="lead-player4">-</span>
             </div>
             <div class="total" id="total-player4">0</div>
             <div class="row">
@@ -698,7 +698,7 @@
     function updateLeadersUI() {
         for (const k of PLAYER_KEYS) {
             el(`card-${k}`).classList.remove("win");
-            el(`lead-${k}`).textContent = "—";
+            el(`lead-${k}`).textContent = "-";
         }
 
         const keys = enabledPlayers();
@@ -1050,7 +1050,7 @@
           <td>${idx + 1}</td>
           <td>${escapeHtml(displayName(t.playerKey))}</td>
           <td>+${t.delta}</td>
-          <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>—</span>"}</td>
+          <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>-</span>"}</td>
           <td class="muted">${fmtTime(t.ts)}</td>
         `;
                 body.appendChild(tr);

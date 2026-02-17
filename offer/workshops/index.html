@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshops - Grzegorz Piwowarek</title>
+    <meta name="description" content="Hands-on technical workshops on Java, Spring Boot, distributed systems, and software architecture. Delivered by a Java Champion, tailored to your team.">
+    <meta name="author" content="Grzegorz Piwowarek">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Workshops - Grzegorz Piwowarek">
+    <meta name="twitter:description" content="Hands-on technical workshops on Java, Spring Boot, and distributed systems from a Java Champion">
+    <meta name="twitter:creator" content="@pivovarit">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Workshops - Grzegorz Piwowarek">
+    <meta property="og:description" content="Hands-on technical workshops on Java, Spring Boot, and distributed systems from a Java Champion">
+    <meta property="og:url" content="https://pivovarit.com/offer/workshops/">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        /* Back link */
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            margin-bottom: 3rem;
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .back-link:hover {
+            color: #999;
+        }
+
+        /* Header */
+
+        .header {
+            margin-bottom: 3.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            color: #777;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* Sections */
+
+        .section {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1.25rem;
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: #1a1a1a;
+            margin-bottom: 3.5rem;
+        }
+
+        /* Prose */
+
+        .prose {
+            font-size: 0.95rem;
+            color: #888;
+            line-height: 1.8;
+        }
+
+        .prose strong {
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        .prose p + p {
+            margin-top: 1rem;
+        }
+
+        /* Workshop catalog */
+
+        .catalog {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .workshop-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .workshop-card:hover {
+            border-color: #333;
+        }
+
+        .workshop-card h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+
+        .workshop-card p {
+            font-size: 0.85rem;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .workshop-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+        }
+
+        .workshop-tags .tag {
+            font-size: 0.65rem;
+        }
+
+        /* Format details */
+
+        .format-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .format-item {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .format-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.35rem;
+        }
+
+        .format-value {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .format-note {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+
+        /* How it works */
+
+        .approach-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .approach-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: baseline;
+        }
+
+        .approach-marker {
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            background: #e25440;
+            border-radius: 50%;
+            margin-top: 0.5rem;
+        }
+
+        .approach-item p {
+            font-size: 0.9rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .approach-item strong {
+            color: #ccc;
+            font-weight: 500;
+        }
+
+        /* Why live / How I run - card grids */
+
+        .reason-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .reason-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .reason-card h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #ccc;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.01em;
+        }
+
+        .reason-card p {
+            font-size: 0.82rem;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .method-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .method-card {
+            background: #151515;
+            border: 1px solid #252525;
+            border-radius: 8px;
+            padding: 1.15rem 1.35rem;
+            display: flex;
+            gap: 1rem;
+            align-items: baseline;
+        }
+
+        .method-card:hover {
+            border-color: #333;
+        }
+
+        .method-number {
+            flex-shrink: 0;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #e25440;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.6;
+        }
+
+        .method-card h3 {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #ccc;
+            margin-bottom: 0.25rem;
+        }
+
+        .method-card p {
+            font-size: 0.82rem;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        /* Participant quotes */
+
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .quote-card {
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .quote-card p {
+            font-size: 0.85rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 0.6rem;
+        }
+
+        .quote-meta {
+            font-size: 0.7rem;
+            color: #555;
+        }
+
+        /* Testimonials */
+
+        .testimonials {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .testimonial {
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .testimonial blockquote {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .testimonial cite {
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+        }
+
+        .testimonial cite strong {
+            color: #777;
+            font-weight: 500;
+        }
+
+        .opinions-link {
+            display: inline-block;
+            margin-top: 1.25rem;
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .opinions-link:hover {
+            color: #999;
+        }
+
+        /* CTA */
+
+        .cta {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: #e25440;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-button:hover {
+            background: #ff6b5b;
+            transform: translateY(-1px);
+        }
+
+        .cta-note {
+            font-size: 0.75rem;
+            color: #444;
+            margin-top: 0.75rem;
+        }
+
+        .cta-alt {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .cta-alt a {
+            color: #999;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .cta-alt a:hover {
+            color: #fff;
+            border-color: #666;
+        }
+
+        /* Footer */
+
+        .footer {
+            text-align: center;
+            padding-top: 1rem;
+            font-size: 0.8rem;
+            color: #444;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #555;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #999;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+            .page {
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .header-subtitle {
+                font-size: 1rem;
+            }
+
+            .format-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .reason-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quotes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print-friendly */
+
+        @media print {
+            body {
+                background: #fff;
+                color: #333;
+            }
+
+            .back-link {
+                display: none;
+            }
+
+            .header h1, .workshop-card h3, .format-value {
+                color: #111;
+            }
+
+            .header-subtitle {
+                color: #555;
+            }
+
+            .tag {
+                background: #f5f5f5;
+                border-color: #ddd;
+                color: #666;
+            }
+
+            .workshop-card, .format-item, .reason-card, .method-card {
+                background: #fafafa;
+                border-color: #e0e0e0;
+            }
+
+            .reason-card h3, .method-card h3 {
+                color: #222;
+            }
+
+            .approach-marker {
+                background: #c0392b;
+            }
+
+            .testimonial, .quote-card {
+                background: #fafafa;
+                border-color: #e0e0e0;
+            }
+
+            .cta-button {
+                background: #333;
+            }
+
+            .footer, .cta-note {
+                color: #999;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+
+    <a href="/offer/" class="back-link">&larr; All services</a>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="tags">
+            <span class="tag">Java Champion</span>
+            <span class="tag">Oracle ACE</span>
+        </div>
+        <h1>Workshops</h1>
+        <p class="header-subtitle">Hands-on technical training for engineering teams. Not a documentation walkthrough - participants get production war stories, OSS internals, and pragmatic advice that works in real systems.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- What makes these different -->
+    <div class="section">
+        <p class="section-label">What Makes These Different</p>
+        <div class="prose">
+            <p>Anyone can read the docs to you. I don't do that. Every workshop is built on <strong>years of building and running production systems</strong>, contributing to open-source projects, and working with teams across the industry. You get the context that documentation can't give you.</p>
+        </div>
+        <div class="approach-list" style="margin-top: 1.25rem;">
+            <div class="approach-item">
+                <div class="approach-marker"></div>
+                <p><strong>Production war stories.</strong> Real incidents, real trade-offs, real design decisions. I share what went wrong, what worked, and what I'd do differently - so you don't have to learn these lessons the hard way.</p>
+            </div>
+            <div class="approach-item">
+                <div class="approach-marker"></div>
+                <p><strong>Pragmatic advice for real systems.</strong> Not textbook answers - guidance that holds up under load, at scale, and on a deadline. What actually matters in production and what you can safely skip.</p>
+            </div>
+            <div class="approach-item">
+                <div class="approach-marker"></div>
+                <p><strong>Industry insights.</strong> Patterns I've seen work (and fail) across different teams, companies, and domains. The kind of perspective you only get from being deep in the ecosystem.</p>
+            </div>
+            <div class="approach-item">
+                <div class="approach-marker"></div>
+                <p><strong>Internals and OSS trivia.</strong> I dig into how things actually work under the hood - JDK internals, framework source code, open-source implementation details. Understanding the "why" behind the API makes you a better engineer.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Why a workshop -->
+    <div class="section">
+        <p class="section-label">Why a Live Workshop</p>
+        <div class="reason-grid">
+            <div class="reason-card">
+                <h3>You can ask "what about our case?"</h3>
+                <p>Self-study courses are generic by design. A live workshop lets your team ask questions about their actual codebase, their architecture, their problems - and get answers on the spot.</p>
+            </div>
+            <div class="reason-card">
+                <h3>Completion rates that actually work</h3>
+                <p>Most online courses are never finished. A focused, scheduled workshop with a live instructor means your team shows up, stays engaged, and walks out with real skills - not a half-watched playlist.</p>
+            </div>
+            <div class="reason-card">
+                <h3>The whole team levels up together</h3>
+                <p>Instead of individuals learning different things at different times, everyone builds the same shared understanding. That pays off immediately in code reviews, design discussions, and day-to-day decisions.</p>
+            </div>
+            <div class="reason-card">
+                <h3>Feedback loops are instant</h3>
+                <p>When someone's confused or heading down the wrong path, I see it in real time and correct course. No waiting for a forum reply or re-watching a video hoping for clarity.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Approach -->
+    <div class="section">
+        <p class="section-label">How I Run Workshops</p>
+        <div class="method-list">
+            <div class="method-card">
+                <span class="method-number">01</span>
+                <div>
+                    <h3>Live coding, not pre-baked demos</h3>
+                    <p>I build most things from scratch right in front of participants. You see the thinking process, the mistakes, the debugging - not a polished copy-paste from a prepared repo.</p>
+                </div>
+            </div>
+            <div class="method-card">
+                <span class="method-number">02</span>
+                <div>
+                    <h3>Code-first, not slides-first</h3>
+                    <p>Participants work on a real project with prepared exercises and tests. Slides are there to set context - the IDE is where the real workshop happens.</p>
+                </div>
+            </div>
+            <div class="method-card">
+                <span class="method-number">03</span>
+                <div>
+                    <h3>Problems before solutions</h3>
+                    <p>I let participants experience the problem firsthand before introducing the pattern or technique that solves it. Understanding the "why" sticks longer than memorizing the "how".</p>
+                </div>
+            </div>
+            <div class="method-card">
+                <span class="method-number">04</span>
+                <div>
+                    <h3>Tailored to your team</h3>
+                    <p>Every workshop is adapted to the group's experience level. I adjust pace, depth, and examples on the fly based on what I see in the room.</p>
+                </div>
+            </div>
+            <div class="method-card">
+                <span class="method-number">05</span>
+                <div>
+                    <h3>Questions welcome anytime</h3>
+                    <p>I don't save Q&amp;A for the end. Participants interrupt, ask, and challenge in real time - that's often where the best discussions happen.</p>
+                </div>
+            </div>
+            <div class="method-card">
+                <span class="method-number">06</span>
+                <div>
+                    <h3>Follow-up call included</h3>
+                    <p>A few weeks after the workshop, we meet for a consulting call to go through questions that came up once your team started applying the ideas in their own codebase.</p>
+                </div>
+            </div>
+            <div class="method-card">
+                <span class="method-number">07</span>
+                <div>
+                    <h3>AI-native option available</h3>
+                    <p>Any workshop can be run with AI coding assistants as a first-class tool. Participants learn to use AI effectively for the topic at hand - not as a gimmick, but as part of their real workflow.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workshop catalog -->
+    <div class="section">
+        <p class="section-label">Workshop Catalog</p>
+        <div class="prose" style="margin-bottom: 1.25rem;">
+            <p>These are <strong>starting points, not fixed agendas</strong>. Every workshop is tailored to your team's stack, experience level, and the problems you're actually facing. Topics can be combined, extended, or reworked from scratch.</p>
+        </div>
+        <div class="catalog">
+            <div class="workshop-card">
+                <h3>Effective Programming in Java</h3>
+                <p>Modern Java idioms, streams, collectors, optionals, and performance trade-offs. From writing cleaner code to understanding what happens under the hood.</p>
+                <div class="workshop-tags">
+                    <span class="tag">2-4 days</span>
+                    <span class="tag">All levels</span>
+                </div>
+            </div>
+            <div class="workshop-card">
+                <h3>Effective Spring Boot</h3>
+                <p>Building production-grade Spring Boot applications from scratch. Annotations, configuration, testing, database integration, and avoiding "Spring magic" pitfalls.</p>
+                <div class="workshop-tags">
+                    <span class="tag">2-4 days</span>
+                    <span class="tag">Intermediate</span>
+                </div>
+            </div>
+            <div class="workshop-card">
+                <h3>Modern Application Architectures</h3>
+                <p>Hexagonal architecture, modularity, and system design patterns with Spring Boot. How to structure applications that stay maintainable as they grow.</p>
+                <div class="workshop-tags">
+                    <span class="tag">2-4 days</span>
+                    <span class="tag">Intermediate+</span>
+                </div>
+            </div>
+            <div class="workshop-card">
+                <h3>Building Modular Monoliths</h3>
+                <p>Splitting monoliths into well-defined modules and preparing for a possible future migration to microservices - without the premature complexity.</p>
+                <div class="workshop-tags">
+                    <span class="tag">2-4 days</span>
+                    <span class="tag">Intermediate+</span>
+                </div>
+            </div>
+            <div class="workshop-card">
+                <h3>Effective Microservices</h3>
+                <p>Pragmatic microservices with Spring Boot. Service boundaries, inter-service communication, resilience patterns, and the implementation and release process.</p>
+                <div class="workshop-tags">
+                    <span class="tag">2-4 days</span>
+                    <span class="tag">Advanced</span>
+                </div>
+            </div>
+            <div class="workshop-card">
+                <h3>Pragmatic Reactive Programming</h3>
+                <p>Reactor, WebFlux, and practical reactive patterns. When reactive makes sense, when it doesn't, and how it compares to modern alternatives like virtual threads.</p>
+                <div class="workshop-tags">
+                    <span class="tag">2-4 days</span>
+                    <span class="tag">Advanced</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Format -->
+    <div class="section">
+        <p class="section-label">Format</p>
+        <div class="format-grid">
+            <div class="format-item">
+                <div class="format-label">Delivery</div>
+                <div class="format-value">On-site or remote</div>
+                <div class="format-note">Both work well - remote workshops are run with high energy and engagement</div>
+            </div>
+            <div class="format-item">
+                <div class="format-label">Duration</div>
+                <div class="format-value">1-5 days</div>
+                <div class="format-note">Can be adjusted to fit your schedule and depth needs</div>
+            </div>
+            <div class="format-item">
+                <div class="format-label">Group size</div>
+                <div class="format-value">Small groups</div>
+                <div class="format-note">Sized for individual attention and hands-on support</div>
+            </div>
+            <div class="format-item">
+                <div class="format-label">Language</div>
+                <div class="format-value">English or Polish</div>
+                <div class="format-note">Materials in English, delivery in either language</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Participant feedback -->
+    <div class="section">
+        <p class="section-label">What Participants Say</p>
+        <div class="quotes-grid">
+            <div class="quote-card">
+                <p>"One of the best trainings I've participated in. Well-chosen topics, perfect pace, and a good balance between breaks and active training."</p>
+                <div class="quote-meta">Effective Programming in Java</div>
+            </div>
+            <div class="quote-card">
+                <p>"Thank you so much for an amazing training. Honestly, it was one of the best-run trainings I've ever attended - and I've been to quite a few."</p>
+                <div class="quote-meta">Effective Spring Boot</div>
+            </div>
+            <div class="quote-card">
+                <p>"I expected a simple training, and instead I got a ton of knowledge along with good practices and guidance on what to avoid."</p>
+                <div class="quote-meta">Effective Programming in Java</div>
+            </div>
+            <div class="quote-card">
+                <p>"By going through the next stages of the program, we experienced the problems ourselves - which made it easier to understand WHY we chose a given solution."</p>
+                <div class="quote-meta">Effective Microservices</div>
+            </div>
+            <div class="quote-card">
+                <p>"Huge thanks! A short training, but really well thought out and very content-rich. You clearly know what you're talking about - not just theoretical knowledge."</p>
+                <div class="quote-meta">Building Modular Monoliths</div>
+            </div>
+            <div class="quote-card">
+                <p>"You won me over from the first slide. It was a pure pleasure to watch you work."</p>
+                <div class="quote-meta">Building Modular Monoliths</div>
+            </div>
+        </div>
+        <a href="/testimonials/" class="opinions-link">Read all participant opinions &rarr;</a>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Testimonial from a buyer -->
+    <div class="section">
+        <p class="section-label">From Workshop Organizers</p>
+        <div class="testimonials">
+            <div class="testimonial">
+                <blockquote>"He was well prepared, used appropriate exercises and supported participants at their own laptops. All participants upvoted the workshop and wish another one."</blockquote>
+                <cite><strong>Marek Berkan</strong>, Team Leader at e-point SA</cite>
+            </div>
+            <div class="testimonial">
+                <blockquote>"Grzegorz helped us level up senior PHP engineers who could write Java, but didn't yet think like idiomatic Java engineers. He helped us focus on the hard parts of building Java-based distributed systems and gave us pragmatic guidance on which choices actually matter in production."</blockquote>
+                <cite><strong>Mateusz Jackiewicz</strong>, Team Lead at Volt.io</cite>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <a href="mailto:contact@4comprehension.com" class="cta-button">Book a Workshop</a>
+        <p class="cta-note">Custom topics and formats available on request</p>
+        <p class="cta-alt">Not sure which workshop fits? <a href="mailto:contact@4comprehension.com?subject=Workshop%20for%20my%20team&body=Hi%20Grzegorz%2C%0A%0AI'm%20interested%20in%20a%20workshop%20for%20my%20team.%20Could%20you%20suggest%20the%20right%20format%3F%0A%0ATeam%20size%3A%20%0ATech%20stack%3A%20%0AMain%20goal%3A%20%0A%0A">Tell me about your team</a> and I'll put together a tailored agenda - no commitment.</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-links">
+            <a href="/">pivovarit.com</a>
+            <a href="/offer/">All Services</a>
+            <a href="/testimonials/">Testimonials</a>
+            <a href="https://4comprehension.com" target="_blank">Blog</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

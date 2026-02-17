@@ -341,12 +341,12 @@
         <div class="card">
             <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                 <strong>Transaction</strong>
-                <span class="muted" id="txnMeta">—</span>
+                <span class="muted" id="txnMeta">-</span>
             </div>
 
             <div class="tagline" aria-label="Mode">
                 <span class="tag" id="modeTag">Mode: Payment</span>
-                <span class="tag" id="turnTag">Turn: —</span>
+                <span class="tag" id="turnTag">Turn: -</span>
                 <span class="tag muted" id="rulesTag">No overdrafts: off</span>
             </div>
 
@@ -369,7 +369,7 @@
             <div class="kpis" aria-label="Stats">
                 <div class="kpi"><b>Total cash in play</b><span id="kpiTotal">0</span></div>
                 <div class="kpi"><b>Transactions</b><span id="kpiTxns">0</span></div>
-                <div class="kpi"><b>Last change</b><span id="kpiLast">—</span></div>
+                <div class="kpi"><b>Last change</b><span id="kpiLast">-</span></div>
             </div>
 
             <div class="controls">
@@ -390,7 +390,7 @@
         <div class="card" id="card-player1">
             <div class="name">
                 <strong id="label-player1">Player 1</strong>
-                <span class="pill" id="lead-player1">—</span>
+                <span class="pill" id="lead-player1">-</span>
             </div>
             <div class="total" id="total-player1">1500</div>
             <div class="row">
@@ -403,7 +403,7 @@
         <div class="card" id="card-player2">
             <div class="name">
                 <strong id="label-player2">Player 2</strong>
-                <span class="pill" id="lead-player2">—</span>
+                <span class="pill" id="lead-player2">-</span>
             </div>
             <div class="total" id="total-player2">1500</div>
             <div class="row">
@@ -416,7 +416,7 @@
         <div class="card hidden" id="card-player3">
             <div class="name">
                 <strong id="label-player3">Player 3</strong>
-                <span class="pill" id="lead-player3">—</span>
+                <span class="pill" id="lead-player3">-</span>
             </div>
             <div class="total" id="total-player3">1500</div>
             <div class="row">
@@ -429,7 +429,7 @@
         <div class="card hidden" id="card-player4">
             <div class="name">
                 <strong id="label-player4">Player 4</strong>
-                <span class="pill" id="lead-player4">—</span>
+                <span class="pill" id="lead-player4">-</span>
             </div>
             <div class="total" id="total-player4">1500</div>
             <div class="row">
@@ -666,7 +666,7 @@
 
     function updateLeadersUI() {
         for (const k of PLAYER_KEYS) {
-            el(`lead-${k}`).textContent = "—";
+            el(`lead-${k}`).textContent = "-";
             el(`card-${k}`).classList.remove("win");
         }
         const {keys, max, leaders} = leaderInfo();
@@ -718,7 +718,7 @@
         <td>${escapeHtml(t.fromLabel)}</td>
         <td>${escapeHtml(t.toLabel)}</td>
         <td>${t.amountLabel}</td>
-        <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>—</span>"}</td>
+        <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>-</span>"}</td>
         <td class="muted">${fmtTime(t.ts)}</td>
       `;
             body.appendChild(tr);
@@ -729,7 +729,7 @@
         el("kpiTotal").textContent = Math.round(totalCashInPlay());
         el("kpiTxns").textContent = String(state.txns.length);
         const last = state.txns[state.txns.length - 1];
-        el("kpiLast").textContent = last ? last.short : "—";
+        el("kpiLast").textContent = last ? last.short : "-";
     }
 
     function save() {
@@ -1005,7 +1005,7 @@
                 to: "bank",
                 typeLabel: "Set balance",
                 fromLabel: displayName(from),
-                toLabel: "—",
+                toLabel: "-",
                 amount: amt,
                 amountLabel: `=${Math.round(amt)} (${sign}${abs})`,
                 short: `${displayName(from)} =${Math.round(amt)}`

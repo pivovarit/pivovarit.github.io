@@ -12,17 +12,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grzegorz Piwowarek</title>
-    <meta name="description" content="Java Champion — independent consultant and trainer helping teams deliver robust distributed systems">
+    <meta name="description" content="Java Champion - independent consultant and trainer helping teams deliver robust distributed systems">
     <meta name="author" content="Grzegorz Piwowarek">
 
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Grzegorz Piwowarek">
-    <meta name="twitter:description" content="Java Champion — independent consultant and trainer helping teams deliver robust distributed systems">
+    <meta name="twitter:description" content="Java Champion - independent consultant and trainer helping teams deliver robust distributed systems">
     <meta name="twitter:creator" content="@pivovarit">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Grzegorz Piwowarek">
-    <meta property="og:description" content="Java Champion — independent consultant and trainer helping teams deliver robust distributed systems">
+    <meta property="og:description" content="Java Champion - independent consultant and trainer helping teams deliver robust distributed systems">
 
     <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
@@ -120,42 +120,47 @@
             font-weight: 500;
         }
 
-        .links {
+        .cta-group {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 0.75rem;
             margin-bottom: 2.5rem;
         }
 
-        .link {
-            display: block;
-            position: relative;
-            padding: 0.9rem 1.5rem;
-            background: #151515;
-            border: 1px solid #252525;
-            border-radius: 8px;
-            color: #e0e0e0;
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: #e25440;
+            color: #fff;
             text-decoration: none;
             font-size: 0.95rem;
-            font-weight: 400;
-            transition: all 0.2s ease;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.01em;
         }
 
-        .link:hover {
-            background: #1a1a1a;
-            border-color: #333;
+        .cta-button:hover {
+            background: #ff6b5b;
             transform: translateY(-1px);
         }
 
-        .link .arrow {
-            position: absolute;
-            left: 1rem;
-            opacity: 0;
-            transition: opacity 0.2s ease;
+        .cta-alt {
+            font-size: 0.8rem;
+            color: #555;
         }
 
-        .link:hover .arrow {
-            opacity: 1;
+        .cta-alt a {
+            color: #777;
+            text-decoration: none;
+            border-bottom: 1px solid #333;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .cta-alt a:hover {
+            color: #fff;
+            border-color: #666;
         }
 
         .social {
@@ -301,11 +306,11 @@
 
     <div class="testimonial">
         <blockquote>"The team scaled to double the size and was deploying to production ten times as frequently as before with higher quality."</blockquote>
-        <cite>— Can Gencer, Director of Engineering at Hazelcast</cite>
+        <cite>- Can Gencer, Director of Engineering at Hazelcast</cite>
     </div>
 
-    <div class="links">
-        <a href="mailto:contact@4comprehension.com" class="link"><span class="arrow">&lt;-</span>Get in Touch</a>
+    <div class="cta-group">
+        <a href="mailto:contact@4comprehension.com?subject=Quick%20intro%20call&body=Hi%20Grzegorz%2C%0A%0AI'd%20like%20to%20schedule%20a%20quick%20intro%20call%20to%20see%20if%20there's%20a%20fit.%0A%0A" class="cta-button">Book a Free Intro Call</a>
     </div>
 
     <div class="divider"></div>
