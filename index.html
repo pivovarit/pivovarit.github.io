@@ -19,10 +19,12 @@
     <meta name="twitter:title" content="Grzegorz Piwowarek">
     <meta name="twitter:description" content="Java Champion - independent consultant and trainer helping teams deliver robust distributed systems">
     <meta name="twitter:creator" content="@pivovarit">
+    <meta name="twitter:image" content="https://pivovarit.github.io/images/profile.jpg">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Grzegorz Piwowarek">
     <meta property="og:description" content="Java Champion - independent consultant and trainer helping teams deliver robust distributed systems">
+    <meta property="og:image" content="https://pivovarit.github.io/images/profile.jpg">
 
     <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
     <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
@@ -146,23 +148,6 @@
             transform: translateY(-1px);
         }
 
-        .cta-alt {
-            font-size: 0.8rem;
-            color: #555;
-        }
-
-        .cta-alt a {
-            color: #777;
-            text-decoration: none;
-            border-bottom: 1px solid #333;
-            transition: color 0.2s ease, border-color 0.2s ease;
-        }
-
-        .cta-alt a:hover {
-            color: #fff;
-            border-color: #666;
-        }
-
         .social {
             display: flex;
             justify-content: center;
@@ -217,29 +202,6 @@
             text-transform: uppercase;
         }
 
-        .trusted-by {
-            margin-bottom: 2.5rem;
-        }
-
-        .trusted-label {
-            font-size: 0.7rem;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            display: block;
-            margin-bottom: 0.75rem;
-        }
-
-        .trusted-companies {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem 1.25rem;
-            color: #555;
-            font-size: 0.85rem;
-            font-weight: 400;
-        }
-
         .testimonial {
             margin: 1.5rem 0;
             padding: 1.25rem 1.5rem;
@@ -281,9 +243,6 @@
                 font-size: 0.75rem;
             }
 
-            .trusted-companies {
-                font-size: 0.8rem;
-            }
         }
     </style>
 </head>
@@ -316,18 +275,18 @@
     <div class="divider"></div>
 
     <div class="social">
-        <a href="https://4comprehension.com" target="_blank">Blog</a>
-        <a href="https://twitter.com/pivovarit" target="_blank">X</a>
-        <a href="https://github.com/pivovarit" target="_blank">GitHub</a>
-        <a href="https://linkedin.com/in/gpiwowarek" target="_blank">LinkedIn</a>
-        <a href="https://bsky.app/profile/pivovarit.bsky.social" target="_blank">Bluesky</a>
-        <a href="mailto:gpiwowarek@gmail.com">Email</a>
+        <a href="https://4comprehension.com" target="_blank" rel="noopener noreferrer">Blog</a>
+        <a href="https://twitter.com/pivovarit" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://github.com/pivovarit" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://linkedin.com/in/gpiwowarek" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://bsky.app/profile/pivovarit.bsky.social" target="_blank" rel="noopener noreferrer">Bluesky</a>
+        <a href="mailto:contact@4comprehension.com">Email</a>
     </div>
 
     <div class="footer">
-        <a href="https://github.com/sponsors/pivovarit" target="_blank">GitHub Sponsors</a>
+        <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a>
         <span class="separator">·</span>
-        <a href="https://buymeacoffee.com/pivovarit" target="_blank">Buy me a coffee</a>
+        <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
     </div>
 </div>
 
@@ -452,19 +411,19 @@
             mouse.y = null;
         });
 
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else {
+                animate();
+            }
+        });
+
         resize();
         animate();
     })();
 </script>
 
-<script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-109711864-1', 'pivovarit.github.io');
-    ga('send', 'pageview');
-</script>
 
 </body>
 </html>
