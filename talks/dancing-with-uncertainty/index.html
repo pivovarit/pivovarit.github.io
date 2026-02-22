@@ -1,0 +1,2102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Dancing with Uncertainty - Challenges of Distributed Systems</title>
+
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/simple.css">
+
+    <link rel="stylesheet" href="plugin/highlight/zenburn.css">
+</head>
+<body>
+<div class="reveal">
+    <div class="footer"><a href="https://x.com/pivovarit">@pivovarit</a></div>
+
+    <div class="slides">
+        <section>
+            <h2>Dancing with Uncertainty</h2>
+            <h4>Challenges of Distributed Systems</h4>
+
+            <div style="margin-top: 30px;">
+                <canvas id="networkCanvas" width="550" height="300" style="max-width: 100%;"></canvas>
+                <script>
+                (function() {
+                    const canvas = document.getElementById('networkCanvas');
+                    const ctx = canvas.getContext('2d');
+                    const W = canvas.width, H = canvas.height;
+
+                    const nodes = [
+                        { x: 95, y: 65, dx: 5.0, dy: 4.2, px: 0.7, py: 1.1 },
+                        { x: 260, y: 50, dx: 4.0, dy: 5.2, px: 1.3, py: 0.6 },
+                        { x: 430, y: 95, dx: 4.6, dy: 3.8, px: 0.9, py: 1.4 },
+                        { x: 380, y: 230, dx: 3.6, dy: 4.8, px: 1.5, py: 0.8 },
+                        { x: 240, y: 245, dx: 5.5, dy: 3.4, px: 0.5, py: 1.2 },
+                        { x: 95, y: 200, dx: 4.2, dy: 4.4, px: 1.1, py: 0.9 }
+                    ];
+
+                    const links = [
+                        [0, 1, 0], [1, 2, 1], [2, 3, 2],
+                        [3, 4, 3], [4, 5, 4], [5, 0, 1], [1, 4, 2]
+                    ];
+
+                    const messages = [];
+                    links.forEach((_, i) => {
+                        const count = 2 + Math.floor(Math.random() * 2);
+                        for (let j = 0; j < count; j++) {
+                            messages.push({
+                                link: i,
+                                t: Math.random(),
+                                speed: 0.15 + Math.random() * 0.2,
+                                dir: Math.random() > 0.5 ? 1 : -1
+                            });
+                        }
+                    });
+
+                    const failureCycles = [47, 53, 59, 61, 67];
+
+                    function getNodePos(node, time) {
+                        return {
+                            x: node.x + Math.sin(time * node.px) * node.dx,
+                            y: node.y + Math.cos(time * node.py) * node.dy
+                        };
+                    }
+
+                    function getLinkOpacity(phase, time) {
+                        const cycle = failureCycles[phase % failureCycles.length];
+                        const t = (time * 0.5) % cycle;
+                        const failStart = cycle * 0.6;
+                        const failEnd = cycle * 0.85;
+                        if (t > failStart && t < failEnd) {
+                            const mid = (failStart + failEnd) / 2;
+                            const dist = Math.abs(t - mid) / ((failEnd - failStart) / 2);
+                            return 0.15 + dist * 0.3;
+                        }
+                        return 0.45;
+                    }
+
+                    function draw(time) {
+                        ctx.clearRect(0, 0, W, H);
+                        const t = time / 1000;
+
+                        const pos = nodes.map(n => getNodePos(n, t));
+
+                        links.forEach(([from, to, phase], i) => {
+                            const opacity = getLinkOpacity(phase, t);
+                            ctx.beginPath();
+                            ctx.moveTo(pos[from].x, pos[from].y);
+                            ctx.lineTo(pos[to].x, pos[to].y);
+                            ctx.strokeStyle = `rgba(31, 94, 94, ${opacity})`;
+                            ctx.lineWidth = 1.6;
+                            ctx.stroke();
+                        });
+
+                        messages.forEach(msg => {
+                            const [from, to, phase] = links[msg.link];
+                            const opacity = getLinkOpacity(phase, t);
+                            if (opacity < 0.3) return; // Hide during failures
+
+                            const p1 = pos[from], p2 = pos[to];
+                            const progress = msg.dir > 0 ? msg.t : 1 - msg.t;
+                            const x = p1.x + (p2.x - p1.x) * progress;
+                            const y = p1.y + (p2.y - p1.y) * progress;
+
+                            ctx.beginPath();
+                            ctx.arc(x, y, 4, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(31, 94, 94, 0.9)`;
+                            ctx.fill();
+
+                            msg.t += msg.speed * 0.016;
+                            if (msg.t > 1) { msg.t = 0; msg.dir *= -1; }
+                        });
+
+                        pos.forEach(p => {
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
+                            ctx.fillStyle = '#3aa0a0';
+                            ctx.fill();
+                            ctx.strokeStyle = '#1f5e5e';
+                            ctx.lineWidth = 1.2;
+                            ctx.stroke();
+                        });
+
+                        requestAnimationFrame(draw);
+                    }
+
+                    requestAnimationFrame(draw);
+                })();
+                </script>
+            </div>
+
+            <h4><a href="https://pivovarit.github.io">Grzegorz Piwowarek</a></h4>
+        </section>
+
+
+        <section>
+            <h2 style="margin-bottom: 0.3em;">{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
+
+            <h4 style="margin: 0.5em 0; font-weight: 500;">
+                <span style="margin: 0 10px;">Java Champion</span>
+                <span style="color: #3aa0a0;">|</span>
+                <span style="margin: 0 10px;">Oracle ACE</span>
+            </h4>
+
+            <div style="color: #555; font-size: 0.6em; margin: 0.6em 0;">
+                <span style="margin: 0 8px;">WarsawJUG Leader</span>
+                <span style="color: #3aa0a0;">|</span>
+                <span style="margin: 0 8px;">Vavr Leader</span>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 1em 0;">
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">distributed systems</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">microservices</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">reactive</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">java</span>
+            </div>
+
+            <h5 style="margin-top: 1em;"><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
+        <section>
+            <h2>CAP Theorem</h2>
+            <ul>
+                <li><strong>C</strong>onsistency</li>
+                <li><strong>A</strong>vailability</li>
+                <li><strong>P</strong>artition tolerance</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Consistency</h2>
+            <h5>every read receives the most recent write</h5>
+            <small>(a single-copy illusion)</small>
+        </section>
+
+        <section>
+            <h2>Availability</h2>
+            <h5>every request receives a non-error response</h5>
+            <small>(even if some nodes are down)</small>
+        </section>
+
+        <section>
+            <h2>Partition tolerance</h2>
+            <h5>system continues to operate even if network links are lost</h5>
+        </section>
+
+        <section>
+            <h2>What makes systems...distributed?</h2>
+        </section>
+
+        <section>
+            <h4>distributed systems are systems that communicate over unreliable channels</h4>
+        </section>
+
+        <section>
+            <h4>Network is unreliable</h4>
+            <small><small>as of 2026</small></small>
+            <br>
+            <img src="img/sharks.jpg" width="40%"/>
+
+            <small><small><a href="https://slate.com/technology/2014/08/shark-attacks-threaten-google-s-undersea-internet-cables-video.html">https://slate.com/technology/2014/08/shark-attacks-threaten-google-s-undersea-internet-cables-video.html</a></small></small>
+        </section>
+
+        <section>
+            <img src="img/packet-loss.jpeg" width="40%"/>
+            <br>
+            <small><small><a href="https://en.wikipedia.org/wiki/IP_over_Avian_Carriers">https://en.wikipedia.org/wiki/IP_over_Avian_Carriers</a></small></small>
+        </section>
+
+        <section>
+            <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
+                <em>Consistency</em> or <em>Availability</em>.</p>
+
+            <canvas id="partitionCanvas" width="550" height="220" style="max-width: 100%;"></canvas>
+            <script>
+            (function() {
+                const canvas = document.getElementById('partitionCanvas');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width, H = canvas.height;
+
+                const nodeA = { x: 100, y: 100, label: 'A', value: 42 };
+                const nodeB = { x: 450, y: 100, label: 'B', value: 42 };
+                const messages = [];
+
+                let partitioned = false;
+                let partitionTimer = 0;
+                const partitionDuration = 320;
+                const normalDuration = 280;
+
+                function spawnSyncMessage(from, to) {
+                    messages.push({
+                        from, to,
+                        value: from.value,
+                        progress: 0,
+                        speed: 0.004 + Math.random() * 0.001,
+                        opacity: 1,
+                        blocked: false
+                    });
+                }
+
+                // Increment value on node A periodically
+                setInterval(() => {
+                    nodeA.value++;
+                    if (!partitioned) spawnSyncMessage(nodeA, nodeB);
+                }, 1400);
+
+                function draw(time) {
+                    ctx.clearRect(0, 0, W, H);
+
+                    // Update partition state
+                    partitionTimer++;
+                    if (!partitioned && partitionTimer > normalDuration) {
+                        partitioned = true;
+                        partitionTimer = 0;
+                    } else if (partitioned && partitionTimer > partitionDuration) {
+                        partitioned = false;
+                        partitionTimer = 0;
+                    }
+
+                    const midX = W / 2;
+                    const valuesMatch = nodeA.value === nodeB.value;
+
+                    // Draw connection line
+                    if (partitioned) {
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x + 32, nodeA.y);
+                        ctx.lineTo(midX - 35, nodeA.y);
+                        ctx.strokeStyle = 'rgba(31, 94, 94, 0.35)';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+
+                        ctx.beginPath();
+                        ctx.moveTo(midX + 35, nodeB.y);
+                        ctx.lineTo(nodeB.x - 32, nodeB.y);
+                        ctx.stroke();
+
+                        // Lightning bolt
+                        ctx.save();
+                        ctx.strokeStyle = '#b45050';
+                        ctx.lineWidth = 2.5;
+                        ctx.beginPath();
+                        ctx.moveTo(midX - 10, nodeA.y - 16);
+                        ctx.lineTo(midX + 3, nodeA.y - 2);
+                        ctx.lineTo(midX - 5, nodeA.y + 2);
+                        ctx.lineTo(midX + 10, nodeA.y + 16);
+                        ctx.stroke();
+                        ctx.restore();
+                    } else {
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x + 32, nodeA.y);
+                        ctx.lineTo(nodeB.x - 32, nodeB.y);
+                        ctx.strokeStyle = 'rgba(31, 94, 94, 0.45)';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    }
+
+                    // Update and draw messages
+                    for (let i = messages.length - 1; i >= 0; i--) {
+                        const m = messages[i];
+                        const fromX = m.from.x + 32;
+                        const toX = m.to.x - 32;
+
+                        if (!m.blocked) {
+                            m.progress += m.speed;
+
+                            if (partitioned) {
+                                const msgX = fromX + (toX - fromX) * m.progress;
+                                if ((m.from === nodeA && msgX >= midX - 25) ||
+                                    (m.from === nodeB && msgX <= midX + 25)) {
+                                    m.blocked = true;
+                                }
+                            }
+                        }
+
+                        if (m.blocked) {
+                            m.opacity -= 0.02;
+                        }
+
+                        // Message delivered - sync value
+                        if (m.progress >= 1 && !m.blocked) {
+                            m.to.value = Math.max(m.to.value, m.value);
+                            messages.splice(i, 1);
+                            continue;
+                        }
+
+                        if (m.opacity <= 0) {
+                            messages.splice(i, 1);
+                            continue;
+                        }
+
+                        const x = fromX + (toX - fromX) * m.progress;
+                        const y = m.from.y;
+
+                        // Draw message with value
+                        ctx.beginPath();
+                        ctx.roundRect(x - 14, y - 10, 28, 20, 4);
+                        ctx.fillStyle = m.blocked
+                            ? `rgba(180, 80, 80, ${m.opacity})`
+                            : `rgba(31, 94, 94, ${m.opacity * 0.85})`;
+                        ctx.fill();
+
+                        ctx.fillStyle = `rgba(255, 255, 255, ${m.opacity})`;
+                        ctx.font = '11px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(m.value, x, y + 4);
+                    }
+
+                    // Draw nodes
+                    [nodeA, nodeB].forEach(node => {
+                        // Node circle
+                        ctx.beginPath();
+                        ctx.arc(node.x, node.y, 30, 0, Math.PI * 2);
+                        ctx.fillStyle = '#3aa0a0';
+                        ctx.fill();
+                        ctx.strokeStyle = '#1f5e5e';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+
+                        // Node label
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 13px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(node.label, node.x, node.y - 6);
+
+                        // Node value
+                        ctx.font = 'bold 15px monospace';
+                        ctx.fillText(node.value, node.x, node.y + 12);
+                    });
+
+                    // Draw status and drift indicator
+                    ctx.font = '13px sans-serif';
+                    ctx.textAlign = 'center';
+                    if (partitioned) {
+                        ctx.fillStyle = '#b45050';
+                        ctx.fillText('PARTITION', midX, 195);
+                        if (!valuesMatch) {
+                            ctx.font = '12px sans-serif';
+                            ctx.fillText('values drifting...', midX, 212);
+                        }
+                    } else {
+                        ctx.fillStyle = '#3aa0a0';
+                        ctx.fillText('connected', midX, 195);
+                        if (valuesMatch) {
+                            ctx.font = '12px sans-serif';
+                            ctx.fillText('in sync', midX, 212);
+                        }
+                    }
+
+                    requestAnimationFrame(draw);
+                }
+
+                requestAnimationFrame(draw);
+            })();
+            </script>
+        </section>
+
+        <section>
+            <h2>The Two Generals Problem</h2>
+            <p>Two generals are planning to attack a city. They can only communicate via messengers, who may be captured.</p>
+        </section>
+
+        <section>
+            <p>
+                How can both generals be sure they attack at the same time, given that messages might not arrive?
+            </p>
+
+            <canvas id="twoGeneralsCanvas" width="550" height="250" style="max-width: 100%; margin-top: 6px;"></canvas>
+            <script>
+                (function() {
+                    const canvas = document.getElementById('twoGeneralsCanvas');
+                    if (!canvas) return;
+                    const ctx = canvas.getContext('2d');
+                    const W = canvas.width, H = canvas.height;
+
+                    const GR = 30;
+                    const G1X = 82, G2X = 468, GY = 95;
+                    const HOSTILE_X1 = 190, HOSTILE_X2 = 360;
+                    const PATH_X1 = G1X + GR, PATH_X2 = G2X - GR;
+
+                    let state = 'IDLE', timer = 0;
+                    let msg = null;
+                    let g1Text = 'Attack at dawn?', g2Text = '...', eventText = '';
+
+                    function setState(s) { state = s; timer = 0; }
+
+                    function spawnMsg(type) {
+                        const willCapture = Math.random() < 0.5;
+                        const captureAt = willCapture ? (0.23 + Math.random() * 0.54) : 2.0;
+                        msg = {
+                            type,
+                            progress: 0,
+                            speed: 0.007,
+                            captureAt,
+                            fromX: type === 'msg' ? PATH_X1 : PATH_X2,
+                            toX:   type === 'msg' ? PATH_X2 : PATH_X1,
+                            captured: false,
+                            capturedX: 0,
+                            fadeAlpha: 1.0
+                        };
+                    }
+
+                    function update() {
+                        timer++;
+                        switch (state) {
+                            case 'IDLE':
+                                if (timer > 90) {
+                                    g1Text = 'Sending message...'; g2Text = '...'; eventText = '';
+                                    spawnMsg('msg');
+                                    setState('G1_SENDING');
+                                }
+                                break;
+                            case 'G1_SENDING':
+                                if (!msg.captured) {
+                                    msg.progress += msg.speed;
+                                    if (msg.progress >= msg.captureAt) {
+                                        msg.captured = true;
+                                        msg.capturedX = msg.fromX + (msg.toX - msg.fromX) * msg.captureAt;
+                                        g1Text = 'Did it arrive?';
+                                        eventText = 'captured!';
+                                    } else if (msg.progress >= 1.0) {
+                                        msg = null;
+                                        g2Text = 'Received! Sending ACK...';
+                                        setState('G2_THINK');
+                                    }
+                                } else {
+                                    msg.fadeAlpha -= 0.025;
+                                    if (msg.fadeAlpha <= 0) { msg = null; setState('MSG_FAIL'); }
+                                }
+                                break;
+                            case 'MSG_FAIL':
+                                if (timer > 65) {
+                                    g1Text = 'Attack at dawn?'; g2Text = '...'; eventText = '';
+                                    setState('IDLE');
+                                }
+                                break;
+                            case 'G2_THINK':
+                                if (timer > 50) { spawnMsg('ack'); setState('ACK_SENDING'); }
+                                break;
+                            case 'ACK_SENDING':
+                                if (!msg.captured) {
+                                    msg.progress += msg.speed;
+                                    if (msg.progress >= msg.captureAt) {
+                                        msg.captured = true;
+                                        msg.capturedX = msg.fromX + (msg.toX - msg.fromX) * msg.captureAt;
+                                        g2Text = 'Did G1 get my ACK?';
+                                        g1Text = 'No confirmation...';
+                                        eventText = 'ACK captured!';
+                                    } else if (msg.progress >= 1.0) {
+                                        msg = null;
+                                        g1Text = 'ACK received!';
+                                        g2Text = 'Did G1 get my ACK?';
+                                        setState('UNCERTAIN');
+                                    }
+                                } else {
+                                    msg.fadeAlpha -= 0.025;
+                                    if (msg.fadeAlpha <= 0) { msg = null; setState('ACK_FAIL'); }
+                                }
+                                break;
+                            case 'ACK_FAIL':
+                                if (timer > 65) {
+                                    g1Text = 'Attack at dawn?'; g2Text = '...'; eventText = '';
+                                    setState('IDLE');
+                                }
+                                break;
+                            case 'UNCERTAIN':
+                                if (timer === 30) eventText = 'No certainty!';
+                                if (timer > 130) {
+                                    g1Text = 'Attack at dawn?'; g2Text = '...'; eventText = '';
+                                    setState('IDLE');
+                                }
+                                break;
+                        }
+                    }
+
+                    function wrapLines(text, maxW) {
+                        const words = text.split(' ');
+                        const lines = [];
+                        let line = '';
+                        for (const w of words) {
+                            const t = line ? line + ' ' + w : w;
+                            if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; }
+                            else line = t;
+                        }
+                        if (line) lines.push(line);
+                        return lines;
+                    }
+
+                    function drawGeneral(x, label, statusText) {
+                        ctx.beginPath();
+                        ctx.arc(x, GY, GR, 0, Math.PI * 2);
+                        ctx.fillStyle = '#3aa0a0';
+                        ctx.fill();
+                        ctx.strokeStyle = '#1f5e5e';
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 13px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(label, x, GY + 4);
+                        ctx.fillStyle = '#444';
+                        ctx.font = '10px sans-serif';
+                        ctx.textAlign = 'center';
+                        wrapLines(statusText, 130).forEach((l, i) => ctx.fillText(l, x, GY + GR + 16 + i * 13));
+                    }
+
+                    function draw() {
+                        ctx.clearRect(0, 0, W, H);
+
+                        const zoneTop = GY - 42, zoneH = 84;
+                        ctx.fillStyle = 'rgba(180,80,80,0.07)';
+                        ctx.fillRect(HOSTILE_X1, zoneTop, HOSTILE_X2 - HOSTILE_X1, zoneH);
+                        ctx.strokeStyle = 'rgba(180,80,80,0.25)';
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([4, 4]);
+                        ctx.strokeRect(HOSTILE_X1, zoneTop, HOSTILE_X2 - HOSTILE_X1, zoneH);
+                        ctx.setLineDash([]);
+                        ctx.fillStyle = 'rgba(180,80,80,0.55)';
+                        ctx.font = '10px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('hostile territory', W / 2, zoneTop - 6);
+
+                        ctx.beginPath();
+                        ctx.moveTo(PATH_X1, GY);
+                        ctx.lineTo(PATH_X2, GY);
+                        ctx.strokeStyle = 'rgba(58,160,160,0.2)';
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([5, 5]);
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+
+                        update();
+
+                        if (msg) {
+                            const x = msg.captured
+                                ? msg.capturedX
+                                : msg.fromX + (msg.toX - msg.fromX) * Math.min(msg.progress, 1.0);
+                            const a = msg.captured ? msg.fadeAlpha : 1.0;
+                            if (msg.captured) {
+                                ctx.fillStyle = `rgba(180,80,80,${a})`;
+                                ctx.font = 'bold 22px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('\u2717', x, GY + 8);
+                            } else {
+                                ctx.beginPath();
+                                ctx.arc(x, GY, 9, 0, Math.PI * 2);
+                                ctx.fillStyle = msg.type === 'msg' ? '#3aa0a0' : '#c08818';
+                                ctx.fill();
+                                ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+                                ctx.lineWidth = 1.5;
+                                ctx.stroke();
+                                ctx.fillStyle = '#fff';
+                                ctx.font = 'bold 10px monospace';
+                                ctx.textAlign = 'center';
+                                ctx.fillText(msg.type === 'msg' ? '!' : '\u2713', x, GY + 4);
+                            }
+                        }
+
+                        if (eventText) {
+                            ctx.fillStyle = '#b45050';
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(eventText, W / 2, 215);
+                        }
+
+                        drawGeneral(G1X, 'G1', g1Text);
+                        drawGeneral(G2X, 'G2', g2Text);
+
+                        requestAnimationFrame(draw);
+                    }
+
+                    draw();
+                })();
+            </script>
+
+        </section>
+
+        <section>
+            <p>
+                There is <strong>no deterministic way</strong> for two parties to <strong>coordinate</strong> over an unreliable communication channel.
+            </p>
+        </section>
+
+        <section>
+            <h3>...</h3>
+        </section>
+
+        <section>
+            <h4>When sending a message over unreliable channels, how to guarantee delivery?</h4
+            <h5><small>(...thought experiment...)</small></h5>
+
+        </section>
+
+        <section>
+            <h3>Definition</h3>
+            <p>An operation is <strong>idempotent</strong> if performing it multiple times produces the <em>same
+                effect</em> as performing it once.</p>
+            <br>
+            <pre><code>f(f(x)) = f(x)</code></pre>
+        </section>
+
+        <section>
+            <h3>Examples</h3>
+            <ul>
+                <li>Setting a user’s status to “active” → ✅</li>
+                <li>Incrementing a counter → ❌</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>In a distributed system</h3>
+            <p>Failures and retries are inevitable.</p>
+        </section>
+
+        <section>
+            <ul>
+                <li>Network retries may cause duplicate requests</li>
+                <li>Clients or load balancers might resend operations</li>
+                <li>Idempotency prevents unwanted side effects</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h3>Exactly-once delivery?</h3>
+            <p><strong>A fairy tale.</strong></p>
+            <br><br>
+            <div class="fragment">
+                <p><strong>Reality:</strong> You only ever get:</p>
+                <ul>
+                    <li><strong>at-most-once</strong> → messages may be lost</li>
+                    <li><strong>at-least-once</strong> → messages may be duplicated</li>
+                </ul>
+            </div>
+        </section>
+
+        <section>
+            <h3>Exactly-once doesn’t exist</h3>
+            <ul>
+                <li>Networks can fail between <em>send</em> and <em>acknowledge</em></li>
+                <li>Clients can retry</li>
+                <li>Servers can crash mid-processing</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Exactly-once <em>effect</em></h3>
+            <p>We can't guarantee <em>exactly-once delivery</em>,</p>
+            <p>but we can design for <strong>exactly-once effect</strong> using idempotency.</p>
+            <br>
+            <pre><code>at-least-once delivery + idempotency = exactly-once</code></pre>
+        </section>
+
+        <!-- RESILIENCE PATTERNS SECTION -->
+        <section>
+            <h2>Resilience Patterns</h2>
+            <p>When failures are inevitable, design for graceful degradation.</p>
+        </section>
+
+        <section>
+            <h2>Circuit Breaker</h2>
+            <p>Prevent cascading failures by <strong>failing fast</strong>.</p>
+            <ul>
+                <li><strong>Closed</strong> → requests pass through normally</li>
+                <li><strong>Open</strong> → requests fail immediately (no calls to failing service)</li>
+                <li><strong>Half-Open</strong> → test if service recovered</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Circuit Breaker States</h3>
+            <svg width="500" height="200" style="max-width: 100%;">
+                <defs>
+                    <style>
+                        .cb-state { fill: #3aa0a0; stroke: #1f5e5e; stroke-width: 2; }
+                        .cb-arrow { stroke: #1f5e5e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+                        .cb-text { font-size: 14px; text-anchor: middle; }
+                    </style>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#1f5e5e"/>
+                    </marker>
+                </defs>
+                <circle cx="80" cy="100" r="40" class="cb-state"/>
+                <text x="80" y="105" class="cb-text" fill="white">Closed</text>
+
+                <circle cx="250" cy="100" r="40" class="cb-state" style="fill: #cc5555;"/>
+                <text x="250" y="105" class="cb-text" fill="white">Open</text>
+
+                <circle cx="420" cy="100" r="40" class="cb-state" style="fill: #ccaa55;"/>
+                <text x="420" y="105" class="cb-text" fill="white">Half-Open</text>
+
+                <path class="cb-arrow" d="M125 85 Q165 50 205 85"/>
+                <path class="cb-arrow" d="M295 85 Q335 50 375 85"/>
+                <path class="cb-arrow" d="M375 115 Q335 150 295 115"/>
+                <path class="cb-arrow" d="M420 145 Q250 200 80 145"/>
+            </svg>
+            <small>Failures trigger opening; timeout triggers half-open; success closes.</small>
+        </section>
+
+        <section>
+            <h3>Circuit Breaker Example</h3>
+            <pre><code class="hljs language-java" data-trim>
+@CircuitBreaker(name = "paymentService",
+                fallbackMethod = "fallbackPayment")
+public Payment processPayment(Order order) {
+    return paymentClient.charge(order);
+}
+
+public Payment fallbackPayment(Order order, Exception e) {
+    return Payment.pending(order.id()); // graceful degradation
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Retry with Exponential Backoff</h2>
+            <p>Don't hammer a failing service - back off gradually.</p>
+            <pre><code data-trim>
+Attempt 1: wait 100ms
+Attempt 2: wait 200ms
+Attempt 3: wait 400ms
+Attempt 4: wait 800ms
+...
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Add Jitter</h3>
+            <p>Without jitter, retries synchronize → <strong>thundering herd</strong>.</p>
+            <pre><code class="hljs language-java" data-trim>
+long backoff = (long) Math.pow(2, attempt) * baseDelay;
+long jitter = random.nextLong(backoff / 2);
+long delay = backoff + jitter;
+            </code></pre>
+            <p>Jitter spreads retries over time, reducing load spikes.</p>
+        </section>
+
+        <section>
+            <h3>Thundering Herd Problem</h3>
+            <p>When many clients retry at the same time:</p>
+            <ul>
+                <li>Service just recovered</li>
+                <li>All clients retry simultaneously</li>
+                <li>Service overwhelmed again</li>
+                <li>Cycle repeats</li>
+            </ul>
+            <p><strong>Solution:</strong> exponential backoff + jitter</p>
+        </section>
+
+        <section>
+            <h2>Bulkhead Pattern</h2>
+            <p>Isolate failures to prevent total system collapse.</p>
+            <p>Named after ship compartments that contain flooding.</p>
+        </section>
+
+        <section>
+            <h3>Bulkhead Strategies</h3>
+            <ul>
+                <li><strong>Thread pool isolation</strong> → separate pools per dependency</li>
+                <li><strong>Semaphore isolation</strong> → limit concurrent calls</li>
+                <li><strong>Connection pool limits</strong> → prevent resource exhaustion</li>
+            </ul>
+            <pre><code class="hljs language-java" data-trim>
+@Bulkhead(name = "inventoryService",
+          type = Bulkhead.Type.THREADPOOL)
+public Inventory checkStock(String productId) {
+    return inventoryClient.getStock(productId);
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h2>Timeout Strategies</h2>
+            <p>How long should you wait?</p>
+            <p class="fragment"><strong>It's harder than it looks.</strong></p>
+        </section>
+
+        <section>
+            <h3>Timeout Considerations</h3>
+            <ul>
+                <li>Too short → false failures, wasted work</li>
+                <li>Too long → resource exhaustion, cascading delays</li>
+                <li>p99 latency ≠ typical latency</li>
+                <li>Downstream timeouts should be shorter than upstream</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Timeout Budget</h3>
+            <pre><code data-trim>
+Client timeout: 3000ms
+  └─ Service A timeout: 2000ms
+       └─ Service B timeout: 1000ms
+            └─ Database timeout: 500ms
+            </code></pre>
+            <p>Each layer must complete within its budget.</p>
+        </section>
+
+        <section>
+            <h3>Combining Patterns</h3>
+            <pre><code class="hljs language-java" data-trim>
+@CircuitBreaker(name = "backend")
+@Bulkhead(name = "backend")
+@Retry(name = "backend")
+@TimeLimiter(name = "backend")
+public CompletableFuture&lt;Result&gt; callBackend() {
+    return backendClient.fetch();
+}
+            </code></pre>
+            <p>Order matters: Retry → CircuitBreaker → Bulkhead → TimeLimiter</p>
+        </section>
+
+        <!-- OBSERVABILITY SECTION -->
+        <section>
+            <h2>Observability</h2>
+            <p>You can't fix what you can't see.</p>
+        </section>
+
+        <section>
+            <h3>The Three Pillars</h3>
+            <ul>
+                <li><strong>Metrics</strong> → aggregated numerical data (counters, gauges, histograms)</li>
+                <li><strong>Logs</strong> → discrete events with context</li>
+                <li><strong>Traces</strong> → request flow across services</li>
+            </ul>
+            <p>You need all three for full visibility.</p>
+        </section>
+
+        <section>
+            <h2>Distributed Tracing</h2>
+            <p>Follow a request as it travels through multiple services.</p>
+        </section>
+
+        <section>
+            <h3>Trace Anatomy</h3>
+            <pre><code data-trim>
+Trace ID: abc-123
+├─ Span: API Gateway (50ms)
+│  └─ Span: OrderService (120ms)
+│     ├─ Span: InventoryService (45ms)
+│     └─ Span: PaymentService (60ms)
+│        └─ Span: Database (15ms)
+            </code></pre>
+            <p>Each span represents one unit of work.</p>
+        </section>
+
+        <section>
+            <h3>Correlation IDs</h3>
+            <p>Propagate a unique ID through all services:</p>
+            <pre><code class="hljs language-java" data-trim>
+// Incoming request
+String traceId = request.getHeader("X-Trace-Id");
+if (traceId == null) {
+    traceId = UUID.randomUUID().toString();
+}
+MDC.put("traceId", traceId);
+
+// Outgoing request
+httpClient.setHeader("X-Trace-Id", traceId);
+            </code></pre>
+            <p>Now you can correlate logs across all services.</p>
+        </section>
+
+        <section>
+            <h3>What Tracing Reveals</h3>
+            <ul>
+                <li>Which service is the bottleneck?</li>
+                <li>Where did the request fail?</li>
+                <li>What's the actual call graph?</li>
+                <li>Are there unexpected dependencies?</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>PACELC Theorem</h2>
+            <p>
+                Daniel Abadi extended CAP to include trade-offs <em>when no partition occurs</em>:
+            </p>
+            <blockquote>
+                <strong>If P</strong> (partition) → <em>A</em> or <em>C</em><br>
+                <strong>Else</strong> (ok) → <em>Latency</em> or <em>Consistency</em>
+            </blockquote>
+        </section>
+
+        <section>
+            <p>Even without partitions, there’s another trade-off</p>
+            <strong>Waiting for consensus takes time</strong>
+            <br><br>
+            <small><p>This is the “ELC” part of PACELC.</p></small>
+        </section>
+
+        <section>
+            <h3>Imagine two coffee shops sharing an order system</h3>
+            <ul>
+                <li><strong>network failure</strong> → choice:
+                    <em>keep taking orders (A)</em> or <em>pause until synced (C)</em></li>
+                <li><strong>no failure</strong> → each order can be:
+                    <em>fast but maybe outdated (L)</em> or <em>slow but always accurate (C)</em></li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Real-world examples</h3>
+            <ul>
+                <li><strong>Amazon Dynamo / Cassandra</strong> → prioritize <em>Availability + Low Latency</em></li>
+                <li><strong>Google Spanner</strong> → prioritize <em>Consistency</em>, accept more latency</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>temporal coupling</h3>
+            <h4>when all your services need to be responsive at the same time</h4>
+        </section>
+
+        <section>
+            <h3>False Dichotomy:</h3>
+            <h4>Consistent vs. Inconsistent</h4>
+        </section>
+
+        <section>
+            <h3>Different consistency levels</h3>
+            <ul>
+                <li><strong>Strong consistency</strong> → Data converges immediately</li>
+                <li><strong>Eventual consistency</strong> → Data converges... eventually</li>
+                <li><strong>Accidental consistency</strong> → Data converges... maybe</li>
+            </ul>
+            <p>All are “consistent” — just in different ways.</p>
+        </section>
+
+        <section>
+            <h3>Eventual consistency</h3>
+            <blockquote>
+                If no new updates occur, all replicas will <strong>eventually</strong> converge to the same state.
+            </blockquote>
+            <p>It’s a trade-off: we get <strong>availability and speed</strong> at the cost of temporary disagreement.
+            </p>
+        </section>
+
+        <section>
+            <h3>Why this makes sense</h3>
+            <ul>
+                <li>Networks are slow and unreliable</li>
+                <li>Waiting for everyone to agree slows everything down</li>
+                <li>So we let nodes respond now and sync later</li>
+            </ul>
+            <p>→ <strong>Fast now, consistent later</strong></p>
+        </section>
+
+        <!-- CONFLICT RESOLUTION SECTION -->
+        <section>
+            <h2>Conflict Resolution</h2>
+            <p>When replicas diverge, how do we reconcile?</p>
+        </section>
+
+        <section>
+            <h3>Last-Write-Wins (LWW)</h3>
+            <p>Simplest approach: highest timestamp wins.</p>
+            <pre><code data-trim>
+Node A: set("key", "A", t=100)
+Node B: set("key", "B", t=105)
+
+Result: "B" wins (higher timestamp)
+            </code></pre>
+            <p class="fragment"><strong>Problem:</strong> Relies on synchronized clocks. Data can be silently lost.</p>
+        </section>
+
+        <section>
+            <h3>Application-Level Resolution</h3>
+            <p>Let the application decide how to merge:</p>
+            <ul>
+                <li>Shopping cart → union of items</li>
+                <li>Counter → sum of increments</li>
+                <li>Document → show conflict to user</li>
+            </ul>
+            <p>Requires domain knowledge.</p>
+        </section>
+
+        <section>
+            <h2>CRDTs</h2>
+            <h4>Conflict-free Replicated Data Types</h4>
+            <p>Data structures that <strong>automatically merge</strong> without conflicts.</p>
+        </section>
+
+        <section>
+            <h3>CRDT Properties</h3>
+            <ul>
+                <li>Replicas can be updated independently</li>
+                <li>Updates always converge to the same state</li>
+                <li>No coordination required during updates</li>
+                <li>Mathematically guaranteed to be conflict-free</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>CRDT Examples</h3>
+            <ul>
+                <li><strong>G-Counter</strong> → grow-only counter (each node tracks its own count)</li>
+                <li><strong>PN-Counter</strong> → counter with increments and decrements</li>
+                <li><strong>G-Set</strong> → grow-only set (add-only)</li>
+                <li><strong>OR-Set</strong> → observed-remove set (add and remove)</li>
+                <li><strong>LWW-Register</strong> → last-writer-wins register</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>G-Counter Example</h3>
+            <pre><code data-trim>
+Node A: {A: 5, B: 0, C: 0}  // A incremented 5 times
+Node B: {A: 0, B: 3, C: 0}  // B incremented 3 times
+Node C: {A: 0, B: 0, C: 2}  // C incremented 2 times
+
+Merge: {A: 5, B: 3, C: 2}   // take max of each
+Total: 5 + 3 + 2 = 10
+            </code></pre>
+            <p>No conflicts possible - just take the maximum per node.</p>
+        </section>
+
+        <section>
+            <h3>CRDTs in Practice</h3>
+            <ul>
+                <li><strong>Redis</strong> → CRDT-based active-active replication</li>
+                <li><strong>Riak</strong> → built-in CRDT support</li>
+                <li><strong>Cassandra</strong> → counter columns</li>
+                <li><strong>Collaborative editing</strong> → Google Docs, Figma</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>CRDT Trade-offs</h3>
+            <ul>
+                <li>✅ Always available, always convergent</li>
+                <li>✅ No coordination overhead</li>
+                <li>❌ Limited to specific data structures</li>
+                <li>❌ Can grow unbounded (tombstones, version vectors)</li>
+                <li>❌ Eventual consistency only</li>
+            </ul>
+        </section>
+
+        <section data-transition="fade">
+            <h3>synchronous communication</h3>
+            <img src="img/sync1.png" width="80%"/>
+        </section>
+
+        <section data-transition="fade">
+            <h3>asynchronous communication</h3>
+            <img src="img/sync2.png" width="80%"/>
+        </section>
+
+        <section>
+            <h3>From HTTP calls...</h3>
+            <pre><code data-trim>
+OrderService -> PaymentService -> NotificationService
+    </code></pre>
+            <p>Each service calls another directly...</p>
+            <p><em>...tight coupling, dependencies, and failure chains.</em></p>
+        </section>
+
+        <section>
+            <h3>...to Events</h3>
+            <pre><code data-trim>
+OrderService --> publishes OrderCreatedEvent
+PaymentService --> consumes OrderCreatedEvent
+NotificationService --> consumes PaymentConfirmedEvent
+    </code></pre>
+            <p>Services react to <strong>events</strong> instead of making direct calls.</p>
+        </section>
+
+        <section>
+            <h2>Local Read Models</h2>
+            <p>Each service maintains its own <strong>local view</strong> of data it needs.</p>
+            <pre><code data-trim>
+@EventListener
+void on(PaymentConfirmedEvent event) {
+    orderReadModel.updateStatus(event.orderId(), "PAID");
+}
+    </code></pre>
+            <p>This enables fast, local reads - no cross-service queries needed</p>
+            <p>...but it eventually consistent</p>
+
+        </section>
+
+        <section>
+            <h3>Why Local Read Models?</h3>
+            <ul>
+                <li>No need to call other services for data</li>
+                <li>Improves reliability - service can operate even if others are down</li>
+            </ul>
+        </section>
+
+
+        <section>
+            <h2>Time</h2>
+
+            <img src="img/time.jpg" width="60%"/>
+
+            <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
+
+            <script>
+                let virtualTime = Date.now();
+                let speed = 1; // 1 = normal speed
+                const speedIncrement = 0.0005; // how much faster per ms
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2,'0');
+                    const mm = String(d.getMinutes()).padStart(2,'0');
+                    const ss = String(d.getSeconds()).padStart(2,'0');
+                    const ms = String(d.getMilliseconds()).padStart(3,'0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let last = performance.now();
+
+                function update() {
+                    const now = performance.now();
+                    const delta = now - last;
+                    last = now;
+
+                    virtualTime += delta * speed;
+                    speed += speedIncrement * delta;
+                    document.getElementById("live-time").textContent = formatWithMs(virtualTime);
+
+                    requestAnimationFrame(update);
+                }
+
+                update();
+            </script>
+        </section>
+
+
+        <section>
+            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
+                   var first = Instant.now();
+                   var second = Instant.now();
+            </code></pre>
+
+            <h3><code>first</code> <= <code>second?</code></h3>
+        </section>
+
+        <section>
+            <h2>Clocks in Distributed Systems</h2>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top: 40px; font-family: monospace; font-size: 1.8rem;">
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node A</div>
+                    <div id="clockA"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node B</div>
+                    <div id="clockB"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node C</div>
+                    <div id="clockC"></div>
+                </div>
+
+            </div>
+
+            <script>
+                const driftRates = {
+                    A: 0,
+                    B: 17.0,
+                    C: -31.2
+                };
+
+                const state = {
+                    A: Date.now(),
+                    B: Date.now() + 20,
+                    C: Date.now() - 35
+                };
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const mm = String(d.getMinutes()).padStart(2, '0');
+                    const ss = String(d.getSeconds()).padStart(2, '0');
+                    const ms = String(d.getMilliseconds()).padStart(3, '0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let lastUpdate = performance.now();
+                let lastSync = lastUpdate;
+
+                function tick() {
+                    const nowPerf = performance.now();
+                    const delta = nowPerf - lastUpdate;
+                    lastUpdate = nowPerf;
+
+                    if (performance.now() - lastSync > 3000) {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta + (driftRates[n] * delta / 1000);
+                        }
+                    } else {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta;
+                        }
+                    }
+
+                    if (Math.random() < 0.001) {
+                        const base = Date.now();
+
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] = base + Math.random() * 30 - 15;
+                        }
+
+                        ["clockA", "clockB", "clockC"].forEach(id => {
+                            const el = document.getElementById(id);
+                            el.style.color = "red";
+                            setTimeout(() => el.style.color = "", 300);
+                        });
+                    }
+
+                    clockA.textContent = formatWithMs(state.A);
+                    clockB.textContent = formatWithMs(state.B);
+                    clockC.textContent = formatWithMs(state.C);
+
+                    requestAnimationFrame(tick);
+                }
+
+                tick();
+            </script>
+        </section>
+
+
+        <section>
+            <p>A <strong>monotonic clock</strong> always moves forward - never backward.</p>
+            <p>But most <code>system clocks</code> are <strong>not monotonic</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Why clocks go backwards</h3>
+            <ul>
+                <li><strong>NTP</strong> (Network Time Protocol) adjustment</li>
+                <li>Virtual machines paused and resumed</li>
+                <li>Leap seconds</li>
+                <li>Manual time correction by an admin</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Monotonic clocks to the rescue</h3>
+            <ul>
+                <li>In Java: <code>System.nanoTime()</code></li>
+                <li>In Linux: <code>CLOCK_MONOTONIC</code></li>
+            </ul>
+            <p>They never go backward, but don’t represent “real” time.</p>
+
+            <br>
+            <small><a href="https://www.javaadvent.com/2019/12/measuring-time-from-java-to-kernel-and-back.html">Measuring time: from Java to kernel and back</a></small>
+
+        </section>
+
+        <section>
+            <p>In distributed systems, time is… <strong>an illusion</strong>.</p>
+        </section>
+
+        <section>
+            <h3>The problem with clocks</h3>
+            <ul>
+                <li>Each machine has its own clock</li>
+                <li>Clocks drift - even if synced</li>
+                <li>Network delays make “now” ambiguous</li>
+            </ul>
+            <p>So: there is no single, global “current time.”</p>
+        </section>
+
+        <section>
+            <h3>Example</h3>
+            <p>Two servers record an event:</p>
+            <ul>
+                <li>Server A: event at 12:00:00.100</li>
+                <li>Server B: event at 12:00:00.090</li>
+            </ul>
+            <p>Which happened first? 🤔</p>
+        </section>
+
+        <section>
+            <h3>Why this matters</h3>
+            <ul>
+                <li>Event ordering affects state changes</li>
+                <li>Conflicts appear when we can’t tell “what came first”</li>
+                <li>Replication, logs, and causality all depend on time</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Happened-before relationship</h3>
+            <p>Instead of wall-clock time, we use <strong>causal order</strong>:</p>
+            <blockquote>
+                A → B if A happened before B (causally)
+            </blockquote>
+            <p>We care about <em>ordering</em> of events, not their timestamps.</p>
+        </section>
+
+        <section>
+            <h3>Logical clocks</h3>
+            <ul>
+                <li><strong>Lamport clocks</strong> → simple counters to track causal order</li>
+                <li><strong>Vector clocks</strong> → richer structure to detect concurrent events</li>
+            </ul>
+            <p>They don’t measure real time - they measure <strong>cause and effect</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Real time vs. logical time</h3>
+            <ul>
+                <li><strong>Real time</strong> → what your watch shows</li>
+                <li><strong>Logical time</strong> → what the system can <em>prove</em> happened first</li>
+            </ul>
+            <p>Distributed systems live in <strong>logical time</strong>.</p>
+        </section>
+
+        <section>
+            <p>Google’s Spanner uses special hardware clocks (TrueTime API) ⏱️</p>
+            <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
+            </p>
+        </section>
+
+        <section>
+            <h3>Summary</h3>
+            <ul>
+                <li>Each node has its own imperfect sense of time</li>
+                <li>We can't rely on timestamps for ordering</li>
+                <li>We use <strong>logical or causal time</strong> to reason safely</li>
+            </ul>
+            <p>Time is relative - especially in distributed systems 🌌</p>
+        </section>
+
+        <!-- CONSENSUS & COORDINATION SECTION -->
+        <section>
+            <h2>Consensus & Coordination</h2>
+            <p>Getting distributed nodes to agree on something.</p>
+        </section>
+
+        <section>
+            <h2>Leader Election</h2>
+            <p>Many distributed systems need a single leader:</p>
+            <ul>
+                <li>Database primary replica</li>
+                <li>Distributed lock manager</li>
+                <li>Kafka partition leader</li>
+                <li>Scheduler coordination</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Why Leader Election Is Hard</h3>
+            <ul>
+                <li>Network partitions → multiple nodes think they're leader</li>
+                <li>Clock skew → lease expiration disagreements</li>
+                <li>Process pauses → GC, VM migrations</li>
+                <li>Failures during election → stuck state</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Consensus Algorithms</h3>
+            <ul>
+                <li><strong>Paxos</strong> → the original (and notoriously hard to understand)</li>
+                <li><strong>Raft</strong> → designed for understandability</li>
+                <li><strong>Zab</strong> → ZooKeeper's protocol</li>
+            </ul>
+            <p>All solve the same fundamental problem: agreement despite failures.</p>
+        </section>
+
+        <section>
+            <h3>Raft in a Nutshell</h3>
+            <ol>
+                <li>Nodes start as <strong>followers</strong></li>
+                <li>If no heartbeat from leader → become <strong>candidate</strong></li>
+                <li>Request votes from other nodes</li>
+                <li>Majority votes → become <strong>leader</strong></li>
+                <li>Leader replicates log entries to followers</li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>Practical Leader Election</h3>
+            <p>Don't implement consensus yourself. Use:</p>
+            <ul>
+                <li><strong>ZooKeeper</strong> → battle-tested, ephemeral nodes</li>
+                <li><strong>etcd</strong> → Kubernetes' choice, Raft-based</li>
+                <li><strong>Consul</strong> → service mesh + KV store</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Distributed Locking</h2>
+            <p>Mutual exclusion across multiple nodes.</p>
+            <p class="fragment">Spoiler: it's <strong>really hard</strong> to get right.</p>
+        </section>
+
+        <section>
+            <h3>The Redlock Controversy</h3>
+            <p>Redis proposed Redlock algorithm for distributed locks.</p>
+            <p class="fragment">Martin Kleppmann (DDIA author) argued it's <strong>unsafe</strong>.</p>
+            <ul class="fragment">
+                <li>Clock assumptions are unrealistic</li>
+                <li>Process pauses can violate safety</li>
+                <li>GC can cause lock to expire while holding it</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Fencing Tokens</h3>
+            <p>Safer approach: use monotonically increasing tokens.</p>
+            <pre><code data-trim>
+Lock acquired with token: 42
+
+// Later, when using the lock:
+storage.write(data, fencingToken=42)
+
+// Storage rejects writes with old tokens
+if (requestToken < currentToken) reject();
+            </code></pre>
+            <p>The resource itself validates the lock.</p>
+        </section>
+
+        <section>
+            <h3>When You Need Distributed Locks</h3>
+            <ul>
+                <li><strong>Efficiency</strong> → prevent duplicate work (lock loss is OK)</li>
+                <li><strong>Correctness</strong> → prevent data corruption (lock loss is NOT OK)</li>
+            </ul>
+            <p class="fragment">For correctness, use proper consensus (ZooKeeper, etcd) or fencing tokens.</p>
+        </section>
+
+        <section>
+            <h2>Split Brain Problem</h2>
+            <p>When network partition creates two groups, each thinking they're the authority.</p>
+        </section>
+
+        <section>
+            <h3>Split Brain Scenario</h3>
+            <pre><code data-trim>
+         [Network Partition]
+              |       |
+    +---------+     +---------+
+    | Node A  |     | Node C  |
+    | Node B  |     | Node D  |
+    +---------+     +---------+
+    "We're the     "We're the
+     cluster!"      cluster!"
+            </code></pre>
+            <p>Both sides accept writes → data divergence.</p>
+        </section>
+
+        <section>
+            <h3>Preventing Split Brain</h3>
+            <ul>
+                <li><strong>Quorum</strong> → require majority (N/2 + 1) for decisions</li>
+                <li><strong>STONITH</strong> → "Shoot The Other Node In The Head" (force restart)</li>
+                <li><strong>Fencing</strong> → isolate the minority partition</li>
+                <li><strong>Witness node</strong> → odd number of voters</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Quorum Math</h3>
+            <pre><code data-trim>
+3 nodes: need 2 to agree (can lose 1)
+5 nodes: need 3 to agree (can lose 2)
+7 nodes: need 4 to agree (can lose 3)
+            </code></pre>
+            <p>Only one partition can ever have a majority.</p>
+            <p><small>This is why ZooKeeper/etcd recommend odd numbers.</small></p>
+        </section>
+
+        <section>
+            <h5>Eventual Consistency != Accidental Consistency</h5>
+        </section>
+
+        <section data-transition="fade">
+            <img src="img/dual-write.png" width="60%"/>
+        </section>
+
+        <section data-transition="fade">
+            <img src="img/dual-write-2.png" width="60%"/>
+        </section>
+
+        <section>
+
+            <pre><code class="hljs language-java" data-trim data-noescape>
+                @Transactional
+                public void createUser(CreateUserCommand command) {
+                    var user = from(command);
+
+                    persist(user);                     // 1
+                    send(UserCreatedEvent.from(user)); // 2
+                }
+            </code></pre>
+            <h4><code>@Transactional</code> won't save you in the distributed world</h4>
+        </section>
+
+        <section data-transition="fade">
+            <h4>Dual-Write (distributed transaction)</h4>
+            <img src="img/cdc3.png" width="50%"/>
+        </section>
+
+        <section data-transition="fade">
+            <h4>Single-Write with async propagation</h4>
+            <img src="img/cdc4.png" width="50%"/>
+        </section>
+
+        <section>
+            <h4>Transactional Outbox Pattern</h4>
+            <h4>Change Data Capture</h4>
+        </section>
+
+        <section>
+            <h2>Transactional Outbox Pattern</h2>
+            <p>Write the event to a local <strong>outbox table</strong> as part of the same transaction.</p>
+            <pre><code data-trim>
+@Transactional
+public void createOrder(Order order) {
+    orderRepository.save(order);
+    outboxRepository.save(new OutboxEvent("OrderCreated", order.id()));
+}
+    </code></pre>
+            <p>Then a separate process reads the outbox and publishes the events</p>
+        </section>
+
+        <section>
+            <h3>Trivial Publisher</h3>
+            <pre><code data-trim>
+while (true) {
+    for (OutboxEvent event : outboxRepository.findUnpublished()) {
+        eventBus.publish(event.toDomainEvent());
+        event.markAsPublished();
+    }
+}
+    </code></pre>
+            <p>Reliable, asynchronous, and decoupled event publishing.</p>
+        </section>
+
+        <section>
+            <h2>Change Data Capture (CDC)</h2>
+            <p>Instead of polling the outbox table manually...</p>
+            <p>We can let the database <strong>stream its own changes</strong>.</p>
+        </section>
+
+        <section>
+            <h3>CDC in Action</h3>
+            <ul>
+                <li>Tools like <strong>Debezium</strong> rely on db replication protocols</li>
+                <li>Each committed change becomes an event</li>
+                <li>No need to modify application logic</li>
+            </ul>
+            <pre><code data-trim>
+-- Database change -->
+INSERT INTO outbox (...) VALUES (...)
+
+-- Debezium -->
+Produces Kafka event: OrderCreated { orderId: 42 }
+    </code></pre>
+        </section>
+
+        <section>
+            <h3>Outbox + CDC Combo</h3>
+            <p><strong>Most robust solution:</strong></p>
+            <ul>
+                <li>Use the <strong>outbox table</strong> for atomic writes</li>
+                <li>Use <strong>CDC</strong> to stream events out automatically</li>
+                <li>No dual writes, no lost events, no external transactions</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Trade-offs</h3>
+            <ul>
+                <li>Increased complexity (extra tables/processes)</li>
+                <li>Possible duplication → requires idempotency</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Distributed Transactions</h2>
+            <p>When one business operation spans multiple services or databases.</p>
+            <ul>
+                <li>Each service has its own local data and transaction boundaries.</li>
+                <li>We still want <strong>atomicity</strong> across them.</li>
+            </ul>
+            <p class="fragment">But... there’s no global transaction manager in distributed systems.</p>
+        </section>
+
+        <section>
+            <h3>Example</h3>
+            <p>Booking a trip:</p>
+            <ul>
+                <li>Reserve a flight ✈️</li>
+                <li>Book a hotel 🏨</li>
+                <li>Charge a credit card 💳</li>
+            </ul>
+            <p class="fragment">If one step fails, the others must be reverted.</p>
+        </section>
+
+        <section>
+            <h2>Two-Phase Commit (2PC)</h2>
+            <p>Classic protocol to coordinate distributed commits.</p>
+            <ol>
+                <li><strong>Prepare phase</strong> - coordinator asks all participants if they can commit.</li>
+                <li><strong>Commit phase</strong> - if all say “yes”, everyone commits; otherwise, all roll back.</li>
+            </ol>
+        </section>
+
+        <section>
+            <h3>2PC Pros and Cons</h3>
+            <ul>
+                <li>✅ Guarantees atomicity across systems.</li>
+                <li>❌ Introduces a single point of failure – the coordinator.</li>
+                <li>❌ Participants must lock data until the commit is decided.</li>
+                <li>❌ Doesn’t scale well under high latency or partial failures.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>When 2PC Fails</h3>
+            <p>If the coordinator crashes between phases...</p>
+            <ul>
+                <li>Some participants may have committed.</li>
+                <li>Others may still be waiting.</li>
+                <li>System enters an <strong>uncertain state</strong>.</li>
+            </ul>
+            <p class="fragment">Recovery requires manual intervention or a timeout heuristic.</p>
+        </section>
+
+        <section>
+            <h2>The Saga Pattern</h2>
+            <p>An alternative to distributed transactions.</p>
+            <ul>
+                <li>Each step is a <strong>local transaction</strong>.</li>
+                <li>On failure, execute <strong>compensating actions</strong>.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Two Saga Coordination Styles</h3>
+            <ul>
+                <li><strong>Choreography</strong> - services react to each other's events.</li>
+                <li><strong>Orchestration</strong> - a central orchestrator tells each participant what to do.</li>
+            </ul>
+            <p class="fragment">Both achieve eventual consistency, but with different trade-offs.</p>
+        </section>
+
+        <section>
+            <h3>Saga Example</h3>
+            <pre><code data-trim style="font-size: 0.8em;line-height:1.1;">
+BookTripSaga:
+  1. FlightService.reserve(flight)
+  2. HotelService.book(hotel)
+  3. PaymentService.charge(user)
+
+If step 3 fails:
+  -> HotelService.cancelBooking()
+  -> FlightService.releaseSeat()
+  </code></pre>
+        </section>
+
+        <section>
+            <h2>Transaction Isolation</h2>
+            <p>Even inside a single database, transactions can interfere with each other.</p>
+            <p>Isolation defines <strong>how visible</strong> one transaction’s changes are to others.</p>
+            <br>
+            <small><small>Remember PACELC?</small></small>
+        </section>
+
+        <section>
+            <h3>ACID Refresher</h3>
+            <ul>
+                <li><strong>A</strong>tomicity - all or nothing</li>
+                <li><strong>C</strong>onsistency - valid state transitions</li>
+                <li><strong>I</strong>solation - no interference</li>
+                <li><strong>D</strong>urability - once committed, it stays</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Why Isolation Matters</h2>
+            <p>Concurrent transactions may cause anomalies:</p>
+            <ul>
+                <li><strong>Dirty Read</strong> - see uncommitted data</li>
+                <li><strong>Non-repeatable Read</strong> - unexpected data changes</li>
+                <li><strong>Phantom Read</strong> - new rows appear unexpectedly</li>
+                <li><strong>Lost Update</strong> - two transactions overwrite each other</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Dirty Read Example</h3>
+            <pre><code data-trim>
+T1: UPDATE accounts SET balance = balance - 100 WHERE id=1;
+T2: SELECT balance FROM accounts WHERE id=1; -- sees uncommitted value
+T1: ROLLBACK;
+    </code></pre>
+            <p><em>T2 read something that never really existed.</em></p>
+        </section>
+
+        <section>
+            <h3>Non-Repeatable Read Example</h3>
+            <pre><code data-trim>
+T1: SELECT * FROM orders WHERE id = 1; -- sees "status = NEW"
+T2: UPDATE orders SET status = 'PAID' WHERE id = 1; COMMIT;
+T1: SELECT * FROM orders WHERE id = 1; -- sees "status = PAID"
+    </code></pre>
+            <p><em>Same query, different result - during one transaction.</em></p>
+        </section>
+
+        <section>
+            <h3>Phantom Read Example</h3>
+            <pre><code data-trim>
+T1: SELECT * FROM orders WHERE status = 'NEW'; -- returns 3 rows
+T2: INSERT INTO orders (status) VALUES ('NEW'); COMMIT;
+T1: SELECT * FROM orders WHERE status = 'NEW'; -- now 4 rows
+    </code></pre>
+            <p><em>New “phantom” data appears mid-transaction.</em></p>
+        </section>
+
+        <section>
+            <h2>Write Skew Anomaly</h2>
+            <p>Occurs when two concurrent transactions read overlapping data and make <strong>non-conflicting writes</strong> based on those reads.</p>
+            <p>Even though each transaction is consistent on its own, the <em>combined result</em> breaks an invariant.</p>
+        </section>
+
+        <section>
+            <h3>Classic Example</h3>
+            <p>Hospital rule: <strong>at least one doctor must be on call</strong>.</p>
+            <pre><code data-trim style="font-size:0.85em">
+CREATE TABLE doctors (
+    id INT,
+    on_call BOOLEAN
+);
+-- Initially:
+-- Dr. Alice: on_call = true
+-- Dr. Bob:   on_call = true
+    </code></pre>
+        </section>
+
+        <section>
+            <h3>Step 1 - Two Transactions Start</h3>
+            <pre><code data-trim>
+T1: SELECT * FROM doctors WHERE on_call = true;
+-- sees Alice + Bob
+
+T2: SELECT * FROM doctors WHERE on_call = true;
+-- sees Alice + Bob
+    </code></pre>
+            <p>Both see that someone else is on call.</p>
+        </section>
+
+        <section>
+            <h3>Step 2 - Both Decide to Go Off Call</h3>
+            <pre><code data-trim>
+T1: UPDATE doctors SET on_call = false WHERE name = 'Alice';
+T2: UPDATE doctors SET on_call = false WHERE name = 'Bob';
+    </code></pre>
+            <p>Each assumes the other doctor stays on call.</p>
+        </section>
+
+        <section>
+            <h3>Step 3 - Both Commit</h3>
+            <pre><code data-trim>
+T1: COMMIT;
+T2: COMMIT;
+    </code></pre>
+            <p><strong>Invariant broken:</strong> nobody is on call anymore 🚨</p>
+        </section>
+
+        <section>
+            <h3>Why It Happens</h3>
+            <ul>
+                <li>Both transactions read the same initial state</li>
+                <li>Each makes a decision that was valid at that moment</li>
+                <li>No direct conflict → no locking → no blocking</li>
+                <li>Combined result violates a business rule</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Isolation Levels and Write Skew</h3>
+            <table style="font-size:0.9em">
+                <thead>
+                <tr>
+                    <th>Isolation Level</th>
+                    <th>Prevents Write Skew?</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr><td>Read Committed</td><td>❌</td></tr>
+                <tr><td>Repeatable Read</td><td>❌ (in most DBs)</td></tr>
+                <tr><td>Serializable</td><td>✅</td></tr>
+                </tbody>
+            </table>
+            <p><small>Only Serializable prevents it, e.g. via predicate locks or SSI (Serializable Snapshot Isolation).</small></p>
+        </section>
+
+
+        <section>
+            <h2>Serializable ≠ Simple</h2>
+            <p>Serializable isolation <strong>simulates sequential execution</strong>.</p>
+            <p>But it comes at a cost:</p>
+            <ul>
+                <li>Higher contention and locking</li>
+                <li>Deadlocks</li>
+                <li>Lower throughput</li>
+            </ul>
+        </section>
+
+        <!-- DATA MANAGEMENT SECTION -->
+        <section>
+            <h2>Data Partitioning</h2>
+            <p>When one database isn't enough.</p>
+        </section>
+
+        <section>
+            <h3>Sharding Strategies</h3>
+            <ul>
+                <li><strong>Range-based</strong> → partition by key ranges (A-M, N-Z)</li>
+                <li><strong>Hash-based</strong> → hash(key) mod N</li>
+                <li><strong>Directory-based</strong> → lookup table maps keys to shards</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Range-Based Sharding</h3>
+            <pre><code data-trim>
+Shard 1: users A-F
+Shard 2: users G-M
+Shard 3: users N-S
+Shard 4: users T-Z
+            </code></pre>
+            <ul>
+                <li>✅ Range queries are efficient</li>
+                <li>❌ Hot spots if data isn't uniform ("Smith" problem)</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Hash-Based Sharding</h3>
+            <pre><code data-trim>
+shard = hash(userId) % numShards
+
+hash("alice") % 4 = 2  → Shard 2
+hash("bob")   % 4 = 0  → Shard 0
+hash("carol") % 4 = 2  → Shard 2
+            </code></pre>
+            <ul>
+                <li>✅ Even distribution</li>
+                <li>❌ Range queries require scatter-gather</li>
+                <li>❌ Adding shards = rehash everything</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Consistent Hashing</h3>
+            <p>Minimize data movement when adding/removing nodes.</p>
+            <pre><code data-trim>
+Ring: 0 ────────────────────── 2^32
+      │    │         │    │
+    Node A  Key1   Node B  Key2
+            </code></pre>
+            <p>Keys move to the next node on the ring.</p>
+            <p>Adding a node only affects its neighbors.</p>
+        </section>
+
+        <section>
+            <h2>Rebalancing</h2>
+            <p>What happens when you add or remove nodes?</p>
+        </section>
+
+        <section>
+            <h3>Rebalancing Challenges</h3>
+            <ul>
+                <li>Data must move between nodes</li>
+                <li>System should remain available during rebalancing</li>
+                <li>Rebalancing consumes network and disk I/O</li>
+                <li>Hot spots can form during migration</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Rebalancing Strategies</h3>
+            <ul>
+                <li><strong>Fixed partitions</strong> → more partitions than nodes, just reassign</li>
+                <li><strong>Dynamic partitioning</strong> → split/merge partitions as needed</li>
+                <li><strong>Proportional partitioning</strong> → partitions per node scales with data</li>
+            </ul>
+            <p><small>Kafka, Cassandra, MongoDB each have different approaches.</small></p>
+        </section>
+
+        <section>
+            <h3>Cross-Shard Queries</h3>
+            <p>The hardest problem in sharding:</p>
+            <pre><code data-trim>
+SELECT * FROM orders
+WHERE user_id = 123
+AND product_category = 'electronics'
+            </code></pre>
+            <p>If sharded by user_id, category queries hit all shards.</p>
+            <p><strong>Solution:</strong> denormalize, or use secondary indexes.</p>
+        </section>
+
+        <!-- API EVOLUTION SECTION -->
+        <section>
+            <h2>API Evolution</h2>
+            <p>How to change APIs without breaking consumers.</p>
+        </section>
+
+        <section>
+            <h3>The Challenge</h3>
+            <ul>
+                <li>Multiple services with independent deployment</li>
+                <li>Can't update all consumers simultaneously</li>
+                <li>Old and new versions must coexist</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Versioning Strategies</h3>
+            <ul>
+                <li><strong>URL versioning</strong> → /api/v1/users, /api/v2/users</li>
+                <li><strong>Header versioning</strong> → Accept: application/vnd.api.v2+json</li>
+                <li><strong>Query parameter</strong> → /api/users?version=2</li>
+            </ul>
+            <p>Each has trade-offs in discoverability and complexity.</p>
+        </section>
+
+        <section>
+            <h3>Backward Compatibility</h3>
+            <p>New version can read old data:</p>
+            <pre><code data-trim>
+// Old format
+{ "name": "Alice" }
+
+// New code handles both
+String fullName = json.has("fullName")
+    ? json.getString("fullName")
+    : json.getString("name");  // fallback
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Forward Compatibility</h3>
+            <p>Old version can read new data:</p>
+            <pre><code data-trim>
+// New format with extra field
+{ "name": "Alice", "middleName": "Marie" }
+
+// Old code ignores unknown fields
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User {
+    private String name;
+}
+            </code></pre>
+        </section>
+
+        <section>
+            <h3>Schema Evolution</h3>
+            <p>Binary formats with built-in compatibility:</p>
+            <ul>
+                <li><strong>Avro</strong> → schema registry, reader/writer schemas</li>
+                <li><strong>Protocol Buffers</strong> → field numbers, optional fields</li>
+                <li><strong>Thrift</strong> → similar to Protobuf</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Protobuf Evolution Rules</h3>
+            <pre><code data-trim>
+message User {
+  string name = 1;
+  // int32 age = 2;        // removed - don't reuse!
+  string email = 3;        // added - new field number
+  optional string phone = 4; // optional for compatibility
+}
+            </code></pre>
+            <ul>
+                <li>Never change field numbers</li>
+                <li>Never reuse deleted field numbers</li>
+                <li>Add fields as optional or with defaults</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Consumer-Driven Contracts</h3>
+            <p>Let consumers define what they need:</p>
+            <ul>
+                <li>Consumers write contract tests</li>
+                <li>Provider verifies contracts before release</li>
+                <li>Tools: Pact, Spring Cloud Contract</li>
+            </ul>
+            <p>Prevents accidental breaking changes.</p>
+        </section>
+
+        <section>
+            <blockquote>
+                Using common sense is the ultimate Best Practice™.
+            </blockquote>
+        </section>
+        <section>
+            <h2>Thank You!</h2>
+            <h5>Need help? Reach out! It's free.</h5>
+
+            <br><br><br><br>
+            <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
+            <small><a href="https://4comprehension.com">4comprehension.com</a></small>
+            <br>
+        </section>
+    </div>
+</div>
+
+<script src="dist/reveal.js"></script>
+<script src="plugin/notes/notes.js"></script>
+<script src="plugin/markdown/markdown.js"></script>
+<script src="plugin/highlight/highlight.js"></script>
+<script>
+    // More info about initialization & config:
+    // - https://revealjs.com/initialization/
+    // - https://revealjs.com/config/
+    Reveal.initialize({
+        hash: true,
+        dependencies: [
+            { src: 'plugin/spotlight/spotlight.js' },
+        ],
+        spotlight: {
+            size: 100,
+            toggleSpotlightOnMouseDown: false,
+            spotlightOnKeyPressAndHold: true,
+            presentingCursor: 'default',
+            initialPresentationMode: true,
+            fadeInAndOut: 100,
+            useAsPointer: false,
+        },
+        keyboard: {
+            // alternative to toggleSpotlightOnMouseDown:
+            // toggle spotlight by pressing key 'c'
+            67: function() { RevealSpotlight.toggleSpotlight() },
+
+            // enter/leave presentation mode by pressing key 'p'
+            80: function() {
+                RevealSpotlight.togglePresentationMode();
+            },
+        },
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+    });
+</script>
+</body>
+<style>
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 98%;
+        color: black;
+        text-align: right;
+        padding: 10px 0px;
+        font-size: 60%;
+    }
+</style>
+</html>
