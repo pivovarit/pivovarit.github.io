@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D7X6WYDG4Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-D7X6WYDG4Z');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Studies — Grzegorz Piwowarek</title>
+    <meta name="description" content="Case studies from consulting engagements — real engineering challenges, real outcomes.">
+    <meta name="author" content="Grzegorz Piwowarek">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Case Studies — Grzegorz Piwowarek">
+    <meta name="twitter:description" content="Real engineering challenges, real outcomes.">
+    <meta name="twitter:creator" content="@pivovarit">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Case Studies — Grzegorz Piwowarek">
+    <meta property="og:description" content="Real engineering challenges, real outcomes.">
+    <meta property="og:url" content="https://pivovarit.com/case-studies/">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 2rem 5rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .page-header {
+            max-width: 600px;
+        }
+
+        .cs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .cs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            margin-bottom: 2.5rem;
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .back-link:hover {
+            color: #999;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 1.35rem;
+            color: #999;
+            margin-bottom: 0.75rem;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .tagline em {
+            font-style: normal;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .intro {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #333;
+            margin: 2rem 0;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* Case study sections */
+
+        .case-study {
+            margin-bottom: 0.5rem;
+        }
+
+        .cs-number {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+
+        .cs-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+        }
+
+        .cs-client {
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Section blocks within a case study */
+
+        .cs-block {
+            margin-bottom: 1.25rem;
+        }
+
+        .cs-block-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.5rem;
+        }
+
+        .cs-block p {
+            font-size: 0.875rem;
+            color: #777;
+            line-height: 1.75;
+        }
+
+        .cs-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cs-steps li {
+            font-size: 0.875rem;
+            color: #777;
+            line-height: 1.7;
+            padding: 0.45rem 0 0.45rem 1.1rem;
+            border-bottom: 1px solid #111;
+            position: relative;
+        }
+
+        .cs-steps li:first-child {
+            border-top: 1px solid #111;
+        }
+
+        .cs-steps li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: #444;
+        }
+
+        .cs-steps li strong {
+            color: #999;
+            font-weight: 500;
+        }
+
+        /* Stats */
+
+        .stats-row {
+            display: flex;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #555;
+            font-weight: 400;
+            margin-top: 0.2rem;
+        }
+
+        /* Quote card */
+
+        .testimonial {
+            margin-top: 1.5rem;
+            padding: 1.25rem 1.5rem;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+        }
+
+        .testimonial blockquote {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .testimonial cite {
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+        }
+
+        /* CTA */
+
+        .cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: #e25440;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-button:hover {
+            background: #ff6b5b;
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #555;
+        }
+
+        .footer a {
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #888;
+        }
+
+        .footer .separator {
+            margin: 0 0.5rem;
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.6rem; }
+            .tagline { font-size: 1.15rem; }
+            .stats-row { gap: 1.5rem; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="container">
+
+    <div class="page-header">
+        <a href="/" class="back-link">← pivovarit.com</a>
+
+        <h1>Case Studies</h1>
+        <p class="tagline">Real work, <em>real outcomes</em>.</p>
+        <p class="intro">Anonymized excerpts from consulting engagements — what the challenge was, how I approached it, and what changed.</p>
+
+        <div class="divider"></div>
+    </div>
+
+    <div class="cs-grid">
+
+    <!-- Case Study 01 -->
+    <div class="case-study">
+
+        <p class="cs-number">01 — Consulting</p>
+        <h2 class="cs-title">Engineering Transformation at a FinTech Scale-up</h2>
+        <p class="cs-client">Series B · 80-person engineering org · 6-month engagement</p>
+
+        <div class="tags">
+            <span class="tag">consulting</span>
+            <span class="tag">leadership</span>
+            <span class="tag">culture</span>
+            <span class="tag">mentoring</span>
+        </div>
+
+        <div class="cs-block">
+            <p class="cs-block-label">The Challenge</p>
+            <p>A Series B payment infrastructure company had scaled from 15 to 80 engineers in 18 months. Hiring speed had outpaced culture. Teams operated in silos, code reviews were inconsistent, architectural decisions were made ad-hoc, and two senior engineers had already resigned citing "chaos." A third was quietly interviewing.</p>
+        </div>
+
+        <div class="cs-block">
+            <p class="cs-block-label">The Approach</p>
+            <ul class="cs-steps">
+                <li><strong>Weeks 1–2:</strong> Embedded observation — attended standups, architecture discussions, and ran 40+ one-on-ones across all engineering levels.</li>
+                <li><strong>Weeks 3–4:</strong> Identified three root causes: lack of shared standards, no structured growth paths, and architectural decisions bypassing the people closest to the code.</li>
+                <li><strong>Month 2:</strong> Facilitated a collaboratively authored Engineering Principles document — written by engineers, not handed down by management.</li>
+                <li><strong>Month 3:</strong> Introduced a lightweight RFC process for architectural decisions, replacing ad-hoc Slack threads.</li>
+                <li><strong>Months 4–5:</strong> Designed and launched an internal mentoring program with explicit promotion criteria and regular check-ins.</li>
+                <li><strong>Month 6:</strong> Defined and helped hire an Engineering Excellence Lead from within — someone who would own this work after the engagement ended.</li>
+            </ul>
+        </div>
+
+        <div class="cs-block">
+            <p class="cs-block-label">The Outcome</p>
+            <p>Three engineers were promoted within 90 days of the program launch. Feature delivery accelerated as teams stopped waiting for informal permission to make decisions. The RFC process eliminated late-stage architectural rework. The engagement ended with a permanent internal owner in place.</p>
+        </div>
+
+        <div class="stats-row">
+            <div>
+                <div class="stat-value">40%</div>
+                <div class="stat-label">faster feature delivery</div>
+            </div>
+            <div>
+                <div class="stat-value">−60%</div>
+                <div class="stat-label">production incidents</div>
+            </div>
+            <div>
+                <div class="stat-value">52</div>
+                <div class="stat-label">engineering NPS (up from 14)</div>
+            </div>
+        </div>
+
+        <div class="testimonial">
+            <blockquote>"Grzegorz didn't just give us a playbook. He helped us understand why we were struggling — and then built the capability for us to fix it ourselves. Six months in, the team barely needed him, which was exactly the point."</blockquote>
+            <cite>— CTO, [Confidential] FinTech</cite>
+        </div>
+
+    </div>
+
+    <!-- Case Study 02 -->
+    <div class="case-study">
+
+        <p class="cs-number">02 — Performance Engineering</p>
+        <h2 class="cs-title">JVM Performance Overhaul for an E-Commerce Platform</h2>
+        <p class="cs-client">E-Commerce · €500M GMV · 10-week engagement</p>
+
+        <div class="tags">
+            <span class="tag">performance</span>
+            <span class="tag">JVM</span>
+            <span class="tag">concurrency</span>
+            <span class="tag">architecture</span>
+        </div>
+
+        <div class="cs-block">
+            <p class="cs-block-label">The Challenge</p>
+            <p>A high-traffic e-commerce platform was losing an estimated €15k/hour during peak sales events due to P99 latency spikes in the order processing service. The internal team had applied standard fixes — read replicas, horizontal scaling, Redis caching — but improvements plateaued after three attempts. They needed someone to find the actual bottleneck.</p>
+        </div>
+
+        <div class="cs-block">
+            <p class="cs-block-label">The Approach</p>
+            <ul class="cs-steps">
+                <li><strong>Week 1:</strong> Instrumentation first — added fine-grained Micrometer metrics and async-profiler sampling. Generated Flame Graphs from peak-load production captures before touching any code.</li>
+                <li><strong>Week 2:</strong> Identified three root causes: a lock-convoy in the inventory reservation service, 2.4 GB/min object allocation in the pricing engine causing GC pressure, and a thundering herd problem in the session cache layer.</li>
+                <li><strong>Weeks 3–5:</strong> Incremental fixes — replaced the coarse lock with a striped approach, rewrote the pricing engine's inner loop using primitive arrays to eliminate boxing overhead, added request coalescing to the session layer.</li>
+                <li><strong>Weeks 6–7:</strong> JVM tuning — migrated from G1GC to ZGC, right-sized heap regions based on profiled allocation behavior, bounded thread pool sizes to observed parallelism limits.</li>
+                <li><strong>Weeks 8–10:</strong> Load testing at 3× peak, incremental production rollout, runbook documentation, and a performance review process to prevent regression.</li>
+            </ul>
+        </div>
+
+        <div class="cs-block">
+            <p class="cs-block-label">The Outcome</p>
+            <p>P99 latency dropped from 2,400ms to 850ms under equivalent load. The system's behavior under peak became predictable — no spikes, no timeout cascades. Three overprovisioned EC2 instance types were decommissioned. The following Black Friday was the first in three years with zero performance-related incidents.</p>
+        </div>
+
+        <div class="stats-row">
+            <div>
+                <div class="stat-value">−65%</div>
+                <div class="stat-label">P99 latency</div>
+            </div>
+            <div>
+                <div class="stat-value">€200k</div>
+                <div class="stat-label">infra savings / year</div>
+            </div>
+            <div>
+                <div class="stat-value">3×</div>
+                <div class="stat-label">peak throughput sustained</div>
+            </div>
+        </div>
+
+        <div class="testimonial">
+            <blockquote>"The impact was visible in the first week. Grzegorz didn't guess — he instrumented everything first, then systematically removed the bottlenecks one by one. The team learned how to think about performance in the process."</blockquote>
+            <cite>— VP Engineering, [Confidential] E-Commerce</cite>
+        </div>
+
+    </div>
+
+    </div><!-- end cs-grid -->
+
+    <div class="divider"></div>
+
+    <div class="cta-group">
+        <a href="mailto:contact@4comprehension.com?subject=Quick%20intro%20call&body=Hi%20Grzegorz%2C%0A%0AI'd%20like%20to%20schedule%20a%20quick%20intro%20call%20to%20see%20if%20there's%20a%20fit.%0A%0A" class="cta-button">Book a Free Intro Call</a>
+    </div>
+
+    <div class="footer">
+        <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a>
+        <span class="separator">·</span>
+        <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        let animationId;
+        const baseConnectionDistance = 120;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / 12000);
+            for (let i = 0; i < particleCount; i++) {
+                const depth = Math.random() * 0.7 + 0.3;
+                const baseVelocity = (Math.random() - 0.5) * 0.4;
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    baseX: 0,
+                    baseY: 0,
+                    vx: baseVelocity * depth,
+                    vy: ((Math.random() - 0.5) * 0.4) * depth,
+                    size: (Math.random() * 2 + 1) * depth,
+                    alpha: (Math.random() * 0.4 + 0.25) * depth,
+                    depth: depth
+                });
+                particles[i].baseX = particles[i].x;
+                particles[i].baseY = particles[i].y;
+            }
+            particles.sort((a, b) => a.depth - b.depth);
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const depthDiff = Math.abs(particles[i].depth - particles[j].depth);
+                    if (depthDiff > 0.25) continue;
+
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    const avgDepth = (particles[i].depth + particles[j].depth) / 2;
+                    const connectionDist = baseConnectionDistance * avgDepth;
+
+                    if (dist < connectionDist) {
+                        const opacity = (1 - dist / connectionDist) * 0.2 * avgDepth;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 0.8 * avgDepth;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.baseX += p.vx;
+                p.baseY += p.vy;
+
+                if (p.baseX < 0) { p.baseX = canvas.width; p.x = canvas.width; }
+                if (p.baseX > canvas.width) { p.baseX = 0; p.x = 0; }
+                if (p.baseY < 0) { p.baseY = canvas.height; p.y = canvas.height; }
+                if (p.baseY > canvas.height) { p.baseY = 0; p.y = 0; }
+
+                let targetX = p.baseX;
+                let targetY = p.baseY;
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = p.baseX - mouse.x;
+                    const dy = p.baseY - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    const effectiveRadius = mouse.radius * p.depth;
+                    if (dist < effectiveRadius) {
+                        const force = (effectiveRadius - dist) / effectiveRadius;
+                        const angle = Math.atan2(dy, dx);
+                        targetX = p.baseX + Math.cos(angle) * force * 30 * p.depth;
+                        targetY = p.baseY + Math.sin(angle) * force * 30 * p.depth;
+                    }
+                }
+
+                p.x += (targetX - p.x) * 0.1;
+                p.y += (targetY - p.y) * 0.1;
+            });
+
+            drawConnections();
+
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+            });
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else {
+                animate();
+            }
+        });
+
+        resize();
+        animate();
+    })();
+</script>
+
+</body>
+</html>
