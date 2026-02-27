@@ -343,7 +343,7 @@
 
         <h1>Case Studies</h1>
         <p class="tagline">Real work, <em>real outcomes</em>.</p>
-        <p class="intro">Anonymized excerpts from consulting engagements — what the challenge was, how I approached it, and what changed.</p>
+        <p class="intro">Anonymized excerpts from consulting engagements - what the challenge was, how we approached it, and what changed.</p>
 
         <div class="divider"></div>
     </div>
@@ -353,57 +353,57 @@
     <!-- Case Study 01 -->
     <div class="case-study">
 
-        <p class="cs-number">01 — Consulting</p>
-        <h2 class="cs-title">Engineering Transformation at a FinTech Scale-up</h2>
-        <p class="cs-client">Series B · 80-person engineering org · 6-month engagement</p>
+        <p class="cs-number">01 - Scalability</p>
+        <h2 class="cs-title">Overcoming a Years-Long Scaling Bottleneck in an iGaming Wallet</h2>
+        <p class="cs-client">iGaming / Sportsbook · Multi-market operator</p>
 
         <div class="tags">
-            <span class="tag">consulting</span>
-            <span class="tag">leadership</span>
-            <span class="tag">culture</span>
-            <span class="tag">mentoring</span>
+            <span class="tag">scalability</span>
+            <span class="tag">event-sourcing</span>
+            <span class="tag">distributed systems</span>
         </div>
 
         <div class="cs-block">
             <p class="cs-block-label">The Challenge</p>
-            <p>A Series B payment infrastructure company had scaled from 15 to 80 engineers in 18 months. Hiring speed had outpaced culture. Teams operated in silos, code reviews were inconsistent, architectural decisions were made ad-hoc, and two senior engineers had already resigned citing "chaos." A third was quietly interviewing.</p>
+            <p>The core of the company's platform was its wallet - an event-sourced service responsible for processing all monetary transactions. Due to in-process caching (Guava) and timestamp-based primary keys, it was unsafe to run more than a single instance. Deployments required downtime, which was unacceptable - any downtime meant players couldn't place bets or access funds, and revenue stopped instantly.</p>
+            <p style="margin-top: 0.75rem;">Early on, off-peak deployment windows made this manageable. As the company expanded into new markets, those windows disappeared. The service became a liability - too dangerous to change, too critical to ignore. Vertical scaling was the only lever left. Years of attempts by the internal team had hit the same wall.</p>
+            <p style="margin-top: 0.75rem;">The deeper issue: every transaction required replaying a sizable amount of event history from the database before any business logic could run - sometimes taking several seconds. The in-memory cache masked this, but also made multi-instance deployment impossible. Timestamps as primary keys on the event table were used as a further argument against horizontal scaling.</p>
         </div>
 
         <div class="cs-block">
             <p class="cs-block-label">The Approach</p>
             <ul class="cs-steps">
-                <li><strong>Weeks 1–2:</strong> Embedded observation — attended standups, architecture discussions, and ran 40+ one-on-ones across all engineering levels.</li>
-                <li><strong>Weeks 3–4:</strong> Identified three root causes: lack of shared standards, no structured growth paths, and architectural decisions bypassing the people closest to the code.</li>
-                <li><strong>Month 2:</strong> Facilitated a collaboratively authored Engineering Principles document — written by engineers, not handed down by management.</li>
-                <li><strong>Month 3:</strong> Introduced a lightweight RFC process for architectural decisions, replacing ad-hoc Slack threads.</li>
-                <li><strong>Months 4–5:</strong> Designed and launched an internal mentoring program with explicit promotion criteria and regular check-ins.</li>
-                <li><strong>Month 6:</strong> Defined and helped hire an Engineering Excellence Lead from within — someone who would own this work after the engagement ended.</li>
+                <li><strong>Sequence numbers over timestamps:</strong> Evolved the events table to use optimistic locking relying on monotonically increasing sequence numbers - guaranteeing that only one instance at a time could commit a new event, making concurrent writes safe across nodes.</li>
+                <li><strong>Snapshotting optimization:</strong> Redesigned the snapshotting strategy to minimize the number of events that had to be replayed on every request, reducing cold-read latency at the database level.</li>
+                <li><strong>Busting the latency myth:</strong> The team's confidence in the cache was built on metrics collected only on first access - warmed query latency had never been measured. Validated on a separate environment and confirmed on a small production subset that DB latency without caching was within acceptable bounds.</li>
+                <li><strong>Four instances, immediately:</strong> With optimistic locking in place and the in-process cache removed, the service was deployed across four instances. Safe, zero-downtime deployments became possible for the first time - unblocking a backlog of deferred improvements.</li>
+                <li><strong>Guaranteed event delivery via Debezium:</strong> Replaced dual-write patterns (which caused occasional event loss) with Debezium polling the event table via CDC, relaying events reliably to RabbitMQ.</li>
+                <li><strong>Affinity-based load balancing + cache restoration:</strong> Switched from round-robin to affinity-based routing with consistent hashing, ensuring requests for the same wallet consistently hit the same instance. With that guarantee in place, it was safe to reintroduce in-process caching - reducing latency by 1–2 orders of magnitude and preparing the platform for an incoming player acquisition.</li>
             </ul>
         </div>
 
         <div class="cs-block">
             <p class="cs-block-label">The Outcome</p>
-            <p>Three engineers were promoted within 90 days of the program launch. Feature delivery accelerated as teams stopped waiting for informal permission to make decisions. The RFC process eliminated late-stage architectural rework. The engagement ended with a permanent internal owner in place.</p>
+            <p>A service that had been untouchable for years was safely running on four instances within weeks. Zero-downtime deployments became the norm. Event delivery became reliable. The timing mattered - the platform absorbed a new player base coming from an acquisition without a single degradation incident.</p>
         </div>
 
         <div class="stats-row">
             <div>
-                <div class="stat-value">40%</div>
-                <div class="stat-label">faster feature delivery</div>
+                <div class="stat-value">4×</div>
+                <div class="stat-label">instance count (was 1)</div>
+            </div>
+<div>
+                <div class="stat-value">30×</div>
+                <div class="stat-label">deploy frequency (1/mo → many/day)</div>
             </div>
             <div>
-                <div class="stat-value">−60%</div>
-                <div class="stat-label">production incidents</div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">downtime from deployments or failures</div>
             </div>
             <div>
-                <div class="stat-value">52</div>
-                <div class="stat-label">engineering NPS (up from 14)</div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">events lost</div>
             </div>
-        </div>
-
-        <div class="testimonial">
-            <blockquote>"Grzegorz didn't just give us a playbook. He helped us understand why we were struggling — and then built the capability for us to fix it ourselves. Six months in, the team barely needed him, which was exactly the point."</blockquote>
-            <cite>— CTO, [Confidential] FinTech</cite>
         </div>
 
     </div>
@@ -411,56 +411,57 @@
     <!-- Case Study 02 -->
     <div class="case-study">
 
-        <p class="cs-number">02 — Performance Engineering</p>
-        <h2 class="cs-title">JVM Performance Overhaul for an E-Commerce Platform</h2>
-        <p class="cs-client">E-Commerce · €500M GMV · 10-week engagement</p>
+        <p class="cs-number">02 — Delivery</p>
+        <h2 class="cs-title">From Quarterly Releases to Continuous Delivery at a B2B SaaS</h2>
+        <p class="cs-client">B2B SaaS · Early-stage platform · 7-person team</p>
 
         <div class="tags">
-            <span class="tag">performance</span>
-            <span class="tag">JVM</span>
-            <span class="tag">concurrency</span>
+            <span class="tag">CI/CD</span>
+            <span class="tag">delivery</span>
             <span class="tag">architecture</span>
+            <span class="tag">automation</span>
         </div>
 
         <div class="cs-block">
             <p class="cs-block-label">The Challenge</p>
-            <p>A high-traffic e-commerce platform was losing an estimated €15k/hour during peak sales events due to P99 latency spikes in the order processing service. The internal team had applied standard fixes — read replicas, horizontal scaling, Redis caching — but improvements plateaued after three attempts. They needed someone to find the actual bottleneck.</p>
+            <p>A B2B SaaS provider was struggling with sluggish delivery and slow bug resolution. The CTO suspected architectural over-engineering - and the investigation confirmed it. Releases were happening once every few months, with each one preceded by a multi-week development freeze dedicated entirely to testing. The system comprised roughly 60 independent components, with a roadmap planning to double that number - all maintained by a team of seven.</p>
+            <p style="margin-top: 0.75rem;">The team was technically strong but lacked deep experience with distributed architectures. Features were developed in isolation on long-lived branches, sometimes for weeks or months, before being integrated into the main codebase. Deployments were largely manual and error-prone. SOC2 compliance requirements on the production environment added further friction - making the team overly cautious about any changes reaching production. There was also just one customer onboarded - and they weren't paying yet.</p>
         </div>
 
         <div class="cs-block">
             <p class="cs-block-label">The Approach</p>
             <ul class="cs-steps">
-                <li><strong>Week 1:</strong> Instrumentation first — added fine-grained Micrometer metrics and async-profiler sampling. Generated Flame Graphs from peak-load production captures before touching any code.</li>
-                <li><strong>Week 2:</strong> Identified three root causes: a lock-convoy in the inventory reservation service, 2.4 GB/min object allocation in the pricing engine causing GC pressure, and a thundering herd problem in the session cache layer.</li>
-                <li><strong>Weeks 3–5:</strong> Incremental fixes — replaced the coarse lock with a striped approach, rewrote the pricing engine's inner loop using primitive arrays to eliminate boxing overhead, added request coalescing to the session layer.</li>
-                <li><strong>Weeks 6–7:</strong> JVM tuning — migrated from G1GC to ZGC, right-sized heap regions based on profiled allocation behavior, bounded thread pool sizes to observed parallelism limits.</li>
-                <li><strong>Weeks 8–10:</strong> Load testing at 3× peak, incremental production rollout, runbook documentation, and a performance review process to prevent regression.</li>
+                <li><strong>Black-box test safety net:</strong> Before touching the architecture, the team invested in a suite of black-box tests covering observable system behavior - agnostic to internals. Slow, but comprehensive enough to provide the confidence needed to restructure things underneath.</li>
+                <li><strong>Trunk-based development:</strong> Abandoned git-flow in favor of short-lived integrations. As soon as a chunk of work was stable, it was merged - preventing long-lived branches from drifting, reducing integration risk, and making the state of the system predictable at all times.</li>
+                <li><strong>Shared kernel extraction:</strong> Common libraries embedded across multiple components were extracted into standalone packages with their own versioning and release lifecycle - breaking implicit coupling between services.</li>
+                <li><strong>GitHub Actions automation:</strong> Manual tagging and deployment processes were replaced with GitHub Actions pipelines, enabling components to be versioned and deployed independently without human coordination.</li>
+                <li><strong>Independent deployability:</strong> With automation and decoupled dependencies in place, components could be deployed without touching the rest of the system - drastically reducing blast radius and making rollbacks tractable.</li>
+                <li><strong>Separate non-SOC2 environment:</strong> A dedicated production-like environment outside the SOC2 compliance boundary was introduced, allowing the team to experiment, validate assumptions, and iterate freely - without putting regulated infrastructure at risk.</li>
             </ul>
         </div>
 
         <div class="cs-block">
             <p class="cs-block-label">The Outcome</p>
-            <p>P99 latency dropped from 2,400ms to 850ms under equivalent load. The system's behavior under peak became predictable — no spikes, no timeout cascades. Three overprovisioned EC2 instance types were decommissioned. The following Black Friday was the first in three years with zero performance-related incidents.</p>
+            <p>What had been a quarterly release cycle became multiple deploys per day. The pre-release testing freeze disappeared - replaced by automated safety nets and incremental integration. Each deployment became a small, targeted change rather than a high-stakes batch release. MTTR dropped significantly as bugs could be isolated, fixed, and shipped in hours rather than queued for the next release window. The team started shipping with confidence rather than caution.</p>
         </div>
 
         <div class="stats-row">
             <div>
-                <div class="stat-value">−65%</div>
-                <div class="stat-label">P99 latency</div>
+                <div class="stat-value">~3mo</div>
+                <div class="stat-label">→ multiple deploys per day</div>
             </div>
             <div>
-                <div class="stat-value">€200k</div>
-                <div class="stat-label">infra savings / year</div>
+                <div class="stat-value">0</div>
+                <div class="stat-label">pre-release freeze weeks</div>
             </div>
             <div>
-                <div class="stat-value">3×</div>
-                <div class="stat-label">peak throughput sustained</div>
+                <div class="stat-value">↓</div>
+                <div class="stat-label">blast radius per deployment</div>
             </div>
-        </div>
-
-        <div class="testimonial">
-            <blockquote>"The impact was visible in the first week. Grzegorz didn't guess — he instrumented everything first, then systematically removed the bottlenecks one by one. The team learned how to think about performance in the process."</blockquote>
-            <cite>— VP Engineering, [Confidential] E-Commerce</cite>
+            <div>
+                <div class="stat-value">↑</div>
+                <div class="stat-label">MTTR (hours, not release cycles)</div>
+            </div>
         </div>
 
     </div>
@@ -473,11 +474,6 @@
         <a href="mailto:contact@4comprehension.com?subject=Quick%20intro%20call&body=Hi%20Grzegorz%2C%0A%0AI'd%20like%20to%20schedule%20a%20quick%20intro%20call%20to%20see%20if%20there's%20a%20fit.%0A%0A" class="cta-button">Book a Free Intro Call</a>
     </div>
 
-    <div class="footer">
-        <a href="https://github.com/sponsors/pivovarit" target="_blank" rel="noopener noreferrer">GitHub Sponsors</a>
-        <span class="separator">·</span>
-        <a href="https://buymeacoffee.com/pivovarit" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
-    </div>
 
 </div>
 

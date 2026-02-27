@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="dist/theme/simple.css">
 
     <link rel="stylesheet" href="plugin/highlight/zenburn.css">
+    <script src="https://pivovarit.github.io/qr/qr.js"></script>
 </head>
 <body>
 <div class="reveal">
@@ -158,6 +159,10 @@
             </div>
 
             <h5 style="margin-top: 1em;"><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
+        <section>
+            <img src="img/snake.jpg" width="60%"/>
         </section>
 
         <section>
@@ -397,6 +402,16 @@
         </section>
 
         <section>
+            <h3>...</h3>
+        </section>
+
+        <section>
+            <h4>When sending a message over unreliable channels, how to guarantee delivery?</h4>
+            <h5><small>(...thought experiment...)</small></h5>
+
+        </section>
+
+        <section>
             <h2>The Two Generals Problem</h2>
             <p>Two generals are planning to attack a city. They can only communicate via messengers, who may be captured.</p>
         </section>
@@ -623,13 +638,11 @@
         </section>
 
         <section>
-            <h3>...</h3>
-        </section>
-
-        <section>
-            <h4>When sending a message over unreliable channels, how to guarantee delivery?</h4
-            <h5><small>(...thought experiment...)</small></h5>
-
+            <h3>Retries are not always safe</h3>
+            <ul>
+                <li>Setting a user’s status to “active” → ✅</li>
+                <li>Incrementing a counter → ❌</li>
+            </ul>
         </section>
 
         <section>
@@ -638,14 +651,6 @@
                 effect</em> as performing it once.</p>
             <br>
             <pre><code>f(f(x)) = f(x)</code></pre>
-        </section>
-
-        <section>
-            <h3>Examples</h3>
-            <ul>
-                <li>Setting a user’s status to “active” → ✅</li>
-                <li>Incrementing a counter → ❌</li>
-            </ul>
         </section>
 
         <section>
@@ -665,23 +670,24 @@
         <section>
             <h3>Exactly-once delivery?</h3>
             <p><strong>A fairy tale.</strong></p>
-            <br><br>
-            <div class="fragment">
+        </section>
+
+        <section>
+            <ul>
+                <li>Networks can fail between <em>send</em> and <em>acknowledge</em></li>
+                <li>Clients can retry</li>
+                <li>Servers can crash mid-processing</li>
+            </ul>
+        </section>
+
+        <section>
+            <div>
                 <p><strong>Reality:</strong> You only ever get:</p>
                 <ul>
                     <li><strong>at-most-once</strong> → messages may be lost</li>
                     <li><strong>at-least-once</strong> → messages may be duplicated</li>
                 </ul>
             </div>
-        </section>
-
-        <section>
-            <h3>Exactly-once doesn’t exist</h3>
-            <ul>
-                <li>Networks can fail between <em>send</em> and <em>acknowledge</em></li>
-                <li>Clients can retry</li>
-                <li>Servers can crash mid-processing</li>
-            </ul>
         </section>
 
         <section>
@@ -692,224 +698,9 @@
             <pre><code>at-least-once delivery + idempotency = exactly-once</code></pre>
         </section>
 
-        <!-- RESILIENCE PATTERNS SECTION -->
         <section>
-            <h2>Resilience Patterns</h2>
-            <p>When failures are inevitable, design for graceful degradation.</p>
-        </section>
-
-        <section>
-            <h2>Circuit Breaker</h2>
-            <p>Prevent cascading failures by <strong>failing fast</strong>.</p>
-            <ul>
-                <li><strong>Closed</strong> → requests pass through normally</li>
-                <li><strong>Open</strong> → requests fail immediately (no calls to failing service)</li>
-                <li><strong>Half-Open</strong> → test if service recovered</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Circuit Breaker States</h3>
-            <svg width="500" height="200" style="max-width: 100%;">
-                <defs>
-                    <style>
-                        .cb-state { fill: #3aa0a0; stroke: #1f5e5e; stroke-width: 2; }
-                        .cb-arrow { stroke: #1f5e5e; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
-                        .cb-text { font-size: 14px; text-anchor: middle; }
-                    </style>
-                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                        <polygon points="0 0, 10 3.5, 0 7" fill="#1f5e5e"/>
-                    </marker>
-                </defs>
-                <circle cx="80" cy="100" r="40" class="cb-state"/>
-                <text x="80" y="105" class="cb-text" fill="white">Closed</text>
-
-                <circle cx="250" cy="100" r="40" class="cb-state" style="fill: #cc5555;"/>
-                <text x="250" y="105" class="cb-text" fill="white">Open</text>
-
-                <circle cx="420" cy="100" r="40" class="cb-state" style="fill: #ccaa55;"/>
-                <text x="420" y="105" class="cb-text" fill="white">Half-Open</text>
-
-                <path class="cb-arrow" d="M125 85 Q165 50 205 85"/>
-                <path class="cb-arrow" d="M295 85 Q335 50 375 85"/>
-                <path class="cb-arrow" d="M375 115 Q335 150 295 115"/>
-                <path class="cb-arrow" d="M420 145 Q250 200 80 145"/>
-            </svg>
-            <small>Failures trigger opening; timeout triggers half-open; success closes.</small>
-        </section>
-
-        <section>
-            <h3>Circuit Breaker Example</h3>
-            <pre><code class="hljs language-java" data-trim>
-@CircuitBreaker(name = "paymentService",
-                fallbackMethod = "fallbackPayment")
-public Payment processPayment(Order order) {
-    return paymentClient.charge(order);
-}
-
-public Payment fallbackPayment(Order order, Exception e) {
-    return Payment.pending(order.id()); // graceful degradation
-}
-            </code></pre>
-        </section>
-
-        <section>
-            <h2>Retry with Exponential Backoff</h2>
-            <p>Don't hammer a failing service - back off gradually.</p>
-            <pre><code data-trim>
-Attempt 1: wait 100ms
-Attempt 2: wait 200ms
-Attempt 3: wait 400ms
-Attempt 4: wait 800ms
-...
-            </code></pre>
-        </section>
-
-        <section>
-            <h3>Add Jitter</h3>
-            <p>Without jitter, retries synchronize → <strong>thundering herd</strong>.</p>
-            <pre><code class="hljs language-java" data-trim>
-long backoff = (long) Math.pow(2, attempt) * baseDelay;
-long jitter = random.nextLong(backoff / 2);
-long delay = backoff + jitter;
-            </code></pre>
-            <p>Jitter spreads retries over time, reducing load spikes.</p>
-        </section>
-
-        <section>
-            <h3>Thundering Herd Problem</h3>
-            <p>When many clients retry at the same time:</p>
-            <ul>
-                <li>Service just recovered</li>
-                <li>All clients retry simultaneously</li>
-                <li>Service overwhelmed again</li>
-                <li>Cycle repeats</li>
-            </ul>
-            <p><strong>Solution:</strong> exponential backoff + jitter</p>
-        </section>
-
-        <section>
-            <h2>Bulkhead Pattern</h2>
-            <p>Isolate failures to prevent total system collapse.</p>
-            <p>Named after ship compartments that contain flooding.</p>
-        </section>
-
-        <section>
-            <h3>Bulkhead Strategies</h3>
-            <ul>
-                <li><strong>Thread pool isolation</strong> → separate pools per dependency</li>
-                <li><strong>Semaphore isolation</strong> → limit concurrent calls</li>
-                <li><strong>Connection pool limits</strong> → prevent resource exhaustion</li>
-            </ul>
-            <pre><code class="hljs language-java" data-trim>
-@Bulkhead(name = "inventoryService",
-          type = Bulkhead.Type.THREADPOOL)
-public Inventory checkStock(String productId) {
-    return inventoryClient.getStock(productId);
-}
-            </code></pre>
-        </section>
-
-        <section>
-            <h2>Timeout Strategies</h2>
-            <p>How long should you wait?</p>
-            <p class="fragment"><strong>It's harder than it looks.</strong></p>
-        </section>
-
-        <section>
-            <h3>Timeout Considerations</h3>
-            <ul>
-                <li>Too short → false failures, wasted work</li>
-                <li>Too long → resource exhaustion, cascading delays</li>
-                <li>p99 latency ≠ typical latency</li>
-                <li>Downstream timeouts should be shorter than upstream</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Timeout Budget</h3>
-            <pre><code data-trim>
-Client timeout: 3000ms
-  └─ Service A timeout: 2000ms
-       └─ Service B timeout: 1000ms
-            └─ Database timeout: 500ms
-            </code></pre>
-            <p>Each layer must complete within its budget.</p>
-        </section>
-
-        <section>
-            <h3>Combining Patterns</h3>
-            <pre><code class="hljs language-java" data-trim>
-@CircuitBreaker(name = "backend")
-@Bulkhead(name = "backend")
-@Retry(name = "backend")
-@TimeLimiter(name = "backend")
-public CompletableFuture&lt;Result&gt; callBackend() {
-    return backendClient.fetch();
-}
-            </code></pre>
-            <p>Order matters: Retry → CircuitBreaker → Bulkhead → TimeLimiter</p>
-        </section>
-
-        <!-- OBSERVABILITY SECTION -->
-        <section>
-            <h2>Observability</h2>
-            <p>You can't fix what you can't see.</p>
-        </section>
-
-        <section>
-            <h3>The Three Pillars</h3>
-            <ul>
-                <li><strong>Metrics</strong> → aggregated numerical data (counters, gauges, histograms)</li>
-                <li><strong>Logs</strong> → discrete events with context</li>
-                <li><strong>Traces</strong> → request flow across services</li>
-            </ul>
-            <p>You need all three for full visibility.</p>
-        </section>
-
-        <section>
-            <h2>Distributed Tracing</h2>
-            <p>Follow a request as it travels through multiple services.</p>
-        </section>
-
-        <section>
-            <h3>Trace Anatomy</h3>
-            <pre><code data-trim>
-Trace ID: abc-123
-├─ Span: API Gateway (50ms)
-│  └─ Span: OrderService (120ms)
-│     ├─ Span: InventoryService (45ms)
-│     └─ Span: PaymentService (60ms)
-│        └─ Span: Database (15ms)
-            </code></pre>
-            <p>Each span represents one unit of work.</p>
-        </section>
-
-        <section>
-            <h3>Correlation IDs</h3>
-            <p>Propagate a unique ID through all services:</p>
-            <pre><code class="hljs language-java" data-trim>
-// Incoming request
-String traceId = request.getHeader("X-Trace-Id");
-if (traceId == null) {
-    traceId = UUID.randomUUID().toString();
-}
-MDC.put("traceId", traceId);
-
-// Outgoing request
-httpClient.setHeader("X-Trace-Id", traceId);
-            </code></pre>
-            <p>Now you can correlate logs across all services.</p>
-        </section>
-
-        <section>
-            <h3>What Tracing Reveals</h3>
-            <ul>
-                <li>Which service is the bottleneck?</li>
-                <li>Where did the request fail?</li>
-                <li>What's the actual call graph?</li>
-                <li>Are there unexpected dependencies?</li>
-            </ul>
+            <h3>Temporal Coupling</h3>
+            <h4>when all services need to be responsive at the same time</h4>
         </section>
 
         <section>
@@ -931,12 +722,12 @@ httpClient.setHeader("X-Trace-Id", traceId);
         </section>
 
         <section>
-            <h3>Imagine two coffee shops sharing an order system</h3>
+            <h3>Imagine two check-in desks for the same flight</h3>
             <ul>
                 <li><strong>network failure</strong> → choice:
-                    <em>keep taking orders (A)</em> or <em>pause until synced (C)</em></li>
-                <li><strong>no failure</strong> → each order can be:
-                    <em>fast but maybe outdated (L)</em> or <em>slow but always accurate (C)</em></li>
+                    <em>keep assigning seats, risk duplicates (A)</em> or <em>freeze until synced (C)</em></li>
+                <li><strong>no failure</strong> → each assignment can be:
+                    <em>fast but from a cached seat map (L)</em> or <em>slow but from a confirmed seat map (C)</em></li>
             </ul>
         </section>
 
@@ -946,11 +737,6 @@ httpClient.setHeader("X-Trace-Id", traceId);
                 <li><strong>Amazon Dynamo / Cassandra</strong> → prioritize <em>Availability + Low Latency</em></li>
                 <li><strong>Google Spanner</strong> → prioritize <em>Consistency</em>, accept more latency</li>
             </ul>
-        </section>
-
-        <section>
-            <h3>temporal coupling</h3>
-            <h4>when all your services need to be responsive at the same time</h4>
         </section>
 
         <section>
@@ -965,7 +751,7 @@ httpClient.setHeader("X-Trace-Id", traceId);
                 <li><strong>Eventual consistency</strong> → Data converges... eventually</li>
                 <li><strong>Accidental consistency</strong> → Data converges... maybe</li>
             </ul>
-            <p>All are “consistent” — just in different ways.</p>
+            <p>All are “consistent” - just in different ways.</p>
         </section>
 
         <section>
@@ -987,95 +773,7 @@ httpClient.setHeader("X-Trace-Id", traceId);
             <p>→ <strong>Fast now, consistent later</strong></p>
         </section>
 
-        <!-- CONFLICT RESOLUTION SECTION -->
-        <section>
-            <h2>Conflict Resolution</h2>
-            <p>When replicas diverge, how do we reconcile?</p>
-        </section>
 
-        <section>
-            <h3>Last-Write-Wins (LWW)</h3>
-            <p>Simplest approach: highest timestamp wins.</p>
-            <pre><code data-trim>
-Node A: set("key", "A", t=100)
-Node B: set("key", "B", t=105)
-
-Result: "B" wins (higher timestamp)
-            </code></pre>
-            <p class="fragment"><strong>Problem:</strong> Relies on synchronized clocks. Data can be silently lost.</p>
-        </section>
-
-        <section>
-            <h3>Application-Level Resolution</h3>
-            <p>Let the application decide how to merge:</p>
-            <ul>
-                <li>Shopping cart → union of items</li>
-                <li>Counter → sum of increments</li>
-                <li>Document → show conflict to user</li>
-            </ul>
-            <p>Requires domain knowledge.</p>
-        </section>
-
-        <section>
-            <h2>CRDTs</h2>
-            <h4>Conflict-free Replicated Data Types</h4>
-            <p>Data structures that <strong>automatically merge</strong> without conflicts.</p>
-        </section>
-
-        <section>
-            <h3>CRDT Properties</h3>
-            <ul>
-                <li>Replicas can be updated independently</li>
-                <li>Updates always converge to the same state</li>
-                <li>No coordination required during updates</li>
-                <li>Mathematically guaranteed to be conflict-free</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>CRDT Examples</h3>
-            <ul>
-                <li><strong>G-Counter</strong> → grow-only counter (each node tracks its own count)</li>
-                <li><strong>PN-Counter</strong> → counter with increments and decrements</li>
-                <li><strong>G-Set</strong> → grow-only set (add-only)</li>
-                <li><strong>OR-Set</strong> → observed-remove set (add and remove)</li>
-                <li><strong>LWW-Register</strong> → last-writer-wins register</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>G-Counter Example</h3>
-            <pre><code data-trim>
-Node A: {A: 5, B: 0, C: 0}  // A incremented 5 times
-Node B: {A: 0, B: 3, C: 0}  // B incremented 3 times
-Node C: {A: 0, B: 0, C: 2}  // C incremented 2 times
-
-Merge: {A: 5, B: 3, C: 2}   // take max of each
-Total: 5 + 3 + 2 = 10
-            </code></pre>
-            <p>No conflicts possible - just take the maximum per node.</p>
-        </section>
-
-        <section>
-            <h3>CRDTs in Practice</h3>
-            <ul>
-                <li><strong>Redis</strong> → CRDT-based active-active replication</li>
-                <li><strong>Riak</strong> → built-in CRDT support</li>
-                <li><strong>Cassandra</strong> → counter columns</li>
-                <li><strong>Collaborative editing</strong> → Google Docs, Figma</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>CRDT Trade-offs</h3>
-            <ul>
-                <li>✅ Always available, always convergent</li>
-                <li>✅ No coordination overhead</li>
-                <li>❌ Limited to specific data structures</li>
-                <li>❌ Can grow unbounded (tombstones, version vectors)</li>
-                <li>❌ Eventual consistency only</li>
-            </ul>
-        </section>
 
         <section data-transition="fade">
             <h3>synchronous communication</h3>
@@ -1116,7 +814,7 @@ void on(PaymentConfirmedEvent event) {
 }
     </code></pre>
             <p>This enables fast, local reads - no cross-service queries needed</p>
-            <p>...but it eventually consistent</p>
+            <p>...but is eventually consistent</p>
 
         </section>
 
@@ -1126,388 +824,6 @@ void on(PaymentConfirmedEvent event) {
                 <li>No need to call other services for data</li>
                 <li>Improves reliability - service can operate even if others are down</li>
             </ul>
-        </section>
-
-
-        <section>
-            <h2>Time</h2>
-
-            <img src="img/time.jpg" width="60%"/>
-
-            <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
-
-            <script>
-                let virtualTime = Date.now();
-                let speed = 1; // 1 = normal speed
-                const speedIncrement = 0.0005; // how much faster per ms
-
-                function formatWithMs(t) {
-                    const d = new Date(t);
-                    const hh = String(d.getHours()).padStart(2,'0');
-                    const mm = String(d.getMinutes()).padStart(2,'0');
-                    const ss = String(d.getSeconds()).padStart(2,'0');
-                    const ms = String(d.getMilliseconds()).padStart(3,'0');
-                    return `${hh}:${mm}:${ss}.${ms}`;
-                }
-
-                let last = performance.now();
-
-                function update() {
-                    const now = performance.now();
-                    const delta = now - last;
-                    last = now;
-
-                    virtualTime += delta * speed;
-                    speed += speedIncrement * delta;
-                    document.getElementById("live-time").textContent = formatWithMs(virtualTime);
-
-                    requestAnimationFrame(update);
-                }
-
-                update();
-            </script>
-        </section>
-
-
-        <section>
-            <pre><code data-trim="" style="font-size: 0.8em;line-height: 0.9; max-height: 90%">
-                   var first = Instant.now();
-                   var second = Instant.now();
-            </code></pre>
-
-            <h3><code>first</code> <= <code>second?</code></h3>
-        </section>
-
-        <section>
-            <h2>Clocks in Distributed Systems</h2>
-
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top: 40px; font-family: monospace; font-size: 1.8rem;">
-
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <div>Node A</div>
-                    <div id="clockA"></div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <div>Node B</div>
-                    <div id="clockB"></div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <div>Node C</div>
-                    <div id="clockC"></div>
-                </div>
-
-            </div>
-
-            <script>
-                const driftRates = {
-                    A: 0,
-                    B: 17.0,
-                    C: -31.2
-                };
-
-                const state = {
-                    A: Date.now(),
-                    B: Date.now() + 20,
-                    C: Date.now() - 35
-                };
-
-                function formatWithMs(t) {
-                    const d = new Date(t);
-                    const hh = String(d.getHours()).padStart(2, '0');
-                    const mm = String(d.getMinutes()).padStart(2, '0');
-                    const ss = String(d.getSeconds()).padStart(2, '0');
-                    const ms = String(d.getMilliseconds()).padStart(3, '0');
-                    return `${hh}:${mm}:${ss}.${ms}`;
-                }
-
-                let lastUpdate = performance.now();
-                let lastSync = lastUpdate;
-
-                function tick() {
-                    const nowPerf = performance.now();
-                    const delta = nowPerf - lastUpdate;
-                    lastUpdate = nowPerf;
-
-                    if (performance.now() - lastSync > 3000) {
-                        for (const n of ["A", "B", "C"]) {
-                            state[n] += delta + (driftRates[n] * delta / 1000);
-                        }
-                    } else {
-                        for (const n of ["A", "B", "C"]) {
-                            state[n] += delta;
-                        }
-                    }
-
-                    if (Math.random() < 0.001) {
-                        const base = Date.now();
-
-                        for (const n of ["A", "B", "C"]) {
-                            state[n] = base + Math.random() * 30 - 15;
-                        }
-
-                        ["clockA", "clockB", "clockC"].forEach(id => {
-                            const el = document.getElementById(id);
-                            el.style.color = "red";
-                            setTimeout(() => el.style.color = "", 300);
-                        });
-                    }
-
-                    clockA.textContent = formatWithMs(state.A);
-                    clockB.textContent = formatWithMs(state.B);
-                    clockC.textContent = formatWithMs(state.C);
-
-                    requestAnimationFrame(tick);
-                }
-
-                tick();
-            </script>
-        </section>
-
-
-        <section>
-            <p>A <strong>monotonic clock</strong> always moves forward - never backward.</p>
-            <p>But most <code>system clocks</code> are <strong>not monotonic</strong>.</p>
-        </section>
-
-        <section>
-            <h3>Why clocks go backwards</h3>
-            <ul>
-                <li><strong>NTP</strong> (Network Time Protocol) adjustment</li>
-                <li>Virtual machines paused and resumed</li>
-                <li>Leap seconds</li>
-                <li>Manual time correction by an admin</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Monotonic clocks to the rescue</h3>
-            <ul>
-                <li>In Java: <code>System.nanoTime()</code></li>
-                <li>In Linux: <code>CLOCK_MONOTONIC</code></li>
-            </ul>
-            <p>They never go backward, but don’t represent “real” time.</p>
-
-            <br>
-            <small><a href="https://www.javaadvent.com/2019/12/measuring-time-from-java-to-kernel-and-back.html">Measuring time: from Java to kernel and back</a></small>
-
-        </section>
-
-        <section>
-            <p>In distributed systems, time is… <strong>an illusion</strong>.</p>
-        </section>
-
-        <section>
-            <h3>The problem with clocks</h3>
-            <ul>
-                <li>Each machine has its own clock</li>
-                <li>Clocks drift - even if synced</li>
-                <li>Network delays make “now” ambiguous</li>
-            </ul>
-            <p>So: there is no single, global “current time.”</p>
-        </section>
-
-        <section>
-            <h3>Example</h3>
-            <p>Two servers record an event:</p>
-            <ul>
-                <li>Server A: event at 12:00:00.100</li>
-                <li>Server B: event at 12:00:00.090</li>
-            </ul>
-            <p>Which happened first? 🤔</p>
-        </section>
-
-        <section>
-            <h3>Why this matters</h3>
-            <ul>
-                <li>Event ordering affects state changes</li>
-                <li>Conflicts appear when we can’t tell “what came first”</li>
-                <li>Replication, logs, and causality all depend on time</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Happened-before relationship</h3>
-            <p>Instead of wall-clock time, we use <strong>causal order</strong>:</p>
-            <blockquote>
-                A → B if A happened before B (causally)
-            </blockquote>
-            <p>We care about <em>ordering</em> of events, not their timestamps.</p>
-        </section>
-
-        <section>
-            <h3>Logical clocks</h3>
-            <ul>
-                <li><strong>Lamport clocks</strong> → simple counters to track causal order</li>
-                <li><strong>Vector clocks</strong> → richer structure to detect concurrent events</li>
-            </ul>
-            <p>They don’t measure real time - they measure <strong>cause and effect</strong>.</p>
-        </section>
-
-        <section>
-            <h3>Real time vs. logical time</h3>
-            <ul>
-                <li><strong>Real time</strong> → what your watch shows</li>
-                <li><strong>Logical time</strong> → what the system can <em>prove</em> happened first</li>
-            </ul>
-            <p>Distributed systems live in <strong>logical time</strong>.</p>
-        </section>
-
-        <section>
-            <p>Google’s Spanner uses special hardware clocks (TrueTime API) ⏱️</p>
-            <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
-            </p>
-        </section>
-
-        <section>
-            <h3>Summary</h3>
-            <ul>
-                <li>Each node has its own imperfect sense of time</li>
-                <li>We can't rely on timestamps for ordering</li>
-                <li>We use <strong>logical or causal time</strong> to reason safely</li>
-            </ul>
-            <p>Time is relative - especially in distributed systems 🌌</p>
-        </section>
-
-        <!-- CONSENSUS & COORDINATION SECTION -->
-        <section>
-            <h2>Consensus & Coordination</h2>
-            <p>Getting distributed nodes to agree on something.</p>
-        </section>
-
-        <section>
-            <h2>Leader Election</h2>
-            <p>Many distributed systems need a single leader:</p>
-            <ul>
-                <li>Database primary replica</li>
-                <li>Distributed lock manager</li>
-                <li>Kafka partition leader</li>
-                <li>Scheduler coordination</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Why Leader Election Is Hard</h3>
-            <ul>
-                <li>Network partitions → multiple nodes think they're leader</li>
-                <li>Clock skew → lease expiration disagreements</li>
-                <li>Process pauses → GC, VM migrations</li>
-                <li>Failures during election → stuck state</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Consensus Algorithms</h3>
-            <ul>
-                <li><strong>Paxos</strong> → the original (and notoriously hard to understand)</li>
-                <li><strong>Raft</strong> → designed for understandability</li>
-                <li><strong>Zab</strong> → ZooKeeper's protocol</li>
-            </ul>
-            <p>All solve the same fundamental problem: agreement despite failures.</p>
-        </section>
-
-        <section>
-            <h3>Raft in a Nutshell</h3>
-            <ol>
-                <li>Nodes start as <strong>followers</strong></li>
-                <li>If no heartbeat from leader → become <strong>candidate</strong></li>
-                <li>Request votes from other nodes</li>
-                <li>Majority votes → become <strong>leader</strong></li>
-                <li>Leader replicates log entries to followers</li>
-            </ol>
-        </section>
-
-        <section>
-            <h3>Practical Leader Election</h3>
-            <p>Don't implement consensus yourself. Use:</p>
-            <ul>
-                <li><strong>ZooKeeper</strong> → battle-tested, ephemeral nodes</li>
-                <li><strong>etcd</strong> → Kubernetes' choice, Raft-based</li>
-                <li><strong>Consul</strong> → service mesh + KV store</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Distributed Locking</h2>
-            <p>Mutual exclusion across multiple nodes.</p>
-            <p class="fragment">Spoiler: it's <strong>really hard</strong> to get right.</p>
-        </section>
-
-        <section>
-            <h3>The Redlock Controversy</h3>
-            <p>Redis proposed Redlock algorithm for distributed locks.</p>
-            <p class="fragment">Martin Kleppmann (DDIA author) argued it's <strong>unsafe</strong>.</p>
-            <ul class="fragment">
-                <li>Clock assumptions are unrealistic</li>
-                <li>Process pauses can violate safety</li>
-                <li>GC can cause lock to expire while holding it</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Fencing Tokens</h3>
-            <p>Safer approach: use monotonically increasing tokens.</p>
-            <pre><code data-trim>
-Lock acquired with token: 42
-
-// Later, when using the lock:
-storage.write(data, fencingToken=42)
-
-// Storage rejects writes with old tokens
-if (requestToken < currentToken) reject();
-            </code></pre>
-            <p>The resource itself validates the lock.</p>
-        </section>
-
-        <section>
-            <h3>When You Need Distributed Locks</h3>
-            <ul>
-                <li><strong>Efficiency</strong> → prevent duplicate work (lock loss is OK)</li>
-                <li><strong>Correctness</strong> → prevent data corruption (lock loss is NOT OK)</li>
-            </ul>
-            <p class="fragment">For correctness, use proper consensus (ZooKeeper, etcd) or fencing tokens.</p>
-        </section>
-
-        <section>
-            <h2>Split Brain Problem</h2>
-            <p>When network partition creates two groups, each thinking they're the authority.</p>
-        </section>
-
-        <section>
-            <h3>Split Brain Scenario</h3>
-            <pre><code data-trim>
-         [Network Partition]
-              |       |
-    +---------+     +---------+
-    | Node A  |     | Node C  |
-    | Node B  |     | Node D  |
-    +---------+     +---------+
-    "We're the     "We're the
-     cluster!"      cluster!"
-            </code></pre>
-            <p>Both sides accept writes → data divergence.</p>
-        </section>
-
-        <section>
-            <h3>Preventing Split Brain</h3>
-            <ul>
-                <li><strong>Quorum</strong> → require majority (N/2 + 1) for decisions</li>
-                <li><strong>STONITH</strong> → "Shoot The Other Node In The Head" (force restart)</li>
-                <li><strong>Fencing</strong> → isolate the minority partition</li>
-                <li><strong>Witness node</strong> → odd number of voters</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Quorum Math</h3>
-            <pre><code data-trim>
-3 nodes: need 2 to agree (can lose 1)
-5 nodes: need 3 to agree (can lose 2)
-7 nodes: need 4 to agree (can lose 3)
-            </code></pre>
-            <p>Only one partition can ever have a majority.</p>
-            <p><small>This is why ZooKeeper/etcd recommend odd numbers.</small></p>
         </section>
 
         <section>
@@ -1618,6 +934,251 @@ Produces Kafka event: OrderCreated { orderId: 42 }
         </section>
 
         <section>
+
+        </section>
+
+
+        <section>
+            <h2>Time</h2>
+
+            <img src="img/time.jpg" width="60%"/>
+
+            <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
+
+            <script>
+                let virtualTime = Date.now();
+                let speed = 1; // 1 = normal speed
+                const speedIncrement = 0.0005; // how much faster per ms
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2,'0');
+                    const mm = String(d.getMinutes()).padStart(2,'0');
+                    const ss = String(d.getSeconds()).padStart(2,'0');
+                    const ms = String(d.getMilliseconds()).padStart(3,'0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let last = performance.now();
+
+                function update() {
+                    const now = performance.now();
+                    const delta = now - last;
+                    last = now;
+
+                    virtualTime += delta * speed;
+                    speed += speedIncrement * delta;
+                    document.getElementById("live-time").textContent = formatWithMs(virtualTime);
+
+                    requestAnimationFrame(update);
+                }
+
+                update();
+            </script>
+        </section>
+
+
+        <section>
+            <pre><code data-trim="" style="font-size: 1.4em;line-height: 1.4; max-height: 90%">
+                   var first = Instant.now();
+                   var second = Instant.now();
+            </code></pre>
+
+            <h3><code>first</code> <= <code>second?</code></h3>
+        </section>
+
+        <section>
+            <h2>Clocks in Distributed Systems</h2>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top: 40px; font-family: monospace; font-size: 1.8rem;">
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node A</div>
+                    <div id="clockA"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node B</div>
+                    <div id="clockB"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node C</div>
+                    <div id="clockC"></div>
+                </div>
+
+            </div>
+
+            <script>
+                const driftRates = {
+                    A: 0,
+                    B: 17.0,
+                    C: -31.2
+                };
+
+                const state = {
+                    A: Date.now(),
+                    B: Date.now() + 20,
+                    C: Date.now() - 35
+                };
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const mm = String(d.getMinutes()).padStart(2, '0');
+                    const ss = String(d.getSeconds()).padStart(2, '0');
+                    const ms = String(d.getMilliseconds()).padStart(3, '0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let lastUpdate = performance.now();
+                let lastSync = lastUpdate;
+
+                function tick() {
+                    const nowPerf = performance.now();
+                    const delta = nowPerf - lastUpdate;
+                    lastUpdate = nowPerf;
+
+                    if (performance.now() - lastSync > 3000) {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta + (driftRates[n] * delta / 1000);
+                        }
+                    } else {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta;
+                        }
+                    }
+
+                    if (Math.random() < 0.001) {
+                        const base = Date.now();
+
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] = base + Math.random() * 30 - 15;
+                        }
+
+                        ["clockA", "clockB", "clockC"].forEach(id => {
+                            const el = document.getElementById(id);
+                            el.style.color = "red";
+                            setTimeout(() => el.style.color = "", 300);
+                        });
+                    }
+
+                    clockA.textContent = formatWithMs(state.A);
+                    clockB.textContent = formatWithMs(state.B);
+                    clockC.textContent = formatWithMs(state.C);
+
+                    requestAnimationFrame(tick);
+                }
+
+                tick();
+            </script>
+        </section>
+
+        <section>
+            <h3>Why clocks go backwards</h3>
+            <ul>
+                <li><strong>NTP</strong> (Network Time Protocol) adjustment</li>
+                <li>Virtual machines paused and resumed</li>
+                <li>Leap seconds</li>
+                <li>Manual time correction by an admin</li>
+            </ul>
+        </section>
+
+        <section>
+            <p>A <strong>monotonic clock</strong> always moves forward - never backward.</p>
+            <p>But most system clocks are <strong>not monotonic</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Monotonic clocks to the rescue</h3>
+            <ul>
+                <li>In Java: <code>System.nanoTime()</code></li>
+                <li>In Linux: <code>CLOCK_MONOTONIC</code></li>
+            </ul>
+            <p>They never go backward, but don’t represent 'real' time.</p>
+
+            <br>
+            <small><a href="https://www.javaadvent.com/2019/12/measuring-time-from-java-to-kernel-and-back.html">Measuring time: from Java to kernel and back</a></small>
+
+        </section>
+
+        <section>
+            <p>In distributed systems, time is… <strong>an illusion</strong>.</p>
+        </section>
+
+        <section>
+            <h3>The problem with clocks</h3>
+            <ul>
+                <li>Each machine has its own clock</li>
+                <li>Clocks drift - even if synced</li>
+                <li>Network delays make 'now' ambiguous</li>
+            </ul>
+            <p>So: there is no single, global 'current time.'</p>
+        </section>
+
+        <section>
+            <h3>Example</h3>
+            <p>Two servers record an event:</p>
+            <ul>
+                <li>Server A: event at 12:00:00.100</li>
+                <li>Server B: event at 12:00:00.090</li>
+            </ul>
+            <p>Which happened first? 🤔</p>
+        </section>
+
+        <section>
+            <h3>Why this matters</h3>
+            <ul>
+                <li>Event ordering affects state changes</li>
+                <li>Conflicts appear when we can’t tell 'what came first'</li>
+                <li>Replication, logs, and causality all depend on time</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Happened-before relationship</h3>
+            <p>Instead of wall-clock time, we use <strong>causal order</strong>:</p>
+            <blockquote>
+                A → B if A happened before B (causally)
+            </blockquote>
+            <p>We care about <em>ordering</em> of events, not their timestamps.</p>
+        </section>
+
+        <section>
+            <h3>Logical clocks</h3>
+            <ul>
+                <li><strong>Lamport clocks</strong> → simple counters to track causal order</li>
+                <li><strong>Vector clocks</strong> → richer structure to detect concurrent events</li>
+            </ul>
+            <p>They don’t measure real time - they measure <strong>cause and effect</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Real time vs. logical time</h3>
+            <ul>
+                <li><strong>Real time</strong> → what your watch shows</li>
+                <li><strong>Logical time</strong> → what the system can <em>prove</em> happened first</li>
+            </ul>
+            <p>Distributed systems live in <strong>logical time</strong>.</p>
+        </section>
+
+        <section>
+            <p>Google’s Spanner uses special hardware clocks (TrueTime API) ⏱️</p>
+            <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
+            </p>
+        </section>
+
+        <section>
+            <h3>Summary</h3>
+            <ul>
+                <li>Each node has its own imperfect sense of time</li>
+                <li>We can't rely on timestamps for ordering</li>
+                <li>We use <strong>logical or causal time</strong> to reason safely</li>
+            </ul>
+            <p>Time is relative - especially in distributed systems 🌌</p>
+        </section>
+
+      <!--  <section>
             <h2>Distributed Transactions</h2>
             <p>When one business operation spans multiple services or databases.</p>
             <ul>
@@ -1698,341 +1259,22 @@ If step 3 fails:
   -> HotelService.cancelBooking()
   -> FlightService.releaseSeat()
   </code></pre>
-        </section>
+        </section>-->
 
         <section>
-            <h2>Transaction Isolation</h2>
-            <p>Even inside a single database, transactions can interfere with each other.</p>
-            <p>Isolation defines <strong>how visible</strong> one transaction’s changes are to others.</p>
-            <br>
-            <small><small>Remember PACELC?</small></small>
-        </section>
-
-        <section>
-            <h3>ACID Refresher</h3>
+            <h3>And there's so much more...</h3>
             <ul>
-                <li><strong>A</strong>tomicity - all or nothing</li>
-                <li><strong>C</strong>onsistency - valid state transitions</li>
-                <li><strong>I</strong>solation - no interference</li>
-                <li><strong>D</strong>urability - once committed, it stays</li>
+                <li>Distributed transactions</li>
+                <li>Transaction isolation anomalies</li>
+                <li>Leader election &amp; split-brain</li>
+                <li>Distributed consensus</li>
+                <li>Distributed locking</li>
+                <li>Backpressure &amp; cascading failures</li>
+                <li>Schema evolution &amp; versioning</li>
+                <li>Distributed tracing &amp; observability</li>
+                <li>Security across trust boundaries</li>
             </ul>
-        </section>
-
-        <section>
-            <h2>Why Isolation Matters</h2>
-            <p>Concurrent transactions may cause anomalies:</p>
-            <ul>
-                <li><strong>Dirty Read</strong> - see uncommitted data</li>
-                <li><strong>Non-repeatable Read</strong> - unexpected data changes</li>
-                <li><strong>Phantom Read</strong> - new rows appear unexpectedly</li>
-                <li><strong>Lost Update</strong> - two transactions overwrite each other</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Dirty Read Example</h3>
-            <pre><code data-trim>
-T1: UPDATE accounts SET balance = balance - 100 WHERE id=1;
-T2: SELECT balance FROM accounts WHERE id=1; -- sees uncommitted value
-T1: ROLLBACK;
-    </code></pre>
-            <p><em>T2 read something that never really existed.</em></p>
-        </section>
-
-        <section>
-            <h3>Non-Repeatable Read Example</h3>
-            <pre><code data-trim>
-T1: SELECT * FROM orders WHERE id = 1; -- sees "status = NEW"
-T2: UPDATE orders SET status = 'PAID' WHERE id = 1; COMMIT;
-T1: SELECT * FROM orders WHERE id = 1; -- sees "status = PAID"
-    </code></pre>
-            <p><em>Same query, different result - during one transaction.</em></p>
-        </section>
-
-        <section>
-            <h3>Phantom Read Example</h3>
-            <pre><code data-trim>
-T1: SELECT * FROM orders WHERE status = 'NEW'; -- returns 3 rows
-T2: INSERT INTO orders (status) VALUES ('NEW'); COMMIT;
-T1: SELECT * FROM orders WHERE status = 'NEW'; -- now 4 rows
-    </code></pre>
-            <p><em>New “phantom” data appears mid-transaction.</em></p>
-        </section>
-
-        <section>
-            <h2>Write Skew Anomaly</h2>
-            <p>Occurs when two concurrent transactions read overlapping data and make <strong>non-conflicting writes</strong> based on those reads.</p>
-            <p>Even though each transaction is consistent on its own, the <em>combined result</em> breaks an invariant.</p>
-        </section>
-
-        <section>
-            <h3>Classic Example</h3>
-            <p>Hospital rule: <strong>at least one doctor must be on call</strong>.</p>
-            <pre><code data-trim style="font-size:0.85em">
-CREATE TABLE doctors (
-    id INT,
-    on_call BOOLEAN
-);
--- Initially:
--- Dr. Alice: on_call = true
--- Dr. Bob:   on_call = true
-    </code></pre>
-        </section>
-
-        <section>
-            <h3>Step 1 - Two Transactions Start</h3>
-            <pre><code data-trim>
-T1: SELECT * FROM doctors WHERE on_call = true;
--- sees Alice + Bob
-
-T2: SELECT * FROM doctors WHERE on_call = true;
--- sees Alice + Bob
-    </code></pre>
-            <p>Both see that someone else is on call.</p>
-        </section>
-
-        <section>
-            <h3>Step 2 - Both Decide to Go Off Call</h3>
-            <pre><code data-trim>
-T1: UPDATE doctors SET on_call = false WHERE name = 'Alice';
-T2: UPDATE doctors SET on_call = false WHERE name = 'Bob';
-    </code></pre>
-            <p>Each assumes the other doctor stays on call.</p>
-        </section>
-
-        <section>
-            <h3>Step 3 - Both Commit</h3>
-            <pre><code data-trim>
-T1: COMMIT;
-T2: COMMIT;
-    </code></pre>
-            <p><strong>Invariant broken:</strong> nobody is on call anymore 🚨</p>
-        </section>
-
-        <section>
-            <h3>Why It Happens</h3>
-            <ul>
-                <li>Both transactions read the same initial state</li>
-                <li>Each makes a decision that was valid at that moment</li>
-                <li>No direct conflict → no locking → no blocking</li>
-                <li>Combined result violates a business rule</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Isolation Levels and Write Skew</h3>
-            <table style="font-size:0.9em">
-                <thead>
-                <tr>
-                    <th>Isolation Level</th>
-                    <th>Prevents Write Skew?</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr><td>Read Committed</td><td>❌</td></tr>
-                <tr><td>Repeatable Read</td><td>❌ (in most DBs)</td></tr>
-                <tr><td>Serializable</td><td>✅</td></tr>
-                </tbody>
-            </table>
-            <p><small>Only Serializable prevents it, e.g. via predicate locks or SSI (Serializable Snapshot Isolation).</small></p>
-        </section>
-
-
-        <section>
-            <h2>Serializable ≠ Simple</h2>
-            <p>Serializable isolation <strong>simulates sequential execution</strong>.</p>
-            <p>But it comes at a cost:</p>
-            <ul>
-                <li>Higher contention and locking</li>
-                <li>Deadlocks</li>
-                <li>Lower throughput</li>
-            </ul>
-        </section>
-
-        <!-- DATA MANAGEMENT SECTION -->
-        <section>
-            <h2>Data Partitioning</h2>
-            <p>When one database isn't enough.</p>
-        </section>
-
-        <section>
-            <h3>Sharding Strategies</h3>
-            <ul>
-                <li><strong>Range-based</strong> → partition by key ranges (A-M, N-Z)</li>
-                <li><strong>Hash-based</strong> → hash(key) mod N</li>
-                <li><strong>Directory-based</strong> → lookup table maps keys to shards</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Range-Based Sharding</h3>
-            <pre><code data-trim>
-Shard 1: users A-F
-Shard 2: users G-M
-Shard 3: users N-S
-Shard 4: users T-Z
-            </code></pre>
-            <ul>
-                <li>✅ Range queries are efficient</li>
-                <li>❌ Hot spots if data isn't uniform ("Smith" problem)</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Hash-Based Sharding</h3>
-            <pre><code data-trim>
-shard = hash(userId) % numShards
-
-hash("alice") % 4 = 2  → Shard 2
-hash("bob")   % 4 = 0  → Shard 0
-hash("carol") % 4 = 2  → Shard 2
-            </code></pre>
-            <ul>
-                <li>✅ Even distribution</li>
-                <li>❌ Range queries require scatter-gather</li>
-                <li>❌ Adding shards = rehash everything</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Consistent Hashing</h3>
-            <p>Minimize data movement when adding/removing nodes.</p>
-            <pre><code data-trim>
-Ring: 0 ────────────────────── 2^32
-      │    │         │    │
-    Node A  Key1   Node B  Key2
-            </code></pre>
-            <p>Keys move to the next node on the ring.</p>
-            <p>Adding a node only affects its neighbors.</p>
-        </section>
-
-        <section>
-            <h2>Rebalancing</h2>
-            <p>What happens when you add or remove nodes?</p>
-        </section>
-
-        <section>
-            <h3>Rebalancing Challenges</h3>
-            <ul>
-                <li>Data must move between nodes</li>
-                <li>System should remain available during rebalancing</li>
-                <li>Rebalancing consumes network and disk I/O</li>
-                <li>Hot spots can form during migration</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Rebalancing Strategies</h3>
-            <ul>
-                <li><strong>Fixed partitions</strong> → more partitions than nodes, just reassign</li>
-                <li><strong>Dynamic partitioning</strong> → split/merge partitions as needed</li>
-                <li><strong>Proportional partitioning</strong> → partitions per node scales with data</li>
-            </ul>
-            <p><small>Kafka, Cassandra, MongoDB each have different approaches.</small></p>
-        </section>
-
-        <section>
-            <h3>Cross-Shard Queries</h3>
-            <p>The hardest problem in sharding:</p>
-            <pre><code data-trim>
-SELECT * FROM orders
-WHERE user_id = 123
-AND product_category = 'electronics'
-            </code></pre>
-            <p>If sharded by user_id, category queries hit all shards.</p>
-            <p><strong>Solution:</strong> denormalize, or use secondary indexes.</p>
-        </section>
-
-        <!-- API EVOLUTION SECTION -->
-        <section>
-            <h2>API Evolution</h2>
-            <p>How to change APIs without breaking consumers.</p>
-        </section>
-
-        <section>
-            <h3>The Challenge</h3>
-            <ul>
-                <li>Multiple services with independent deployment</li>
-                <li>Can't update all consumers simultaneously</li>
-                <li>Old and new versions must coexist</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Versioning Strategies</h3>
-            <ul>
-                <li><strong>URL versioning</strong> → /api/v1/users, /api/v2/users</li>
-                <li><strong>Header versioning</strong> → Accept: application/vnd.api.v2+json</li>
-                <li><strong>Query parameter</strong> → /api/users?version=2</li>
-            </ul>
-            <p>Each has trade-offs in discoverability and complexity.</p>
-        </section>
-
-        <section>
-            <h3>Backward Compatibility</h3>
-            <p>New version can read old data:</p>
-            <pre><code data-trim>
-// Old format
-{ "name": "Alice" }
-
-// New code handles both
-String fullName = json.has("fullName")
-    ? json.getString("fullName")
-    : json.getString("name");  // fallback
-            </code></pre>
-        </section>
-
-        <section>
-            <h3>Forward Compatibility</h3>
-            <p>Old version can read new data:</p>
-            <pre><code data-trim>
-// New format with extra field
-{ "name": "Alice", "middleName": "Marie" }
-
-// Old code ignores unknown fields
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
-    private String name;
-}
-            </code></pre>
-        </section>
-
-        <section>
-            <h3>Schema Evolution</h3>
-            <p>Binary formats with built-in compatibility:</p>
-            <ul>
-                <li><strong>Avro</strong> → schema registry, reader/writer schemas</li>
-                <li><strong>Protocol Buffers</strong> → field numbers, optional fields</li>
-                <li><strong>Thrift</strong> → similar to Protobuf</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Protobuf Evolution Rules</h3>
-            <pre><code data-trim>
-message User {
-  string name = 1;
-  // int32 age = 2;        // removed - don't reuse!
-  string email = 3;        // added - new field number
-  optional string phone = 4; // optional for compatibility
-}
-            </code></pre>
-            <ul>
-                <li>Never change field numbers</li>
-                <li>Never reuse deleted field numbers</li>
-                <li>Add fields as optional or with defaults</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Consumer-Driven Contracts</h3>
-            <p>Let consumers define what they need:</p>
-            <ul>
-                <li>Consumers write contract tests</li>
-                <li>Provider verifies contracts before release</li>
-                <li>Tools: Pact, Spring Cloud Contract</li>
-            </ul>
-            <p>Prevents accidental breaking changes.</p>
+            <p class="fragment">Distributed systems are <strong>genuinely hard</strong>.<br>Design with failure in mind - always.</p>
         </section>
 
         <section>
@@ -2042,12 +1284,27 @@ message User {
         </section>
         <section>
             <h2>Thank You!</h2>
-            <h5>Need help? Reach out! It's free.</h5>
 
-            <br><br><br><br>
-            <h4><a href="https://twitter.com/pivovarit">@pivovarit</a></h4>
-            <small><a href="https://4comprehension.com">4comprehension.com</a></small>
+            <p style="margin: 16px 0 4px; letter-spacing: 0.05em;">
+                <span style="margin: 0 14px; font-weight: 600;">Workshops</span>
+                <span style="color: #bbb;">|</span>
+                <span style="margin: 0 14px; font-weight: 600;">Mentoring</span>
+                <span style="color: #bbb;">|</span>
+                <span style="margin: 0 14px; font-weight: 600;">Consulting</span>
+            </p>
+
+            <small><a href="https://pivovarit.com">pivovarit.com</a></small>
             <br>
+            <div id="qrcode"></div>
+            <script>
+                new QRCode(document.getElementById('qrcode'), {
+                    text: 'https://pivovarit.github.io/talks/dancing-with-uncertainty',
+                    width: 1024,
+                    height: 1024
+                }).style.cssText = 'width: 200px; height: 200px; padding: 8px; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);border-radius: 8px;';
+            </script>
+            <br>
+            <small><a href="https://pivovarit.github.io/talks/dancing-with-uncertainty">https://pivovarit.github.io/talks/dancing-with-uncertainty</a></small>
         </section>
     </div>
 </div>
