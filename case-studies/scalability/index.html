@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D7X6WYDG4Z"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-D7X6WYDG4Z');
+    </script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overcoming a Years-Long Scaling Bottleneck in an iGaming Wallet — Grzegorz Piwowarek</title>
+    <meta name="description" content="How a single-instance wallet service became a horizontally scalable, zero-downtime system.">
+    <meta name="author" content="Grzegorz Piwowarek">
+
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 2rem 5rem;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 720px;
+            width: 100%;
+        }
+
+        .back-link {
+            display: inline-block;
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            margin-bottom: 2.5rem;
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .back-link:hover { color: #999; }
+
+        .cs-number {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.4rem;
+            line-height: 1.35;
+        }
+
+        .cs-client {
+            font-size: 0.8rem;
+            color: #555;
+            margin-bottom: 1.25rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #999;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 999px;
+            padding: 0.25rem 0.75rem;
+            letter-spacing: 0.02em;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #333;
+            margin: 2rem 0;
+        }
+
+        .cs-block {
+            margin-bottom: 2rem;
+        }
+
+        .cs-block-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #444;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 1rem;
+        }
+
+        .cs-sub-label {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .cs-sub-label:first-of-type {
+            margin-top: 0;
+        }
+
+        .cs-block p {
+            font-size: 0.875rem;
+            color: #777;
+            line-height: 1.75;
+        }
+
+        .pull-quote {
+            font-size: 1.05rem;
+            font-style: italic;
+            color: #bbb;
+            border-left: 2px solid #e25440;
+            padding: 0.6rem 1.25rem;
+            margin: 2rem 0;
+            line-height: 1.6;
+        }
+
+        .cs-steps {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cs-steps li {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.7;
+            padding: 0.6rem 0 0.6rem 1.1rem;
+            border-bottom: 1px solid #111;
+            position: relative;
+        }
+
+        .cs-steps li:first-child { border-top: 1px solid #111; }
+
+        .cs-steps li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: #333;
+        }
+
+        .cs-steps li strong {
+            color: #888;
+            font-weight: 500;
+        }
+
+        .cs-steps li.breakthrough {
+            color: #888;
+        }
+
+        .cs-steps li.breakthrough::before {
+            content: '→';
+            color: #e25440;
+            font-style: normal;
+        }
+
+        .cs-steps li.breakthrough strong {
+            color: #e0e0e0;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 2.5rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .stat-before {
+            font-size: 0.7rem;
+            color: #333;
+            font-weight: 400;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #555;
+            font-weight: 400;
+        }
+
+        .testimonial {
+            margin-top: 0;
+            padding: 1.25rem 1.5rem;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+        }
+
+        .testimonial blockquote {
+            font-size: 0.9rem;
+            color: #888;
+            font-style: italic;
+            line-height: 1.7;
+            margin: 0 0 0.75rem 0;
+        }
+
+        .testimonial cite {
+            font-size: 0.8rem;
+            color: #555;
+            font-style: normal;
+        }
+
+        .cta-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.9rem 2.5rem;
+            background: #e25440;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: background 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .cta-button:hover {
+            background: #ff6b5b;
+            transform: translateY(-1px);
+        }
+
+        .cs-nav {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .cs-nav-link {
+            font-size: 0.8rem;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            letter-spacing: 0.01em;
+        }
+
+        .cs-nav-link:hover { color: #999; }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.4rem; }
+            .stats-row { gap: 1.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="container">
+
+    <a href="/case-studies/" class="back-link">← Case Studies</a>
+
+    <p class="cs-number">01 — Scalability</p>
+    <h1>Overcoming a Years-Long Scaling Bottleneck in an iGaming Wallet</h1>
+    <p class="cs-client">iGaming / Sportsbook · Multi-market operator</p>
+
+    <div class="tags">
+        <span class="tag">scalability</span>
+        <span class="tag">event-sourcing</span>
+        <span class="tag">distributed systems</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cs-block">
+        <p class="cs-block-label">The Challenge</p>
+
+        <p class="cs-sub-label">Symptoms</p>
+        <p>The core wallet service — responsible for every monetary transaction across the platform — could only run as a single instance. Deployments required a full outage: no bets, no fund access, no revenue. Early on, off-peak windows made this manageable. As the company expanded into new markets, those windows disappeared entirely.</p>
+
+        <p class="cs-sub-label">Root Cause</p>
+        <p>Every transaction required replaying a sizable chunk of event history before any business logic could run — sometimes taking several seconds. An in-process Guava cache masked this latency, but made horizontal scaling impossible: a second instance would have its own cold cache and couldn't safely share write access. Timestamp-based primary keys on the event table added a further argument against multi-instance deployment. The internal team had attempted to fix this multiple times. Each attempt had stalled at the same wall.</p>
+    </div>
+
+    <div class="cs-block">
+        <p class="cs-block-label">The Approach</p>
+        <ul class="cs-steps">
+            <li><strong>Sequence numbers over timestamps:</strong> Evolved the events table to use optimistic locking with monotonically increasing sequence numbers — guaranteeing only one instance at a time could commit a new event, making concurrent writes safe across nodes.</li>
+            <li><strong>Snapshotting optimization:</strong> Redesigned the snapshotting strategy to minimize the number of events replayed per request, reducing cold-read latency at the database level.</li>
+            <li class="breakthrough"><strong>Busting the latency myth:</strong> The team's confidence in the cache rested on metrics collected only on first access — warmed query latency had never been measured. A separate environment validated it, a small production subset confirmed it: DB latency without caching was within acceptable bounds. This was the insight that unlocked everything.</li>
+            <li><strong>Four instances, immediately:</strong> With optimistic locking in place and the in-process cache removed, the service was deployed across four instances. Zero-downtime deployments became possible for the first time, unblocking years of deferred improvements.</li>
+            <li><strong>Guaranteed event delivery via Debezium:</strong> Replaced dual-write patterns — which caused occasional event loss — with Debezium CDC polling the event table and relaying events reliably to RabbitMQ.</li>
+            <li><strong>Affinity-based routing + cache restoration:</strong> Switched from round-robin to consistent-hashing affinity routing, ensuring requests for the same wallet consistently hit the same node. With that guarantee restored, it was safe to reintroduce in-process caching — dropping latency by 1–2 orders of magnitude and readying the platform for an incoming acquisition.</li>
+        </ul>
+    </div>
+
+    <div class="cs-block">
+        <p class="cs-block-label">The Outcome</p>
+        <p>A service that had been untouchable for years was safely running on four instances within weeks. Zero-downtime deployments became the norm. Event delivery became reliable. The timing mattered — the platform absorbed a new player base from an acquisition without a single degradation incident.</p>
+    </div>
+
+    <div class="stats-row" style="justify-content: space-between;">
+        <div class="stat">
+            <div class="stat-value">4×</div>
+            <div class="stat-before">was: 1 instance</div>
+            <div class="stat-label">instance count</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">30×</div>
+            <div class="stat-before">was: ~1/month</div>
+            <div class="stat-label">deploy frequency</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">0</div>
+            <div class="stat-before">was: required per deploy</div>
+            <div class="stat-label">downtime incidents</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">0</div>
+            <div class="stat-before">was: occasional loss</div>
+            <div class="stat-label">events lost</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cta-group">
+        <a href="mailto:contact@4comprehension.com?subject=Quick%20intro%20call&body=Hi%20Grzegorz%2C%0A%0AI'd%20like%20to%20schedule%20a%20quick%20intro%20call%20to%20see%20if%20there's%20a%20fit.%0A%0A" class="cta-button">Book a Free Intro Call</a>
+    </div>
+
+    <div class="cs-nav">
+        <a href="/case-studies/delivery/" class="cs-nav-link">Next: Delivery →</a>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        let animationId;
+        const baseConnectionDistance = 120;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / 12000);
+            for (let i = 0; i < particleCount; i++) {
+                const depth = Math.random() * 0.7 + 0.3;
+                const baseVelocity = (Math.random() - 0.5) * 0.4;
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    baseX: 0, baseY: 0,
+                    vx: baseVelocity * depth,
+                    vy: ((Math.random() - 0.5) * 0.4) * depth,
+                    size: (Math.random() * 2 + 1) * depth,
+                    alpha: (Math.random() * 0.4 + 0.25) * depth,
+                    depth: depth
+                });
+                particles[i].baseX = particles[i].x;
+                particles[i].baseY = particles[i].y;
+            }
+            particles.sort((a, b) => a.depth - b.depth);
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    if (Math.abs(particles[i].depth - particles[j].depth) > 0.25) continue;
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const avgDepth = (particles[i].depth + particles[j].depth) / 2;
+                    const connectionDist = baseConnectionDistance * avgDepth;
+                    if (dist < connectionDist) {
+                        const opacity = (1 - dist / connectionDist) * 0.2 * avgDepth;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 0.8 * avgDepth;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.baseX += p.vx;
+                p.baseY += p.vy;
+                if (p.baseX < 0) { p.baseX = canvas.width; p.x = canvas.width; }
+                if (p.baseX > canvas.width) { p.baseX = 0; p.x = 0; }
+                if (p.baseY < 0) { p.baseY = canvas.height; p.y = canvas.height; }
+                if (p.baseY > canvas.height) { p.baseY = 0; p.y = 0; }
+                let targetX = p.baseX, targetY = p.baseY;
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = p.baseX - mouse.x;
+                    const dy = p.baseY - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const effectiveRadius = mouse.radius * p.depth;
+                    if (dist < effectiveRadius) {
+                        const force = (effectiveRadius - dist) / effectiveRadius;
+                        const angle = Math.atan2(dy, dx);
+                        targetX = p.baseX + Math.cos(angle) * force * 30 * p.depth;
+                        targetY = p.baseY + Math.sin(angle) * force * 30 * p.depth;
+                    }
+                }
+                p.x += (targetX - p.x) * 0.1;
+                p.y += (targetY - p.y) * 0.1;
+            });
+            drawConnections();
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+            });
+            animationId = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        document.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) cancelAnimationFrame(animationId);
+            else animate();
+        });
+        resize();
+        animate();
+    })();
+</script>
+
+</body>
+</html>

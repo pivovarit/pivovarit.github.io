@@ -1,17 +1,32 @@
-body {
-  font-family: "Raleway", sans-serif;
-  line-height: 1.5;
+* {
   margin: 0;
   padding: 0;
-  background: #1a1a2e;
-  color: #a0a0b0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  background: #0a0a0a;
+  color: #e0e0e0;
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
 }
 
 a {
   color: #e25440;
   text-decoration: none;
-  transition: color 0.3s;
+  transition: color 0.2s;
 }
 
 a:hover {
@@ -29,43 +44,68 @@ a:hover {
   padding: 50px 20px 40px;
 }
 
+.back-link {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: #555;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: #999;
+}
+
 .page-title {
-  font-family: "Roboto Slab", serif;
-  font-size: 2.2rem;
-  font-weight: 300;
-  color: #ffffff;
-  margin: 0 0 12px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
 }
 
 .page-subtitle {
-  font-size: 1rem;
-  color: #6a6a7a;
+  font-size: 0.85rem;
+  color: #555;
   margin: 0;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .opinions-btn {
   margin-top: 24px;
-  padding: 12px 28px;
-  font-family: "Raleway", sans-serif;
+  padding: 0.9rem 2.5rem;
+  font-family: 'Inter', sans-serif;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #fff;
-  background: linear-gradient(135deg, #e25440, #ff6b5b);
+  background: #e25440;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: background 0.2s ease, transform 0.2s ease;
+  letter-spacing: 0.01em;
 }
 
 .opinions-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(226, 84, 64, 0.4);
+  background: #ff6b5b;
+  transform: translateY(-1px);
 }
 
 .opinions-btn:active {
   transform: translateY(0);
 }
 
+.divider {
+  width: 60px;
+  height: 1px;
+  background: #333;
+  margin: 0 auto 2rem;
+}
+
+/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -73,7 +113,7 @@ a:hover {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   z-index: 1000;
   align-items: center;
   justify-content: center;
@@ -85,9 +125,9 @@ a:hover {
 }
 
 .modal-content {
-  background: #16162a;
-  border: 1px solid #2a2a40;
-  border-radius: 12px;
+  background: #111;
+  border: 1px solid #1f1f1f;
+  border-radius: 8px;
   max-width: 700px;
   width: 100%;
   max-height: 80vh;
@@ -113,21 +153,21 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  border-bottom: 1px solid #2a2a40;
+  border-bottom: 1px solid #1f1f1f;
 }
 
 .modal-title {
-  font-family: "Roboto Slab", serif;
-  font-size: 1.4rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 600;
   color: #fff;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .modal-close {
   background: none;
   border: none;
-  color: #6a6a7a;
+  color: #555;
   font-size: 1.8rem;
   cursor: pointer;
   padding: 0;
@@ -150,10 +190,10 @@ a:hover {
 }
 
 .opinion-count {
-  font-size: 0.9rem;
-  color: #6a6a7a;
+  font-size: 0.85rem;
+  color: #555;
   font-weight: 400;
-  margin-left: 12px;
+  margin-left: 8px;
 }
 
 .scroll-top-btn {
@@ -161,19 +201,18 @@ a:hover {
   bottom: 0;
   align-self: center;
   margin-top: 8px;
-  padding: 10px 20px;
-  font-family: "Raleway", sans-serif;
+  padding: 0.6rem 1.5rem;
+  font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #fff;
-  background: linear-gradient(135deg, #e25440, #ff6b5b);
+  background: #e25440;
   border: none;
-  border-radius: 20px;
+  border-radius: 999px;
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s, transform 0.2s;
-  box-shadow: 0 4px 12px rgba(226, 84, 64, 0.4);
+  transition: opacity 0.3s, visibility 0.3s, background 0.2s, transform 0.2s;
 }
 
 .scroll-top-btn.visible {
@@ -182,19 +221,20 @@ a:hover {
 }
 
 .scroll-top-btn:hover {
-  transform: translateY(-2px);
+  background: #ff6b5b;
+  transform: translateY(-1px);
 }
 
 .opinion-card {
-  background: #1a1a2e;
-  border: 1px solid #2a2a40;
+  background: #0f0f0f;
+  border: 1px solid #1f1f1f;
   border-radius: 8px;
   padding: 20px;
   transition: border-color 0.2s;
 }
 
 .opinion-card:hover {
-  border-color: #3a3a50;
+  border-color: #333;
 }
 
 .opinion-meta {
@@ -207,29 +247,30 @@ a:hover {
 }
 
 .opinion-workshop {
-  font-weight: 600;
+  font-weight: 500;
   color: #e25440;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .opinion-date {
-  font-size: 0.85rem;
-  color: #6a6a7a;
+  font-size: 0.8rem;
+  color: #555;
 }
 
 .opinion-text {
-  color: #d0d0e0;
+  color: #888;
   line-height: 1.7;
   margin: 0;
   font-style: italic;
+  font-size: 0.9rem;
 }
 
 .lang-toggle-btn {
   margin-top: 10px;
   padding: 0;
-  font-family: "Raleway", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
-  color: #6a6a7a;
+  color: #555;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -237,37 +278,16 @@ a:hover {
 }
 
 .lang-toggle-btn:hover {
-  color: #a0a0b0;
+  color: #999;
 }
 
 .no-opinions {
   text-align: center;
-  color: #6a6a7a;
+  color: #555;
   padding: 40px 20px;
 }
 
-@media (max-width: 480px) {
-  .modal-content {
-    max-height: 90vh;
-  }
-
-  .modal-header {
-    padding: 16px 20px;
-  }
-
-  .modal-title {
-    font-size: 1.2rem;
-  }
-
-  .opinions-container {
-    padding: 16px;
-  }
-
-  .opinion-card {
-    padding: 16px;
-  }
-}
-
+/* Testimonials Grid */
 .testimonials-grid {
   display: flex;
   flex-wrap: wrap;
@@ -279,27 +299,23 @@ a:hover {
 .testimonial-card {
   width: calc(50% - 12px);
   max-width: 550px;
-}
-
-.testimonial-card {
   box-sizing: border-box;
-  background: #16162a;
-  border: 1px solid #2a2a40;
+  background: #111;
+  border: 1px solid #1f1f1f;
   border-radius: 8px;
   padding: 32px;
   position: relative;
   transform: translateY(20px);
   opacity: 0;
   animation: slideUp 0.5s ease forwards;
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
 }
 
 .testimonial-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-  border-color: #3a3a50;
+  border-color: #333;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .testimonial-card:nth-child(1) { animation-delay: 0.1s; }
@@ -314,29 +330,17 @@ a:hover {
   position: absolute;
   top: 20px;
   left: 24px;
-  font-family: "Roboto Slab", serif;
   font-size: 4rem;
   line-height: 1;
-  color: #2a2a40;
+  color: #222;
   pointer-events: none;
 }
 
-.testimonial-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  border-radius: 0 0 8px 8px;
-  background: linear-gradient(90deg, #e25440, #ff6b5b);
-}
-
 .testimonial-quote {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-style: italic;
   line-height: 1.8;
-  color: #d0d0e0;
+  color: #888;
   margin: 0 0 24px;
   position: relative;
   z-index: 1;
@@ -348,21 +352,21 @@ a:hover {
   align-items: center;
   gap: 12px;
   padding-top: 20px;
-  border-top: 1px solid #2a2a40;
+  border-top: 1px solid #1f1f1f;
 }
 
 .author-avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e25440, #ff6b5b);
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-family: "Roboto Slab", serif;
-  font-size: 1.1rem;
-  font-weight: 400;
+  color: #999;
+  font-size: 0.95rem;
+  font-weight: 500;
   flex-shrink: 0;
 }
 
@@ -371,42 +375,41 @@ a:hover {
 }
 
 .author-name {
-  font-weight: 600;
-  color: #ffffff;
+  font-weight: 500;
+  color: #e0e0e0;
   margin: 0 0 2px;
+  font-size: 0.9rem;
 }
 
 .author-title {
-  font-size: 0.85rem;
-  color: #6a6a7a;
+  font-size: 0.8rem;
+  color: #555;
   margin: 0;
 }
 
 .author-company {
-  color: #e25440;
-  font-weight: 600;
+  color: #999;
 }
 
 .testimonial-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid #2a2a40;
+  border-top: 1px solid #1f1f1f;
 }
 
 .testimonial-tag {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 0.25rem 0.75rem;
   font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #e25440;
-  background: rgba(226, 84, 64, 0.1);
-  border: 1px solid rgba(226, 84, 64, 0.3);
-  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #999;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 999px;
 }
 
 @keyframes slideUp {
@@ -420,7 +423,7 @@ a:hover {
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
-  color: #6a6a7a;
+  color: #555;
 }
 
 .empty-state-icon {
@@ -434,25 +437,23 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 24px 12px;
-  color: #4a4a5a;
-  font-size: 0.8em;
+  color: #555;
+  font-size: 0.8rem;
+  border-top: 1px solid #1a1a1a;
 }
 
 @media (max-width: 768px) {
   .testimonial-card {
     width: 100%;
-  }
-
-  .page-title {
-    font-size: 1.8rem;
-  }
-
-  .testimonial-card {
     padding: 24px;
   }
 
+  .page-title {
+    font-size: 1.6rem;
+  }
+
   .testimonial-quote {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -462,7 +463,7 @@ a:hover {
   }
 
   .page-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .testimonial-card {
@@ -476,8 +477,24 @@ a:hover {
   }
 
   .author-avatar {
-    width: 40px;
-    height: 40px;
-    font-size: 0.95rem;
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+  }
+
+  .modal-header {
+    padding: 16px 20px;
+  }
+
+  .opinions-container {
+    padding: 16px;
+  }
+
+  .opinion-card {
+    padding: 16px;
   }
 }

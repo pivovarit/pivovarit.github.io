@@ -30,11 +30,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -51,34 +47,15 @@
 
         #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -1;
             pointer-events: none;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 720px;
             width: 100%;
-        }
-
-        .page-header {
-            max-width: 600px;
-        }
-
-        .cs-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: start;
-        }
-
-        @media (max-width: 900px) {
-            .cs-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         .back-link {
@@ -91,9 +68,7 @@
             letter-spacing: 0.01em;
         }
 
-        .back-link:hover {
-            color: #999;
-        }
+        .back-link:hover { color: #999; }
 
         h1 {
             font-size: 2rem;
@@ -121,7 +96,6 @@
             font-size: 0.85rem;
             color: #555;
             line-height: 1.7;
-            margin-bottom: 0.5rem;
         }
 
         .divider {
@@ -135,7 +109,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-bottom: 1.25rem;
+            margin-top: 1rem;
         }
 
         .tag {
@@ -149,186 +123,75 @@
             letter-spacing: 0.02em;
         }
 
-        /* Case study sections */
+        /* Case study cards */
 
-        .case-study {
-            margin-bottom: 0.5rem;
+        .cs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        .cs-number {
-            font-size: 0.85rem;
+        .cs-card {
+            display: block;
+            padding: 1.75rem 2rem;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .cs-card:hover {
+            border-color: #333;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .cs-card-number {
+            font-size: 0.75rem;
             color: #555;
             font-weight: 400;
             letter-spacing: 0.15em;
             text-transform: uppercase;
-            margin-bottom: 0.6rem;
-        }
-
-        .cs-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #fff;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.4rem;
-            line-height: 1.4;
-        }
-
-        .cs-client {
-            font-size: 0.8rem;
-            color: #555;
-            margin-bottom: 1.25rem;
-        }
-
-        /* Section blocks within a case study */
-
-        .cs-block {
-            margin-bottom: 1.25rem;
-        }
-
-        .cs-block-label {
-            font-size: 0.72rem;
-            font-weight: 500;
-            color: #444;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
             margin-bottom: 0.5rem;
         }
 
-        .cs-block p {
-            font-size: 0.875rem;
-            color: #777;
-            line-height: 1.75;
-        }
-
-        .cs-steps {
-            list-style: none;
-            padding: 0;
-        }
-
-        .cs-steps li {
-            font-size: 0.875rem;
-            color: #777;
-            line-height: 1.7;
-            padding: 0.45rem 0 0.45rem 1.1rem;
-            border-bottom: 1px solid #111;
-            position: relative;
-        }
-
-        .cs-steps li:first-child {
-            border-top: 1px solid #111;
-        }
-
-        .cs-steps li::before {
-            content: '·';
-            position: absolute;
-            left: 0;
-            color: #444;
-        }
-
-        .cs-steps li strong {
-            color: #999;
-            font-weight: 500;
-        }
-
-        /* Stats */
-
-        .stats-row {
-            display: flex;
-            gap: 2rem;
-            margin: 1.5rem 0;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
+        .cs-card-title {
+            font-size: 1.1rem;
             font-weight: 600;
             color: #fff;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
+            letter-spacing: -0.01em;
+            line-height: 1.4;
+            margin-bottom: 0.3rem;
         }
 
-        .stat-label {
-            font-size: 0.75rem;
-            color: #555;
-            font-weight: 400;
-            margin-top: 0.2rem;
-        }
-
-        /* Quote card */
-
-        .testimonial {
-            margin-top: 1.5rem;
-            padding: 1.25rem 1.5rem;
-            background: #111;
-            border: 1px solid #1f1f1f;
-            border-radius: 8px;
-        }
-
-        .testimonial blockquote {
-            font-size: 0.9rem;
-            color: #888;
-            font-style: italic;
-            line-height: 1.7;
-            margin: 0 0 0.75rem 0;
-        }
-
-        .testimonial cite {
+        .cs-card-client {
             font-size: 0.8rem;
             color: #555;
-            font-style: normal;
+            margin-bottom: 0.25rem;
         }
 
-        /* CTA */
+        .cs-card-excerpt {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.65;
+            margin-top: 0.75rem;
+        }
 
-        .cta-group {
+        .cs-card-footer {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-top: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.25rem;
         }
 
-        .cta-button {
-            display: inline-block;
-            padding: 0.9rem 2.5rem;
-            background: #e25440;
-            color: #fff;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: background 0.2s ease, transform 0.2s ease;
-            letter-spacing: 0.01em;
-        }
-
-        .cta-button:hover {
-            background: #ff6b5b;
-            transform: translateY(-1px);
-        }
-
-        .footer {
-            margin-top: 2rem;
+        .cs-card-cta {
             font-size: 0.8rem;
             color: #555;
-        }
-
-        .footer a {
-            color: #555;
-            text-decoration: none;
             transition: color 0.2s ease;
         }
 
-        .footer a:hover {
-            color: #888;
-        }
-
-        .footer .separator {
-            margin: 0 0.5rem;
-        }
-
-        @media (max-width: 480px) {
-            h1 { font-size: 1.6rem; }
-            .tagline { font-size: 1.15rem; }
-            .stats-row { gap: 1.5rem; flex-wrap: wrap; }
+        .cs-card:hover .cs-card-cta {
+            color: #999;
         }
     </style>
 </head>
@@ -338,142 +201,48 @@
 
 <div class="container">
 
-    <div class="page-header">
-        <a href="/" class="back-link">← pivovarit.com</a>
+    <a href="/" class="back-link">← pivovarit.github.io</a>
 
-        <h1>Case Studies</h1>
-        <p class="tagline">Real work, <em>real outcomes</em>.</p>
-        <p class="intro">Anonymized excerpts from consulting engagements - what the challenge was, how we approached it, and what changed.</p>
-
-        <div class="divider"></div>
-    </div>
-
-    <div class="cs-grid">
-
-    <!-- Case Study 01 -->
-    <div class="case-study">
-
-        <p class="cs-number">01 - Scalability</p>
-        <h2 class="cs-title">Overcoming a Years-Long Scaling Bottleneck in an iGaming Wallet</h2>
-        <p class="cs-client">iGaming / Sportsbook · Multi-market operator</p>
-
-        <div class="tags">
-            <span class="tag">scalability</span>
-            <span class="tag">event-sourcing</span>
-            <span class="tag">distributed systems</span>
-        </div>
-
-        <div class="cs-block">
-            <p class="cs-block-label">The Challenge</p>
-            <p>The core of the company's platform was its wallet - an event-sourced service responsible for processing all monetary transactions. Due to in-process caching (Guava) and timestamp-based primary keys, it was unsafe to run more than a single instance. Deployments required downtime, which was unacceptable - any downtime meant players couldn't place bets or access funds, and revenue stopped instantly.</p>
-            <p style="margin-top: 0.75rem;">Early on, off-peak deployment windows made this manageable. As the company expanded into new markets, those windows disappeared. The service became a liability - too dangerous to change, too critical to ignore. Vertical scaling was the only lever left. Years of attempts by the internal team had hit the same wall.</p>
-            <p style="margin-top: 0.75rem;">The deeper issue: every transaction required replaying a sizable amount of event history from the database before any business logic could run - sometimes taking several seconds. The in-memory cache masked this, but also made multi-instance deployment impossible. Timestamps as primary keys on the event table were used as a further argument against horizontal scaling.</p>
-        </div>
-
-        <div class="cs-block">
-            <p class="cs-block-label">The Approach</p>
-            <ul class="cs-steps">
-                <li><strong>Sequence numbers over timestamps:</strong> Evolved the events table to use optimistic locking relying on monotonically increasing sequence numbers - guaranteeing that only one instance at a time could commit a new event, making concurrent writes safe across nodes.</li>
-                <li><strong>Snapshotting optimization:</strong> Redesigned the snapshotting strategy to minimize the number of events that had to be replayed on every request, reducing cold-read latency at the database level.</li>
-                <li><strong>Busting the latency myth:</strong> The team's confidence in the cache was built on metrics collected only on first access - warmed query latency had never been measured. Validated on a separate environment and confirmed on a small production subset that DB latency without caching was within acceptable bounds.</li>
-                <li><strong>Four instances, immediately:</strong> With optimistic locking in place and the in-process cache removed, the service was deployed across four instances. Safe, zero-downtime deployments became possible for the first time - unblocking a backlog of deferred improvements.</li>
-                <li><strong>Guaranteed event delivery via Debezium:</strong> Replaced dual-write patterns (which caused occasional event loss) with Debezium polling the event table via CDC, relaying events reliably to RabbitMQ.</li>
-                <li><strong>Affinity-based load balancing + cache restoration:</strong> Switched from round-robin to affinity-based routing with consistent hashing, ensuring requests for the same wallet consistently hit the same instance. With that guarantee in place, it was safe to reintroduce in-process caching - reducing latency by 1–2 orders of magnitude and preparing the platform for an incoming player acquisition.</li>
-            </ul>
-        </div>
-
-        <div class="cs-block">
-            <p class="cs-block-label">The Outcome</p>
-            <p>A service that had been untouchable for years was safely running on four instances within weeks. Zero-downtime deployments became the norm. Event delivery became reliable. The timing mattered - the platform absorbed a new player base coming from an acquisition without a single degradation incident.</p>
-        </div>
-
-        <div class="stats-row">
-            <div>
-                <div class="stat-value">4×</div>
-                <div class="stat-label">instance count (was 1)</div>
-            </div>
-<div>
-                <div class="stat-value">30×</div>
-                <div class="stat-label">deploy frequency (1/mo → many/day)</div>
-            </div>
-            <div>
-                <div class="stat-value">0</div>
-                <div class="stat-label">downtime from deployments or failures</div>
-            </div>
-            <div>
-                <div class="stat-value">0</div>
-                <div class="stat-label">events lost</div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Case Study 02 -->
-    <div class="case-study">
-
-        <p class="cs-number">02 — Delivery</p>
-        <h2 class="cs-title">From Quarterly Releases to Continuous Delivery at a B2B SaaS</h2>
-        <p class="cs-client">B2B SaaS · Early-stage platform · 7-person team</p>
-
-        <div class="tags">
-            <span class="tag">CI/CD</span>
-            <span class="tag">delivery</span>
-            <span class="tag">architecture</span>
-            <span class="tag">automation</span>
-        </div>
-
-        <div class="cs-block">
-            <p class="cs-block-label">The Challenge</p>
-            <p>A B2B SaaS provider was struggling with sluggish delivery and slow bug resolution. The CTO suspected architectural over-engineering - and the investigation confirmed it. Releases were happening once every few months, with each one preceded by a multi-week development freeze dedicated entirely to testing. The system comprised roughly 60 independent components, with a roadmap planning to double that number - all maintained by a team of seven.</p>
-            <p style="margin-top: 0.75rem;">The team was technically strong but lacked deep experience with distributed architectures. Features were developed in isolation on long-lived branches, sometimes for weeks or months, before being integrated into the main codebase. Deployments were largely manual and error-prone. SOC2 compliance requirements on the production environment added further friction - making the team overly cautious about any changes reaching production. There was also just one customer onboarded - and they weren't paying yet.</p>
-        </div>
-
-        <div class="cs-block">
-            <p class="cs-block-label">The Approach</p>
-            <ul class="cs-steps">
-                <li><strong>Black-box test safety net:</strong> Before touching the architecture, the team invested in a suite of black-box tests covering observable system behavior - agnostic to internals. Slow, but comprehensive enough to provide the confidence needed to restructure things underneath.</li>
-                <li><strong>Trunk-based development:</strong> Abandoned git-flow in favor of short-lived integrations. As soon as a chunk of work was stable, it was merged - preventing long-lived branches from drifting, reducing integration risk, and making the state of the system predictable at all times.</li>
-                <li><strong>Shared kernel extraction:</strong> Common libraries embedded across multiple components were extracted into standalone packages with their own versioning and release lifecycle - breaking implicit coupling between services.</li>
-                <li><strong>GitHub Actions automation:</strong> Manual tagging and deployment processes were replaced with GitHub Actions pipelines, enabling components to be versioned and deployed independently without human coordination.</li>
-                <li><strong>Independent deployability:</strong> With automation and decoupled dependencies in place, components could be deployed without touching the rest of the system - drastically reducing blast radius and making rollbacks tractable.</li>
-                <li><strong>Separate non-SOC2 environment:</strong> A dedicated production-like environment outside the SOC2 compliance boundary was introduced, allowing the team to experiment, validate assumptions, and iterate freely - without putting regulated infrastructure at risk.</li>
-            </ul>
-        </div>
-
-        <div class="cs-block">
-            <p class="cs-block-label">The Outcome</p>
-            <p>What had been a quarterly release cycle became multiple deploys per day. The pre-release testing freeze disappeared - replaced by automated safety nets and incremental integration. Each deployment became a small, targeted change rather than a high-stakes batch release. MTTR dropped significantly as bugs could be isolated, fixed, and shipped in hours rather than queued for the next release window. The team started shipping with confidence rather than caution.</p>
-        </div>
-
-        <div class="stats-row">
-            <div>
-                <div class="stat-value">~3mo</div>
-                <div class="stat-label">→ multiple deploys per day</div>
-            </div>
-            <div>
-                <div class="stat-value">0</div>
-                <div class="stat-label">pre-release freeze weeks</div>
-            </div>
-            <div>
-                <div class="stat-value">↓</div>
-                <div class="stat-label">blast radius per deployment</div>
-            </div>
-            <div>
-                <div class="stat-value">↑</div>
-                <div class="stat-label">MTTR (hours, not release cycles)</div>
-            </div>
-        </div>
-
-    </div>
-
-    </div><!-- end cs-grid -->
+    <h1>Case Studies</h1>
+    <p class="tagline">Real work, <em>real outcomes</em>.</p>
+    <p class="intro">Anonymized excerpts from consulting engagements - what the challenge was, how we approached it, and what changed.</p>
 
     <div class="divider"></div>
 
-    <div class="cta-group">
-        <a href="mailto:contact@4comprehension.com?subject=Quick%20intro%20call&body=Hi%20Grzegorz%2C%0A%0AI'd%20like%20to%20schedule%20a%20quick%20intro%20call%20to%20see%20if%20there's%20a%20fit.%0A%0A" class="cta-button">Book a Free Intro Call</a>
-    </div>
+    <div class="cs-list">
 
+        <a href="/case-studies/scalability/" class="cs-card">
+            <p class="cs-card-number">01 — Scalability</p>
+            <h2 class="cs-card-title">Overcoming a Years-Long Scaling Bottleneck in an iGaming Wallet</h2>
+            <p class="cs-card-client">iGaming / Sportsbook · Multi-market operator</p>
+            <div class="tags">
+                <span class="tag">scalability</span>
+                <span class="tag">event-sourcing</span>
+                <span class="tag">distributed systems</span>
+            </div>
+            <p class="cs-card-excerpt">A single-instance wallet service — too dangerous to change, too critical to ignore. Vertical scaling was the only lever left. Years of attempts by the internal team had hit the same wall.</p>
+            <div class="cs-card-footer">
+                <span class="cs-card-cta">Read case study →</span>
+            </div>
+        </a>
+
+        <a href="/case-studies/delivery/" class="cs-card">
+            <p class="cs-card-number">02 — Delivery</p>
+            <h2 class="cs-card-title">From Quarterly Releases to Continuous Delivery at a B2B SaaS</h2>
+            <p class="cs-card-client">B2B SaaS · Early-stage platform · 7-person team</p>
+            <div class="tags">
+                <span class="tag">CI/CD</span>
+                <span class="tag">delivery</span>
+                <span class="tag">architecture</span>
+                <span class="tag">automation</span>
+            </div>
+            <p class="cs-card-excerpt">Releases every few months, each preceded by a multi-week testing freeze. 60 components, a team of seven, and a roadmap that wanted to double that number.</p>
+            <div class="cs-card-footer">
+                <span class="cs-card-cta">Read case study →</span>
+            </div>
+        </a>
+
+    </div>
 
 </div>
 
@@ -501,8 +270,7 @@
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    baseX: 0,
-                    baseY: 0,
+                    baseX: 0, baseY: 0,
                     vx: baseVelocity * depth,
                     vy: ((Math.random() - 0.5) * 0.4) * depth,
                     size: (Math.random() * 2 + 1) * depth,
@@ -518,16 +286,12 @@
         function drawConnections() {
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
-                    const depthDiff = Math.abs(particles[i].depth - particles[j].depth);
-                    if (depthDiff > 0.25) continue;
-
+                    if (Math.abs(particles[i].depth - particles[j].depth) > 0.25) continue;
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-
                     const avgDepth = (particles[i].depth + particles[j].depth) / 2;
                     const connectionDist = baseConnectionDistance * avgDepth;
-
                     if (dist < connectionDist) {
                         const opacity = (1 - dist / connectionDist) * 0.2 * avgDepth;
                         ctx.beginPath();
@@ -543,24 +307,18 @@
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             particles.forEach(p => {
                 p.baseX += p.vx;
                 p.baseY += p.vy;
-
                 if (p.baseX < 0) { p.baseX = canvas.width; p.x = canvas.width; }
                 if (p.baseX > canvas.width) { p.baseX = 0; p.x = 0; }
                 if (p.baseY < 0) { p.baseY = canvas.height; p.y = canvas.height; }
                 if (p.baseY > canvas.height) { p.baseY = 0; p.y = 0; }
-
-                let targetX = p.baseX;
-                let targetY = p.baseY;
-
+                let targetX = p.baseX, targetY = p.baseY;
                 if (mouse.x !== null && mouse.y !== null) {
                     const dx = p.baseX - mouse.x;
                     const dy = p.baseY - mouse.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-
                     const effectiveRadius = mouse.radius * p.depth;
                     if (dist < effectiveRadius) {
                         const force = (effectiveRadius - dist) / effectiveRadius;
@@ -569,43 +327,26 @@
                         targetY = p.baseY + Math.sin(angle) * force * 30 * p.depth;
                     }
                 }
-
                 p.x += (targetX - p.x) * 0.1;
                 p.y += (targetY - p.y) * 0.1;
             });
-
             drawConnections();
-
             particles.forEach(p => {
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
                 ctx.fill();
             });
-
             animationId = requestAnimationFrame(animate);
         }
 
         window.addEventListener('resize', resize);
-
-        document.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        document.addEventListener('mouseleave', () => {
-            mouse.x = null;
-            mouse.y = null;
-        });
-
+        document.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        document.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                cancelAnimationFrame(animationId);
-            } else {
-                animate();
-            }
+            if (document.hidden) cancelAnimationFrame(animationId);
+            else animate();
         });
-
         resize();
         animate();
     })();

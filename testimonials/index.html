@@ -6,9 +6,7 @@
     <meta name="description" content="Testimonials from companies where Grzegorz Piwowarek delivered workshops and consulting services.">
     <title>Testimonials - Grzegorz Piwowarek</title>
     <link href="testimonials.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600;700&family=Roboto+Slab:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-3HB1PH886Z"></script>
     <script>
@@ -21,12 +19,16 @@
 
 <body>
 
+<canvas id="bg-canvas"></canvas>
+
 <div>
     <main class="content">
         <header class="page-header">
+            <a href="/" class="back-link">← pivovarit.github.io</a>
             <h1 class="page-title">Testimonials</h1>
-            <p class="page-subtitle">Feedback from workshops and consulting engagements</p>
-            <button id="opinionsBtn" class="opinions-btn">View Participant Opinions</button>
+            <p class="page-subtitle">Workshops · Consulting · Mentoring</p>
+            <div class="divider" style="margin-top: 1.5rem; margin-bottom: 0;"></div>
+            <button id="opinionsBtn" class="opinions-btn" style="margin-top: 1.5rem;">View Participant Opinions</button>
         </header>
 
         <div id="opinionsModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
@@ -195,6 +197,140 @@
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) closeModalFn();
     });
+</script>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 150 };
+        let animationId;
+        const baseConnectionDistance = 120;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initParticles();
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / 12000);
+            for (let i = 0; i < particleCount; i++) {
+                const depth = Math.random() * 0.7 + 0.3;
+                const baseVelocity = (Math.random() - 0.5) * 0.4;
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    baseX: 0,
+                    baseY: 0,
+                    vx: baseVelocity * depth,
+                    vy: ((Math.random() - 0.5) * 0.4) * depth,
+                    size: (Math.random() * 2 + 1) * depth,
+                    alpha: (Math.random() * 0.4 + 0.25) * depth,
+                    depth: depth
+                });
+                particles[i].baseX = particles[i].x;
+                particles[i].baseY = particles[i].y;
+            }
+            particles.sort((a, b) => a.depth - b.depth);
+        }
+
+        function drawConnections() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const depthDiff = Math.abs(particles[i].depth - particles[j].depth);
+                    if (depthDiff > 0.25) continue;
+
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    const avgDepth = (particles[i].depth + particles[j].depth) / 2;
+                    const connectionDist = baseConnectionDistance * avgDepth;
+
+                    if (dist < connectionDist) {
+                        const opacity = (1 - dist / connectionDist) * 0.2 * avgDepth;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 0.8 * avgDepth;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                p.baseX += p.vx;
+                p.baseY += p.vy;
+
+                if (p.baseX < 0) { p.baseX = canvas.width; p.x = canvas.width; }
+                if (p.baseX > canvas.width) { p.baseX = 0; p.x = 0; }
+                if (p.baseY < 0) { p.baseY = canvas.height; p.y = canvas.height; }
+                if (p.baseY > canvas.height) { p.baseY = 0; p.y = 0; }
+
+                let targetX = p.baseX;
+                let targetY = p.baseY;
+
+                if (mouse.x !== null && mouse.y !== null) {
+                    const dx = p.baseX - mouse.x;
+                    const dy = p.baseY - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    const effectiveRadius = mouse.radius * p.depth;
+                    if (dist < effectiveRadius) {
+                        const force = (effectiveRadius - dist) / effectiveRadius;
+                        const angle = Math.atan2(dy, dx);
+                        targetX = p.baseX + Math.cos(angle) * force * 30 * p.depth;
+                        targetY = p.baseY + Math.sin(angle) * force * 30 * p.depth;
+                    }
+                }
+
+                p.x += (targetX - p.x) * 0.1;
+                p.y += (targetY - p.y) * 0.1;
+            });
+
+            drawConnections();
+
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+                ctx.fill();
+            });
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(animationId);
+            } else {
+                animate();
+            }
+        });
+
+        resize();
+        animate();
+    })();
 </script>
 
 </body>
