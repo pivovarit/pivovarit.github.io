@@ -54,6 +54,13 @@
     "title": "Team Leader",
     "company": "e-point SA",
     "tags": ["workshop"]
+  },
+  {
+    "quote": "I have been working with Grzegorz since he joined the company and was continuously impressed by his technical skills as a software craftsman, his deep knowledge in distributed systems and attention to often neglected lower level implementation details. <br><br>In addition to the technical skills, Grzegorz stepped up as an evangelist of building a strong tech culture and kickstarted what I would call a movement to build a tech brand. <br><br>He's a great colleague with straight to the point approach, a mentor and a leader and I believe without doubt can be a strong addition to any tech team in a multitude of roles.",
+    "author": "Vaidotas Valuckas",
+    "title": "Principal Software Engineer",
+    "company": "Bound",
+    "tags": ["contract"]
   }
 ]
 
