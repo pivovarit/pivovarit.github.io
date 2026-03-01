@@ -1,5 +1,19 @@
 [
   {
+    "quote": "Grzegorz is one of those rare individuals who combines people leadership with excellent technical aptitude. At Hazelcast, he was the chief architect for the company's managed service. He led the transformation of a project with sizeable technical debt. <br><br>The result was that the team scaled to double the size and was deploying to production ten times as frequently as before with higher quality (...) always getting the buy-in from the team before introducing any systemic changes.",
+    "author": "Can Gencer",
+    "title": "Director of Engineering",
+    "company": "Hazelcast",
+    "tags": ["contract"]
+  },
+  {
+    "quote": "Grzegorz is a passionate software architect and engineer who can jump straight into the deep end, make an impact, and tackle tough problems. <br><br>At the same time, he's the type of engineer who brings a broad perspective (...) This perspective is rare and valuable as great ideas come from many sources. <br><br>He's also able to recruit great talent.",
+    "author": "John DesJardins",
+    "title": "CTO",
+    "company": "Hazelcast",
+    "tags": ["contract"]
+  },
+  {
     "quote": "Grzegorz helped us level up senior PHP engineers who could write Java, but didn't yet think like idiomatic Java engineers.<br><br>He helped us focus on the hard parts of building Java-based distributed systems and gave us pragmatic guidance on which choices actually matter in production.",
     "author": "Mateusz Jackiewicz",
     "title": "Team Lead",
@@ -21,24 +35,10 @@
     "tags": ["consulting"]
   },
   {
-    "quote": "Grzegorz is one of those rare individuals who combines people leadership with excellent technical aptitude. At Hazelcast, he was the chief architect for the company's managed service. He led the transformation of a project with sizeable technical debt. <br><br>The result was that the team scaled to double the size and was deploying to production ten times as frequently as before with higher quality (...) always getting the buy-in from the team before introducing any systemic changes.",
-    "author": "Can Gencer",
-    "title": "Director of Engineering",
-    "company": "Hazelcast",
-    "tags": ["contract"]
-  },
-  {
     "quote": "I've been working with Grzegorz for a while now and continue to see some clear and consistent things. <br>The phrase \"going the extra mile\" is a bit overused today, but it certainly fits well here. <br><br> Grzegorz is consistently handling the extra details that most people skip over. That coupled with a open way of collaborating with me and with the team has made our work highly productive.",
     "author": "Eugen Paraschiv",
     "title": "CEO",
     "company": "Baeldung",
-    "tags": ["contract"]
-  },
-  {
-    "quote": "Grzegorz is a passionate software architect and engineer who can jump straight into the deep end, make an impact, and tackle tough problems. <br><br>At the same time, he's the type of engineer who brings a broad perspective (...) This perspective is rare and valuable as great ideas come from many sources. <br><br>He's also able to recruit great talent.",
-    "author": "John DesJardins",
-    "title": "CTO",
-    "company": "Hazelcast",
     "tags": ["contract"]
   },
   {
