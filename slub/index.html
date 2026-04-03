@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Zaproszenie Ślubne</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      padding: 14px 20px;
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    nav a {
+      color: #999;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    nav a:hover,
+    nav a.active {
+      color: #c4a97d;
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        gap: 12px;
+        font-size: 9px;
+        letter-spacing: 2px;
+        flex-wrap: wrap;
+        padding: 10px 12px;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.35)),
+        url('BA3F9087-A8B5-4794-AC2B-124BFB0431A4_1_105_c.jpeg') center / cover no-repeat;
+    }
+    .hero-content { color: #fff; }
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 200;
+      letter-spacing: 6px;
+    }
+    .hero .divider {
+      width: 50px;
+      height: 1px;
+      background: #c4a97d;
+      margin: 20px auto;
+    }
+    .hero .date {
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 6px;
+      color: #e8dcc8;
+    }
+    .hero .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.5);
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(8px); }
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 {
+        font-size: 36px;
+        letter-spacing: 3px;
+      }
+      .hero .date {
+        font-size: 11px;
+        letter-spacing: 4px;
+      }
+    }
+
+    /* SECTIONS */
+    section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 100px 24px;
+    }
+    section h2 {
+      font-size: 28px;
+      font-weight: 200;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+    .section-divider {
+      width: 40px;
+      height: 1px;
+      background: #c4a97d;
+      margin: 0 auto 48px;
+    }
+    section p {
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: #444;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    /* PARA */
+    .para-hero {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 2px;
+      margin-bottom: 48px;
+    }
+    .para-block {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    .para-block.reverse {
+      flex-direction: row-reverse;
+    }
+    .para-block img {
+      width: 45%;
+      flex-shrink: 0;
+      border-radius: 2px;
+      object-fit: cover;
+      aspect-ratio: 3 / 4;
+    }
+    .para-block .text p {
+      text-align: left;
+    }
+
+    @media (max-width: 640px) {
+      .para-block,
+      .para-block.reverse {
+        flex-direction: column;
+      }
+      .para-block img {
+        width: 100%;
+      }
+    }
+
+    /* DETAILS */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      text-align: center;
+    }
+    .detail-card h3 {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #c4a97d;
+      margin-bottom: 12px;
+    }
+    .detail-card p {
+      font-size: 15px;
+      color: #444;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 640px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* TIMELINE */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: #e8e0d4;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid #c4a97d;
+      background: #fff;
+    }
+    .timeline-item .time {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #c4a97d;
+      font-weight: 300;
+    }
+    .timeline-item .event {
+      font-size: 15px;
+      color: #1a1a1a;
+      font-weight: 300;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#para">Para</a>
+  <a href="#szczegoly">Szczegóły</a>
+  <a href="#harmonogram">Harmonogram</a>
+  <a href="#lokalizacja">Lokalizacja</a>
+  <a href="#noclegi">Noclegi</a>
+  <a href="#prezenty">Prezenty</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1>Anna &amp; Piotr</h1>
+    <div class="divider"></div>
+    <div class="date">21 CZERWCA 2026</div>
+  </div>
+  <div class="scroll-hint">↓</div>
+</div>
+
+<section id="para">
+  <h2>Nasza historia</h2>
+  <div class="section-divider"></div>
+
+  <img class="para-hero" src="25E4BD39-6680-421B-AF65-680151030F17_1_105_c.jpeg"
+       alt="Anna i Piotr">
+
+  <div class="para-block">
+    <img src="67DEF40B-674B-48DE-94A0-8AD65313EDCB_1_105_c.jpeg" alt="">
+    <div class="text">
+      <p>Poznaliśmy się pewnego jesiennego wieczoru, kiedy żadne z nas nie spodziewało się, że ten dzień zmieni wszystko. Od pierwszej rozmowy wiedzieliśmy, że to jest coś wyjątkowego.</p>
+    </div>
+  </div>
+
+  <div class="para-block reverse">
+    <img src="C04A21BA-87A6-4E3B-941B-B413FA63E22D_1_105_c.jpeg" alt="">
+    <div class="text">
+      <p>Po wielu wspólnych podróżach, wieczorach i przygodach, zdecydowaliśmy się na ten najważniejszy krok. Z radością zapraszamy Was do wspólnego świętowania.</p>
+    </div>
+  </div>
+
+  <div class="para-block">
+    <img src="14667671-5A55-4D32-BD89-4782DDD79F94_1_105_c.jpeg" alt="">
+    <div class="text">
+      <p>Każdy dzień razem jest dla nas wyjątkowy. Cieszymy się, że możemy podzielić się z Wami tym szczególnym momentem.</p>
+    </div>
+  </div>
+
+  <div class="para-block reverse">
+    <img src="371DCF73-AC94-4FFB-9FC5-82662B1EF887_1_105_c.jpeg" alt="">
+    <div class="text">
+      <p>To będzie dzień pełen radości, miłości i niezapomnianych wspomnień. Nie możemy się doczekać!</p>
+    </div>
+  </div>
+
+  <div class="para-block">
+    <img src="F0F1D602-A0F8-43AD-86A9-0A94363FC157_1_105_c.jpeg" alt="">
+    <div class="text">
+      <p>Zapraszamy Was do wspólnego świętowania tego wyjątkowego dnia.</p>
+    </div>
+  </div>
+</section>
+
+<section id="szczegoly">
+  <h2>Szczegóły</h2>
+  <div class="section-divider"></div>
+  <div class="details-grid">
+    <div class="detail-card">
+      <h3>Ceremonia</h3>
+      <p>Kościół św. Anny<br>ul. Krakowska 12, Warszawa<br><br>Godzina 14:00</p>
+    </div>
+    <div class="detail-card">
+      <h3>Przyjęcie</h3>
+      <p>Dwór Oliwski<br>ul. Parkowa 8, Warszawa<br><br>Od godziny 16:00</p>
+    </div>
+  </div>
+</section>
+
+<section id="harmonogram">
+  <h2>Harmonogram</h2>
+  <div class="section-divider"></div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="time">14:00</div>
+      <div class="event">Ceremonia ślubna</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">15:30</div>
+      <div class="event">Przyjazd gości do sali weselnej</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">16:00</div>
+      <div class="event">Toast powitalny</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">17:00</div>
+      <div class="event">Obiad</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">19:00</div>
+      <div class="event">Pierwszy taniec</div>
+    </div>
+    <div class="timeline-item">
+      <div class="time">20:00</div>
+      <div class="event">Zabawa do białego rana</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
