@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grzegorz Piwowarek - Resume</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #1a1a1a;
+            line-height: 1.5;
+            font-size: 14px;
+            background: #f5f5f5;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 48px 56px;
+        }
+
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .download-btn:hover { background: #333; }
+
+        @media print {
+            body { background: #fff; }
+            .page { padding: 0; max-width: none; }
+            .download-btn { display: none; }
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 28px;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        header .tagline {
+            font-size: 15px;
+            color: #444;
+            margin-bottom: 12px;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 20px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .contact-row a {
+            color: #555;
+            text-decoration: none;
+        }
+
+        .contact-row a:hover { text-decoration: underline; }
+
+        /* Sections */
+        section { margin-bottom: 24px; }
+
+        section h2 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #1a1a1a;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 14px;
+        }
+
+        /* Summary */
+        .summary p {
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Skills */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 6px 16px;
+            font-size: 13px;
+        }
+
+        .skills-grid dt {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .skills-grid dd { color: #444; }
+
+        /* Experience */
+        .job {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .job:last-child { margin-bottom: 0; }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 2px;
+        }
+
+        .job-title {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .job-date {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        .job-company {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        .job p {
+            font-size: 13px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .job ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .job ul li {
+            font-size: 13px;
+            color: #333;
+            padding-left: 14px;
+            position: relative;
+            margin-bottom: 2px;
+        }
+
+        .job ul li::before {
+            content: "\2022";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        .job .tech {
+            font-size: 12px;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        /* Education & References */
+        .edu-entry {
+            margin-bottom: 8px;
+        }
+
+        .edu-entry .job-header { margin-bottom: 0; }
+
+        .edu-entry p {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .reference {
+            margin-bottom: 14px;
+        }
+
+        .reference blockquote {
+            font-size: 13px;
+            color: #444;
+            font-style: italic;
+            margin: 4px 0;
+            padding-left: 12px;
+            border-left: 2px solid #ddd;
+        }
+
+        .reference .ref-author {
+            font-size: 12px;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        /* OSS Projects */
+        .oss-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .oss-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            page-break-inside: avoid;
+        }
+
+        .oss-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+
+        .oss-card-header a {
+            font-weight: 700;
+            font-size: 14px;
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        .oss-card-header a:hover { text-decoration: underline; }
+
+        .oss-card-stars {
+            font-size: 12px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .oss-card p {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Community */
+        .community-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .community-list li {
+            font-size: 13px;
+            color: #333;
+            padding-left: 14px;
+            position: relative;
+            margin-bottom: 2px;
+        }
+
+        .community-list li::before {
+            content: "\2022";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        @media (max-width: 600px) {
+            .page { padding: 24px 20px; }
+            .contact-row { flex-direction: column; gap: 4px; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .job-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<button class="download-btn" onclick="window.print()">Download PDF</button>
+<div class="page">
+
+    <header>
+        <h1>Grzegorz Piwowarek</h1>
+        <div class="tagline">Principal Engineer - Distributed and Event-Driven Systems</div>
+        <div class="contact-row">
+            <a href="mailto:gpiwowarek@gmail.com">gpiwowarek@gmail.com</a>
+<a href="https://github.com/pivovarit">github.com/pivovarit</a>
+            <a href="https://linkedin.com/in/gpiwowarek">linkedin.com/in/gpiwowarek</a>
+            <a href="https://4comprehension.com">4comprehension.com</a>
+        </div>
+    </header>
+
+    <section class="summary">
+        <h2>Summary</h2>
+        <p>Java Champion, OSS creator, and engineer with 14+ years of experience architecting and scaling demanding distributed systems. <br><br>Proven ability to take ownership of foundational architecture, establish engineering standards, and mentor teams while shipping production systems end to end. Known for making immediate impact in complex systems and earning engineering trust through technical depth rather than authority.</p>
+    </section>
+
+    <section>
+        <h2>Core Skills</h2>
+        <dl class="skills-grid">
+            <dt>Languages</dt>
+            <dd>JVM-based Languages, Go </dd>
+            <dt>Data Systems</dt>
+            <dd>PostgreSQL, ClickHouse, Hazelcast</dd>
+            <dt>Infrastructure</dt>
+            <dd>AWS, Docker, GitHub Actions, CI/CD pipelines</dd>
+            <dt>Architecture</dt>
+            <dd>Distributed systems, event sourcing, microservices</dd>
+            <dt>Leadership</dt>
+            <dd>Technical architecture ownership, team building, mentoring, engineering culture</dd>
+        </dl>
+    </section>
+
+    <section>
+        <h2>Experience</h2>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Senior Software Engineer (Contract)</span>
+                <span class="job-date">Oct 2024 - Present</span>
+            </div>
+            <div class="job-company">Bound, London (remote)</div>
+            <p>Shaping the architecture of event-driven distributed systems to balance reliability, consistency, and scalability.</p>
+            <div class="tech">Distributed Systems, Event-Driven Architecture</div>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Founding Engineer</span>
+                <span class="job-date">Jan 2024 - Sep 2024</span>
+            </div>
+            <div class="job-company">Quesma, Warsaw</div>
+            <p>Shaped the foundations of a Database Gateway - a high-throughput data proxy handling ingestion, routing, and schema inference at scale.</p>
+            <ul>
+                <li>Designed and implemented the first iteration of Quesma: L4/L7 proxy MVP handling live data traffic</li>
+                <li>Built the internal routing API, ingest statistics analyzer with field type inference, and ClickHouse table discovery system</li>
+                <li>Defined the internal data representation layer for multi-format data processing</li>
+                <li>Established GitHub Actions-based CI automation, merge queue, and developer productivity tooling</li>
+            </ul>
+            <div class="tech">Go, ClickHouse, GitHub Actions</div>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Principal Engineer</span>
+                <span class="job-date">Nov 2022 - Jul 2023</span>
+            </div>
+            <div class="job-company">Miim, Salt Lake City (remote)</div>
+            <p>Owned all technology backing the real-time streaming backend and data architecture of miim.ai.</p>
+            <ul>
+                <li>Spearheaded architecture redesign of the core system for scalability and resilience</li>
+                <li>Identified and resolved PostgreSQL performance bottlenecks in a high-transaction multi-tenant environment</li>
+                <li>Diagnosed and fixed data consistency and performance issues in Hazelcast streaming jobs</li>
+                <li>Designed concurrent modification mechanisms for live data and a stable multi-tenant database migration system</li>
+                <li>Designed and rolled out the MVP of a public-facing REST API</li>
+            </ul>
+            <div class="tech">Java, Go, AWS, Kafka, Hazelcast, PostgreSQL</div>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Senior Software Engineer &rarr; Lead Architect</span>
+                <span class="job-date">Dec 2019 - Nov 2022</span>
+            </div>
+            <div class="job-company">Hazelcast, San Mateo (remote)</div>
+            <p>Progressed from R&amp;D into lead architect in the CTO's office. Revived a project set up for failure through technical leadership and organizational change.</p>
+            <ul>
+                <li>Reshaped the product into a new cloud offering (Viridian) and supported the engineering team through implementation</li>
+                <li>Kickstarted CI/CD adoption and redesigned the recruitment process; scaled the team 2x with higher deployment frequency</li>
+                <li>Worked on the initial phase of Project Alto - a thread-per-core, cloud-native generation of Hazelcast</li>
+                <li>Built Hazelcast Turbine - a new service-mesh-like product in Go (core team)</li>
+                <li>R&amp;D on GraalVM integration for Hazelcast IMDG client/server, Quarkus client, and WAN replication</li>
+            </ul>
+            <div class="tech">Java, Go, AWS, Kubernetes, GraalVM, gRPC, Spring Boot, Quarkus, GitHub Actions</div>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Senior Software Engineer &rarr; Lead Software Engineer &rarr; Software Architect</span>
+                <span class="job-date">Feb 2018 - Nov 2019</span>
+            </div>
+            <div class="job-company">Casumo, Malta (remote)</div>
+            <ul>
+                <li>Scaled the core event-sourced monetary transaction engine to 10,000 TPS and enabled multi-node deployments</li>
+                <li>Recruited, assembled, and coached a team tackling performance and scalability issues in legacy components</li>
+                <li>Modernised CI/CD pipelines with parallel builds, cutting minutes from each execution</li>
+                <li>Refactored and scaled cometd-relaying for zero-downtime deployments</li>
+            </ul>
+            <div class="tech">Java, Kotlin, RabbitMQ, Axon, Spring Boot, PostgreSQL, Docker, AWS</div>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Lead Technical Editor</span>
+                <span class="job-date">May 2016 - Oct 2018</span>
+            </div>
+            <div class="job-company">Baeldung</div>
+            <p>Managed and mentored a team of ten technical editors; responsible for most articles published on the site during this period.</p>
+        </div>
+
+        <div class="job">
+            <div class="job-header">
+                <span class="job-title">Software Engineer / Team Leader</span>
+                <span class="job-date">Feb 2014 - Jan 2018</span>
+            </div>
+            <div class="job-company">TouK, Warsaw</div>
+            <ul>
+                <li>Developed a Kafka-based message broker for Allegro (<a href="https://hermes.allegro.tech" style="color:#555">hermes.allegro.tech</a>) &mdash; high-throughput data ingestion at scale</li>
+                <li>Built an OSGi-based integration platform for a major GSM provider</li>
+            </ul>
+            <div class="tech">Java, Kotlin, Scala, Spring Boot, PostgreSQL, Kafka, Docker</div>
+        </div>
+
+        <p style="color:#888; font-style:italic; margin-top:12px;">Earlier experience includes software engineering roles dating back to 2012.</p>
+
+    </section>
+
+    <section>
+        <h2>Open Source &amp; Community</h2>
+        <p style="margin-bottom:12px;"><strong>Java Champion</strong></p>
+
+        <div class="oss-grid">
+            <div class="oss-card">
+                <div class="oss-card-header">
+                    <a href="https://github.com/vavr-io/vavr">Vavr</a>
+                    <span class="oss-card-stars">6,100+ stars</span>
+                </div>
+                <p>Object-functional library for Java - persistent collections, monads, and functional error handling.</p>
+            </div>
+
+            <div class="oss-card">
+                <div class="oss-card-header">
+                    <a href="https://github.com/pivovarit/parallel-collectors">Parallel Collectors</a>
+                    <span class="oss-card-stars">670+ stars</span>
+                </div>
+                <p>Parallel processing toolkit for the Stream API</p>
+            </div>
+
+            <div class="oss-card">
+                <div class="oss-card-header">
+                    <a href="https://github.com/pivovarit/outboxd">Outboxd</a>
+                </div>
+                <p>Lightweight transactional outbox relay using PostgreSQL logical replication</p>
+            </div>
+
+            <div class="oss-card">
+                <div class="oss-card-header">
+                    <a href="https://github.com/pivovarit/fencepost">Fencepost</a>
+                </div>
+                <p>Distributed concurrency toolkit for Java relying on PostgreSQL</p>
+            </div>
+        </div>
+
+        <ul class="community-list">
+            <li>WarsawJUG Leader; JDD Program Committee member</li>
+            <li>Conference speaker: OracleCodeOne, Devoxx, JavaZone, OracleCode LA, and others</li>
+            <li>Author at <a href="https://4comprehension.com" style="color:#333">4comprehension.com</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Education</h2>
+        <div class="edu-entry">
+            <div class="job-header">
+                <span class="job-title">BSc, Electronics and Information Technology</span>
+                <span class="job-date">2009 - 2014</span>
+            </div>
+            <p>Warsaw University of Technology - Specialization: Information and Decision Systems</p>
+        </div>
+    </section>
+
+    <section>
+        <h2>References</h2>
+
+        <div class="reference">
+            <blockquote>"Grzegorz is one of those rare individuals who combines people leadership with excellent technical aptitude. He led the transformation of a project with sizeable technical debt. The team scaled to double the size and was deploying to production ten times as frequently as before with higher quality."</blockquote>
+            <div class="ref-author">&mdash; Can Gencer, Director of Engineering at DataDog, ex-VP of Engineering at Hazelcast</div>
+        </div>
+
+        <div class="reference">
+            <blockquote>"Continuously impressed by his technical skills as a software craftsman, his deep knowledge of distributed systems, and attention to often neglected lower-level implementation details. He stepped up as an evangelist of building a strong tech culture."</blockquote>
+            <div class="ref-author">&mdash; Vaidotas Valuckas, Senior Software Engineer at Casumo</div>
+        </div>
+
+        <div class="reference">
+            <blockquote>"Grzegorz is a passionate software architect and engineer who can jump straight into the deep end and make an impact. He brings a broad perspective due to his involvement in Open Source and Java communities. He's also able to recruit great talent - engineers who can bring in other top talent can be a true game changer in building high performing teams."</blockquote>
+            <div class="ref-author">&mdash; John DesJardins, CTO at Hazelcast</div>
+        </div>
+
+        <div class="reference">
+            <blockquote>"The phrase 'going the extra mile' certainly fits well &mdash; Grzegorz is consistently handling the extra details that most people skip over."</blockquote>
+            <div class="ref-author">&mdash; Eugen Paraschiv, Owner at baeldung.com</div>
+        </div>
+
+    </section>
+
+</div>
+</body>
+</html>

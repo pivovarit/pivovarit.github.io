@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+    <meta name="theme-color" content="#f6f7fb"/>
     <title>Scrabble Score Tracker</title>
     <style>
         :root {
@@ -13,6 +16,7 @@
             margin: 0;
             background: #f6f7fb;
             color: #111;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
         .wrap {
@@ -96,26 +100,26 @@
 
         input[type="number"] {
             width: 140px;
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 10px;
             border: 1px solid #e3e6ef;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         input[type="text"] {
             flex: 1;
             min-width: 220px;
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 10px;
             border: 1px solid #e3e6ef;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         select {
-            padding: 10px 12px;
+            padding: 12px;
             border-radius: 10px;
             border: 1px solid #e3e6ef;
-            font-size: 14px;
+            font-size: 16px;
             background: #fff;
         }
 
@@ -125,13 +129,14 @@
         }
 
         button {
-            padding: 10px 12px;
+            padding: 12px 16px;
             border-radius: 10px;
             border: 0;
             background: #111827;
             color: #fff;
             cursor: pointer;
             font-weight: 600;
+            font-size: 16px;
         }
 
         button.secondary {
@@ -322,6 +327,136 @@
             margin-left: 8px;
             font-size: 12px;
         }
+
+        @media (max-width: 600px) {
+            .wrap {
+                padding: 12px;
+            }
+
+            .sub {
+                display: none;
+            }
+
+            input[type="number"] {
+                width: auto;
+                flex: 1;
+            }
+
+            input[type="text"] {
+                min-width: 0;
+            }
+
+            .row {
+                flex-direction: column;
+            }
+
+            .row button {
+                width: 100%;
+            }
+
+            .controls {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .controls button {
+                width: 100%;
+            }
+
+            .timeCol {
+                display: none;
+            }
+
+            .modalBackdrop {
+                padding: 8px;
+                align-items: flex-end;
+            }
+
+            .modal {
+                border-radius: 16px 16px 0 0;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            .statGrid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .bestWord td {
+            background: #fef3c7;
+        }
+
+        .bestWord td:first-child::before {
+            content: "\2605 ";
+            color: #d97706;
+        }
+
+        .finishedBanner {
+            text-align: center;
+            padding: 24px 16px;
+        }
+
+        .finishedBanner .winner {
+            font-size: 28px;
+            font-weight: 750;
+            margin-bottom: 8px;
+        }
+
+        .finishedBanner .subtitle {
+            font-size: 14px;
+            opacity: .75;
+        }
+
+        .standingsTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+
+        .standingsTable th, .standingsTable td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eef0f6;
+            font-size: 14px;
+        }
+
+        .standingsTable th {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            opacity: .7;
+        }
+
+        .standingsTable tr:first-child td {
+            font-weight: 700;
+        }
+
+        .statGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .statBox {
+            background: #f6f7fb;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .statBox .statLabel {
+            font-size: 12px;
+            opacity: .7;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .statBox .statValue {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -419,6 +554,7 @@
             <button class="secondary" id="undoBtn" disabled>Undo last turn</button>
             <button class="secondary" id="exportBtn">Export JSON</button>
             <button class="secondary" id="editNamesBtn">Edit players</button>
+            <button id="finishBtn" disabled>Finish game</button>
             <button class="danger" id="resetBtn">Reset game</button>
         </div>
 
@@ -430,7 +566,7 @@
                     <th>Player</th>
                     <th>Score</th>
                     <th>Note</th>
-                    <th class="muted">Time</th>
+                    <th class="muted timeCol">Time</th>
                 </tr>
                 </thead>
                 <tbody id="historyBody">
@@ -496,6 +632,19 @@
     </div>
 </div>
 
+<div class="modalBackdrop" id="gameOverBackdrop" role="dialog" aria-modal="true" aria-labelledby="gameOverTitle">
+    <div class="modal">
+        <div class="modalHeader">
+            <strong id="gameOverTitle">Game Over</strong>
+        </div>
+        <div id="gameOverContent"></div>
+        <div class="modalActions">
+            <button class="secondary" id="gameOverCloseBtn">Close</button>
+            <button class="danger" id="gameOverResetBtn">Reset game</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const STORAGE_KEY = "scrabble_tracker_v7_turns";
     const PLAYER_KEYS = ["player1", "player2", "player3", "player4"];
@@ -510,7 +659,8 @@
         },
         turns: [],
         namesLocked: false,
-        currentPlayerKey: "player1"
+        currentPlayerKey: "player1",
+        gameFinished: false
     };
 
     const el = (id) => document.getElementById(id);
@@ -560,12 +710,20 @@
         const scoreEl = el(`score-${k}`);
         if (!scoreEl) return;
         setTimeout(() => {
+            const card = el(`card-${k}`);
+            if (card && window.innerWidth <= 600) {
+                card.scrollIntoView({behavior: "smooth", block: "center"});
+            }
             scoreEl.focus();
             if (typeof scoreEl.select === "function") scoreEl.select();
         }, 0);
     }
 
     function updateStatusPillNow() {
+        if (state.gameFinished) {
+            el("statusPill").textContent = "Game finished";
+            return;
+        }
         clampCurrentPlayer();
         el("statusPill").textContent = `Turn: ${displayName(state.currentPlayerKey)}`;
     }
@@ -594,6 +752,7 @@
             state.turns = Array.isArray(parsed.turns) ? parsed.turns : [];
             state.namesLocked = Boolean(parsed.namesLocked);
             if (typeof parsed.currentPlayerKey === "string") state.currentPlayerKey = parsed.currentPlayerKey;
+            if (typeof parsed.gameFinished === "boolean") state.gameFinished = parsed.gameFinished;
 
             for (const k of PLAYER_KEYS) state.players[k].total = 0;
             for (const t of state.turns) {
@@ -660,7 +819,7 @@
             const note = el(`note-${k}`);
             const btn = el(`add-${k}`);
 
-            const disabled = !isActive;
+            const disabled = !isActive || state.gameFinished;
 
             score.disabled = disabled;
             note.disabled = disabled;
@@ -720,6 +879,7 @@
     }
 
     function addTurn(playerKey) {
+        if (state.gameFinished) return;
         if (playerKey !== state.currentPlayerKey) {
             setStatus(`It's ${displayName(state.currentPlayerKey)}'s turn`);
             focusPlayer(state.currentPlayerKey);
@@ -772,6 +932,7 @@
     }
 
     function undo() {
+        if (state.gameFinished) return;
         const t = state.turns.pop();
         if (!t) return;
 
@@ -800,6 +961,7 @@
 
         state.namesLocked = false;
         state.currentPlayerKey = "player1";
+        state.gameFinished = false;
 
         save();
         render();
@@ -887,6 +1049,60 @@
         if (!state.namesLocked) return;
         closePlayersModal();
     });
+
+    function buildGameOverContent() {
+        const keys = enabledPlayers();
+        const sorted = [...keys].sort((a, b) => state.players[b].total - state.players[a].total);
+        const topScore = state.players[sorted[0]].total;
+        const winners = sorted.filter(k => state.players[k].total === topScore);
+
+        let winnerText;
+        if (winners.length > 1) {
+            winnerText = winners.map(displayName).join(" & ") + " — Tie!";
+        } else {
+            winnerText = displayName(winners[0]) + " wins!";
+        }
+
+        const totalTurns = state.turns.length;
+        const bestDelta = Math.max(...state.turns.map(t => t.delta));
+        const bestTurns = state.turns.filter(t => t.delta === bestDelta);
+        const bestLabel = bestTurns.map(t => `${displayName(t.playerKey)} (+${t.delta}${t.note ? " — " + t.note : ""})`).join(", ");
+
+        let html = `<div class="finishedBanner">
+            <div class="winner">${escapeHtml(winnerText)}</div>
+            <div class="subtitle">Final score: ${topScore} points</div>
+        </div>`;
+
+        html += `<table class="standingsTable"><thead><tr><th>Rank</th><th>Player</th><th>Score</th><th>Avg/Turn</th></tr></thead><tbody>`;
+        let rank = 0, prevScore = null;
+        for (const k of sorted) {
+            const score = state.players[k].total;
+            if (score !== prevScore) { rank++; prevScore = score; }
+            const playerTurns = state.turns.filter(t => t.playerKey === k).length;
+            const avg = playerTurns > 0 ? (score / playerTurns).toFixed(1) : "0";
+            html += `<tr><td>${rank}</td><td>${escapeHtml(displayName(k))}</td><td>${score}</td><td>${avg}</td></tr>`;
+        }
+        html += `</tbody></table>`;
+
+        html += `<div class="statGrid">
+            <div class="statBox"><div class="statLabel">Total turns</div><div class="statValue">${totalTurns}</div></div>
+            <div class="statBox"><div class="statLabel">Best word</div><div class="statValue">${escapeHtml(bestLabel)}</div></div>
+        </div>`;
+
+        return html;
+    }
+
+    function finishGame() {
+        if (state.turns.length === 0) return;
+        if (!confirm("Finish the game? No more turns can be added.")) return;
+
+        state.gameFinished = true;
+        save();
+        render();
+
+        el("gameOverContent").innerHTML = buildGameOverContent();
+        el("gameOverBackdrop").classList.add("show");
+    }
 
     function buildSeries() {
         const keys = enabledPlayers();
@@ -1021,13 +1237,16 @@
         }
 
         el("turnCount").textContent = `${state.turns.length} turn${state.turns.length === 1 ? "" : "s"}`;
-        el("undoBtn").disabled = state.turns.length === 0;
+        el("undoBtn").disabled = state.turns.length === 0 || state.gameFinished;
+        el("finishBtn").disabled = state.turns.length === 0 || state.gameFinished;
 
         const body = el("historyBody");
         body.innerHTML = "";
 
         const keys = enabledPlayers();
         const perRound = Math.max(1, keys.length);
+
+        const bestDelta = state.turns.length > 0 ? Math.max(...state.turns.map(t => t.delta)) : 0;
 
         if (state.turns.length === 0) {
             const tr = document.createElement("tr");
@@ -1046,12 +1265,13 @@
                 }
 
                 const tr = document.createElement("tr");
+                if (t.delta === bestDelta && bestDelta > 0) tr.className = "bestWord";
                 tr.innerHTML = `
           <td>${idx + 1}</td>
           <td>${escapeHtml(displayName(t.playerKey))}</td>
           <td>${t.delta >= 0 ? "+" : ""}${t.delta}</td>
           <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>-</span>"}</td>
-          <td class="muted">${fmtTime(t.ts)}</td>
+          <td class="muted timeCol">${fmtTime(t.ts)}</td>
         `;
                 body.appendChild(tr);
             });
@@ -1082,9 +1302,16 @@
         }
 
         el("undoBtn").addEventListener("click", undo);
+        el("finishBtn").addEventListener("click", finishGame);
         el("resetBtn").addEventListener("click", resetGame);
         el("exportBtn").addEventListener("click", exportJson);
         el("editNamesBtn").addEventListener("click", () => openPlayersModal(false));
+
+        el("gameOverCloseBtn").addEventListener("click", () => el("gameOverBackdrop").classList.remove("show"));
+        el("gameOverResetBtn").addEventListener("click", () => {
+            el("gameOverBackdrop").classList.remove("show");
+            resetGame();
+        });
 
         el("modalSaveBtn").addEventListener("click", savePlayersAndLock);
         el("modalUseDefaultsBtn").addEventListener("click", useDefaultsAndLock);
