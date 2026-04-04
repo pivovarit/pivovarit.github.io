@@ -358,7 +358,7 @@
             <div class="total" id="total-player1">0</div>
             <div class="row">
                 <label for="score-player1"></label><input id="score-player1" type="number" inputmode="numeric"
-                                                          placeholder="+ points"/>
+                                                          placeholder="+/- points"/>
                 <label for="note-player1"></label><input id="note-player1" type="text"
                                                          placeholder="note (optional) e.g., QUIZ +50"/>
                 <button id="add-player1">Add turn</button>
@@ -373,7 +373,7 @@
             <div class="total" id="total-player2">0</div>
             <div class="row">
                 <label for="score-player2"></label><input id="score-player2" type="number" inputmode="numeric"
-                                                          placeholder="+ points"/>
+                                                          placeholder="+/- points"/>
                 <label for="note-player2"></label><input id="note-player2" type="text"
                                                          placeholder="note (optional) e.g., JAZZ +64"/>
                 <button id="add-player2">Add turn</button>
@@ -388,7 +388,7 @@
             <div class="total" id="total-player3">0</div>
             <div class="row">
                 <label for="score-player3"></label><input id="score-player3" type="number" inputmode="numeric"
-                                                          placeholder="+ points"/>
+                                                          placeholder="+/- points"/>
                 <label for="note-player3"></label><input id="note-player3" type="text" placeholder="note (optional)"/>
                 <button id="add-player3">Add turn</button>
             </div>
@@ -402,7 +402,7 @@
             <div class="total" id="total-player4">0</div>
             <div class="row">
                 <label for="score-player4"></label><input id="score-player4" type="number" inputmode="numeric"
-                                                          placeholder="+ points"/>
+                                                          placeholder="+/- points"/>
                 <label for="note-player4"></label><input id="note-player4" type="text" placeholder="note (optional)"/>
                 <button id="add-player4">Add turn</button>
             </div>
@@ -739,8 +739,8 @@
         }
 
         const delta = Number(raw);
-        if (!Number.isFinite(delta) || delta < 0) {
-            setStatus("Enter a non-negative score");
+        if (!Number.isFinite(delta)) {
+            setStatus("Enter a valid score");
             scoreEl.focus();
             return;
         }
@@ -767,7 +767,7 @@
         save();
         render();
 
-        setStatus(`Added ${displayName(playerKey)} +${delta}`);
+        setStatus(`Added ${displayName(playerKey)} ${delta >= 0 ? "+" : ""}${delta}`);
         focusPlayer(next);
     }
 
@@ -937,7 +937,7 @@
 
         const allVals = keys.flatMap(k => y[k] || []);
         const maxY = Math.max(10, ...allVals);
-        const minY = 0;
+        const minY = Math.min(0, ...allVals);
 
         const xToPx = (xi) => pad.l + (plotW * (n === 0 ? 0 : (xi / n)));
         const yToPx = (yv) => pad.t + plotH * (1 - (yv - minY) / (maxY - minY));
@@ -1049,7 +1049,7 @@
                 tr.innerHTML = `
           <td>${idx + 1}</td>
           <td>${escapeHtml(displayName(t.playerKey))}</td>
-          <td>+${t.delta}</td>
+          <td>${t.delta >= 0 ? "+" : ""}${t.delta}</td>
           <td>${t.note ? escapeHtml(t.note) : "<span class='muted'>-</span>"}</td>
           <td class="muted">${fmtTime(t.ts)}</td>
         `;
