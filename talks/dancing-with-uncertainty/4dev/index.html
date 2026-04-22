@@ -18,8 +18,7 @@
     <div class="footer"><a href="https://x.com/pivovarit">@pivovarit</a></div>
 
     <div class="slides">
-        <section>
-            <img src="img/intro.png" style="max-width: 100%; max-height: 85vh;">
+        <section data-background-image="img/first.jpg" data-background-size="contain" data-background-color="#3438b0">
         </section>
 
         <section>
@@ -137,32 +136,6 @@
             </div>
 
             <h4><a href="https://pivovarit.github.io">Grzegorz Piwowarek</a></h4>
-        </section>
-
-
-        <section>
-            <h2 style="margin-bottom: 0.3em;">{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
-
-            <h4 style="margin: 0.5em 0; font-weight: 500;">
-                <span style="margin: 0 10px;">Java Champion</span>
-                <span style="color: #3aa0a0;">|</span>
-                <span style="margin: 0 10px;">Oracle ACE</span>
-            </h4>
-
-            <div style="color: #555; font-size: 0.6em; margin: 0.6em 0;">
-                <span style="margin: 0 8px;">WarsawJUG Leader</span>
-                <span style="color: #3aa0a0;">|</span>
-                <span style="margin: 0 8px;">Vavr Leader</span>
-            </div>
-
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 1em 0;">
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">distributed systems</span>
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">microservices</span>
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">reactive</span>
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">java</span>
-            </div>
-
-            <h5 style="margin-top: 1em;"><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
         </section>
 
         <section>
@@ -938,10 +911,261 @@ Produces Kafka event: OrderCreated { orderId: 42 }
         </section>
 
         <section>
+            <h3><a href="https://outboxd.pivovarit.com">outboxd</a></h3>
+            <p>A lightweight outbox relay for PostgreSQL</p>
+            <ul>
+                <li>Uses PostgreSQL <strong>logical replication</strong> for near-real-time delivery</li>
+                <li><strong>At-least-once</strong> guarantees with automatic retries</li>
+                <li>No JVM, no Kafka Connect, no Debezium infrastructure</li>
+            </ul>
+            <br>
+            <small><a href="https://outboxd.pivovarit.com">outboxd.pivovarit.com</a></small>
+        </section>
+
+        <section>
 
         </section>
 
 
+        <section>
+            <h2>Time</h2>
+
+            <img src="img/time.jpg" width="60%"/>
+
+            <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
+
+            <script>
+                let virtualTime = Date.now();
+                let speed = 1; // 1 = normal speed
+                const speedIncrement = 0.0005; // how much faster per ms
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2,'0');
+                    const mm = String(d.getMinutes()).padStart(2,'0');
+                    const ss = String(d.getSeconds()).padStart(2,'0');
+                    const ms = String(d.getMilliseconds()).padStart(3,'0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let last = performance.now();
+
+                function update() {
+                    const now = performance.now();
+                    const delta = now - last;
+                    last = now;
+
+                    virtualTime += delta * speed;
+                    speed += speedIncrement * delta;
+                    document.getElementById("live-time").textContent = formatWithMs(virtualTime);
+
+                    requestAnimationFrame(update);
+                }
+
+                update();
+            </script>
+        </section>
+
+
+        <section>
+            <pre><code data-trim="" style="font-size: 1.4em;line-height: 1.4; max-height: 90%">
+                   var first = Instant.now();
+                   var second = Instant.now();
+            </code></pre>
+
+            <h3><code>first</code> <= <code>second?</code></h3>
+        </section>
+
+        <section>
+            <h2>Clocks in Distributed Systems</h2>
+
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 25px; margin-top: 40px; font-family: monospace; font-size: 1.8rem;">
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node A</div>
+                    <div id="clockA"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node B</div>
+                    <div id="clockB"></div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div>Node C</div>
+                    <div id="clockC"></div>
+                </div>
+
+            </div>
+
+            <script>
+                const driftRates = {
+                    A: 0,
+                    B: 17.0,
+                    C: -31.2
+                };
+
+                const state = {
+                    A: Date.now(),
+                    B: Date.now() + 20,
+                    C: Date.now() - 35
+                };
+
+                function formatWithMs(t) {
+                    const d = new Date(t);
+                    const hh = String(d.getHours()).padStart(2, '0');
+                    const mm = String(d.getMinutes()).padStart(2, '0');
+                    const ss = String(d.getSeconds()).padStart(2, '0');
+                    const ms = String(d.getMilliseconds()).padStart(3, '0');
+                    return `${hh}:${mm}:${ss}.${ms}`;
+                }
+
+                let lastUpdate = performance.now();
+                let lastSync = lastUpdate;
+
+                function tick() {
+                    const nowPerf = performance.now();
+                    const delta = nowPerf - lastUpdate;
+                    lastUpdate = nowPerf;
+
+                    if (performance.now() - lastSync > 3000) {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta + (driftRates[n] * delta / 1000);
+                        }
+                    } else {
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] += delta;
+                        }
+                    }
+
+                    if (Math.random() < 0.001) {
+                        const base = Date.now();
+
+                        for (const n of ["A", "B", "C"]) {
+                            state[n] = base + Math.random() * 30 - 15;
+                        }
+
+                        ["clockA", "clockB", "clockC"].forEach(id => {
+                            const el = document.getElementById(id);
+                            el.style.color = "red";
+                            setTimeout(() => el.style.color = "", 300);
+                        });
+                    }
+
+                    clockA.textContent = formatWithMs(state.A);
+                    clockB.textContent = formatWithMs(state.B);
+                    clockC.textContent = formatWithMs(state.C);
+
+                    requestAnimationFrame(tick);
+                }
+
+                tick();
+            </script>
+        </section>
+
+        <section>
+            <h3>Why clocks go backwards</h3>
+            <ul>
+                <li><strong>NTP</strong> (Network Time Protocol) adjustment</li>
+                <li>Virtual machines paused and resumed</li>
+                <li>Leap seconds</li>
+                <li>Manual time correction by an admin</li>
+            </ul>
+        </section>
+
+        <section>
+            <p>A <strong>monotonic clock</strong> always moves forward - never backward.</p>
+            <p>But most system clocks are <strong>not monotonic</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Monotonic clocks to the rescue</h3>
+            <ul>
+                <li>In Java: <code>System.nanoTime()</code></li>
+                <li>In Linux: <code>CLOCK_MONOTONIC</code></li>
+            </ul>
+            <p>They never go backward, but don’t represent 'real' time.</p>
+
+            <br>
+            <small><a href="https://www.javaadvent.com/2019/12/measuring-time-from-java-to-kernel-and-back.html">Measuring time: from Java to kernel and back</a></small>
+
+        </section>
+
+        <section>
+            <p>In distributed systems, time is… <strong>an illusion</strong>.</p>
+        </section>
+
+        <section>
+            <h3>The problem with clocks</h3>
+            <ul>
+                <li>Each machine has its own clock</li>
+                <li>Clocks drift - even if synced</li>
+                <li>Network delays make 'now' ambiguous</li>
+            </ul>
+            <p>So: there is no single, global 'current time.'</p>
+        </section>
+
+        <section>
+            <h3>Example</h3>
+            <p>Two servers record an event:</p>
+            <ul>
+                <li>Server A: event at 12:00:00.100</li>
+                <li>Server B: event at 12:00:00.090</li>
+            </ul>
+            <p>Which happened first? 🤔</p>
+        </section>
+
+        <section>
+            <h3>Why this matters</h3>
+            <ul>
+                <li>Event ordering affects state changes</li>
+                <li>Conflicts appear when we can’t tell 'what came first'</li>
+                <li>Replication, logs, and causality all depend on time</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>Happened-before relationship</h3>
+            <p>Instead of wall-clock time, we use <strong>causal order</strong>:</p>
+            <blockquote>
+                A → B if A happened before B (causally)
+            </blockquote>
+            <p>We care about <em>ordering</em> of events, not their timestamps.</p>
+        </section>
+
+        <section>
+            <h3>Logical clocks</h3>
+            <ul>
+                <li><strong>Lamport clocks</strong> → simple counters to track causal order</li>
+                <li><strong>Vector clocks</strong> → richer structure to detect concurrent events</li>
+            </ul>
+            <p>They don’t measure real time - they measure <strong>cause and effect</strong>.</p>
+        </section>
+
+        <section>
+            <h3>Real time vs. logical time</h3>
+            <ul>
+                <li><strong>Real time</strong> → what your watch shows</li>
+                <li><strong>Logical time</strong> → what the system can <em>prove</em> happened first</li>
+            </ul>
+            <p>Distributed systems live in <strong>logical time</strong>.</p>
+        </section>
+
+        <section>
+            <p>Google’s Spanner uses special hardware clocks (TrueTime API) ⏱️</p>
+            <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
+            </p>
+        </section>
+
+        <section>
+            <h3>Summary</h3>
+            <ul>
+                <li>Each node has its own imperfect sense of time</li>
+                <li>We can't rely on timestamps for ordering</li>
+                <li>We use <strong>logical or causal time</strong> to reason safely</li>
+            </ul>
+            <p>Time is relative - especially in distributed systems 🌌</p>
+        </section>
 
       <!--  <section>
             <h2>Distributed Transactions</h2>
@@ -1028,7 +1252,7 @@ If step 3 fails:
 
         <section>
             <h3>And there's so much more...</h3>
-            <ul style="font-size: 0.75em;">
+            <ul>
                 <li>Distributed transactions</li>
                 <li>Transaction isolation anomalies</li>
                 <li>Leader election &amp; split-brain</li>
@@ -1038,7 +1262,6 @@ If step 3 fails:
                 <li>Schema evolution &amp; versioning</li>
                 <li>Distributed tracing &amp; observability</li>
                 <li>Security across trust boundaries</li>
-                <li>Time &amp; clock synchronization</li>
             </ul>
             <p class="fragment">Distributed systems are <strong>genuinely hard</strong>.<br>Design with failure in mind - always.</p>
         </section>
@@ -1048,6 +1271,31 @@ If step 3 fails:
                 Using common sense is the ultimate Best Practice™.
             </blockquote>
         </section>
+        <section>
+            <h2 style="margin-bottom: 0.3em;">{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
+
+            <h4 style="margin: 0.5em 0; font-weight: 500;">
+                <span style="margin: 0 10px;">Java Champion</span>
+                <span style="color: #3aa0a0;">|</span>
+                <span style="margin: 0 10px;">Oracle ACE</span>
+            </h4>
+
+            <div style="color: #555; font-size: 0.6em; margin: 0.6em 0;">
+                <span style="margin: 0 8px;">WarsawJUG Leader</span>
+                <span style="color: #3aa0a0;">|</span>
+                <span style="margin: 0 8px;">Vavr Leader</span>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 1em 0;">
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">distributed systems</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">microservices</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">reactive</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">java</span>
+            </div>
+
+            <h5 style="margin-top: 1em;"><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
         <section>
             <h2>Thank You!</h2>
 
@@ -1071,6 +1319,9 @@ If step 3 fails:
             </script>
             <br>
             <small><a href="https://pivovarit.github.io/talks/dancing-with-uncertainty">https://pivovarit.github.io/talks/dancing-with-uncertainty</a></small>
+        </section>
+
+        <section data-background-image="img/eventory_qr.png" data-background-size="contain" data-background-color="#3438b0">
         </section>
     </div>
 </div>
