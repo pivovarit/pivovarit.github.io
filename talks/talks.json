@@ -8,6 +8,13 @@
       "location": "@lublin-csk"
     },
     {
+      "conference": "PoznańJUG",
+      "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
+      "date": "2026-05-13",
+      "url": "https://crossweb.pl/wydarzenia/jug-poznan-dancing-with-lightnings-maj-2026/",
+      "location": "@poznan-sollers"
+    },
+    {
       "conference": "4Developers 2026",
       "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
       "date": "2026-04-22",
@@ -1725,6 +1732,14 @@
       },
       "coordinates": "52.24161484245933, 21.028687500632525",
       "place": "CNK"
+    },
+    "poznan-sollers": {
+      "location": {
+        "city": "Poznań",
+        "country": "Poland"
+      },
+      "coordinates": "52.41130472304964, 16.941030437339823",
+      "place": "Sollers"
     },
     "poznan-nowy-rynek": {
       "location": {
