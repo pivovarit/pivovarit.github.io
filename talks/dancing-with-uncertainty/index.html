@@ -747,7 +747,7 @@
         <section>
             <h3>Different consistency levels</h3>
             <ul>
-                <li><strong>Strong consistency</strong> → Data converges immediately</li>
+                <li><strong>Strong consistency</strong> → Data "converges" immediately</li>
                 <li><strong>Eventual consistency</strong> → Data converges... eventually</li>
                 <li><strong>Accidental consistency</strong> → Data converges... maybe</li>
             </ul>
@@ -922,6 +922,14 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 <li>Use the <strong>outbox table</strong> for atomic writes</li>
                 <li>Use <strong>CDC</strong> to stream events out automatically</li>
                 <li>No dual writes, no lost events, no external transactions</li>
+            </ul>
+        </section>
+
+        <section>
+            <h3>OSS Support</h3>
+            <ul>
+                <li><a href="https://github.com/pivovarit/outboxd"><strong>outboxd</strong></a> - a lightweight event relay daemon for PostgreSQL implementing the transactional outbox pattern with WAL-based replication</li>
+                <li><a href="https://github.com/pivovarit/fencepost"><strong>fencepost</strong></a> - distributed locking, leader election, and message queuing backed entirely by PostgreSQL</li>
             </ul>
         </section>
 
