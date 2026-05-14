@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grzegorz Piwowarek - Technical Mentoring</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #1a1a1a;
+            line-height: 1.6;
+            font-size: 14px;
+            background: #f5f5f5;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 48px 56px;
+        }
+
+        .download-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #1a1a1a;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .download-btn:hover { background: #333; }
+
+        @media print {
+            body { background: #fff; font-size: 11px; line-height: 1.3; }
+            .page { padding: 0; max-width: none; }
+            .download-btn { display: none; }
+
+            header { margin-bottom: 10px; padding-bottom: 8px; }
+            header h1 { font-size: 22px; margin-bottom: 2px; }
+            .header-subtitle { font-size: 12px; }
+
+            section { margin-bottom: 8px; }
+            section h2 { font-size: 10px; margin-bottom: 6px; padding-bottom: 2px; }
+
+            .section-intro { font-size: 11px; margin-bottom: 8px; }
+
+            .value-grid { gap: 8px; }
+            .value-item { padding: 6px 8px; }
+            .value-item h3 { font-size: 11px; margin-bottom: 1px; }
+            .value-item p { font-size: 10px; line-height: 1.3; }
+
+            .mentoring-area { margin-bottom: 6px; }
+            .mentoring-area h3 { font-size: 12px; margin-bottom: 1px; }
+            .mentoring-area > p { font-size: 10px; margin-bottom: 3px; }
+            .clean-list li { font-size: 11px; margin-bottom: 1px; }
+
+            .low-risk { margin-top: 6px; padding: 6px 8px; }
+            .low-risk h3 { font-size: 11px; margin-bottom: 1px; }
+            .low-risk p { font-size: 10px; line-height: 1.3; }
+
+            .testimonial { margin-bottom: 8px; }
+            .testimonial blockquote { font-size: 10px; }
+            .testimonial .testimonial-author { font-size: 9px; }
+
+            .about-credentials { font-size: 10px; margin-bottom: 4px; }
+            .about p { font-size: 10px; }
+            .about br { display: none; }
+            .profile-photo { width: 64px; height: 64px; }
+
+            .next-steps { margin-bottom: 0; }
+            .next-steps p { font-size: 12px; margin-bottom: 4px; }
+            .next-steps .cta-email { font-size: 13px; }
+            .next-steps .cta-note { font-size: 10px; margin-bottom: 4px; }
+            .next-steps .links { font-size: 10px; }
+
+            .page-break { page-break-before: always; }
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 28px;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 15px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        /* About with photo */
+        .about-inner {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-credentials {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .about-contact {
+            font-size: 13px;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .about-contact a {
+            color: #555;
+            text-decoration: none;
+        }
+
+        .about-contact a:hover { text-decoration: underline; }
+
+        /* Sections */
+        section { margin-bottom: 24px; }
+
+        section h2 {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #1a1a1a;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin-bottom: 14px;
+        }
+
+        /* About */
+        .about p {
+            color: #333;
+            font-size: 14px;
+        }
+
+        /* Bullet lists */
+        .clean-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .clean-list li {
+            font-size: 14px;
+            color: #333;
+            padding-left: 14px;
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .clean-list li::before {
+            content: "\2022";
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+
+        /* Value proposition */
+        .value-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .value-item {
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+
+        .value-item h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .value-item p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Section intro */
+        .section-intro {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 18px;
+        }
+
+        /* Mentoring areas */
+        .mentoring-area {
+            margin-bottom: 18px;
+        }
+
+        .mentoring-area:last-child { margin-bottom: 0; }
+
+        .mentoring-area h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .mentoring-area > p {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        /* Low risk callout */
+        .low-risk {
+            margin-top: 14px;
+            padding: 14px 16px;
+            background: #f8f8f8;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+        }
+
+        .low-risk h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .low-risk p {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Outcomes */
+        .outcome {
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            border-left: 3px solid #1a1a1a;
+            background: #fafafa;
+            page-break-inside: avoid;
+        }
+
+        .outcome:last-child { margin-bottom: 0; }
+
+        .outcome .outcome-quote {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .outcome .outcome-source {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Testimonials */
+        .testimonial {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .testimonial:last-child { margin-bottom: 0; }
+
+        .testimonial blockquote {
+            font-size: 13px;
+            color: #444;
+            font-style: italic;
+            margin: 0 0 4px 0;
+            padding-left: 12px;
+            border-left: 2px solid #ddd;
+        }
+
+        .testimonial .testimonial-author {
+            font-size: 12px;
+            color: #777;
+            padding-left: 12px;
+        }
+
+        /* Next Steps */
+        .next-steps {
+            text-align: center;
+        }
+
+        .next-steps p {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .next-steps a {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .next-steps a:hover { text-decoration: underline; }
+
+        .next-steps .cta-email {
+            font-size: 16px;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .next-steps .cta-note {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .next-steps .links {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .next-steps .links a {
+            color: #555;
+            font-weight: 400;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .page { padding: 24px 20px; }
+
+            .value-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-inner {
+                flex-direction: column;
+            }
+            .profile-photo {
+                align-self: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<button class="download-btn" onclick="window.print()">Download PDF</button>
+<div class="page">
+
+    <header>
+        <h1>Technical Mentoring</h1>
+        <div class="header-subtitle">A case for investing in external mentoring for your engineering team</div>
+    </header>
+
+    <section>
+        <h2>Why Invest in External Mentoring</h2>
+        <p class="section-intro">Hiring an external mentor is a multiplier on the investment you have already made in your engineering team.</p>
+
+        <div class="value-grid">
+            <div class="value-item">
+                <h3>Break Past Local Optima</h3>
+                <p>Teams converge on what works and get stuck there - shared context turns blind spots into consensus. An external mentor who has seen how other companies, scales, and domains solve the same problems can challenge assumptions that no one on the inside thinks to question.</p>
+            </div>
+            <div class="value-item">
+                <h3>Tailored, Not Generic</h3>
+                <p>Online courses are generic and most never get completed. Mentoring starts from where the person actually is - their specific gaps, their codebase, their career context - and adapts as they grow. A live conversation, not a recording, with real follow-up across sessions.</p>
+            </div>
+            <div class="value-item">
+                <h3>Compress the Learning Curve</h3>
+                <p>Some lessons take years to learn through experience alone - navigating architectural trade-offs, thinking in production, building technical judgement. A mentor who has already made those mistakes can help engineers skip the slow path and reach senior-level thinking faster.</p>
+            </div>
+            <div class="value-item">
+                <h3>Invest in Retention</h3>
+                <p>Engineers who feel they are growing stay. Engineers who feel stuck leave. Dedicated mentoring is one of the strongest signals a company can send that it takes individual development seriously - and it costs a fraction of a single backfill.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section>
+        <h2>What the Mentoring Covers</h2>
+        <p class="section-intro">Mentoring is tailored to the individual, but typically falls into one or more of the following areas:</p>
+
+        <div class="mentoring-area">
+            <h3>Technical Excellence</h3>
+            <p>Deep, hands-on guidance on the hard software engineering challenges - the kind that only surface in production and rarely get covered in courses or books</p>
+            <ul class="clean-list">
+                <li>Distributed systems design, architecture trade-offs</li>
+                <li>Java/JVM best practices, multithreading, concurrency, and performance</li>
+                <li>AI adoption mindset - pragmatic, production-focused guidance on integrating LLMs and AI tooling into existing systems</li>
+                <li>Production readiness, operational thinking, and incident response</li>
+            </ul>
+        </div>
+
+        <div class="mentoring-area">
+            <h3>Career Growth &amp; Visibility</h3>
+            <p>Engineering skill alone doesn't build a career. Mentoring in this area helps engineers articulate their value, build a professional reputation, and navigate the business side of technology.</p>
+            <ul class="clean-list">
+                <li>Building a personal brand and professional visibility in the industry</li>
+                <li>Communicating technical value to non-technical stakeholders</li>
+                <li>Selling ideas, proposals, and architectural decisions internally</li>
+                <li>Navigating career transitions - IC to lead, employee to consultant, or into independent work</li>
+            </ul>
+        </div>
+
+        <div class="mentoring-area">
+            <h3>Public Speaking &amp; Workshops</h3>
+            <p>Practical coaching on crafting and delivering technical content that resonates with developer audiences.</p>
+            <ul class="clean-list">
+                <li>Developing conference talk proposals (CFPs) that get accepted</li>
+                <li>Structuring and delivering engaging technical presentations</li>
+                <li>Designing and running hands-on workshops - from exercises to pacing</li>
+                <li>Building a speaking track record and navigating the conference circuit</li>
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>How It Works</h2>
+        <ul class="clean-list">
+            <li>Regular sessions (remote), tailored to the mentee's context and goals</li>
+            <li>Ongoing engagement that builds over time - not a one-off workshop</li>
+            <li>Adapts to individual contributors or small teams</li>
+            <li>Starts with a free 20-minute intro call to assess fit</li>
+        </ul>
+        <div class="low-risk">
+            <h3>Low Risk, Easy to Try</h3>
+            <p>There is no long-term contract or upfront commitment. Start with a few sessions and see the impact first-hand. If it is not the right fit, simply stop - no lock-in, no questions asked.</p>
+        </div>
+    </section>
+
+<section>
+        <h2>What Leaders Say</h2>
+
+        <div class="testimonial">
+            <blockquote>"The team scaled to double the size and was deploying to production ten times as frequently as before with higher quality."</blockquote>
+            <div class="testimonial-author">- Can Gencer, Director of Engineering at Hazelcast</div>
+        </div>
+
+        <div class="testimonial">
+            <blockquote>"Grzegorz is simply brilliant. He not only has amazing technical knowledge and skills, but he is also very capable at design and has a gift for explaining even very complicated concepts in a very simple manner."</blockquote>
+            <div class="testimonial-author">- Bruno Fratini, Senior Engineering Manager at Casumo</div>
+        </div>
+
+        <div class="testimonial">
+            <blockquote>"He helped us focus on the hard parts of building Java-based distributed systems and gave us pragmatic guidance on which choices actually matter in production."</blockquote>
+            <div class="testimonial-author">- Mateusz Jackiewicz, Team Lead at Volt.io</div>
+        </div>
+    </section>
+
+    <section class="about">
+        <h2>About the Mentor</h2>
+        <div class="about-inner">
+            <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QQERXhpZgAATU0AKgAAAAgACwEOAAIAAAAVAAAAkgEPAAIAAAAGAAAAqAEQAAIAAAAVAAAArgESAAMAAAABAAEAAAEaAAUAAAABAAAAxAEbAAUAAAABAAAAzAEoAAMAAAABAAIAAAExAAIAAAAzAAAA1AEyAAIAAAAUAAABCAE7AAIAAAAVAAABHIdpAAQAAAABAAABMgAAAABncGl3b3dhcmVrQGdtYWlsLmNvbQAAQ2Fub24AQ2Fub24gRU9TIDZEIE1hcmsgSUkAAAAAAEgAAAABAAAASAAAAAFBZG9iZSBQaG90b3Nob3AgTGlnaHRyb29tIENsYXNzaWMgMTMuMyAoTWFjaW50b3NoKQAAMjAyNDowNToxNSAxMToxMTozNQBFd2EgS2FyYSBQaG90b2dyYXBoeQAAACeCmgAFAAAAAQAAAwyCnQAFAAAAAQAAAxSIIgADAAAAAQABAACIJwADAAAAAQGQAACIMAADAAAAAQACAACIMgAEAAAAAQAAAZCQAAAHAAAABDAyMzGQAwACAAAAFAAAAxyQBAACAAAAFAAAAzCQEAACAAAABwAAA0SQEQACAAAABwAAA0yQEgACAAAABwAAA1SRAQAHAAAABAECAwCSAQAKAAAAAQAAA1ySAgAFAAAAAQAAA2SSBAAKAAAAAQAAA2ySBQAFAAAAAQAAA3SSBwADAAAAAQAFAACSCQADAAAAAQAJAACSCgAFAAAAAQAAA3yShgAHAAAAHAAAA4SSkAACAAAABDQxMACSkQACAAAABDQxMACSkgACAAAABDQxMACgAAAHAAAABDAxMDCgAQADAAAAAQABAACgAgAEAAAAAQAAAKCgAwAEAAAAAQAAAKCiDgAFAAAAAQAAA6CiDwAFAAAAAQAAA6iiEAADAAAAAQADAACkAQADAAAAAQAAAACkAgADAAAAAQABAACkAwADAAAAAQABAACkBgADAAAAAQAAAACkMQACAAAADQAAA7CkMgAFAAAABAAAA76kNAACAAAAEgAAA96kNQACAAAACwAAA/AAAAAAAAAAAQAAAH0AAAAJAAAAAjIwMjQ6MDU6MTUgMTE6MTE6MzUAMjAyNDowNToxNSAxMToxMTozNQArMDI6MDAAACswMjowMAAAKzAyOjAwAAAABDDJAACaAgAAyS0AAC5bAAAAAAAAAAEAAAAFAAAACAAAADIAAAABQVNDSUkAAABncGl3b3dhcmVrQGdtYWlsLmNvbQATc10AAALeABNzXQAAAt4wNjgwNTEwMDA5NjcAAAAAADIAAAABAAAAMgAAAAEAAAAAAAAAAQAAAAAAAAABRUY1MG1tIGYvMS4yTCBVU00AMDAwMDgwNWNmNAAA/+ENvGh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8APD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNi4wLjAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczphdXg9Imh0dHA6Ly9ucy5hZG9iZS5jb20vZXhpZi8xLjAvYXV4LyIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOnBob3Rvc2hvcD0iaHR0cDovL25zLmFkb2JlLmNvbS9waG90b3Nob3AvMS4wLyIgeG1sbnM6SXB0YzR4bXBFeHQ9Imh0dHA6Ly9pcHRjLm9yZy9zdGQvSXB0YzR4bXBFeHQvMjAwOC0wMi0yOS8iIHhtbG5zOklwdGM0eG1wQ29yZT0iaHR0cDovL2lwdGMub3JnL3N0ZC9JcHRjNHhtcENvcmUvMS4wL3htbG5zLyIgYXV4OlNlcmlhbE51bWJlcj0iMDY4MDUxMDAwOTY3IiBhdXg6TGVuc1NlcmlhbE51bWJlcj0iMDAwMDgwNWNmNCIgYXV4OkZsYXNoQ29tcGVuc2F0aW9uPSIwLzEiIGF1eDpMZW5zSW5mbz0iNTAvMSA1MC8xIDAvMCAwLzAiIGF1eDpMZW5zPSJFRjUwbW0gZi8xLjJMIFVTTSIgYXV4OkltYWdlTnVtYmVyPSIwIiBhdXg6TGVuc0lEPSIyNDEiIGF1eDpGaXJtd2FyZT0iMS4yLjAiIHhtcDpSYXRpbmc9IjUiIHhtcDpDcmVhdGVEYXRlPSIyMDI0LTA1LTE1VDExOjExOjM1IiB4bXA6TW9kaWZ5RGF0ZT0iMjAyNC0wNS0xNVQxMToxMTozNSIgcGhvdG9zaG9wOkRhdGVDcmVhdGVkPSIyMDI0LTA1LTE1VDExOjExOjM1KzAyOjAwIj4gPGRjOmRlc2NyaXB0aW9uPiA8cmRmOkFsdD4gPHJkZjpsaSB4bWw6bGFuZz0ieC1kZWZhdWx0Ij5ncGl3b3dhcmVrQGdtYWlsLmNvbTwvcmRmOmxpPiA8L3JkZjpBbHQ+IDwvZGM6ZGVzY3JpcHRpb24+IDxkYzpjcmVhdG9yPiA8cmRmOlNlcT4gPHJkZjpsaT5Fd2EgS2FyYSBQaG90b2dyYXBoeTwvcmRmOmxpPiA8L3JkZjpTZXE+IDwvZGM6Y3JlYXRvcj4gPElwdGM0eG1wRXh0OlBlcnNvbkluSW1hZ2U+IDxyZGY6QmFnPiA8cmRmOmxpPkdyemVnb3J6PC9yZGY6bGk+IDwvcmRmOkJhZz4gPC9JcHRjNHhtcEV4dDpQZXJzb25JbkltYWdlPiA8SXB0YzR4bXBDb3JlOkNyZWF0b3JDb250YWN0SW5mbyBJcHRjNHhtcENvcmU6Q2lFbWFpbFdvcms9Im1lQGV3YWthcmEuY29tIiBJcHRjNHhtcENvcmU6Q2lBZHJDdHJ5PSJVbml0ZWQgS2luZ2RvbSIgSXB0YzR4bXBDb3JlOkNpQWRyQ2l0eT0iTG9uZG9uIiBJcHRjNHhtcENvcmU6Q2lVcmxXb3JrPSJ3d3cuZXdha2FyYS5jb20iLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg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" alt="Grzegorz Piwowarek" class="profile-photo">
+            <div class="about-text">
+                <div class="about-credentials">Java Champion &middot; Oracle ACE &middot; 14+ years in distributed systems</div>
+                <p>Grzegorz Piwowarek is a Java Champion, Oracle ACE, and leader of the Warsaw Java User Group. With over 14 years of hands-on experience, he brings deep practical expertise to every engagement.</p>
+                <br>
+                <p>He is an active open-source contributor - creator of Parallel Collectors and a project lead of Vavr, and has delivered over 150 conference talks across 20+ countries, including Devoxx, JavaZone, and Oracle Code One.</p>
+                <br>
+                <p>Throughout his career, he has served as a Principal Engineer, Lead Architect in the CTO's office at Hazelcast, and a Founding Engineer at an early-stage startup - giving him first-hand perspective across the full spectrum of engineering roles and responsibilities.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="next-steps">
+        <h2>Next Steps</h2>
+        <p>To discuss how mentoring can be tailored to your team's needs:</p>
+        <a href="mailto:contact@4comprehension.com" class="cta-email">contact@4comprehension.com</a>
+        <p class="cta-note">Book a free 20-minute intro call - no commitment</p>
+        <div class="links">
+            <a href="https://pivovarit.com">pivovarit.com</a> &middot;
+            <a href="https://4comprehension.com">4comprehension.com</a> &middot;
+            <a href="https://linkedin.com/in/gpiwowarek">linkedin.com/in/gpiwowarek</a>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
