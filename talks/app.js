@@ -266,7 +266,8 @@ let activeInfoWindow = null;
 let countdownInterval = null;
 let clusterer = null;
 let travelLines = [];
-let mapMode = "pins"; // "pins" | "clusters"
+let heatmap = null;
+let mapMode = "pins"; // "pins" | "clusters" | "heatmap"
 
 function animateCounter(element, target, duration = 1500) {
     const start = 0;
@@ -467,15 +468,19 @@ function clearMarkers() {
         line.setMap(null);
     }
     travelLines = [];
+    if (heatmap) {
+        heatmap.setMap(null);
+        heatmap = null;
+    }
     if (activeInfoWindow) {
         activeInfoWindow.close();
         activeInfoWindow = null;
     }
 }
 
-function createPinElement() {
+function createPinElement(pulsing = false) {
     const div = document.createElement("div");
-    div.className = "map-pin";
+    div.className = pulsing ? "map-pin pulsing" : "map-pin";
     return div;
 }
 
@@ -537,6 +542,15 @@ function buildTravelPath(talks, data) {
     }
 }
 
+function findNextTalkLocationKey(data) {
+    const todayTs = today().getTime();
+    const upcoming = data.events
+        .filter((t) => t._ts >= todayTs)
+        .sort((a, b) => a._ts - b._ts);
+    if (!upcoming.length) return null;
+    return normalizeLocationId(upcoming[0].location);
+}
+
 async function initMap() {
     const selectedYear = getSelectedYear();
 
@@ -581,70 +595,102 @@ async function initMap() {
         clearMarkers();
     }
 
+    const useHeatmap = mapMode === "heatmap";
     const bounds = new google.maps.LatLngBounds();
     const useClusters = mapMode === "clusters" && typeof markerClusterer !== "undefined";
 
-    for (const [key, { lat, lng, talks: ts }] of locationsMap.entries()) {
-        const location = key ? data.locations?.[key] : null;
-        if (!location) continue;
+    const nextTalkKey = findNextTalkLocationKey(data);
 
-        const position = { lat, lng };
-        const title = `${location.place ?? ""} (${ts.length} talk${ts.length !== 1 ? "s" : ""})`;
+    if (useHeatmap) {
+        const { HeatmapLayer } = await google.maps.importLibrary("visualization");
 
-        const markerOpts = {
-            position,
-            title,
-        };
-
-        if (useClusters) {
-            markerOpts.content = createMarkerElement(ts.length);
-        } else {
-            markerOpts.content = createPinElement();
-            markerOpts.map = mapInstance;
+        const heatmapData = [];
+        for (const [, { lat, lng, talks: ts }] of locationsMap.entries()) {
+            for (let i = 0; i < ts.length; i++) {
+                heatmapData.push(new google.maps.LatLng(lat, lng));
+            }
+            bounds.extend({ lat, lng });
         }
 
-        const marker = new AdvancedMarkerElement(markerOpts);
-
-        markers.push(marker);
-        bounds.extend(position);
-
-        const contentNode = createInfoWindowContent(location, { lat, lng }, ts);
-
-        const infoWindow = new google.maps.InfoWindow({
-            content: contentNode.outerHTML,
-        });
-
-        marker.addEventListener("click", () => {
-            if (activeInfoWindow) activeInfoWindow.close();
-            infoWindow.open({ map: mapInstance, anchor: marker });
-            activeInfoWindow = infoWindow;
-        });
-    }
-
-    if (useClusters && markers.length > 0) {
-        const { AdvancedMarkerElement: ClusterMarker } = await google.maps.importLibrary("marker");
-        clusterer = new markerClusterer.MarkerClusterer({
+        heatmap = new HeatmapLayer({
+            data: heatmapData,
             map: mapInstance,
-            markers,
-            renderer: {
-                render: ({ count, position }) => {
-                    return new ClusterMarker({
-                        position,
-                        content: createClusterElement(count),
-                    });
-                },
-            },
+            radius: 30,
+            opacity: 0.7,
+            gradient: [
+                "rgba(0, 0, 0, 0)",
+                "rgba(226, 84, 64, 0.3)",
+                "rgba(226, 84, 64, 0.5)",
+                "rgba(255, 107, 91, 0.7)",
+                "rgba(255, 152, 0, 0.85)",
+                "rgba(255, 235, 59, 1)",
+            ],
         });
+    } else {
+        for (const [key, { lat, lng, talks: ts }] of locationsMap.entries()) {
+            const location = key ? data.locations?.[key] : null;
+            if (!location) continue;
+
+            const position = { lat, lng };
+            const title = `${location.place ?? ""} (${ts.length} talk${ts.length !== 1 ? "s" : ""})`;
+            const isNextTalk = key === nextTalkKey;
+
+            const markerOpts = {
+                position,
+                title,
+            };
+
+            if (useClusters) {
+                markerOpts.content = createMarkerElement(ts.length);
+            } else {
+                markerOpts.content = createPinElement(isNextTalk);
+                markerOpts.map = mapInstance;
+                if (isNextTalk) markerOpts.zIndex = 9999;
+            }
+
+            const marker = new AdvancedMarkerElement(markerOpts);
+
+            markers.push(marker);
+            bounds.extend(position);
+
+            const contentNode = createInfoWindowContent(location, { lat, lng }, ts);
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: contentNode.outerHTML,
+            });
+
+            marker.addEventListener("click", () => {
+                if (activeInfoWindow) activeInfoWindow.close();
+                infoWindow.open({ map: mapInstance, anchor: marker });
+                activeInfoWindow = infoWindow;
+            });
+        }
+
+        if (useClusters && markers.length > 0) {
+            const { AdvancedMarkerElement: ClusterMarker } = await google.maps.importLibrary("marker");
+            clusterer = new markerClusterer.MarkerClusterer({
+                map: mapInstance,
+                markers,
+                renderer: {
+                    render: ({ count, position }) => {
+                        return new ClusterMarker({
+                            position,
+                            content: createClusterElement(count),
+                        });
+                    },
+                },
+            });
+        }
     }
 
-    if (markers.length > 0) {
+    if (!useHeatmap && markers.length > 0) {
         buildTravelPath(talks, data);
     }
 
-    if (markers.length === 1) {
+    if (locationsMap.size === 1) {
         mapInstance.setCenter(bounds.getCenter());
         mapInstance.setZoom(10);
-    } else if (markers.length > 1) {
+    } else if (locationsMap.size > 1) {
         mapInstance.fitBounds(bounds, { top: 40, right: 40, bottom: 40, left: 40 });
     } else {
         mapInstance.setCenter({ lat: 50, lng: 15 });
@@ -732,11 +778,14 @@ async function initPage() {
     }
 }
 
+const mapModes = ["pins", "clusters", "heatmap"];
+const mapModeLabels = { pins: "Pins", clusters: "Clusters", heatmap: "Heatmap" };
+
 function syncToggleButton() {
     const btn = document.getElementById("mapModeToggle");
     if (!btn) return;
-    btn.textContent = mapMode === "clusters" ? "Clusters" : "Pins";
-    btn.classList.toggle("active", mapMode === "clusters");
+    btn.textContent = mapModeLabels[mapMode];
+    btn.classList.toggle("active", mapMode !== "pins");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -746,7 +795,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggleBtn = document.getElementById("mapModeToggle");
     if (toggleBtn) {
         toggleBtn.addEventListener("click", () => {
-            mapMode = mapMode === "pins" ? "clusters" : "pins";
+            const idx = mapModes.indexOf(mapMode);
+            mapMode = mapModes[(idx + 1) % mapModes.length];
             syncToggleButton();
             initMap();
         });
