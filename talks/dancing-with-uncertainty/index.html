@@ -12,6 +12,154 @@
 
     <link rel="stylesheet" href="plugin/highlight/zenburn.css">
     <script src="https://pivovarit.github.io/qr/qr.js"></script>
+
+    <script>
+    // SlideAnim - driver for per-slide animations.
+    // Animations run only while their slide is visible, restart on entry,
+    // render crisply on HiDPI displays, advance by wall-clock dt (rate-independent
+    // on 120Hz screens), and degrade to a single static frame when the user
+    // prefers reduced motion or during PDF export.
+    //
+    // Usage: SlideAnim.register('canvasId', {
+    //     reset() { ... },              // called each time the slide is entered
+    //     frame(ctx, dt, t) { ... },    // dt: seconds since last frame (clamped),
+    //                                   // t: seconds of animation time since entry
+    //     staticT: 0,                   // optional t used for static renders
+    // });                               // (reduced motion, PDF export, overview)
+    // For canvases, logical coordinates are the width/height attributes; the
+    // canvas is cleared before each frame. For non-canvas elements ctx is null.
+    window.SlideAnim = (function () {
+        const anims = [];
+        const staticMode = matchMedia('(prefers-reduced-motion: reduce)').matches
+            || /print-pdf/gi.test(location.search);
+
+        function register(id, handlers) {
+            anims.push(Object.assign({ id, el: null, raf: 0 }, handlers));
+        }
+
+        function setup(anim) {
+            const el = document.getElementById(anim.id);
+            if (!el) return false;
+            anim.el = el;
+            if (el.tagName === 'CANVAS') {
+                anim.W = el.width;
+                anim.H = el.height;
+                el.style.width = '100%';
+                el.style.maxWidth = anim.W + 'px';
+                el.style.height = 'auto';
+                anim.ctx = el.getContext('2d');
+                anim.dpr = 0;
+                applyDpr(anim);
+            } else {
+                anim.ctx = null;
+            }
+            return true;
+        }
+
+        // Size the backing store for the current devicePixelRatio; re-run on
+        // entry/resize so a mid-talk monitor change doesn't leave canvases soft.
+        function applyDpr(anim) {
+            const dpr = window.devicePixelRatio || 1;
+            if (anim.dpr === dpr) return;
+            anim.dpr = dpr;
+            anim.el.width = anim.W * dpr;
+            anim.el.height = anim.H * dpr;
+        }
+
+        function renderFrame(anim, dt, t) {
+            const ctx = anim.ctx;
+            if (ctx) {
+                ctx.setTransform(anim.dpr, 0, 0, anim.dpr, 0, 0);
+                ctx.clearRect(0, 0, anim.W, anim.H);
+            }
+            anim.frame(ctx, dt, t);
+        }
+
+        // One static frame at anim.staticT - used for reduced motion, PDF
+        // export, overview thumbnails, and post-resize repaints.
+        function renderStatic(anim) {
+            if (!anim.el && !setup(anim)) return;
+            if (anim.ctx) applyDpr(anim);
+            if (anim.reset) anim.reset();
+            try {
+                renderFrame(anim, 0, anim.staticT || 0);
+            } catch (err) {
+                console.error('SlideAnim "' + anim.id + '" failed:', err);
+            }
+        }
+
+        function start(anim) {
+            if (anim.raf) return;
+            if (staticMode) { renderStatic(anim); return; }
+            if (anim.ctx) applyDpr(anim);
+            if (anim.reset) anim.reset();
+            let last = performance.now();
+            let t = 0; // accumulated from clamped dt, so rAF throttling
+                       // (alt-tab, occlusion) pauses instead of fast-forwarding
+            const loop = now => {
+                const dt = Math.min((now - last) / 1000, 0.05);
+                last = now;
+                t += dt;
+                try {
+                    renderFrame(anim, dt, t);
+                } catch (err) {
+                    anim.raf = 0; // a broken frame stops cleanly and can restart on re-entry
+                    console.error('SlideAnim "' + anim.id + '" failed:', err);
+                    return;
+                }
+                anim.raf = requestAnimationFrame(loop);
+            };
+            anim.raf = requestAnimationFrame(loop);
+        }
+
+        function stop(anim) {
+            if (anim.raf) cancelAnimationFrame(anim.raf);
+            anim.raf = 0;
+        }
+
+        function sync() {
+            const current = Reveal.getCurrentSlide();
+            anims.forEach(anim => {
+                if (!anim.el && !setup(anim)) return;
+                const section = anim.el.closest('section');
+                const fragment = anim.el.closest('.fragment');
+                const revealed = !fragment || fragment.classList.contains('visible');
+                const visible = !!current && revealed && (section === current
+                    || section.contains(current) || current.contains(section));
+                if (visible) start(anim); else stop(anim);
+            });
+        }
+
+        window.addEventListener('resize', () => anims.forEach(anim => {
+            if (!anim.el || !anim.ctx) return;
+            const prev = anim.dpr;
+            applyDpr(anim);
+            if (anim.dpr !== prev && !anim.raf) renderStatic(anim);
+        }));
+
+        window.addEventListener('load', () => {
+            if (!window.Reveal) return;
+            if (staticMode && /print-pdf/gi.test(location.search)) {
+                // PDF export lays out every slide at once: render each animation once.
+                const renderAll = () => anims.forEach(renderStatic);
+                Reveal.isReady() ? renderAll() : Reveal.on('ready', renderAll);
+                return;
+            }
+            const hook = () => {
+                // Pre-render every animation once so overview mode and deep
+                // links never show a blank canvas.
+                anims.forEach(renderStatic);
+                Reveal.on('slidechanged', sync);
+                Reveal.on('fragmentshown', sync);
+                Reveal.on('fragmenthidden', sync);
+                sync();
+            };
+            Reveal.isReady() ? hook() : Reveal.on('ready', hook);
+        });
+
+        return { register };
+    })();
+    </script>
 </head>
 <body>
 <div class="reveal">
@@ -26,10 +174,6 @@
                 <canvas id="networkCanvas" width="550" height="300" style="max-width: 100%;"></canvas>
                 <script>
                 (function() {
-                    const canvas = document.getElementById('networkCanvas');
-                    const ctx = canvas.getContext('2d');
-                    const W = canvas.width, H = canvas.height;
-
                     const nodes = [
                         { x: 95, y: 65, dx: 5.0, dy: 4.2, px: 0.7, py: 1.1 },
                         { x: 260, y: 50, dx: 4.0, dy: 5.2, px: 1.3, py: 0.6 },
@@ -79,55 +223,60 @@
                         return 0.45;
                     }
 
-                    function draw(time) {
-                        ctx.clearRect(0, 0, W, H);
-                        const t = time / 1000;
+                    SlideAnim.register('networkCanvas', {
+                        // static renders show a healthy network mid-traffic
+                        staticT: 5,
+                        reset() {
+                            // message positions persist across entries: the scene has no story
+                            // arc, so a mid-flight snapshot is a valid starting point
+                        },
+                        frame(ctx, dt, t) {
+                            // +50s phase offset: the driver resets t on every slide entry, and the
+                            // failure windows only open ~56s into a cycle - without the offset the
+                            // link-failure beat would never be seen during a short title dwell
+                            const ft = t + 50;
+                            const pos = nodes.map(n => getNodePos(n, t));
 
-                        const pos = nodes.map(n => getNodePos(n, t));
+                            links.forEach(([from, to, phase], i) => {
+                                const opacity = getLinkOpacity(phase, ft);
+                                ctx.beginPath();
+                                ctx.moveTo(pos[from].x, pos[from].y);
+                                ctx.lineTo(pos[to].x, pos[to].y);
+                                ctx.strokeStyle = `rgba(31, 94, 94, ${opacity})`;
+                                ctx.lineWidth = 1.6;
+                                ctx.stroke();
+                            });
 
-                        links.forEach(([from, to, phase], i) => {
-                            const opacity = getLinkOpacity(phase, t);
-                            ctx.beginPath();
-                            ctx.moveTo(pos[from].x, pos[from].y);
-                            ctx.lineTo(pos[to].x, pos[to].y);
-                            ctx.strokeStyle = `rgba(31, 94, 94, ${opacity})`;
-                            ctx.lineWidth = 1.6;
-                            ctx.stroke();
-                        });
+                            messages.forEach(msg => {
+                                const [from, to, phase] = links[msg.link];
+                                const opacity = getLinkOpacity(phase, ft);
+                                if (opacity < 0.3) return; // Hide during failures
 
-                        messages.forEach(msg => {
-                            const [from, to, phase] = links[msg.link];
-                            const opacity = getLinkOpacity(phase, t);
-                            if (opacity < 0.3) return; // Hide during failures
+                                const p1 = pos[from], p2 = pos[to];
+                                const progress = msg.dir > 0 ? msg.t : 1 - msg.t;
+                                const x = p1.x + (p2.x - p1.x) * progress;
+                                const y = p1.y + (p2.y - p1.y) * progress;
 
-                            const p1 = pos[from], p2 = pos[to];
-                            const progress = msg.dir > 0 ? msg.t : 1 - msg.t;
-                            const x = p1.x + (p2.x - p1.x) * progress;
-                            const y = p1.y + (p2.y - p1.y) * progress;
+                                ctx.beginPath();
+                                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                                ctx.fillStyle = `rgba(31, 94, 94, 0.9)`;
+                                ctx.fill();
 
-                            ctx.beginPath();
-                            ctx.arc(x, y, 4, 0, Math.PI * 2);
-                            ctx.fillStyle = `rgba(31, 94, 94, 0.9)`;
-                            ctx.fill();
+                                msg.t += msg.speed * dt;
+                                if (msg.t > 1) { msg.t = 0; msg.dir *= -1; }
+                            });
 
-                            msg.t += msg.speed * 0.016;
-                            if (msg.t > 1) { msg.t = 0; msg.dir *= -1; }
-                        });
-
-                        pos.forEach(p => {
-                            ctx.beginPath();
-                            ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
-                            ctx.fillStyle = '#3aa0a0';
-                            ctx.fill();
-                            ctx.strokeStyle = '#1f5e5e';
-                            ctx.lineWidth = 1.2;
-                            ctx.stroke();
-                        });
-
-                        requestAnimationFrame(draw);
-                    }
-
-                    requestAnimationFrame(draw);
+                            pos.forEach(p => {
+                                ctx.beginPath();
+                                ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
+                                ctx.fillStyle = '#3aa0a0';
+                                ctx.fill();
+                                ctx.strokeStyle = '#1f5e5e';
+                                ctx.lineWidth = 1.2;
+                                ctx.stroke();
+                            });
+                        }
+                    });
                 })();
                 </script>
             </div>
@@ -163,32 +312,10 @@
 
         <section>
             <img src="img/snake.jpg" width="60%"/>
-        </section>
-
-        <section>
-            <h2>CAP Theorem</h2>
-            <ul>
-                <li><strong>C</strong>onsistency</li>
-                <li><strong>A</strong>vailability</li>
-                <li><strong>P</strong>artition tolerance</li>
-            </ul>
-        </section>
-
-        <section>
-            <h2>Consistency</h2>
-            <h5>every read receives the most recent write</h5>
-            <small>(a single-copy illusion)</small>
-        </section>
-
-        <section>
-            <h2>Availability</h2>
-            <h5>every request receives a non-error response</h5>
-            <small>(even if some nodes are down)</small>
-        </section>
-
-        <section>
-            <h2>Partition tolerance</h2>
-            <h5>system continues to operate even if network links are lost</h5>
+            <aside class="notes">
+                Hook: why does the snake eat itself? It doesn't know it's eating itself - it has no global view of
+                its own body. Neither do your services. Bridge: "so what actually makes a system distributed?"
+            </aside>
         </section>
 
         <section>
@@ -215,59 +342,96 @@
         </section>
 
         <section>
+            <h2>CAP Theorem</h2>
+            <ul>
+                <li class="fragment"><strong>C</strong>onsistency<br>
+                    <small>every read receives the most recent write <em>(a single-copy illusion)</em></small></li>
+                <li class="fragment"><strong>A</strong>vailability<br>
+                    <small>every request receives a non-error response <em>(even if some nodes are down)</em></small></li>
+                <li class="fragment"><strong>P</strong>artition tolerance<br>
+                    <small>the system keeps operating even when network links are lost</small></li>
+            </ul>
+            <aside class="notes">
+                Reveal one letter at a time. C is shorthand for linearizability; A means every request to a
+                non-failing node gets a response - the precise Gilbert &amp; Lynch definitions are the back-pocket
+                answer if someone pushes back. Avoid saying "pick 2 of 3": partitions are not optional, so the real
+                choice is the next slide.
+            </aside>
+        </section>
+
+        <section>
             <p><strong>Rule:</strong> In the presence of a network partition, a distributed system must choose either
                 <em>Consistency</em> or <em>Availability</em>.</p>
 
-            <canvas id="partitionCanvas" width="550" height="220" style="max-width: 100%;"></canvas>
+            <canvas id="partitionCanvas" width="550" height="220"></canvas>
             <script>
             (function() {
-                const canvas = document.getElementById('partitionCanvas');
-                const ctx = canvas.getContext('2d');
-                const W = canvas.width, H = canvas.height;
+                const W = 550, H = 220;
+
+                const CONNECTED_FOR = 4.7;    // seconds connected before a partition strikes
+                const PARTITIONED_FOR = 5.3;  // seconds partitioned before the link heals
+                const INCREMENT_EVERY = 1.4;  // seconds between increments on node A
+                const MSG_SPEED = 0.24;       // progress/s of a regular sync message
+                const HEAL_SYNC_SPEED = 0.55; // progress/s of the catch-up sync after healing
+                const HEAL_HOLD = 3.4;        // seconds before A's next increment after healing,
+                                              // so the catch-up sync lands and 'in sync' holds
+                const PULSE_FOR = 1.0;        // seconds of the re-match pulse around node B
 
                 const nodeA = { x: 100, y: 100, label: 'A', value: 42 };
                 const nodeB = { x: 450, y: 100, label: 'B', value: 42 };
-                const messages = [];
+                let messages = [];
 
                 let partitioned = false;
-                let partitionTimer = 0;
-                const partitionDuration = 320;
-                const normalDuration = 280;
+                let stateTimer = 0;
+                let incrementTimer = 0;
+                let pulseTimer = -1;          // < 0 means no pulse running
+                let prevMatch = true;
 
-                function spawnSyncMessage(from, to) {
+                function spawnSyncMessage(from, to, speed) {
                     messages.push({
                         from, to,
                         value: from.value,
                         progress: 0,
-                        speed: 0.004 + Math.random() * 0.001,
+                        speed: speed || (MSG_SPEED + Math.random() * 0.06),
                         opacity: 1,
                         blocked: false
                     });
                 }
 
-                // Increment value on node A periodically
-                setInterval(() => {
-                    nodeA.value++;
-                    if (!partitioned) spawnSyncMessage(nodeA, nodeB);
-                }, 1400);
+                function reset() {
+                    nodeA.value = 42;
+                    nodeB.value = 42;
+                    messages = [];
+                    partitioned = false;
+                    stateTimer = 0;
+                    incrementTimer = 0;
+                    pulseTimer = -1;
+                    prevMatch = true;
+                }
 
-                function draw(time) {
-                    ctx.clearRect(0, 0, W, H);
-
-                    // Update partition state
-                    partitionTimer++;
-                    if (!partitioned && partitionTimer > normalDuration) {
+                function updateState(dt) {
+                    stateTimer += dt;
+                    if (!partitioned && stateTimer > CONNECTED_FOR) {
                         partitioned = true;
-                        partitionTimer = 0;
-                    } else if (partitioned && partitionTimer > partitionDuration) {
+                        stateTimer = 0;
+                    } else if (partitioned && stateTimer > PARTITIONED_FOR) {
                         partitioned = false;
-                        partitionTimer = 0;
+                        stateTimer = 0;
+                        // Healed: sync immediately so the audience sees convergence
+                        spawnSyncMessage(nodeA, nodeB, HEAL_SYNC_SPEED);
+                        incrementTimer = INCREMENT_EVERY - HEAL_HOLD;
                     }
 
-                    const midX = W / 2;
-                    const valuesMatch = nodeA.value === nodeB.value;
+                    // Increment value on node A periodically (visible time only)
+                    incrementTimer += dt;
+                    while (incrementTimer >= INCREMENT_EVERY) {
+                        incrementTimer -= INCREMENT_EVERY;
+                        nodeA.value++;
+                        if (!partitioned) spawnSyncMessage(nodeA, nodeB);
+                    }
+                }
 
-                    // Draw connection line
+                function drawLink(ctx, midX) {
                     if (partitioned) {
                         ctx.beginPath();
                         ctx.moveTo(nodeA.x + 32, nodeA.y);
@@ -300,15 +464,16 @@
                         ctx.lineWidth = 2;
                         ctx.stroke();
                     }
+                }
 
-                    // Update and draw messages
+                function updateAndDrawMessages(ctx, dt, midX) {
                     for (let i = messages.length - 1; i >= 0; i--) {
                         const m = messages[i];
                         const fromX = m.from.x + 32;
                         const toX = m.to.x - 32;
 
                         if (!m.blocked) {
-                            m.progress += m.speed;
+                            m.progress += m.speed * dt;
 
                             if (partitioned) {
                                 const msgX = fromX + (toX - fromX) * m.progress;
@@ -320,7 +485,7 @@
                         }
 
                         if (m.blocked) {
-                            m.opacity -= 0.02;
+                            m.opacity -= 1.2 * dt;
                         }
 
                         // Message delivered - sync value
@@ -347,12 +512,13 @@
                         ctx.fill();
 
                         ctx.fillStyle = `rgba(255, 255, 255, ${m.opacity})`;
-                        ctx.font = '11px monospace';
+                        ctx.font = '12px monospace';
                         ctx.textAlign = 'center';
                         ctx.fillText(m.value, x, y + 4);
                     }
+                }
 
-                    // Draw nodes
+                function drawNodes(ctx) {
                     [nodeA, nodeB].forEach(node => {
                         // Node circle
                         ctx.beginPath();
@@ -373,8 +539,19 @@
                         ctx.font = 'bold 15px monospace';
                         ctx.fillText(node.value, node.x, node.y + 12);
                     });
+                }
 
-                    // Draw status and drift indicator
+                function drawPulse(ctx) {
+                    const k = Math.min(pulseTimer / PULSE_FOR, 1);
+                    const ease = 1 - Math.pow(1 - k, 2);
+                    ctx.beginPath();
+                    ctx.arc(nodeB.x, nodeB.y, 33 + 11 * ease, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(58, 160, 160, ${0.85 * (1 - k)})`;
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+                }
+
+                function drawStatus(ctx, midX, valuesMatch) {
                     ctx.font = '13px sans-serif';
                     ctx.textAlign = 'center';
                     if (partitioned) {
@@ -392,17 +569,45 @@
                             ctx.fillText('in sync', midX, 212);
                         }
                     }
-
-                    requestAnimationFrame(draw);
                 }
 
-                requestAnimationFrame(draw);
+                function frame(ctx, dt) {
+                    const midX = W / 2;
+
+                    updateState(dt);
+                    drawLink(ctx, midX);
+                    updateAndDrawMessages(ctx, dt, midX);
+                    drawNodes(ctx);
+
+                    const valuesMatch = nodeA.value === nodeB.value;
+                    if (pulseTimer >= 0) {
+                        pulseTimer += dt;
+                        if (pulseTimer > PULSE_FOR) pulseTimer = -1;
+                    }
+                    if (valuesMatch && !prevMatch) pulseTimer = 0;
+                    prevMatch = valuesMatch;
+                    if (pulseTimer >= 0) drawPulse(ctx);
+
+                    drawStatus(ctx, midX, valuesMatch);
+                }
+
+                SlideAnim.register('partitionCanvas', { reset, frame });
             })();
             </script>
+            <aside class="notes">
+                Let the animation run one full cycle (~10s): A keeps incrementing, the partition strikes
+                (lightning bolt), values drift apart, the link heals, the catch-up sync converges them. Point at
+                the drifting values while partitioned - that drift IS the C-vs-A choice: serve stale (A) or
+                refuse to answer (C).
+            </aside>
         </section>
 
         <section>
             <h3>...</h3>
+            <aside class="notes">
+                Beat - hold the pause. Then: "so if the network can eat messages... how do you ever guarantee
+                delivery?" Sets up the thought experiment.
+            </aside>
         </section>
 
         <section>
@@ -421,33 +626,53 @@
                 How can both generals be sure they attack at the same time, given that messages might not arrive?
             </p>
 
-            <canvas id="twoGeneralsCanvas" width="550" height="250" style="max-width: 100%; margin-top: 6px;"></canvas>
+            <div style="margin-top: 6px;">
+                <canvas id="twoGeneralsCanvas" width="550" height="250"></canvas>
+            </div>
             <script>
                 (function() {
-                    const canvas = document.getElementById('twoGeneralsCanvas');
-                    if (!canvas) return;
-                    const ctx = canvas.getContext('2d');
-                    const W = canvas.width, H = canvas.height;
+                    const W = 550, H = 250;
 
                     const GR = 30;
                     const G1X = 82, G2X = 468, GY = 95;
                     const HOSTILE_X1 = 190, HOSTILE_X2 = 360;
                     const PATH_X1 = G1X + GR, PATH_X2 = G2X - GR;
 
-                    let state = 'IDLE', timer = 0;
-                    let msg = null;
-                    let g1Text = 'Attack at dawn?', g2Text = '...', eventText = '';
+                    const MSG_SPEED = 0.42;        // progress per second (was 0.007/frame @ 60fps)
+                    const FADE_SPEED = 1.5;        // alpha per second (was 0.025/frame @ 60fps)
+                    const IDLE_HOLD = 1.5;
+                    const THINK_HOLD = 0.85;
+                    const FAIL_HOLD = 1.1;
+                    const UNCERTAIN_HOLD = 2.2;
+                    const UNCERTAIN_TEXT_AT = 0.5;
+
+                    let state, timer, msg, deck, outcome;
+                    let g1Text, g2Text, eventText;
+
+                    // Shuffled outcome cycle: each pass shows all three cases
+                    // (message captured, ACK captured, both delivered) in
+                    // random-looking order, reshuffled when exhausted.
+                    function shuffledOutcomes() {
+                        const cases = ['msg-captured', 'ack-captured', 'delivered'];
+                        for (let i = cases.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [cases[i], cases[j]] = [cases[j], cases[i]];
+                        }
+                        return cases;
+                    }
+
+                    function nextOutcome() {
+                        if (deck.length === 0) deck = shuffledOutcomes();
+                        return deck.pop();
+                    }
 
                     function setState(s) { state = s; timer = 0; }
 
-                    function spawnMsg(type) {
-                        const willCapture = Math.random() < 0.5;
-                        const captureAt = willCapture ? (0.23 + Math.random() * 0.54) : 2.0;
+                    function spawnMsg(type, willCapture) {
                         msg = {
                             type,
                             progress: 0,
-                            speed: 0.007,
-                            captureAt,
+                            captureAt: willCapture ? (0.23 + Math.random() * 0.54) : 2.0,
                             fromX: type === 'msg' ? PATH_X1 : PATH_X2,
                             toX:   type === 'msg' ? PATH_X2 : PATH_X1,
                             captured: false,
@@ -456,19 +681,20 @@
                         };
                     }
 
-                    function update() {
-                        timer++;
+                    function update(dt) {
+                        timer += dt;
                         switch (state) {
                             case 'IDLE':
-                                if (timer > 90) {
+                                if (timer > IDLE_HOLD) {
                                     g1Text = 'Sending message...'; g2Text = '...'; eventText = '';
-                                    spawnMsg('msg');
+                                    outcome = nextOutcome();
+                                    spawnMsg('msg', outcome === 'msg-captured');
                                     setState('G1_SENDING');
                                 }
                                 break;
                             case 'G1_SENDING':
                                 if (!msg.captured) {
-                                    msg.progress += msg.speed;
+                                    msg.progress += MSG_SPEED * dt;
                                     if (msg.progress >= msg.captureAt) {
                                         msg.captured = true;
                                         msg.capturedX = msg.fromX + (msg.toX - msg.fromX) * msg.captureAt;
@@ -480,22 +706,25 @@
                                         setState('G2_THINK');
                                     }
                                 } else {
-                                    msg.fadeAlpha -= 0.025;
+                                    msg.fadeAlpha -= FADE_SPEED * dt;
                                     if (msg.fadeAlpha <= 0) { msg = null; setState('MSG_FAIL'); }
                                 }
                                 break;
                             case 'MSG_FAIL':
-                                if (timer > 65) {
+                                if (timer > FAIL_HOLD) {
                                     g1Text = 'Attack at dawn?'; g2Text = '...'; eventText = '';
                                     setState('IDLE');
                                 }
                                 break;
                             case 'G2_THINK':
-                                if (timer > 50) { spawnMsg('ack'); setState('ACK_SENDING'); }
+                                if (timer > THINK_HOLD) {
+                                    spawnMsg('ack', outcome === 'ack-captured');
+                                    setState('ACK_SENDING');
+                                }
                                 break;
                             case 'ACK_SENDING':
                                 if (!msg.captured) {
-                                    msg.progress += msg.speed;
+                                    msg.progress += MSG_SPEED * dt;
                                     if (msg.progress >= msg.captureAt) {
                                         msg.captured = true;
                                         msg.capturedX = msg.fromX + (msg.toX - msg.fromX) * msg.captureAt;
@@ -509,19 +738,19 @@
                                         setState('UNCERTAIN');
                                     }
                                 } else {
-                                    msg.fadeAlpha -= 0.025;
+                                    msg.fadeAlpha -= FADE_SPEED * dt;
                                     if (msg.fadeAlpha <= 0) { msg = null; setState('ACK_FAIL'); }
                                 }
                                 break;
                             case 'ACK_FAIL':
-                                if (timer > 65) {
+                                if (timer > FAIL_HOLD) {
                                     g1Text = 'Attack at dawn?'; g2Text = '...'; eventText = '';
                                     setState('IDLE');
                                 }
                                 break;
                             case 'UNCERTAIN':
-                                if (timer === 30) eventText = 'No certainty!';
-                                if (timer > 130) {
+                                if (timer >= UNCERTAIN_TEXT_AT && !eventText) eventText = 'No certainty!';
+                                if (timer > UNCERTAIN_HOLD) {
                                     g1Text = 'Attack at dawn?'; g2Text = '...'; eventText = '';
                                     setState('IDLE');
                                 }
@@ -529,7 +758,7 @@
                         }
                     }
 
-                    function wrapLines(text, maxW) {
+                    function wrapLines(ctx, text, maxW) {
                         const words = text.split(' ');
                         const lines = [];
                         let line = '';
@@ -542,7 +771,7 @@
                         return lines;
                     }
 
-                    function drawGeneral(x, label, statusText) {
+                    function drawGeneral(ctx, x, label, statusText) {
                         ctx.beginPath();
                         ctx.arc(x, GY, GR, 0, Math.PI * 2);
                         ctx.fillStyle = '#3aa0a0';
@@ -555,14 +784,12 @@
                         ctx.textAlign = 'center';
                         ctx.fillText(label, x, GY + 4);
                         ctx.fillStyle = '#444';
-                        ctx.font = '10px sans-serif';
+                        ctx.font = '12px sans-serif';
                         ctx.textAlign = 'center';
-                        wrapLines(statusText, 130).forEach((l, i) => ctx.fillText(l, x, GY + GR + 16 + i * 13));
+                        wrapLines(ctx, statusText, 150).forEach((l, i) => ctx.fillText(l, x, GY + GR + 16 + i * 15));
                     }
 
-                    function draw() {
-                        ctx.clearRect(0, 0, W, H);
-
+                    function drawScene(ctx, t) {
                         const zoneTop = GY - 42, zoneH = 84;
                         ctx.fillStyle = 'rgba(180,80,80,0.07)';
                         ctx.fillRect(HOSTILE_X1, zoneTop, HOSTILE_X2 - HOSTILE_X1, zoneH);
@@ -572,7 +799,7 @@
                         ctx.strokeRect(HOSTILE_X1, zoneTop, HOSTILE_X2 - HOSTILE_X1, zoneH);
                         ctx.setLineDash([]);
                         ctx.fillStyle = 'rgba(180,80,80,0.55)';
-                        ctx.font = '10px sans-serif';
+                        ctx.font = '12px sans-serif';
                         ctx.textAlign = 'center';
                         ctx.fillText('hostile territory', W / 2, zoneTop - 6);
 
@@ -585,21 +812,19 @@
                         ctx.stroke();
                         ctx.setLineDash([]);
 
-                        update();
-
                         if (msg) {
                             const x = msg.captured
                                 ? msg.capturedX
                                 : msg.fromX + (msg.toX - msg.fromX) * Math.min(msg.progress, 1.0);
-                            const a = msg.captured ? msg.fadeAlpha : 1.0;
                             if (msg.captured) {
-                                ctx.fillStyle = `rgba(180,80,80,${a})`;
+                                ctx.fillStyle = `rgba(180,80,80,${msg.fadeAlpha})`;
                                 ctx.font = 'bold 22px sans-serif';
                                 ctx.textAlign = 'center';
-                                ctx.fillText('\u2717', x, GY + 8);
+                                ctx.fillText('✗', x, GY + 8);
                             } else {
+                                const y = GY + Math.sin(t * 7) * 2;
                                 ctx.beginPath();
-                                ctx.arc(x, GY, 9, 0, Math.PI * 2);
+                                ctx.arc(x, y, 9, 0, Math.PI * 2);
                                 ctx.fillStyle = msg.type === 'msg' ? '#3aa0a0' : '#c08818';
                                 ctx.fill();
                                 ctx.strokeStyle = 'rgba(255,255,255,0.85)';
@@ -608,7 +833,7 @@
                                 ctx.fillStyle = '#fff';
                                 ctx.font = 'bold 10px monospace';
                                 ctx.textAlign = 'center';
-                                ctx.fillText(msg.type === 'msg' ? '!' : '\u2713', x, GY + 4);
+                                ctx.fillText(msg.type === 'msg' ? '!' : '✓', x, y + 4);
                             }
                         }
 
@@ -619,30 +844,234 @@
                             ctx.fillText(eventText, W / 2, 215);
                         }
 
-                        drawGeneral(G1X, 'G1', g1Text);
-                        drawGeneral(G2X, 'G2', g2Text);
-
-                        requestAnimationFrame(draw);
+                        drawGeneral(ctx, G1X, 'G1', g1Text);
+                        drawGeneral(ctx, G2X, 'G2', g2Text);
                     }
 
-                    draw();
+                    SlideAnim.register('twoGeneralsCanvas', {
+                        reset() {
+                            deck = shuffledOutcomes();
+                            outcome = null;
+                            msg = null;
+                            g1Text = 'Attack at dawn?';
+                            g2Text = '...';
+                            eventText = '';
+                            setState('IDLE');
+                        },
+                        frame(ctx, dt, t) {
+                            update(dt);
+                            drawScene(ctx, t);
+                        }
+                    });
                 })();
             </script>
-
+            <aside class="notes">
+                The loop shows all three outcomes in random order: message captured, ACK captured, and both
+                delivered - and even when everything arrives, G2 still can't know G1 got the ACK. Name the
+                infinite regress out loud: every ack would need its own ack.
+            </aside>
         </section>
 
         <section>
             <p>
-                There is <strong>no deterministic way</strong> for two parties to <strong>coordinate</strong> over an unreliable communication channel.
+                <strong>No protocol can guarantee</strong> that two parties <strong>agree to act</strong> over an
+                unreliable channel.
             </p>
+            <p><small>Every additional ack raises confidence - never certainty.</small></p>
+            <aside class="notes">
+                Deliberately "no protocol", not "no deterministic way" - randomized protocols can't solve it
+                either. If asked "doesn't TCP solve this?": TCP retransmits, but the regress applies to the
+                final ack - the application layer still can't reach common knowledge.
+            </aside>
         </section>
 
         <section>
             <h3>Retries are not always safe</h3>
             <ul>
-                <li>Setting a user’s status to “active” → ✅</li>
-                <li>Incrementing a counter → ❌</li>
+                <li>Setting a user’s status to 'active':  <span style="color: #3aa0a0; font-weight: bold;">✓</span></li>
+                <li>Charging a credit card:  <span style="color: #b45050; font-weight: bold;">✗</span></li>
             </ul>
+
+            <div style="display: flex; justify-content: center; gap: 30px;">
+                <div class="fragment" style="width: 260px;">
+                    <canvas id="retryCanvasA" width="260" height="260"></canvas>
+                </div>
+                <div class="fragment" style="width: 260px;">
+                    <canvas id="retryCanvasB" width="260" height="260"></canvas>
+                </div>
+            </div>
+            <script>
+            (function() {
+                const CYCLE = 12;
+                const ATTEMPTS = [1.2, 3.8, 6.4];
+                const REQ_DUR = 1.0;
+                const ACK_DELAY = 0.3;
+                const ACK_LOST = 0.5;   // fraction of the return path where the ack dies
+                const ACK_DUR = 1.0;
+                const X_FADE = 0.7;
+                const VERDICT_AT = 9.3;
+                const PW = 255, CY = 145;
+
+                const PANELS = [
+                    { x0: 2, code: 'status = "active"', label: 'idempotent', ok: true,
+                        verdictText: 'one logical request, one effect' },
+                    { x0: 2, code: 'charge($99)', label: 'not idempotent', ok: false,
+                        verdictText: 'one logical request, three charges' }
+                ];
+
+                function easeInOut(p) {
+                    return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+                }
+
+                function timeline(tc) {
+                    const st = { deliveries: 0, req: null, ack: null, lostX: 0, flash: 0,
+                        caption: '', captionColor: '#555', verdict: tc >= VERDICT_AT };
+                    ATTEMPTS.forEach((start, i) => {
+                        const delivered = start + REQ_DUR;
+                        const ackStart = delivered + ACK_DELAY;
+                        const lostAt = ackStart + ACK_LOST * ACK_DUR;
+                        const next = i + 1 < ATTEMPTS.length ? ATTEMPTS[i + 1] : VERDICT_AT;
+                        if (tc >= delivered) st.deliveries = i + 1;
+                        if (tc >= delivered && tc < delivered + 0.5) st.flash = 1 - (tc - delivered) / 0.5;
+                        if (tc >= start && tc < delivered) {
+                            st.req = easeInOut((tc - start) / REQ_DUR);
+                            st.caption = i === 0 ? 'request sent' : 'same request, retry ' + i;
+                        } else if (tc >= ackStart && tc < lostAt) {
+                            st.ack = (tc - ackStart) / ACK_DUR;
+                        } else if (tc >= lostAt && tc < next) {
+                            st.lostX = Math.max(0, 1 - (tc - lostAt) / X_FADE);
+                            st.caption = i < ATTEMPTS.length - 1 ? 'ack lost - client will retry' : 'ack lost';
+                            st.captionColor = '#b45050';
+                        }
+                    });
+                    return st;
+                }
+
+                function drawPill(ctx, x, text, color) {
+                    ctx.beginPath();
+                    ctx.roundRect(x - 16, CY - 9, 32, 18, 9);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, x, CY + 4);
+                }
+
+                function drawPanel(ctx, p, st) {
+                    const cx = p.x0 + 38;
+                    const midX = p.x0 + PW / 2;
+                    const boxX = p.x0 + 150, boxY = CY - 27, boxW = 92, boxH = 54;
+                    const boxCX = boxX + boxW / 2;
+                    const pathFrom = cx + 32, pathTo = boxX - 16;
+                    const bad = !p.ok && st.verdict;
+
+                    ctx.textAlign = 'center';
+
+                    // panel header
+                    ctx.fillStyle = '#1f5e5e';
+                    ctx.font = 'bold 13px monospace';
+                    ctx.fillText(p.code, midX, 26);
+                    ctx.fillStyle = p.ok ? 'rgba(31,94,94,0.8)' : 'rgba(180,80,80,0.8)';
+                    ctx.font = '12px sans-serif';
+                    ctx.fillText(p.label, midX, 44);
+
+                    // request path
+                    ctx.beginPath();
+                    ctx.moveTo(cx + 16, CY);
+                    ctx.lineTo(boxX - 4, CY);
+                    ctx.strokeStyle = 'rgba(58,160,160,0.2)';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // client
+                    ctx.beginPath();
+                    ctx.arc(cx, CY, 13, 0, Math.PI * 2);
+                    ctx.fillStyle = '#3aa0a0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#1f5e5e';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#555';
+                    ctx.font = '12px sans-serif';
+                    ctx.fillText('client', cx, CY + 30);
+
+                    // state box
+                    ctx.beginPath();
+                    ctx.roundRect(boxX, boxY, boxW, boxH, 6);
+                    ctx.fillStyle = bad ? 'rgba(180,80,80,0.12)' : 'rgba(58,160,160,0.08)';
+                    ctx.fill();
+                    ctx.strokeStyle = bad ? '#b45050' : '#1f5e5e';
+                    ctx.lineWidth = 1.5 + st.flash * 1.5;
+                    ctx.stroke();
+
+                    ctx.fillStyle = bad ? '#b45050' : '#1f5e5e';
+                    if (p.ok) {
+                        ctx.font = 'bold 13px monospace';
+                        ctx.fillText('"active"', boxCX, CY + 5);
+                    } else {
+                        ctx.font = 'bold 18px monospace';
+                        ctx.fillText('$' + st.deliveries * 99, boxCX, CY + 6);
+                    }
+                    ctx.fillStyle = '#555';
+                    ctx.font = '12px sans-serif';
+                    ctx.fillText(p.ok ? 'state' : 'charged', boxCX, boxY + boxH + 14);
+
+                    // request / ack in flight, lost-ack marker
+                    if (st.req !== null) drawPill(ctx, pathFrom + (pathTo - pathFrom) * st.req, 'req', '#3aa0a0');
+                    if (st.ack !== null) drawPill(ctx, pathTo + (pathFrom - pathTo) * st.ack, 'ack', '#c08818');
+                    if (st.lostX > 0) {
+                        ctx.fillStyle = `rgba(180,80,80,${st.lostX.toFixed(3)})`;
+                        ctx.font = 'bold 20px sans-serif';
+                        ctx.fillText('✗', (pathFrom + pathTo) / 2, CY + 7);
+                    }
+
+                    // verdict
+                    if (st.verdict) {
+                        ctx.font = 'bold 20px sans-serif';
+                        ctx.fillStyle = p.ok ? '#3aa0a0' : '#b45050';
+                        ctx.fillText(p.ok ? '✓' : '✗', boxCX, boxY - 10);
+                        ctx.font = 'bold 13px sans-serif';
+                        ctx.fillStyle = p.ok ? 'rgba(31,94,94,0.9)' : '#b45050';
+                        ctx.fillText(p.verdictText, midX, 236);
+                    }
+                }
+
+                // Each panel lives in its own fragment: its story starts from
+                // the beginning the moment the presenter reveals it.
+                function registerPanel(id, p) {
+                    SlideAnim.register(id, {
+                        // static renders (reduced motion / PDF) show the verdict, not the idle scene
+                        staticT: 10,
+                        reset() {
+                            // all animation state derives from t, so each entry restarts at the idle scene
+                        },
+                        frame(ctx, dt, t) {
+                            const st = timeline(t % CYCLE);
+                            drawPanel(ctx, p, st);
+                            if (!st.verdict && st.caption) {
+                                ctx.fillStyle = st.captionColor;
+                                ctx.font = '12px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText(st.caption, p.x0 + PW / 2, 236);
+                            }
+                        }
+                    });
+                }
+                registerPanel('retryCanvasA', PANELS[0]);
+                registerPanel('retryCanvasB', PANELS[1]);
+            })();
+            </script>
+            <aside class="notes">
+                Reveal the panels one at a time; each restarts its story on reveal. Left: same request three
+                times, state stays "active". Right: the war story - POST /charge, ack lost, client retries, and a
+                real customer is charged three times. This is "how to never double-charge anyone", not theory.
+            </aside>
         </section>
 
         <section>
@@ -654,15 +1083,11 @@
         </section>
 
         <section>
-            <h3>In a distributed system</h3>
-            <p>Failures and retries are inevitable.</p>
-        </section>
-
-        <section>
+            <h3>Failures and retries are inevitable</h3>
             <ul>
-                <li>Network retries may cause duplicate requests</li>
-                <li>Clients or load balancers might resend operations</li>
-                <li>Idempotency prevents unwanted side effects</li>
+                <li>Networks can fail between <em>send</em> and <em>acknowledge</em></li>
+                <li>Clients and load balancers retry</li>
+                <li>Servers can crash mid-processing</li>
             </ul>
         </section>
 
@@ -673,35 +1098,463 @@
         </section>
 
         <section>
-            <ul>
-                <li>Networks can fail between <em>send</em> and <em>acknowledge</em></li>
-                <li>Clients can retry</li>
-                <li>Servers can crash mid-processing</li>
-            </ul>
-        </section>
-
-        <section>
             <div>
                 <p><strong>Reality:</strong> You only ever get:</p>
                 <ul>
-                    <li><strong>at-most-once</strong> → messages may be lost</li>
-                    <li><strong>at-least-once</strong> → messages may be duplicated</li>
+                    <li><strong>at-most-once</strong> -> messages may be lost</li>
+                    <li><strong>at-least-once</strong> -> messages may be duplicated</li>
                 </ul>
             </div>
+
+            <div class="fragment">
+                <canvas id="deliveryCanvasA" width="550" height="115"></canvas>
+            </div>
+            <div class="fragment">
+                <canvas id="deliveryCanvasB" width="550" height="135"></canvas>
+            </div>
+            <script>
+            (function() {
+                const SX = 70, RX = 480, NR = 20;
+                const TOP_Y = 62, BOT_Y = 66;   // each lane in its own canvas
+                const MID = (SX + RX) / 2;
+                const FLIGHT = 1.4;
+                const LOOP = 12;
+
+                // at-most-once: six sends per loop, two dropped mid-flight (~1 in 3)
+                const topMsgs = [
+                    { send: 0.6, drop: null },
+                    { send: 2.2, drop: 0.52 },
+                    { send: 3.8, drop: null },
+                    { send: 5.4, drop: null },
+                    { send: 7.0, drop: 0.62 },
+                    { send: 8.6, drop: null }
+                ];
+
+                // at-least-once: send -> ack lost -> timeout -> retry -> duplicate
+                const MSG_SEND = 1.0;
+                const ACK1_SEND = 2.7;
+                const ACK_DROP = 0.55;
+                const RETRY_SEND = 6.0;
+                const ACK2_SEND = 7.7;
+
+                function ease(u) {
+                    return u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+                }
+
+                function laneX(p) {
+                    const x1 = SX + NR + 16, x2 = RX - NR - 16;
+                    return x1 + (x2 - x1) * p;
+                }
+
+                function drawLaneLine(ctx, y) {
+                    ctx.beginPath();
+                    ctx.moveTo(SX + NR, y);
+                    ctx.lineTo(RX - NR, y);
+                    ctx.strokeStyle = 'rgba(58,160,160,0.2)';
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([5, 5]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                function drawNode(ctx, x, y, label) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, NR, 0, Math.PI * 2);
+                    ctx.fillStyle = '#3aa0a0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#1f5e5e';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 13px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(label, x, y + 4);
+                }
+
+                function drawDot(ctx, x, y) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, Math.PI * 2);
+                    ctx.fillStyle = '#3aa0a0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#1f5e5e';
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                }
+
+                function drawAck(ctx, x, y) {
+                    ctx.beginPath();
+                    ctx.arc(x, y, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = '#c08818';
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 10px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('✓', x, y + 3.5);
+                }
+
+                function drawPill(ctx, x, y, text) {
+                    ctx.beginPath();
+                    ctx.roundRect(x - 14, y - 10, 28, 20, 4);
+                    ctx.fillStyle = 'rgba(31,94,94,0.85)';
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, x, y + 4);
+                }
+
+                function drawCross(ctx, x, y, alpha) {
+                    ctx.fillStyle = `rgba(180,80,80,${alpha})`;
+                    ctx.font = 'bold 20px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('✗', x, y + 7);
+                }
+
+                function caption(ctx, x, y, text) {
+                    ctx.fillStyle = 'rgba(180,80,80,0.9)';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, x, y);
+                }
+
+                function drawTopLane(ctx, lt) {
+                    drawLaneLine(ctx, TOP_Y);
+
+                    // delivered pips at R; lost slots stay as hollow gaps
+                    topMsgs.forEach((m, i) => {
+                        if (lt < m.send + FLIGHT) return;
+                        const px = RX - 40 + i * 16;
+                        const py = TOP_Y + 38;
+                        ctx.beginPath();
+                        ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+                        if (m.drop === null) {
+                            ctx.fillStyle = '#3aa0a0';
+                            ctx.fill();
+                            ctx.strokeStyle = '#1f5e5e';
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        } else {
+                            ctx.strokeStyle = 'rgba(180,80,80,0.5)';
+                            ctx.lineWidth = 1.2;
+                            ctx.stroke();
+                        }
+                    });
+
+                    // in-flight messages and mid-flight drops
+                    topMsgs.forEach(m => {
+                        const u = (lt - m.send) / FLIGHT;
+                        if (u < 0) return;
+                        if (m.drop !== null && u >= m.drop) {
+                            const dropT = m.send + m.drop * FLIGHT;
+                            const fade = 1 - (lt - dropT) / 0.9;
+                            const x = laneX(ease(m.drop));
+                            if (fade > 0) drawCross(ctx, x, TOP_Y, fade);
+                            if (lt - dropT < 1.3) caption(ctx, x, TOP_Y + 28, 'lost');
+                        } else if (u < 1) {
+                            drawDot(ctx, laneX(ease(u)), TOP_Y);
+                        }
+                    });
+                }
+
+                function drawBottomLane(ctx, lt) {
+                    drawLaneLine(ctx, BOT_Y);
+
+                    // receiver inbox: each delivery of m2 stacks a pill
+                    if (lt >= MSG_SEND + FLIGHT) drawPill(ctx, RX, BOT_Y + 34, 'm2');
+                    if (lt >= RETRY_SEND + FLIGHT) drawPill(ctx, RX, BOT_Y + 56, 'm2');
+
+                    // first send
+                    const u1 = (lt - MSG_SEND) / FLIGHT;
+                    if (u1 >= 0 && u1 < 1) drawPill(ctx, laneX(ease(u1)), BOT_Y, 'm2');
+
+                    // ack #1, lost mid-flight
+                    const a1 = (lt - ACK1_SEND) / FLIGHT;
+                    if (a1 >= 0) {
+                        if (a1 < ACK_DROP) {
+                            drawAck(ctx, laneX(1 - ease(a1)), BOT_Y);
+                        } else {
+                            const dropT = ACK1_SEND + ACK_DROP * FLIGHT;
+                            const fade = 1 - (lt - dropT) / 0.9;
+                            const x = laneX(1 - ease(ACK_DROP));
+                            if (fade > 0) drawCross(ctx, x, BOT_Y, fade);
+                            if (lt - dropT < 1.3) caption(ctx, x, BOT_Y + 28, 'ack lost');
+                        }
+                    }
+
+                    // timeout ring around S while waiting to retry
+                    if (lt >= MSG_SEND && lt < RETRY_SEND) {
+                        const f = (lt - MSG_SEND) / (RETRY_SEND - MSG_SEND);
+                        ctx.beginPath();
+                        ctx.arc(SX, BOT_Y, NR + 6, -Math.PI / 2, -Math.PI / 2 + f * Math.PI * 2);
+                        ctx.strokeStyle = 'rgba(192,136,24,0.8)';
+                        ctx.lineWidth = 2.5;
+                        ctx.stroke();
+                    }
+
+                    // retry
+                    const u2 = (lt - RETRY_SEND) / FLIGHT;
+                    if (u2 >= 0 && u2 < 1) drawPill(ctx, laneX(ease(u2)), BOT_Y, 'm2');
+
+                    // ack #2 makes it back
+                    const a2 = (lt - ACK2_SEND) / FLIGHT;
+                    if (a2 >= 0 && a2 < 1) drawAck(ctx, laneX(1 - ease(a2)), BOT_Y);
+
+                    // sender status
+                    let status = '';
+                    if (lt >= 2.4 && lt < 5.4) status = 'waiting for ack...';
+                    else if (lt >= 5.4 && lt < 7.0) status = 'timeout -> retry';
+                    else if (lt >= ACK2_SEND + FLIGHT && lt < 11.4) status = 'ack received';
+                    if (status) {
+                        ctx.fillStyle = '#555';
+                        ctx.font = '12px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(status, SX, BOT_Y + NR + 22);
+                    }
+
+                    if (lt >= RETRY_SEND + FLIGHT + 0.1 && lt < 11.4) {
+                        caption(ctx, MID, BOT_Y + 30, 'duplicated');
+                    }
+                }
+
+                function drawLabel(ctx, text, y) {
+                    ctx.fillStyle = '#555';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, MID, y);
+                }
+
+                // Each lane lives in its own fragment: its story starts from
+                // the beginning the moment the presenter reveals it.
+                SlideAnim.register('deliveryCanvasA', {
+                    // static renders catch a message in flight while the first loss is still visible
+                    staticT: 4.0,
+                    reset() {
+                        // scene is a pure function of loop time - no mutable state to reseed
+                    },
+                    frame(ctx, dt, t) {
+                        const lt = t % LOOP;
+                        drawLabel(ctx, 'at-most-once', TOP_Y - 34);
+                        drawTopLane(ctx, lt);
+                        drawNode(ctx, SX, TOP_Y, 'S');
+                        drawNode(ctx, RX, TOP_Y, 'R');
+                    }
+                });
+
+                SlideAnim.register('deliveryCanvasB', {
+                    // static renders show the duplicate m2 stacked in R's inbox
+                    staticT: 7.8,
+                    reset() {
+                        // scene is a pure function of loop time - no mutable state to reseed
+                    },
+                    frame(ctx, dt, t) {
+                        const lt = t % LOOP;
+                        drawLabel(ctx, 'at-least-once', BOT_Y - 34);
+                        drawBottomLane(ctx, lt);
+                        drawNode(ctx, SX, BOT_Y, 'S');
+                        drawNode(ctx, RX, BOT_Y, 'R');
+                    }
+                });
+            })();
+            </script>
         </section>
 
         <section>
-            <h3>Exactly-once <em>effect</em></h3>
-            <p>We can't guarantee <em>exactly-once delivery</em>,</p>
-            <p>but we can design for <strong>exactly-once effect</strong> using idempotency.</p>
-            <br>
-            <pre><code>at-least-once delivery + idempotency = exactly-once</code></pre>
-        </section>
+    <h3>Exactly-once <em>effect</em></h3>
+    <p>We can't guarantee <em>exactly-once delivery</em>,</p>
+    <p>but we can design for <strong>exactly-once effect</strong> using idempotency.</p>
+    <pre><code>at-least-once delivery + idempotency = exactly-once effect</code></pre>
+    <canvas id="dedupCanvas" width="550" height="160"></canvas>
+    <script>
+    (function() {
+        const LOOP = 10;
+        const LANE_Y = 74;
 
-        <section>
-            <h3>Temporal Coupling</h3>
-            <h4>when all services need to be responsive at the same time</h4>
-        </section>
+        const SENDER = { x: 12, y: LANE_Y - 18, w: 76, h: 36 };
+        const GATE = { cx: 275, w: 30, top: LANE_Y - 48, h: 96 };
+        const COUNTER = { x: 440, y: LANE_Y - 22, w: 98, h: 44 };
+
+        const START_X = SENDER.x + SENDER.w + 20;
+        const END_X = COUNTER.x - 22;
+        const STOP_X = GATE.cx - GATE.w / 2 - 22;
+
+        const PRE = 1.25, HOLD = 0.2, POST = 1.05;
+        const SEEN_HOLD = 0.9, FADE = 0.6;
+
+        const pills = [
+            { id: 'm1', launch: 0.6, dup: false },
+            { id: 'm2', launch: 2.2, dup: false },
+            { id: 'm2', launch: 3.8, dup: true },
+            { id: 'm3', launch: 5.4, dup: false }
+        ];
+
+        function clamp01(p) { return Math.min(Math.max(p, 0), 1); }
+        function smooth(p) { const q = clamp01(p); return q * q * (3 - 2 * q); }
+        function lerp(a, b, p) { return a + (b - a) * p; }
+
+        function pillState(pill, tl) {
+            const local = tl - pill.launch;
+            if (local < 0) return null;
+            const fadeIn = clamp01(local / 0.15);
+            if (pill.dup) {
+                if (local < PRE) {
+                    return { x: lerp(START_X, STOP_X, smooth(local / PRE)), alpha: fadeIn, seen: false };
+                }
+                const held = local - PRE;
+                if (held < SEEN_HOLD) return { x: STOP_X, alpha: 1, seen: true, seenAge: held };
+                const fade = (held - SEEN_HOLD) / FADE;
+                if (fade >= 1) return null;
+                return { x: STOP_X, alpha: 1 - fade, seen: true, seenAge: held };
+            }
+            if (local < PRE) {
+                return { x: lerp(START_X, GATE.cx, smooth(local / PRE)), alpha: fadeIn, seen: false };
+            }
+            if (local < PRE + HOLD) return { x: GATE.cx, alpha: 1, seen: false };
+            const p = (local - PRE - HOLD) / POST;
+            if (p >= 1) return null;
+            const alpha = p > 0.88 ? (1 - p) / 0.12 : 1;
+            return { x: lerp(GATE.cx, END_X, smooth(p)), alpha, seen: false };
+        }
+
+        function gateGlow(tl) {
+            let g = 0;
+            pills.forEach(pill => {
+                if (pill.dup) return;
+                const age = tl - (pill.launch + PRE);
+                if (age >= 0 && age < HOLD + 0.3) g = Math.max(g, 1 - age / (HOLD + 0.3));
+            });
+            return g;
+        }
+
+        function counterState(tl) {
+            let count = 0, pulse = 0;
+            pills.forEach(pill => {
+                if (pill.dup) return;
+                const age = tl - (pill.launch + PRE + HOLD + POST);
+                if (age >= 0) {
+                    count++;
+                    if (age < 0.45) pulse = Math.max(pulse, 1 - age / 0.45);
+                }
+            });
+            return { count, pulse };
+        }
+
+        function drawLane(ctx) {
+            ctx.beginPath();
+            ctx.moveTo(SENDER.x + SENDER.w, LANE_Y);
+            ctx.lineTo(COUNTER.x, LANE_Y);
+            ctx.strokeStyle = 'rgba(58,160,160,0.2)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawSender(ctx) {
+            ctx.beginPath();
+            ctx.roundRect(SENDER.x, SENDER.y, SENDER.w, SENDER.h, 8);
+            ctx.fillStyle = '#3aa0a0';
+            ctx.fill();
+            ctx.strokeStyle = '#1f5e5e';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('sender', SENDER.x + SENDER.w / 2, LANE_Y + 4);
+        }
+
+        function drawGate(ctx, glow) {
+            ctx.beginPath();
+            ctx.roundRect(GATE.cx - GATE.w / 2, GATE.top, GATE.w, GATE.h, 9);
+            ctx.fillStyle = `rgba(58,160,160,${0.08 + glow * 0.14})`;
+            ctx.fill();
+            ctx.strokeStyle = `rgba(31,94,94,${0.55 + glow * 0.45})`;
+            ctx.lineWidth = 1.6 + glow * 1.2;
+            ctx.stroke();
+            ctx.fillStyle = '#555';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('idempotency', GATE.cx, GATE.top + GATE.h + 18);
+        }
+
+        function drawCounter(ctx, count, pulse) {
+            const cx = COUNTER.x + COUNTER.w / 2;
+            ctx.fillStyle = '#555';
+            ctx.font = '12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('effects applied', cx, COUNTER.y - 8);
+            const grow = pulse * 3;
+            ctx.beginPath();
+            ctx.roundRect(COUNTER.x - grow, COUNTER.y - grow, COUNTER.w + grow * 2, COUNTER.h + grow * 2, 8);
+            ctx.fillStyle = `rgba(58,160,160,${0.1 + pulse * 0.18})`;
+            ctx.fill();
+            ctx.strokeStyle = '#1f5e5e';
+            ctx.lineWidth = 1.6 + pulse;
+            ctx.stroke();
+            ctx.fillStyle = '#1f5e5e';
+            ctx.font = 'bold 20px monospace';
+            ctx.fillText(count, cx, COUNTER.y + COUNTER.h / 2 + 7);
+        }
+
+        function drawPill(ctx, pill, s) {
+            const w = 36, h = 22;
+            ctx.beginPath();
+            ctx.roundRect(s.x - w / 2, LANE_Y - h / 2, w, h, 5);
+            ctx.fillStyle = s.seen
+                ? `rgba(130,130,130,${0.75 * s.alpha})`
+                : `rgba(31,94,94,${0.85 * s.alpha})`;
+            ctx.fill();
+            ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+            ctx.font = 'bold 12px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText(pill.id, s.x, LANE_Y + 4);
+            if (pill.dup && !s.seen) {
+                ctx.fillStyle = `rgba(85,85,85,${0.8 * s.alpha})`;
+                ctx.font = '12px sans-serif';
+                ctx.fillText('retry', s.x, LANE_Y - 17);
+            }
+            if (s.seen) {
+                const a = s.alpha * clamp01(s.seenAge / 0.15);
+                const tw = 34, th = 16;
+                const ty = LANE_Y - h / 2 - th - 6;
+                ctx.beginPath();
+                ctx.roundRect(s.x - tw / 2, ty, tw, th, 4);
+                ctx.fillStyle = `rgba(130,130,130,${0.18 * a})`;
+                ctx.fill();
+                ctx.strokeStyle = `rgba(110,110,110,${0.8 * a})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.fillStyle = `rgba(85,85,85,${a})`;
+                ctx.font = '12px sans-serif';
+                ctx.fillText('seen', s.x, ty + 12);
+            }
+        }
+
+        SlideAnim.register('dedupCanvas', {
+            // static renders show the duplicate m2 held at the gate ("seen")
+            staticT: 5.4,
+            reset() {
+                // Timeline is a pure function of t; nothing mutable to reseed.
+            },
+            frame(ctx, dt, t) {
+                const tl = t % LOOP;
+                drawLane(ctx);
+                drawGate(ctx, gateGlow(tl));
+                drawSender(ctx);
+                const cs = counterState(tl);
+                drawCounter(ctx, cs.count, cs.pulse);
+                pills.forEach(pill => {
+                    const s = pillState(pill, tl);
+                    if (s) drawPill(ctx, pill, s);
+                });
+            }
+        });
+    })();
+    </script>
+</section>
 
         <section>
             <h2>PACELC Theorem</h2>
@@ -709,14 +1562,18 @@
                 Daniel Abadi extended CAP to include trade-offs <em>when no partition occurs</em>:
             </p>
             <blockquote>
-                <strong>If P</strong> (partition) → <em>A</em> or <em>C</em><br>
-                <strong>Else</strong> (ok) → <em>Latency</em> or <em>Consistency</em>
+                <strong>If P</strong> (partition) -> <em>A</em> or <em>C</em><br>
+                <strong>Else</strong> (ok) -> <em>Latency</em> or <em>Consistency</em>
             </blockquote>
+            <aside class="notes">
+                Re-anchor: back to the C-or-A choice from the opening. Abadi's point: the trade-off doesn't
+                disappear when the network is healthy - you just pay in latency instead of availability.
+            </aside>
         </section>
 
         <section>
             <p>Even without partitions, there’s another trade-off</p>
-            <strong>Waiting for consensus takes time</strong>
+            <strong>Waiting for replicas to acknowledge takes time</strong>
             <br><br>
             <small><p>This is the “ELC” part of PACELC.</p></small>
         </section>
@@ -724,9 +1581,9 @@
         <section>
             <h3>Imagine two check-in desks for the same flight</h3>
             <ul>
-                <li><strong>network failure</strong> → choice:
+                <li><strong>network failure</strong> -> choice:
                     <em>keep assigning seats, risk duplicates (A)</em> or <em>freeze until synced (C)</em></li>
-                <li><strong>no failure</strong> → each assignment can be:
+                <li><strong>no failure</strong> -> each assignment can be:
                     <em>fast but from a cached seat map (L)</em> or <em>slow but from a confirmed seat map (C)</em></li>
             </ul>
         </section>
@@ -734,8 +1591,8 @@
         <section>
             <h3>Real-world examples</h3>
             <ul>
-                <li><strong>Amazon Dynamo / Cassandra</strong> → prioritize <em>Availability + Low Latency</em></li>
-                <li><strong>Google Spanner</strong> → prioritize <em>Consistency</em>, accept more latency</li>
+                <li><strong>Amazon Dynamo / Cassandra</strong> -> prioritize <em>Availability + Low Latency</em></li>
+                <li><strong>Google Spanner</strong> -> prioritize <em>Consistency</em>, accept more latency</li>
             </ul>
         </section>
 
@@ -747,9 +1604,9 @@
         <section>
             <h3>Different consistency levels</h3>
             <ul>
-                <li><strong>Strong consistency</strong> → Data "converges" immediately</li>
-                <li><strong>Eventual consistency</strong> → Data converges... eventually</li>
-                <li><strong>Accidental consistency</strong> → Data converges... maybe</li>
+                <li><strong>Strong consistency</strong> -> Data "converges" immediately</li>
+                <li><strong>Eventual consistency</strong> -> Data converges... eventually</li>
+                <li><strong>Accidental consistency</strong> -> Data converges... maybe</li>
             </ul>
             <p>All are “consistent” - just in different ways.</p>
         </section>
@@ -759,8 +1616,242 @@
             <blockquote>
                 If no new updates occur, all replicas will <strong>eventually</strong> converge to the same state.
             </blockquote>
+
+            <canvas id="convergeCanvas" width="550" height="200"></canvas>
+            <script>
+            (function() {
+                const W = 550, H = 200;
+                const R = 26;
+                const SYNC_HOLD = 2.0;
+                const CONVERGED_HOLD = 2.8;
+                const GOSSIP_TRAVEL = 1.1;
+                const PULSE_LIFE = 0.9;
+
+                const replicas = [
+                    { x: 115, y: 78,  label: 'R1', version: 1, tint: 0 },
+                    { x: 275, y: 118, label: 'R2', version: 1, tint: 0 },
+                    { x: 435, y: 78,  label: 'R3', version: 1, tint: 0 }
+                ];
+                const links = [[0, 1], [1, 2], [0, 2]];
+
+                let phase, phaseT, nextVersion, writes, gossips, pulses, spawnTimer;
+
+                function maxVersion() {
+                    return Math.max(...replicas.map(r => r.version));
+                }
+
+                function allAgree() {
+                    return replicas.every(r => r.version === replicas[0].version);
+                }
+
+                function pick(arr) {
+                    return arr[Math.floor(Math.random() * arr.length)];
+                }
+
+                function startBurst() {
+                    writes = [];
+                    const count = 2 + (Math.random() < 0.5 ? 1 : 0);
+                    let at = 0.6;
+                    for (let i = 0; i < count; i++) {
+                        writes.push({ at, done: false });
+                        at += 1.4 + Math.random() * 0.9;
+                    }
+                    spawnTimer = 0.8;
+                    phase = 'burst';
+                    phaseT = 0;
+                }
+
+                function applyWrite() {
+                    const rep = pick(replicas);
+                    rep.version = nextVersion++;
+                    pulses.push({ x: rep.x, y: rep.y, age: 0, amber: true, label: 'write' });
+                }
+
+                function spawnGossip() {
+                    const top = maxVersion();
+                    const fresh = replicas.filter(r => r.version === top);
+                    const stale = replicas.filter(r =>
+                        r.version < top && !gossips.some(g => g.to === r));
+                    if (!stale.length) return;
+                    const from = pick(fresh);
+                    gossips.push({ from, to: pick(stale), t: 0, version: from.version });
+                }
+
+                function ease(u) {
+                    return u * u * (3 - 2 * u);
+                }
+
+                function update(dt) {
+                    phaseT += dt;
+
+                    if (phase === 'sync' && phaseT >= SYNC_HOLD) startBurst();
+
+                    if (phase === 'burst') {
+                        writes.forEach(w => {
+                            if (!w.done && phaseT >= w.at) { w.done = true; applyWrite(); }
+                        });
+                        if (phaseT >= writes[writes.length - 1].at + 0.6) {
+                            phase = 'gossip';
+                            phaseT = 0;
+                        }
+                    }
+
+                    if (phase === 'burst' || phase === 'gossip') {
+                        spawnTimer -= dt;
+                        if (spawnTimer <= 0) {
+                            spawnGossip();
+                            spawnTimer = 1.0 + Math.random() * 0.5;
+                        }
+                    }
+
+                    for (let i = gossips.length - 1; i >= 0; i--) {
+                        const g = gossips[i];
+                        g.t += dt / GOSSIP_TRAVEL;
+                        if (g.t >= 1) {
+                            if (g.version > g.to.version) {
+                                g.to.version = g.version;
+                                pulses.push({ x: g.to.x, y: g.to.y, age: 0, amber: false, label: '' });
+                            }
+                            gossips.splice(i, 1);
+                        }
+                    }
+
+                    for (let i = pulses.length - 1; i >= 0; i--) {
+                        pulses[i].age += dt / PULSE_LIFE;
+                        if (pulses[i].age >= 1) pulses.splice(i, 1);
+                    }
+
+                    const top = maxVersion();
+                    replicas.forEach(r => {
+                        const target = r.version < top ? 1 : 0;
+                        r.tint += (target - r.tint) * Math.min(1, dt * 4);
+                    });
+
+                    if (phase === 'gossip' && allAgree() && gossips.length === 0) {
+                        phase = 'converged';
+                        phaseT = 0;
+                    }
+                    if (phase === 'converged' && phaseT >= CONVERGED_HOLD) startBurst();
+                }
+
+                function mix(a, b, k) {
+                    return Math.round(a + (b - a) * k);
+                }
+
+                function draw(ctx) {
+                    ctx.strokeStyle = 'rgba(31, 94, 94, 0.18)';
+                    ctx.lineWidth = 1.5;
+                    links.forEach(([a, b]) => {
+                        ctx.beginPath();
+                        ctx.moveTo(replicas[a].x, replicas[a].y);
+                        ctx.lineTo(replicas[b].x, replicas[b].y);
+                        ctx.stroke();
+                    });
+
+                    gossips.forEach(g => {
+                        const u = ease(Math.min(g.t, 1));
+                        const x = g.from.x + (g.to.x - g.from.x) * u;
+                        const y = g.from.y + (g.to.y - g.from.y) * u;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(31, 94, 94, 0.9)';
+                        ctx.fill();
+                        ctx.fillStyle = 'rgba(31, 94, 94, 0.8)';
+                        ctx.font = 'bold 12px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('v' + g.version, x, y - 9);
+                    });
+
+                    pulses.forEach(p => {
+                        const a = 1 - p.age;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, R + 4 + p.age * 16, 0, Math.PI * 2);
+                        ctx.strokeStyle = p.amber
+                            ? `rgba(192, 136, 24, ${a * 0.85})`
+                            : `rgba(58, 160, 160, ${a * 0.8})`;
+                        ctx.lineWidth = 2.5;
+                        ctx.stroke();
+                        if (p.label) {
+                            ctx.fillStyle = `rgba(192, 136, 24, ${a})`;
+                            ctx.font = '12px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(p.label, p.x, p.y - R - 14);
+                        }
+                    });
+
+                    replicas.forEach(rep => {
+                        const k = rep.tint * 0.6;
+                        ctx.beginPath();
+                        ctx.arc(rep.x, rep.y, R, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgb(${mix(58, 158, k)}, ${mix(160, 142, k)}, ${mix(160, 116, k)})`;
+                        ctx.fill();
+                        ctx.strokeStyle = `rgb(${mix(31, 108, k)}, ${mix(94, 96, k)}, ${mix(94, 74, k)})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 12px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(rep.label, rep.x, rep.y - 6);
+                        ctx.font = 'bold 15px monospace';
+                        ctx.fillText('v' + rep.version, rep.x, rep.y + 13);
+                    });
+
+                    if (phase === 'converged') {
+                        const aIn = Math.min(phaseT / 0.35, 1);
+                        const aOut = Math.min(Math.max((CONVERGED_HOLD - phaseT) / 0.4, 0), 1);
+                        ctx.strokeStyle = `rgba(58, 160, 160, ${aIn * aOut * 0.9})`;
+                        ctx.lineWidth = 2.5;
+                        replicas.forEach(rep => {
+                            ctx.beginPath();
+                            ctx.arc(rep.x, rep.y, R + 5 + aIn * 4, 0, Math.PI * 2);
+                            ctx.stroke();
+                        });
+                    }
+
+                    let caption, color;
+                    if (phase === 'converged') {
+                        caption = 'converged';
+                        color = '#3aa0a0';
+                    } else if (!allAgree()) {
+                        caption = 'replicas disagree...';
+                        color = '#c08818';
+                    } else {
+                        caption = 'in sync';
+                        color = '#3aa0a0';
+                    }
+                    ctx.fillStyle = color;
+                    ctx.font = '13px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(caption, W / 2, H - 12);
+                }
+
+                SlideAnim.register('convergeCanvas', {
+                    reset() {
+                        replicas.forEach(r => { r.version = 1; r.tint = 0; });
+                        nextVersion = 2;
+                        writes = [];
+                        gossips = [];
+                        pulses = [];
+                        spawnTimer = 0;
+                        phase = 'sync';
+                        phaseT = 0;
+                    },
+                    frame(ctx, dt) {
+                        update(dt);
+                        draw(ctx);
+                    }
+                });
+            })();
+            </script>
+
             <p>It’s a trade-off: we get <strong>availability and speed</strong> at the cost of temporary disagreement.
             </p>
+            <aside class="notes">
+                Let one burst play out: amber pulse = a write lands on one replica, versions diverge (stale
+                replicas tint amber), gossip dots carry the newest version around, then the teal "converged" ring.
+                Key phrase: "eventually" is a guarantee about the destination, not the journey.
+            </aside>
         </section>
 
         <section>
@@ -770,18 +1861,264 @@
                 <li>Waiting for everyone to agree slows everything down</li>
                 <li>So we let nodes respond now and sync later</li>
             </ul>
-            <p>→ <strong>Fast now, consistent later</strong></p>
+            <p>-> <strong>Fast now, consistent later</strong></p>
         </section>
 
 
 
+        <section>
+            <h3>Temporal Coupling</h3>
+            <h4>when all services need to be responsive at the same time</h4>
+
+            <canvas id="temporalCanvas" width="550" height="280"></canvas>
+            <script>
+            (function () {
+                const W = 550;
+                const NY = 118, R = 22;
+                const CLIENT_X = 45;
+                const SERVICES = [
+                    { x: 138, label: 'A' },
+                    { x: 231, label: 'B' },
+                    { x: 324, label: 'C' },
+                    { x: 417, label: 'D' },
+                    { x: 510, label: 'E' }
+                ];
+                const FAIL = 3;                          // D goes down, deep in the chain
+                const XS = SERVICES.map(s => s.x);
+                const FWD = [CLIENT_X].concat(XS);       // client -> A -> ... -> E
+                const BACK = FWD.slice().reverse();
+                const TO_FAIL = FWD.slice(0, FAIL + 2);  // client -> ... -> D (dies there)
+                const FROM_FAIL = TO_FAIL.slice().reverse();
+                const FAIL_LABEL = SERVICES[FAIL].label;
+                const OTHER_LABELS = SERVICES.filter((s, j) => j !== FAIL).map(s => s.label);
+                const OTHERS_TEXT = OTHER_LABELS.slice(0, -1).join(', ')
+                    + ' and ' + OTHER_LABELS[OTHER_LABELS.length - 1];
+
+                const HOP = 0.55;                            // seconds per node-to-node hop
+                const T_REQ1 = 0.9;                          // healthy request leaves the client
+                const T_PROC = T_REQ1 + (FWD.length - 1) * HOP;       // request reaches E, E processes
+                const T_RESP = T_PROC + 0.6;                 // response leaves E
+                const T_OK = T_RESP + (FWD.length - 1) * HOP;         // response reaches the client
+                const T_FAIL = T_OK + 2.0;                   // D starts going down
+                const T_REQ2 = T_FAIL + 0.7;                 // second request leaves the client
+                const T_DIE = T_REQ2 + (TO_FAIL.length - 1) * HOP;    // request dies at D
+                const T_ERR = T_DIE + 0.9;                   // failure starts propagating back
+                const T_HOLD = T_ERR + (FROM_FAIL.length - 1) * HOP;  // failure reaches the client
+                const T_RECOVER = T_HOLD + 2.3;              // D starts recovering
+                const T_IDLE = T_RECOVER + 0.8;              // healthy again, brief idle
+                const LOOP = T_IDLE + 0.6;                   // ~18.7s
+
+                function clamp01(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+                function ease(u) { u = clamp01(u); return u * u * (3 - 2 * u); }
+                function lerp(a, b, u) { return Math.round(a + (b - a) * u); }
+
+                function downAmount(lt) {
+                    if (lt < T_FAIL) return 0;
+                    if (lt < T_REQ2) return ease((lt - T_FAIL) / (T_REQ2 - T_FAIL));
+                    if (lt < T_RECOVER) return 1;
+                    if (lt < T_IDLE) return 1 - ease((lt - T_RECOVER) / (T_IDLE - T_RECOVER));
+                    return 0;
+                }
+
+                function chainPillX(chain, t0, lt) {
+                    const i = Math.min(Math.floor((lt - t0) / HOP), chain.length - 2);
+                    const u = ease((lt - t0 - i * HOP) / HOP);
+                    const d = Math.sign(chain[i + 1] - chain[i]);
+                    const from = chain[i] + d * R;
+                    const to = chain[i + 1] - d * R;
+                    return from + (to - from) * u;
+                }
+
+                function drawLink(ctx, x1, x2, alpha) {
+                    ctx.beginPath();
+                    ctx.moveTo(x1, NY);
+                    ctx.lineTo(x2, NY);
+                    ctx.strokeStyle = `rgba(31, 94, 94, ${alpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+                function drawClient(ctx) {
+                    ctx.beginPath();
+                    ctx.roundRect(CLIENT_X - R, NY - R, R * 2, R * 2, 10);
+                    ctx.fillStyle = '#3aa0a0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#1f5e5e';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#555';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('client', CLIENT_X, NY + R + 18);
+                }
+
+                function drawService(ctx, x, label, down) {
+                    if (down > 0) {
+                        ctx.beginPath();
+                        ctx.arc(x, NY, R + 5, 0, Math.PI * 2);
+                        ctx.strokeStyle = `rgba(180, 80, 80, ${0.85 * down})`;
+                        ctx.lineWidth = 2.5;
+                        ctx.stroke();
+                    }
+                    ctx.beginPath();
+                    ctx.arc(x, NY, R, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgb(${lerp(58, 198, down)}, ${lerp(160, 198, down)}, ${lerp(160, 198, down)})`;
+                    ctx.fill();
+                    ctx.strokeStyle = `rgb(${lerp(31, 150, down)}, ${lerp(94, 150, down)}, ${lerp(94, 150, down)})`;
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 14px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(label, x, NY + 5);
+                    if (down > 0.05) {
+                        ctx.fillStyle = `rgba(180, 80, 80, ${down})`;
+                        ctx.font = 'bold 12px sans-serif';
+                        ctx.fillText('down', x, NY - R - 14);
+                    }
+                }
+
+                function drawPill(ctx, x, label, color) {
+                    ctx.beginPath();
+                    ctx.roundRect(x - 17, NY - 10, 34, 20, 5);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 12px monospace';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(label, x, NY + 4);
+                }
+
+                function drawBadge(ctx, ok, scale) {
+                    if (scale <= 0) return;
+                    const bx = CLIENT_X + R - 3, by = NY - R - 3;
+                    ctx.beginPath();
+                    ctx.arc(bx, by, 11 * scale, 0, Math.PI * 2);
+                    ctx.fillStyle = ok ? '#3aa0a0' : '#b45050';
+                    ctx.fill();
+                    ctx.strokeStyle = '#fff';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    if (scale > 0.6) {
+                        ctx.fillStyle = '#fff';
+                        ctx.font = 'bold 12px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(ok ? '✓' : '✗', bx, by + 4);
+                    }
+                }
+
+                function drawCaption(ctx, text, rgb, alpha, y, font) {
+                    ctx.fillStyle = `rgba(${rgb}, ${alpha})`;
+                    ctx.font = font || '13px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, W / 2, y);
+                }
+
+                SlideAnim.register('temporalCanvas', {
+                    // static renders show the failure verdict, not the empty idle scene
+                    staticT: 15.5,
+                    reset() {
+                        // The scene is a pure function of looped slide time; no mutable state.
+                    },
+                    frame(ctx, dt, t) {
+                        const lt = t % LOOP;
+                        const down = downAmount(lt);
+                        const failHold = lt >= T_HOLD && lt < T_RECOVER;
+                        const failX = XS[FAIL];
+
+                        for (let i = 0; i < FWD.length - 1; i++) {
+                            // links touching the failed node dim while it is down
+                            const adjacent = i === FAIL || i === FAIL + 1;
+                            drawLink(ctx, FWD[i] + R, FWD[i + 1] - R,
+                                0.35 * (adjacent ? 1 - 0.6 * down : 1));
+                        }
+
+                        if (failHold) {
+                            // every other service is still perfectly healthy - highlight them
+                            const p = ease((lt - T_HOLD) / 0.5);
+                            const pulse = 0.3 + 0.15 * Math.sin(lt * 4);
+                            SERVICES.forEach((s, j) => {
+                                if (j === FAIL) return;
+                                ctx.beginPath();
+                                ctx.arc(s.x, NY, R + 6, 0, Math.PI * 2);
+                                ctx.strokeStyle = `rgba(58, 160, 160, ${pulse * p})`;
+                                ctx.lineWidth = 3;
+                                ctx.stroke();
+                                ctx.fillStyle = `rgba(31, 94, 94, ${0.9 * p})`;
+                                ctx.font = '12px sans-serif';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('healthy', s.x, NY + R + 16);
+                            });
+                        }
+
+                        drawClient(ctx);
+                        SERVICES.forEach((s, j) => drawService(ctx, s.x, s.label, j === FAIL ? down : 0));
+
+                        if (lt >= T_REQ1 && lt < T_PROC) {
+                            drawPill(ctx, chainPillX(FWD, T_REQ1, lt), 'req', '#3aa0a0');
+                        } else if (lt >= T_PROC && lt < T_RESP) {
+                            const p = (lt - T_PROC) / (T_RESP - T_PROC);
+                            ctx.beginPath();
+                            ctx.arc(XS[XS.length - 1], NY, R + 12 * p, 0, Math.PI * 2);
+                            ctx.strokeStyle = `rgba(58, 160, 160, ${0.6 * (1 - p)})`;
+                            ctx.lineWidth = 2;
+                            ctx.stroke();
+                        } else if (lt >= T_RESP && lt < T_OK) {
+                            drawPill(ctx, chainPillX(BACK, T_RESP, lt), 'ok', '#c08818');
+                        } else if (lt >= T_OK && lt < T_FAIL) {
+                            const p = ease((lt - T_OK) / 0.4);
+                            drawBadge(ctx, true, p);
+                            drawCaption(ctx, 'all up -> it works', '31, 94, 94', 0.9 * p, 252);
+                        } else if (lt >= T_REQ2 && lt < T_DIE) {
+                            drawPill(ctx, chainPillX(TO_FAIL, T_REQ2, lt), 'req', '#3aa0a0');
+                        }
+
+                        if (lt >= T_DIE && lt < T_ERR + 0.5) {
+                            // request dies at the failed node's doorstep
+                            let a;
+                            if (lt < T_DIE + 0.25) a = (lt - T_DIE) / 0.25;
+                            else if (lt < T_ERR) a = 1;
+                            else a = 1 - (lt - T_ERR) / 0.5;
+                            ctx.fillStyle = `rgba(180, 80, 80, ${a})`;
+                            ctx.font = 'bold 22px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('✗', failX - R - 8, NY + 8);
+                        }
+
+                        if (lt >= T_ERR && lt < T_HOLD) {
+                            drawPill(ctx, chainPillX(FROM_FAIL, T_ERR, lt), 'err', '#b45050');
+                        }
+
+                        if (failHold) {
+                            const p = ease((lt - T_HOLD) / 0.4);
+                            drawBadge(ctx, false, p);
+                            drawCaption(ctx, FAIL_LABEL + ' is down -> the whole chain fails', '180, 80, 80', p, 252);
+                            drawCaption(ctx, 'even though ' + OTHERS_TEXT + ' are healthy', '31, 94, 94', 0.8 * p, 270, '12px sans-serif');
+                        }
+                    }
+                });
+            })();
+            </script>
+            <aside class="notes">
+                Bridge: we just chose "respond now, sync later" for DATA. Now the same choice for CALLS between
+                services - what happens when everyone must be up at the same time?
+                Walk the chain: the healthy request travels all the way to E and back - green check. Then D goes
+                down, the second request dies at D's doorstep, and the error propagates back: the client fails
+                even though A, B, C and E are perfectly healthy. That's what synchronous call chains buy you -
+                segue to async.
+            </aside>
+        </section>
+
         <section data-transition="fade">
-            <h3>synchronous communication</h3>
+            <h3>Synchronous communication</h3>
             <img src="img/sync1.png" width="80%"/>
         </section>
 
         <section data-transition="fade">
-            <h3>asynchronous communication</h3>
+            <h3>Asynchronous communication</h3>
             <img src="img/sync2.png" width="80%"/>
         </section>
 
@@ -808,7 +2145,7 @@ NotificationService --> consumes PaymentConfirmedEvent
             <h2>Local Read Models</h2>
             <p>Each service maintains its own <strong>local view</strong> of data it needs.</p>
             <pre><code data-trim>
-@EventListener
+@KafkaListener(topics = "payments")
 void on(PaymentConfirmedEvent event) {
     orderReadModel.updateStatus(event.orderId(), "PAID");
 }
@@ -827,7 +2164,7 @@ void on(PaymentConfirmedEvent event) {
         </section>
 
         <section>
-            <h5>Eventual Consistency != Accidental Consistency</h5>
+            <h3>Eventual Consistency != Accidental Consistency</h3>
         </section>
 
         <section data-transition="fade">
@@ -863,8 +2200,226 @@ void on(PaymentConfirmedEvent event) {
         </section>
 
         <section>
-            <h4>Transactional Outbox Pattern</h4>
-            <h4>Change Data Capture</h4>
+            <h4>Where we’re heading:</h4>
+            <h4>Transactional Outbox + Change Data Capture</h4>
+
+            <canvas id="outboxCanvas" width="550" height="280"></canvas>
+            <script>
+            (function() {
+                const W = 550;
+
+                const SERVICE = { x: 16, y: 96, w: 82, h: 48 };
+                const DB = { x: 150, y: 78, w: 96, h: 86, ry: 10 };
+                const ORDERS = { x: 160, y: 96, w: 76, h: 18 };
+                const OUTBOX = { x: 160, y: 124, w: 76, h: 18 };
+                const TAP = { x: 272, y: 121, w: 32, h: 24 };
+                const CONSUMER = { x: 458, y: 109, w: 82, h: 48 };
+                const BUS_Y = 133;
+                const SERVICE_Y = 120;
+                const PILL_FROM = 230, PILL_TO = 444;
+                const TAP_CX = TAP.x + TAP.w / 2;
+
+                const WRITE_STARTS = [0.6, 4.4, 8.2];
+                const LOOP = 13.8;
+
+                function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+                function easeInOut(p) { return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2; }
+
+                // commit highlight: rises as the write pulse lands, holds, snaps off quickly
+                function txFlash(s) {
+                    if (s < 0.5 || s > 1.6) return 0;
+                    if (s < 0.65) return (s - 0.5) / 0.15;
+                    if (s < 1.3) return 1;
+                    return 1 - (s - 1.3) / 0.3;
+                }
+
+                function line(ctx, x1, y1, x2, y2) {
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                }
+
+                function drawArrow(ctx, x1, y1, x2, y2) {
+                    line(ctx, x1, y1, x2 - 6, y2);
+                    ctx.beginPath();
+                    ctx.moveTo(x2, y2);
+                    ctx.lineTo(x2 - 7, y2 - 4.5);
+                    ctx.lineTo(x2 - 7, y2 + 4.5);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
+                function drawBox(ctx, b, label) {
+                    ctx.beginPath();
+                    ctx.roundRect(b.x, b.y, b.w, b.h, 6);
+                    ctx.fillStyle = '#3aa0a0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#1f5e5e';
+                    ctx.lineWidth = 1.5;
+                    ctx.stroke();
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 13px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(label, b.x + b.w / 2, b.y + b.h / 2 + 4.5);
+                }
+
+                function drawDb(ctx) {
+                    const cx = DB.x + DB.w / 2;
+                    ctx.fillStyle = 'rgba(58,160,160,0.07)';
+                    ctx.strokeStyle = 'rgba(31,94,94,0.7)';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(DB.x, DB.y);
+                    ctx.lineTo(DB.x, DB.y + DB.h);
+                    ctx.ellipse(cx, DB.y + DB.h, DB.w / 2, DB.ry, 0, Math.PI, 0, true);
+                    ctx.lineTo(DB.x + DB.w, DB.y);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.beginPath();
+                    ctx.ellipse(cx, DB.y, DB.w / 2, DB.ry, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                }
+
+                function drawRow(ctx, r, label, flash) {
+                    ctx.beginPath();
+                    ctx.roundRect(r.x, r.y, r.w, r.h, 3);
+                    ctx.fillStyle = 'rgba(58,160,160,0.12)';
+                    ctx.fill();
+                    if (flash > 0) {
+                        ctx.fillStyle = `rgba(31,94,94,${0.72 * flash})`;
+                        ctx.fill();
+                    }
+                    ctx.strokeStyle = `rgba(31,94,94,${0.45 + 0.35 * flash})`;
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.font = '11px sans-serif';
+                    ctx.textAlign = 'center';
+                    const ty = r.y + r.h / 2 + 4;
+                    ctx.fillStyle = '#1f5e5e';
+                    ctx.fillText(label, r.x + r.w / 2, ty);
+                    const whiteA = clamp01((flash - 0.35) / 0.3);
+                    if (whiteA > 0) {
+                        ctx.fillStyle = `rgba(255,255,255,${whiteA})`;
+                        ctx.fillText(label, r.x + r.w / 2, ty);
+                    }
+                }
+
+                function drawTap(ctx, glow) {
+                    ctx.beginPath();
+                    ctx.roundRect(TAP.x, TAP.y, TAP.w, TAP.h, 4);
+                    ctx.fillStyle = `rgba(58,160,160,${0.12 + 0.5 * glow})`;
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(31,94,94,0.7)';
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                }
+
+                SlideAnim.register('outboxCanvas', {
+                    // static renders catch an event pill on the bus, mid-stream
+                    staticT: 3.4,
+                    reset() {
+                        // stateless: every frame is a pure function of t, fresh loop on entry
+                    },
+                    frame(ctx, dt, t) {
+                        const T = t % LOOP;
+
+                        let flash = 0, tapGlow = 0;
+                        const pulses = [], pills = [], checks = [];
+
+                        WRITE_STARTS.forEach((start, i) => {
+                            const s = T - start;
+                            if (s < 0) return;
+                            if (s < 0.5) pulses.push({ x: 98 + 48 * easeInOut(s / 0.5), a: clamp01(s / 0.1) });
+                            flash = Math.max(flash, txFlash(s));
+                            if (s >= 1.4 && s < 3.75) {
+                                const x = PILL_FROM + (PILL_TO - PILL_FROM) * easeInOut(clamp01((s - 1.4) / 2.2));
+                                const a = Math.min(clamp01((s - 1.4) / 0.2), clamp01((3.75 - s) / 0.15));
+                                pills.push({ x, a, label: 'e' + (i + 1) });
+                                tapGlow = Math.max(tapGlow, Math.exp(-Math.pow((x - TAP_CX) / 26, 2)));
+                            }
+                            if (s >= 3.6 && s < 5.4) {
+                                checks.push(Math.min(clamp01((s - 3.6) / 0.15), clamp01((5.4 - s) / 0.4)));
+                            }
+                        });
+
+                        // service -> db arrow
+                        ctx.strokeStyle = 'rgba(31,94,94,0.5)';
+                        ctx.fillStyle = 'rgba(31,94,94,0.5)';
+                        ctx.lineWidth = 1.5;
+                        drawArrow(ctx, SERVICE.x + SERVICE.w, SERVICE_Y, DB.x - 2, SERVICE_Y);
+
+                        // db -> cdc tap connector (dashed: the tap reads the outbox)
+                        ctx.strokeStyle = 'rgba(31,94,94,0.45)';
+                        ctx.lineWidth = 1.5;
+                        ctx.setLineDash([3, 3]);
+                        line(ctx, DB.x + DB.w, BUS_Y, TAP.x, BUS_Y);
+                        ctx.setLineDash([]);
+
+                        // event bus line
+                        ctx.strokeStyle = 'rgba(31,94,94,0.35)';
+                        ctx.lineWidth = 2;
+                        line(ctx, TAP.x + TAP.w, BUS_Y, CONSUMER.x, BUS_Y);
+
+                        ctx.fillStyle = '#555';
+                        ctx.font = '12px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('event log', (TAP.x + TAP.w + CONSUMER.x) / 2, BUS_Y - 16);
+                        ctx.fillText('cdc', TAP_CX, TAP.y + TAP.h + 17);
+
+                        drawDb(ctx);
+                        drawRow(ctx, ORDERS, 'orders', flash);
+                        drawRow(ctx, OUTBOX, 'outbox', flash);
+                        drawTap(ctx, tapGlow);
+                        drawBox(ctx, SERVICE, 'service');
+                        drawBox(ctx, CONSUMER, 'consumer');
+
+                        // '1 tx' atomicity tag above the db
+                        if (flash > 0) {
+                            ctx.beginPath();
+                            ctx.roundRect(178, 42, 40, 20, 5);
+                            ctx.fillStyle = `rgba(31,94,94,${0.9 * flash})`;
+                            ctx.fill();
+                            ctx.fillStyle = `rgba(255,255,255,${flash})`;
+                            ctx.font = 'bold 11px monospace';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('1 tx', 198, 56);
+                        }
+
+                        pulses.forEach(p => {
+                            ctx.beginPath();
+                            ctx.arc(p.x, SERVICE_Y, 5, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(31,94,94,${0.9 * p.a})`;
+                            ctx.fill();
+                        });
+
+                        pills.forEach(p => {
+                            ctx.beginPath();
+                            ctx.roundRect(p.x - 13, BUS_Y - 9, 26, 18, 4);
+                            ctx.fillStyle = `rgba(31,94,94,${0.9 * p.a})`;
+                            ctx.fill();
+                            ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+                            ctx.font = 'bold 12px monospace';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(p.label, p.x, BUS_Y + 3.5);
+                        });
+
+                        checks.forEach(a => {
+                            ctx.fillStyle = `rgba(58,160,160,${a})`;
+                            ctx.font = 'bold 16px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('✓', CONSUMER.x + CONSUMER.w / 2, CONSUMER.y - 9);
+                        });
+
+                        ctx.fillStyle = 'rgba(31,94,94,0.8)';
+                        ctx.font = '13px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('one local transaction -> events stream out asynchronously', W / 2, 248);
+                    }
+                });
+            })();
+            </script>
         </section>
 
         <section>
@@ -891,12 +2446,8 @@ while (true) {
 }
     </code></pre>
             <p>Reliable, asynchronous, and decoupled event publishing.</p>
-        </section>
-
-        <section>
-            <h2>Change Data Capture (CDC)</h2>
-            <p>Instead of polling the outbox table manually...</p>
-            <p>We can let the database <strong>stream its own changes</strong>.</p>
+            <p class="fragment">...or skip the polling and let the database <strong>stream its own changes</strong>:
+                <em>Change Data Capture</em></p>
         </section>
 
         <section>
@@ -916,12 +2467,12 @@ Produces Kafka event: OrderCreated { orderId: 42 }
         </section>
 
         <section>
-            <h3>Outbox + CDC Combo</h3>
-            <p><strong>Most robust solution:</strong></p>
+            <h3>Outbox + CDC: the deal</h3>
             <ul>
-                <li>Use the <strong>outbox table</strong> for atomic writes</li>
-                <li>Use <strong>CDC</strong> to stream events out automatically</li>
-                <li>No dual writes, no lost events, no external transactions</li>
+                <li><span style="color: #3aa0a0; font-weight: bold;">✓</span> atomic writes - no dual writes, no lost events, no distributed transactions</li>
+                <li><span style="color: #3aa0a0; font-weight: bold;">✓</span> events stream out automatically</li>
+                <li><span style="color: #b45050; font-weight: bold;">✗</span> extra tables and processes</li>
+                <li><span style="color: #b45050; font-weight: bold;">✗</span> duplicates still happen -> consumers must be idempotent</li>
             </ul>
         </section>
 
@@ -934,15 +2485,14 @@ Produces Kafka event: OrderCreated { orderId: 42 }
         </section>
 
         <section>
-            <h3>Trade-offs</h3>
-            <ul>
-                <li>Increased complexity (extra tables/processes)</li>
-                <li>Possible duplication → requires idempotency</li>
-            </ul>
-        </section>
-
-        <section>
-
+            <h3>So far: <em>space</em>.</h3>
+            <h3 class="fragment">Now: <em>time</em>.</h3>
+            <aside class="notes">
+                Chapter break - breathe. Everything until now was about state living in different PLACES.
+                The second half is about events happening at different TIMES - and why "what time is it?" is the
+                wrong question in a distributed system. If someone smirks about "temporal coupling": even that was
+                really a space problem - WHO has to be reachable, not WHEN.
+            </aside>
         </section>
 
 
@@ -952,37 +2502,57 @@ Produces Kafka event: OrderCreated { orderId: 42 }
             <img src="img/time.jpg" width="60%"/>
 
             <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
+            <div id="live-time-speed" style="margin-top: 4px; font-size: 0.9rem; font-family: monospace; color: #555;"></div>
 
             <script>
-                let virtualTime = Date.now();
-                let speed = 1; // 1 = normal speed
-                const speedIncrement = 0.0005; // how much faster per ms
+                (function() {
+                    const clockEl = document.getElementById('live-time');
+                    const speedEl = document.getElementById('live-time-speed');
 
-                function formatWithMs(t) {
-                    const d = new Date(t);
-                    const hh = String(d.getHours()).padStart(2,'0');
-                    const mm = String(d.getMinutes()).padStart(2,'0');
-                    const ss = String(d.getSeconds()).padStart(2,'0');
-                    const ms = String(d.getMilliseconds()).padStart(3,'0');
-                    return `${hh}:${mm}:${ss}.${ms}`;
-                }
+                    let virtualTime = 0;
+                    let speed = 1; // 1 = normal speed
 
-                let last = performance.now();
+                    function formatWithMs(t) {
+                        const d = new Date(t);
+                        const hh = String(d.getHours()).padStart(2,'0');
+                        const mm = String(d.getMinutes()).padStart(2,'0');
+                        const ss = String(d.getSeconds()).padStart(2,'0');
+                        const ms = String(d.getMilliseconds()).padStart(3,'0');
+                        return `${hh}:${mm}:${ss}.${ms}`;
+                    }
 
-                function update() {
-                    const now = performance.now();
-                    const delta = now - last;
-                    last = now;
+                    function speedColor(s) {
+                        // drift from #555 toward #b45050, fully red by ~x20
+                        const blend = Math.min(Math.max((s - 1) / 19, 0), 1);
+                        const r = Math.round(85 + (180 - 85) * blend);
+                        const g = Math.round(85 + (80 - 85) * blend);
+                        const b = Math.round(85 + (80 - 85) * blend);
+                        return `rgb(${r}, ${g}, ${b})`;
+                    }
 
-                    virtualTime += delta * speed;
-                    speed += speedIncrement * delta;
-                    document.getElementById("live-time").textContent = formatWithMs(virtualTime);
-
-                    requestAnimationFrame(update);
-                }
-
-                update();
+                    SlideAnim.register('live-time', {
+                        reset() {
+                            // Deliberate Date.now(): seeds the display with REAL wall-clock time so the
+                            // audience recognizes "their" clock before it starts lying. Not a frame-timing
+                            // source - frames still advance by the driver's dt.
+                            virtualTime = Date.now();
+                            speed = 1;
+                        },
+                        frame(ctx, dt, t) {
+                            virtualTime += dt * 1000 * speed;
+                            speed += 0.5 * dt; // same growth rate as the old 0.0005/ms
+                            clockEl.textContent = formatWithMs(virtualTime);
+                            speedEl.textContent = 'x' + speed.toFixed(1);
+                            speedEl.style.color = speedColor(speed);
+                        }
+                    });
+                })();
             </script>
+            <aside class="notes">
+                The clock starts at real wall time, then quietly accelerates - by the end of this sentence it's
+                running several times too fast and the multiplier is turning red. Punchline: every clock in your
+                fleet is doing this; yours just lies more slowly.
+            </aside>
         </section>
 
 
@@ -993,6 +2563,10 @@ Produces Kafka event: OrderCreated { orderId: 42 }
             </code></pre>
 
             <h3><code>first</code> <= <code>second?</code></h3>
+            <aside class="notes">
+                Let them vote. Answer: not necessarily - NTP can step the wall clock backwards between the two
+                calls. Segue: "and that's on ONE machine. Now add more."
+            </aside>
         </section>
 
         <section>
@@ -1003,93 +2577,113 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <div>Node A</div>
                     <div id="clockA"></div>
+                    <div id="driftA" style="font-size: 0.5em; color: #555;">reference</div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <div>Node B</div>
                     <div id="clockB"></div>
+                    <div id="driftB" style="font-size: 0.5em; color: #555;"></div>
                 </div>
 
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <div>Node C</div>
                     <div id="clockC"></div>
+                    <div id="driftC" style="font-size: 0.5em; color: #555;"></div>
                 </div>
 
             </div>
 
             <script>
-                const driftRates = {
-                    A: 0,
-                    B: 17.0,
-                    C: -31.2
-                };
+                (function () {
+                    const NODES = ['A', 'B', 'C'];
+                    const RATES = { A: 0, B: 0.017, C: -0.0312 }; // B gains ~17ms/s, C loses ~31ms/s
+                    const OFFSETS = { A: 0, B: 20, C: -35 };
+                    const SYNC_PERIOD = 7;        // seconds between NTP-style resyncs
+                    const FLASH_DURATION = 0.35;  // seconds the adjusted clocks flash red
 
-                const state = {
-                    A: Date.now(),
-                    B: Date.now() + 20,
-                    C: Date.now() - 35
-                };
+                    const clockEls = {}, driftEls = {};
+                    NODES.forEach(n => {
+                        clockEls[n] = document.getElementById('clock' + n);
+                        driftEls[n] = document.getElementById('drift' + n);
+                    });
 
-                function formatWithMs(t) {
-                    const d = new Date(t);
-                    const hh = String(d.getHours()).padStart(2, '0');
-                    const mm = String(d.getMinutes()).padStart(2, '0');
-                    const ss = String(d.getSeconds()).padStart(2, '0');
-                    const ms = String(d.getMilliseconds()).padStart(3, '0');
-                    return `${hh}:${mm}:${ss}.${ms}`;
-                }
+                    let base = 0;
+                    const clocks = { A: 0, B: 0, C: 0 };
+                    const flashUntil = { A: -1, B: -1, C: -1 };
+                    let nextSync = 0;
 
-                let lastUpdate = performance.now();
-                let lastSync = lastUpdate;
-
-                function tick() {
-                    const nowPerf = performance.now();
-                    const delta = nowPerf - lastUpdate;
-                    lastUpdate = nowPerf;
-
-                    if (performance.now() - lastSync > 3000) {
-                        for (const n of ["A", "B", "C"]) {
-                            state[n] += delta + (driftRates[n] * delta / 1000);
-                        }
-                    } else {
-                        for (const n of ["A", "B", "C"]) {
-                            state[n] += delta;
-                        }
+                    function formatWithMs(t) {
+                        const d = new Date(t);
+                        const hh = String(d.getHours()).padStart(2, '0');
+                        const mm = String(d.getMinutes()).padStart(2, '0');
+                        const ss = String(d.getSeconds()).padStart(2, '0');
+                        const ms = String(d.getMilliseconds()).padStart(3, '0');
+                        return `${hh}:${mm}:${ss}.${ms}`;
                     }
 
-                    if (Math.random() < 0.001) {
-                        const base = Date.now();
-
-                        for (const n of ["A", "B", "C"]) {
-                            state[n] = base + Math.random() * 30 - 15;
-                        }
-
-                        ["clockA", "clockB", "clockC"].forEach(id => {
-                            const el = document.getElementById(id);
-                            el.style.color = "red";
-                            setTimeout(() => el.style.color = "", 300);
-                        });
+                    function formatDrift(ms) {
+                        const r = Math.round(ms);
+                        return (r >= 0 ? '+' : '') + r + 'ms';
                     }
 
-                    clockA.textContent = formatWithMs(state.A);
-                    clockB.textContent = formatWithMs(state.B);
-                    clockC.textContent = formatWithMs(state.C);
+                    SlideAnim.register('clockA', {
+                        reset() {
+                            // Deliberate Date.now(): all three node clocks are seeded from real wall time
+                            // so the audience sees "now" drifting apart. Not a frame-timing source.
+                            base = Date.now();
+                            NODES.forEach(n => {
+                                clocks[n] = base + OFFSETS[n];
+                                flashUntil[n] = -1;
+                            });
+                            nextSync = SYNC_PERIOD;
+                        },
+                        frame(ctx, dt, t) {
+                            NODES.forEach(n => {
+                                clocks[n] += dt * 1000 * (1 + RATES[n]);
+                            });
 
-                    requestAnimationFrame(tick);
-                }
+                            if (t >= nextSync) {
+                                nextSync += SYNC_PERIOD;
+                                const truth = base + t * 1000;
+                                NODES.forEach(n => {
+                                    clocks[n] = truth + (Math.random() * 30 - 15);
+                                    flashUntil[n] = t + FLASH_DURATION;
+                                });
+                            }
 
-                tick();
+                            NODES.forEach(n => {
+                                clockEls[n].textContent = formatWithMs(clocks[n]);
+                                clockEls[n].style.color = t < flashUntil[n] ? '#b45050' : '';
+                            });
+                            driftEls.B.textContent = formatDrift(clocks.B - clocks.A);
+                            driftEls.C.textContent = formatDrift(clocks.C - clocks.A);
+                        }
+                    });
+                })();
             </script>
+            <aside class="notes">
+                B gains, C loses (rates exaggerated for visibility - real quartz drifts seconds per day, not per
+                minute). Every 7 seconds an NTP-style resync snaps all three together - red flash. Point at the
+                drift counters between syncs: that gap is why "now" is ambiguous across nodes.
+            </aside>
         </section>
 
         <section>
             <h3>Why clocks go backwards</h3>
             <ul>
                 <li><strong>NTP</strong> (Network Time Protocol) adjustment</li>
-                <li>Virtual machines paused and resumed</li>
+                <li>VM snapshot restores and live migrations</li>
                 <li>Leap seconds</li>
                 <li>Manual time correction by an admin</li>
             </ul>
+            <aside class="notes">
+                Leap-second aside: Google and AWS "smear" the extra second over many hours - clocks deliberately
+                run at the wrong RATE so they never step. A perfect on-theme trade-off: accept rate error to avoid
+                step error. If challenged on live migrations: the backward step comes from the one-shot hypervisor
+                time sync AFTER the move (e.g. VMware Tools post-vMotion corrects a fast guest backwards) or a
+                destination host whose clock is behind the source - the migration pause itself jumps forward.
+            </aside>
         </section>
 
         <section>
@@ -1115,63 +2709,263 @@ Produces Kafka event: OrderCreated { orderId: 42 }
         </section>
 
         <section>
-            <h3>The problem with clocks</h3>
-            <ul>
-                <li>Each machine has its own clock</li>
-                <li>Clocks drift - even if synced</li>
-                <li>Network delays make 'now' ambiguous</li>
-            </ul>
-            <p>So: there is no single, global 'current time.'</p>
-        </section>
-
-        <section>
-            <h3>Example</h3>
-            <p>Two servers record an event:</p>
+            <h3>Monotonic clocks fix <em>one</em> machine</h3>
+            <p>Across machines you’re back to wall clocks. Two servers record an event:</p>
             <ul>
                 <li>Server A: event at 12:00:00.100</li>
                 <li>Server B: event at 12:00:00.090</li>
             </ul>
-            <p>Which happened first? 🤔</p>
-        </section>
-
-        <section>
-            <h3>Why this matters</h3>
-            <ul>
-                <li>Event ordering affects state changes</li>
-                <li>Conflicts appear when we can’t tell 'what came first'</li>
-                <li>Replication, logs, and causality all depend on time</li>
-            </ul>
+            <p>Which happened first?</p>
+            <aside class="notes">
+                The pivot of the whole section: monotonic clocks fix ONE machine, but each machine still has its
+                own imperfect clock, and network delay makes "now" ambiguous between them. Replication, logs and
+                conflict resolution all need an answer to "what came first" - and wall clocks can't give one.
+                So we stop asking "when" and start asking "what caused what".
+            </aside>
         </section>
 
         <section>
             <h3>Happened-before relationship</h3>
-            <p>Instead of wall-clock time, we use <strong>causal order</strong>:</p>
-            <blockquote>
-                A → B if A happened before B (causally)
-            </blockquote>
+            <p style="margin-bottom: 0.2em;">Instead of wall-clock time, we use <strong>causal order</strong>:</p>
+            <ul style="font-size: 0.7em;">
+                <li><strong>same process</strong>: a -> b if a comes first</li>
+                <li><strong>message</strong>: a -> b if a is the send and b the receive</li>
+                <li><strong>transitivity</strong>: a -> b and b -> c ⇒ a -> c</li>
+            </ul>
+            <canvas id="causalCanvas" width="550" height="220"></canvas>
+            <script>
+            (function() {
+                const W = 550, H = 220;
+                const Y1 = 60, Y2 = 150;
+                const LINE_X1 = 58, LINE_X2 = 512;
+
+                const DEPART = 4.4, ARRIVE = 6.4;
+                const CAUSAL_T0 = 8.6, CAUSAL_T1 = 10.6;
+                const CONC_T0 = 10.9, CONC_T1 = 12.9;
+                const LOOP = 16.0;
+
+                const events = [
+                    { x: 140, y: Y1, label: '1', side: -1, at: 1.0 },
+                    { x: 140, y: Y2, label: '1', side: 1,  at: 2.2 },
+                    { x: 250, y: Y1, label: '2', side: -1, at: 3.4 },
+                    { x: 360, y: Y2, label: '3', side: 1,  at: ARRIVE, note: 'max(1,2)+1' },
+                    { x: 405, y: Y1, label: '3', side: -1, at: 7.4 }
+                ];
+                const SEND = events[2], RECV = events[3];
+
+                const mdx = RECV.x - SEND.x, mdy = RECV.y - SEND.y;
+                const mlen = Math.hypot(mdx, mdy);
+                const ux = mdx / mlen, uy = mdy / mlen;
+                const sx = SEND.x + ux * 9, sy = SEND.y + uy * 9;
+                const ex = RECV.x - ux * 10, ey = RECV.y - uy * 10;
+                const mAngle = Math.atan2(mdy, mdx);
+
+                const clamp01 = v => Math.max(0, Math.min(1, v));
+
+                function easeOutBack(u) {
+                    const c = 1.70158;
+                    const v = u - 1;
+                    return 1 + (c + 1) * v * v * v + c * v * v;
+                }
+
+                function easeInOutCubic(u) {
+                    return u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+                }
+
+                function phaseAlpha(tt, t0, t1) {
+                    if (tt <= t0 || tt >= t1) return 0;
+                    const u = (tt - t0) / (t1 - t0);
+                    return Math.min(1, u * 5, (1 - u) * 5);
+                }
+
+                function arrowHead(ctx, x, y, angle, size, color) {
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(angle);
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.lineTo(-size, -size * 0.55);
+                    ctx.lineTo(-size, size * 0.55);
+                    ctx.closePath();
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                function drawProcessLines(ctx) {
+                    [Y1, Y2].forEach((y, i) => {
+                        ctx.beginPath();
+                        ctx.moveTo(LINE_X1, y);
+                        ctx.lineTo(LINE_X2, y);
+                        ctx.strokeStyle = 'rgba(31,94,94,0.4)';
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                        ctx.fillStyle = '#444';
+                        ctx.font = 'bold 13px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('P' + (i + 1), 36, y + 4);
+                    });
+                    ctx.beginPath();
+                    ctx.moveTo(462, 21);
+                    ctx.lineTo(504, 21);
+                    ctx.strokeStyle = '#888';
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                    arrowHead(ctx, 510, 21, 0, 7, '#888');
+                    ctx.fillStyle = '#888';
+                    ctx.font = '11px sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.fillText('time', 454, 25);
+                }
+
+                function drawEvent(ctx, ev, tt) {
+                    if (tt < ev.at) return;
+                    const pop = clamp01((tt - ev.at) / 0.45);
+                    const r = Math.max(6 * easeOutBack(pop), 0.1);
+                    ctx.beginPath();
+                    ctx.arc(ev.x, ev.y, r, 0, Math.PI * 2);
+                    ctx.fillStyle = '#3aa0a0';
+                    ctx.fill();
+                    ctx.strokeStyle = '#1f5e5e';
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+
+                    const labelDelay = ev.note ? 0.7 : 0.15;
+                    const la = clamp01((tt - ev.at - labelDelay) / 0.4);
+                    if (la > 0) {
+                        ctx.fillStyle = `rgba(31,94,94,${la})`;
+                        ctx.font = 'bold 13px monospace';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(ev.label, ev.x, ev.side < 0 ? ev.y - 15 : ev.y + 24);
+                    }
+                    if (ev.note) {
+                        const na = clamp01((tt - ev.at - 0.1) / 0.4);
+                        if (na > 0) {
+                            ctx.fillStyle = `rgba(85,85,85,${na})`;
+                            ctx.font = '12px monospace';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(ev.note, ev.x, ev.y + 39);
+                        }
+                    }
+                }
+
+                function drawMessage(ctx, tt) {
+                    if (tt < DEPART) return;
+                    const p = easeInOutCubic(clamp01((tt - DEPART) / (ARRIVE - DEPART)));
+                    const hx = sx + (ex - sx) * p;
+                    const hy = sy + (ey - sy) * p;
+
+                    ctx.beginPath();
+                    ctx.moveTo(sx, sy);
+                    ctx.lineTo(hx, hy);
+                    ctx.strokeStyle = 'rgba(31,94,94,0.55)';
+                    ctx.lineWidth = 1.8;
+                    ctx.stroke();
+
+                    if (p >= 1) {
+                        arrowHead(ctx, ex + ux * 2, ey + uy * 2, mAngle, 8, 'rgba(31,94,94,0.7)');
+                    } else {
+                        ctx.beginPath();
+                        ctx.arc(hx, hy, 5, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(31,94,94,0.9)';
+                        ctx.fill();
+                    }
+                }
+
+                function drawPulsePair(ctx, evA, evB, tt, a, rgb) {
+                    const r = 11 + 2.5 * Math.sin(tt * Math.PI * 2 * 1.1);
+                    [evA, evB].forEach(ev => {
+                        ctx.beginPath();
+                        ctx.arc(ev.x, ev.y, r, 0, Math.PI * 2);
+                        ctx.strokeStyle = `rgba(${rgb},${0.85 * a})`;
+                        ctx.lineWidth = 2;
+                        ctx.stroke();
+                    });
+                }
+
+                function drawCaption(ctx, text, a, rgb) {
+                    ctx.fillStyle = `rgba(${rgb},${a})`;
+                    ctx.font = '13px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, W / 2, 210);
+                }
+
+                SlideAnim.register('causalCanvas', {
+                    // static renders (reduced motion / PDF) show the completed
+                    // diagram with the 'a -> b (causal)' caption, not the
+                    // empty t=0 timelines
+                    staticT: 9.6,
+                    reset() {
+                        // purely time-driven scene: every frame derives from t
+                    },
+                    frame(ctx, dt, t) {
+                        const tt = t % LOOP;
+                        drawProcessLines(ctx);
+                        drawMessage(ctx, tt);
+
+                        const ca = phaseAlpha(tt, CAUSAL_T0, CAUSAL_T1);
+                        if (ca > 0) {
+                            ctx.beginPath();
+                            ctx.moveTo(sx, sy);
+                            ctx.lineTo(ex, ey);
+                            ctx.strokeStyle = `rgba(31,94,94,${0.55 * ca})`;
+                            ctx.lineWidth = 2.6;
+                            ctx.stroke();
+                            drawPulsePair(ctx, SEND, RECV, tt, ca, '31,94,94');
+                            ctx.fillStyle = `rgba(31,94,94,${ca})`;
+                            ctx.font = 'italic 12px sans-serif';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('a', SEND.x - 16, SEND.y + 16);
+                            ctx.fillText('b', RECV.x + 17, RECV.y - 8);
+                            drawCaption(ctx, 'a -> b (causal)', ca, '31,94,94');
+                        }
+
+                        const xa = phaseAlpha(tt, CONC_T0, CONC_T1);
+                        if (xa > 0) {
+                            drawPulsePair(ctx, events[0], events[1], tt, xa, '192,136,24');
+                            drawCaption(ctx, 'concurrent (no order!)', xa, '192,136,24');
+                        }
+
+                        events.forEach(ev => drawEvent(ctx, ev, tt));
+                    }
+                });
+            })();
+            </script>
             <p>We care about <em>ordering</em> of events, not their timestamps.</p>
+            <aside class="notes">
+                The canvas demonstrates rules 1 and 2: events popping along each process line (same-process
+                order), then the message arrow from P1 to P2 (send -> receive, note the max(1,2)+1 counter).
+                The amber pulse pair at the end is the punchline: two events with NO path between them are
+                concurrent - no causal order exists, and no protocol can recover one.
+            </aside>
         </section>
 
         <section>
             <h3>Logical clocks</h3>
             <ul>
-                <li><strong>Lamport clocks</strong> → simple counters to track causal order</li>
-                <li><strong>Vector clocks</strong> → richer structure to detect concurrent events</li>
+                <li><strong>Lamport clocks</strong> -> an order <em>consistent with</em> causality
+                    <small>(one-way: a -> b ⇒ L(a) &lt; L(b), but not the reverse)</small></li>
+                <li><strong>Vector clocks</strong> -> can additionally <em>detect</em> that events are concurrent</li>
             </ul>
-            <p>They don’t measure real time - they measure <strong>cause and effect</strong>.</p>
+            <p>They don’t measure real time - they encode an order <strong>consistent with cause and effect</strong>.</p>
+            <aside class="notes">
+                Careful wording: Lamport timestamps don't "track" causality - concurrent events still get ordered
+                timestamps (the amber pair on the previous slide would, too). They only promise the one-way
+                implication. Detecting concurrency is exactly the gap vector clocks close.
+            </aside>
         </section>
 
         <section>
             <h3>Real time vs. logical time</h3>
             <ul>
-                <li><strong>Real time</strong> → what your watch shows</li>
-                <li><strong>Logical time</strong> → what the system can <em>prove</em> happened first</li>
+                <li><strong>Real time</strong> -> what your watch shows</li>
+                <li><strong>Logical time</strong> -> what the system can <em>prove</em> happened first</li>
             </ul>
             <p>Distributed systems live in <strong>logical time</strong>.</p>
         </section>
 
         <section>
-            <p>Google’s Spanner uses special hardware clocks (TrueTime API) ⏱️</p>
+            <p>Google’s Spanner uses special hardware clocks (TrueTime API)</p>
             <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
             </p>
         </section>
@@ -1183,91 +2977,8 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 <li>We can't rely on timestamps for ordering</li>
                 <li>We use <strong>logical or causal time</strong> to reason safely</li>
             </ul>
-            <p>Time is relative - especially in distributed systems 🌌</p>
+            <p>Time is relative - especially in distributed systems</p>
         </section>
-
-      <!--  <section>
-            <h2>Distributed Transactions</h2>
-            <p>When one business operation spans multiple services or databases.</p>
-            <ul>
-                <li>Each service has its own local data and transaction boundaries.</li>
-                <li>We still want <strong>atomicity</strong> across them.</li>
-            </ul>
-            <p class="fragment">But... there’s no global transaction manager in distributed systems.</p>
-        </section>
-
-        <section>
-            <h3>Example</h3>
-            <p>Booking a trip:</p>
-            <ul>
-                <li>Reserve a flight ✈️</li>
-                <li>Book a hotel 🏨</li>
-                <li>Charge a credit card 💳</li>
-            </ul>
-            <p class="fragment">If one step fails, the others must be reverted.</p>
-        </section>
-
-        <section>
-            <h2>Two-Phase Commit (2PC)</h2>
-            <p>Classic protocol to coordinate distributed commits.</p>
-            <ol>
-                <li><strong>Prepare phase</strong> - coordinator asks all participants if they can commit.</li>
-                <li><strong>Commit phase</strong> - if all say “yes”, everyone commits; otherwise, all roll back.</li>
-            </ol>
-        </section>
-
-        <section>
-            <h3>2PC Pros and Cons</h3>
-            <ul>
-                <li>✅ Guarantees atomicity across systems.</li>
-                <li>❌ Introduces a single point of failure – the coordinator.</li>
-                <li>❌ Participants must lock data until the commit is decided.</li>
-                <li>❌ Doesn’t scale well under high latency or partial failures.</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>When 2PC Fails</h3>
-            <p>If the coordinator crashes between phases...</p>
-            <ul>
-                <li>Some participants may have committed.</li>
-                <li>Others may still be waiting.</li>
-                <li>System enters an <strong>uncertain state</strong>.</li>
-            </ul>
-            <p class="fragment">Recovery requires manual intervention or a timeout heuristic.</p>
-        </section>
-
-        <section>
-            <h2>The Saga Pattern</h2>
-            <p>An alternative to distributed transactions.</p>
-            <ul>
-                <li>Each step is a <strong>local transaction</strong>.</li>
-                <li>On failure, execute <strong>compensating actions</strong>.</li>
-            </ul>
-        </section>
-
-        <section>
-            <h3>Two Saga Coordination Styles</h3>
-            <ul>
-                <li><strong>Choreography</strong> - services react to each other's events.</li>
-                <li><strong>Orchestration</strong> - a central orchestrator tells each participant what to do.</li>
-            </ul>
-            <p class="fragment">Both achieve eventual consistency, but with different trade-offs.</p>
-        </section>
-
-        <section>
-            <h3>Saga Example</h3>
-            <pre><code data-trim style="font-size: 0.8em;line-height:1.1;">
-BookTripSaga:
-  1. FlightService.reserve(flight)
-  2. HotelService.book(hotel)
-  3. PaymentService.charge(user)
-
-If step 3 fails:
-  -> HotelService.cancelBooking()
-  -> FlightService.releaseSeat()
-  </code></pre>
-        </section>-->
 
         <section>
             <h3>And there's so much more...</h3>
@@ -1283,6 +2994,24 @@ If step 3 fails:
                 <li>Security across trust boundaries</li>
             </ul>
             <p class="fragment">Distributed systems are <strong>genuinely hard</strong>.<br>Design with failure in mind - always.</p>
+        </section>
+
+        <section>
+            <h3>Dancing with uncertainty</h3>
+            <p>You can’t eliminate uncertainty - you learn the steps:</p>
+            <ul>
+                <li class="fragment">Assume <strong>at-least-once</strong> -> make every consumer idempotent</li>
+                <li class="fragment">Never dual-write -> <strong>outbox + CDC</strong></li>
+                <li class="fragment">Never order events by wall clock -> use <strong>causal order</strong></li>
+                <li class="fragment">Pick your trade-offs <em>explicitly</em> -> A vs C, latency vs consistency</li>
+            </ul>
+            <aside class="notes">
+                The payoff of the title: you never get rid of uncertainty - you choreograph around it. One
+                actionable line per chapter of the talk; this is the slide people should photograph.
+                If someone quotes Spanner against rule 3: TrueTime is the exception that proves it - wall-clock
+                ordering is safe only when clock uncertainty is explicit, bounded, and waited out; commodity NTP
+                gives you none of that.
+            </aside>
         </section>
 
         <section>
