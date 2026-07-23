@@ -116,38 +116,6 @@ function createInfoWindowContent(location, coords, talksAtLocation) {
     return root;
 }
 
-async function getAllYearsFromTalks() {
-    const data = await getData();
-    const years = new Set(data.events.map((t) => t._year));
-    return Array.from(years).sort((a, b) => b - a);
-}
-
-async function buildYearPicker() {
-    const select = document.getElementById("yearSelect");
-    if (!select) return;
-
-    const years = await getAllYearsFromTalks();
-    const selectedYear = getSelectedYear();
-
-    select.textContent = "";
-
-    const allOpt = el("option", { text: "All years", attrs: { value: "" } });
-    select.appendChild(allOpt);
-
-    for (const y of years) {
-        select.appendChild(el("option", { text: String(y), attrs: { value: String(y) } }));
-    }
-
-    select.value = selectedYear == null ? "" : String(selectedYear);
-
-    select.onchange = () => {
-        const val = select.value;
-        const newYear = val === "" ? null : Number(val);
-        setSelectedYearInUrl(newYear);
-        refreshUI();
-    };
-}
-
 async function loadTalks() {
     const selectedYear = getSelectedYear();
     const data = await getData();
@@ -172,8 +140,12 @@ async function loadTalks() {
     const pastTalks = talks.filter((t) => t._ts < todayTs);
 
     let currentYear = null;
+    let prevTalkTitle = null;
 
-    if (includeUpcomingPast && upcomingTalks.length > 0) {
+    // The UPCOMING/PAST split only makes sense when both sections exist.
+    const showSectionLabels = includeUpcomingPast && upcomingTalks.length > 0 && pastTalks.length > 0;
+
+    if (showSectionLabels) {
         tbody.appendChild(makeHeaderRow("UPCOMING", "upcoming"));
     }
 
@@ -183,11 +155,13 @@ async function loadTalks() {
             currentYear = y;
             tbody.appendChild(makeHeaderRow(String(y), "year-header"));
         }
-        appendTalkRow(tbody, t, data, seqFromBottom--);
+        appendTalkRow(tbody, t, data, seqFromBottom--, t.talk === prevTalkTitle);
+        prevTalkTitle = t.talk;
     }
 
     currentYear = null;
-    if (includeUpcomingPast && pastTalks.length > 0) {
+    prevTalkTitle = null;
+    if (showSectionLabels) {
         tbody.appendChild(makeHeaderRow("PAST", "past"));
     }
 
@@ -197,13 +171,15 @@ async function loadTalks() {
             currentYear = y;
             tbody.appendChild(makeHeaderRow(String(y), "year-header"));
         }
-        appendTalkRow(tbody, t, data, seqFromBottom--);
+        appendTalkRow(tbody, t, data, seqFromBottom--, t.talk === prevTalkTitle);
+        prevTalkTitle = t.talk;
     }
 
     if (selectedYear != null) {
         tbody.textContent = "";
         seqFromBottom = talks.length;
         currentYear = null;
+        prevTalkTitle = null;
 
         for (const t of talks) {
             const y = t._year;
@@ -211,12 +187,55 @@ async function loadTalks() {
                 currentYear = y;
                 tbody.appendChild(makeHeaderRow(String(y), "year-header"));
             }
-            appendTalkRow(tbody, t, data, seqFromBottom--);
+            appendTalkRow(tbody, t, data, seqFromBottom--, t.talk === prevTalkTitle);
+            prevTalkTitle = t.talk;
         }
+    } else {
+        collapseOlderYears(tbody);
     }
 }
 
-function appendTalkRow(tbody, t, data, seq) {
+const VISIBLE_YEARS = 3;
+
+function collapseOlderYears(tbody) {
+    const rows = Array.from(tbody.children);
+    let yearsSeen = 0;
+    let collapseStart = -1;
+
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].classList.contains("year-header")) {
+            yearsSeen++;
+            if (yearsSeen === VISIBLE_YEARS + 1) {
+                collapseStart = i;
+                break;
+            }
+        }
+    }
+
+    if (collapseStart < 0) return;
+
+    const hidden = rows.slice(collapseStart);
+    for (const row of hidden) row.classList.add("collapsed");
+
+    const hiddenCount = hidden.filter((r) => r.querySelector(".seq")).length;
+
+    const tr = el("tr", { className: "show-more" });
+    const td = el("td");
+    td.colSpan = 5;
+    const btn = el("button", {
+        className: "show-more-btn",
+        text: `Show ${hiddenCount} earlier talks`,
+    });
+    btn.onclick = () => {
+        for (const row of hidden) row.classList.remove("collapsed");
+        tr.remove();
+    };
+    td.appendChild(btn);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+}
+
+function appendTalkRow(tbody, t, data, seq, isRepeat = false) {
     const key = normalizeLocationId(t.location);
     const location = key ? data.locations?.[key] : null;
 
@@ -239,8 +258,7 @@ function appendTalkRow(tbody, t, data, seq) {
     tr.appendChild(tdConf);
 
     const tdTalk = el("td");
-    const talkSpan = el("span", { text: t.talk ?? "" });
-    talkSpan.style.fontSize = "0.9em";
+    const talkSpan = el("span", { className: isRepeat ? "talk-title talk-repeat" : "talk-title", text: t.talk ?? "" });
     tdTalk.appendChild(talkSpan);
     tr.appendChild(tdTalk);
 
@@ -400,6 +418,17 @@ async function buildYearChart() {
     const chart = document.getElementById('yearChart');
     chart.textContent = '';
 
+    const caption = el('div', {
+        className: 'year-chart-caption',
+        text: selectedYear != null
+            ? `Showing ${selectedYear} — click the bar again to see all years`
+            : 'Talks per year — click a bar to filter',
+    });
+    chart.appendChild(caption);
+
+    const barsWrap = el('div', { className: 'year-bars' });
+    chart.appendChild(barsWrap);
+
     for (const year of years) {
         const count = yearCounts[year];
         const height = Math.max((count / maxCount) * 80, 8);
@@ -442,7 +471,7 @@ async function buildYearChart() {
             }
         };
 
-        chart.appendChild(bar);
+        barsWrap.appendChild(bar);
     }
 
     requestAnimationFrame(() => {
@@ -590,6 +619,7 @@ async function initMap() {
             center: { lat: 50, lng: 15 },
             mapId: "talksMapId",
             colorScheme: "DARK",
+            fullscreenControl: false,
         });
     } else {
         clearMarkers();
@@ -713,7 +743,6 @@ async function refreshUI() {
         loadTalks(),
         updateStats(),
         buildYearChart(),
-        buildYearPicker(),
     ]);
     await initMap();
 }
@@ -769,7 +798,6 @@ async function initPage() {
             updateStats(),
             updateCountdown(),
             buildYearChart(),
-            buildYearPicker(),
         ]);
         hideLoading();
     } catch (err) {
@@ -778,29 +806,26 @@ async function initPage() {
     }
 }
 
-const mapModes = ["pins", "clusters", "heatmap"];
-const mapModeLabels = { pins: "Pins", clusters: "Clusters", heatmap: "Heatmap" };
-
-function syncToggleButton() {
-    const btn = document.getElementById("mapModeToggle");
-    if (!btn) return;
-    btn.textContent = mapModeLabels[mapMode];
-    btn.classList.toggle("active", mapMode !== "pins");
+function syncMapModeButtons() {
+    document.querySelectorAll("#mapModeControls .map-mode-btn").forEach((btn) => {
+        const active = btn.dataset.mode === mapMode;
+        btn.classList.toggle("active", active);
+        btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     initPage();
-    syncToggleButton();
+    syncMapModeButtons();
 
-    const toggleBtn = document.getElementById("mapModeToggle");
-    if (toggleBtn) {
-        toggleBtn.addEventListener("click", () => {
-            const idx = mapModes.indexOf(mapMode);
-            mapMode = mapModes[(idx + 1) % mapModes.length];
-            syncToggleButton();
+    document.querySelectorAll("#mapModeControls .map-mode-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+            if (btn.dataset.mode === mapMode) return;
+            mapMode = btn.dataset.mode;
+            syncMapModeButtons();
             initMap();
         });
-    }
+    });
 
     const retryBtn = document.getElementById('retryBtn');
     if (retryBtn) {

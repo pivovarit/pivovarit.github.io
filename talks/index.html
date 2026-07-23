@@ -23,6 +23,11 @@
 
 <div>
     <main class="content">
+        <header class="page-header">
+            <h1 class="page-title">Conference Talks</h1>
+            <p class="page-subtitle"><a href="/">Grzegorz Piwowarek</a> &middot; Java Champion &middot; international speaker</p>
+        </header>
+
         <div id="loadingState" class="loading-state" role="status" aria-live="polite">
             <div class="loading-spinner" aria-hidden="true"></div>
             <span>Loading talks...</span>
@@ -79,7 +84,11 @@
 
         <div class="map-wrapper">
             <div id="map" role="region" aria-label="Map of conference locations"></div>
-            <button id="mapModeToggle" class="map-mode-toggle" aria-label="Toggle map view mode">Clusters</button>
+            <div id="mapModeControls" class="map-mode-controls" role="group" aria-label="Map view mode">
+                <button class="map-mode-btn active" data-mode="pins" aria-pressed="true">Pins</button>
+                <button class="map-mode-btn" data-mode="clusters" aria-pressed="false">Clusters</button>
+                <button class="map-mode-btn" data-mode="heatmap" aria-pressed="false">Heatmap</button>
+            </div>
         </div>
 
         <div id="yearChart" class="year-chart" role="navigation" aria-label="Filter by year"></div>
