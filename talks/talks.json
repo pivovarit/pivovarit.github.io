@@ -1,6 +1,13 @@
 {
   "events": [
     {
+      "conference": "Confitura 2026",
+      "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
+      "date": "2026-09-26",
+      "url": "https://2026.confitura.pl",
+      "location": "@warsaw-adn"
+    },
+    {
       "conference": "IT Unplugged",
       "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
       "date": "2026-06-17",
