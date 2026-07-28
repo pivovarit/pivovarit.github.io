@@ -8,6 +8,13 @@
       "location": "@warsaw-adn"
     },
     {
+      "conference": "JCrete 2026",
+      "talk": "Non-code AI leverage in SDLC",
+      "date": "2026-07-28",
+      "url": "https://www.jcrete.org",
+      "location": "@crete-oac"
+    },
+    {
       "conference": "IT Unplugged",
       "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
       "date": "2026-06-17",
