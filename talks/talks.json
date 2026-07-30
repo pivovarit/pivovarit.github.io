@@ -1,6 +1,13 @@
 {
   "events": [
     {
+      "conference": "JDD 2026",
+      "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
+      "date": "2026-10-20",
+      "url": "https://jdd.org.pl",
+      "location": "@cracow-metropolo"
+    },
+    {
       "conference": "Confitura 2026",
       "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
       "date": "2026-09-26",
