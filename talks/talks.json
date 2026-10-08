@@ -1,6 +1,13 @@
 {
   "events": [
     {
+      "conference": "InfoShare Katowice 2026",
+      "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
+      "date": "2026-11-17",
+      "url": "https://katowice.infoshare.pl",
+      "location": "@katowice-mck"
+    },
+    {
       "conference": "JDD 2026",
       "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
       "date": "2026-10-20",
@@ -1480,6 +1487,14 @@
       },
       "coordinates": "50.25292207906272, 19.023493147612825",
       "place": "Strefa Centralna"
+    },
+    "katowice-mck": {
+      "location": {
+        "city": "Katowice",
+        "country": "Poland"
+      },
+      "coordinates": "50.2662477, 19.0276219",
+      "place": "MCK Katowice"
     },
     "kiev-depo": {
       "location": {
