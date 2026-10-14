@@ -281,7 +281,7 @@
                 </script>
             </div>
 
-            <h4><a href="https://pivovarit.github.io">Grzegorz Piwowarek</a></h4>
+            <h4><a href="https://pivovarit.com">Grzegorz Piwowarek</a></h4>
         </section>
 
 
@@ -307,11 +307,11 @@
                 <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">java</span>
             </div>
 
-            <h5 style="margin-top: 1em;"><a href="https://twitter.com/pivovarit">@pivovarit</a></h5>
+            <h5 style="margin-top: 1em;"><a href="https://x.com/pivovarit">@pivovarit</a></h5>
         </section>
 
         <section>
-            <img src="img/snake.jpg" width="60%"/>
+            <img src="img/snake.jpg" width="60%" alt="A snake eating its own tail (ouroboros)"/>
             <aside class="notes">
                 Hook: why does the snake eat itself? It doesn't know it's eating itself - it has no global view of
                 its own body. Neither do your services. Bridge: "so what actually makes a system distributed?"
@@ -330,13 +330,13 @@
             <h4>Network is unreliable</h4>
             <small><small>as of 2026</small></small>
             <br>
-            <img src="img/sharks.jpg" width="40%"/>
+            <img src="img/sharks.jpg" width="40%" alt="Shark biting an undersea internet cable"/>
 
             <small><small><a href="https://slate.com/technology/2014/08/shark-attacks-threaten-google-s-undersea-internet-cables-video.html">https://slate.com/technology/2014/08/shark-attacks-threaten-google-s-undersea-internet-cables-video.html</a></small></small>
         </section>
 
         <section>
-            <img src="img/packet-loss.jpeg" width="40%"/>
+            <img src="img/packet-loss.jpeg" width="40%" alt="Diagram of IP over Avian Carriers, a joke networking protocol using pigeons"/>
             <br>
             <small><small><a href="https://en.wikipedia.org/wiki/IP_over_Avian_Carriers">https://en.wikipedia.org/wiki/IP_over_Avian_Carriers</a></small></small>
         </section>
@@ -1461,7 +1461,7 @@
             ctx.lineWidth = 1.5;
             ctx.stroke();
             ctx.fillStyle = '#fff';
-            ctx.font = 'bold 11px sans-serif';
+            ctx.font = 'bold 12px sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('sender', SENDER.x + SENDER.w / 2, LANE_Y + 4);
         }
@@ -2114,12 +2114,12 @@
 
         <section data-transition="fade">
             <h3>Synchronous communication</h3>
-            <img src="img/sync1.png" width="80%"/>
+            <img src="img/sync1.png" width="80%" alt="Diagram of synchronous communication between services"/>
         </section>
 
         <section data-transition="fade">
             <h3>Asynchronous communication</h3>
-            <img src="img/sync2.png" width="80%"/>
+            <img src="img/sync2.png" width="80%" alt="Diagram of asynchronous communication between services"/>
         </section>
 
         <section>
@@ -2168,11 +2168,11 @@ void on(PaymentConfirmedEvent event) {
         </section>
 
         <section data-transition="fade">
-            <img src="img/dual-write.png" width="60%"/>
+            <img src="img/dual-write.png" width="60%" alt="Diagram illustrating the dual-write problem between a database and a message broker"/>
         </section>
 
         <section data-transition="fade">
-            <img src="img/dual-write-2.png" width="60%"/>
+            <img src="img/dual-write-2.png" width="60%" alt="Diagram showing one of the two dual-write operations failing, leaving database and message broker inconsistent"/>
         </section>
 
         <section>
@@ -2191,12 +2191,12 @@ void on(PaymentConfirmedEvent event) {
 
         <section data-transition="fade">
             <h4>Dual-Write (distributed transaction)</h4>
-            <img src="img/cdc3.png" width="50%"/>
+            <img src="img/cdc3.png" width="50%" alt="Diagram of a dual-write distributed transaction across database and message broker"/>
         </section>
 
         <section data-transition="fade">
             <h4>Single-Write with async propagation</h4>
-            <img src="img/cdc4.png" width="50%"/>
+            <img src="img/cdc4.png" width="50%" alt="Diagram of single-write with async propagation via change data capture"/>
         </section>
 
         <section>
@@ -2294,7 +2294,7 @@ void on(PaymentConfirmedEvent event) {
                     ctx.strokeStyle = `rgba(31,94,94,${0.45 + 0.35 * flash})`;
                     ctx.lineWidth = 1;
                     ctx.stroke();
-                    ctx.font = '11px sans-serif';
+                    ctx.font = '12px sans-serif';
                     ctx.textAlign = 'center';
                     const ty = r.y + r.h / 2 + 4;
                     ctx.fillStyle = '#1f5e5e';
@@ -2382,7 +2382,7 @@ void on(PaymentConfirmedEvent event) {
                             ctx.fillStyle = `rgba(31,94,94,${0.9 * flash})`;
                             ctx.fill();
                             ctx.fillStyle = `rgba(255,255,255,${flash})`;
-                            ctx.font = 'bold 11px monospace';
+                            ctx.font = 'bold 12px monospace';
                             ctx.textAlign = 'center';
                             ctx.fillText('1 tx', 198, 56);
                         }
@@ -2499,7 +2499,7 @@ Produces Kafka event: OrderCreated { orderId: 42 }
         <section>
             <h2>Time</h2>
 
-            <img src="img/time.jpg" width="60%"/>
+            <img src="img/time.jpg" width="60%" alt="Clocks representing the passage of time"/>
 
             <div id="live-time" style="margin-top: 20px; font-size: 2rem; font-family: monospace;"></div>
             <div id="live-time-speed" style="margin-top: 4px; font-size: 0.9rem; font-family: monospace; color: #555;"></div>
@@ -2813,7 +2813,7 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                     ctx.stroke();
                     arrowHead(ctx, 510, 21, 0, 7, '#888');
                     ctx.fillStyle = '#888';
-                    ctx.font = '11px sans-serif';
+                    ctx.font = '12px sans-serif';
                     ctx.textAlign = 'right';
                     ctx.fillText('time', 454, 25);
                 }
