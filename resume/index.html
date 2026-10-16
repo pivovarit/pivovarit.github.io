@@ -278,6 +278,7 @@
 
         @media (max-width: 600px) {
             .page { padding: 24px 20px; }
+            header { flex-direction: column; }
             .contact-row { flex-direction: column; gap: 4px; }
             .skills-grid { grid-template-columns: 1fr; }
             .job-header { flex-direction: column; }
@@ -290,34 +291,28 @@
 
     <header>
         <h1>Grzegorz Piwowarek</h1>
-        <div class="tagline">Principal Engineer - Distributed and Event-Driven Systems</div>
+        <div class="tagline">Distributed Systems and Event-driven Architectures</div>
         <div class="contact-row">
             <a href="mailto:gpiwowarek@gmail.com">gpiwowarek@gmail.com</a>
-<a href="https://github.com/pivovarit">github.com/pivovarit</a>
+            <a href="https://github.com/pivovarit">github.com/pivovarit</a>
             <a href="https://linkedin.com/in/gpiwowarek">linkedin.com/in/gpiwowarek</a>
             <a href="https://4comprehension.com">4comprehension.com</a>
         </div>
     </header>
 
     <section class="summary">
-        <h2>Summary</h2>
-        <p>Java Champion, OSS creator, and engineer with 14+ years of experience architecting and scaling demanding distributed systems. <br><br>Proven ability to take ownership of foundational architecture, establish engineering standards, and mentor teams while shipping production systems end to end. Known for making immediate impact in complex systems and earning engineering trust through technical depth rather than authority.</p>
-    </section>
-
-    <section>
-        <h2>Core Skills</h2>
-        <dl class="skills-grid">
-            <dt>Languages</dt>
-            <dd>JVM-based Languages, Go </dd>
-            <dt>Data Systems</dt>
-            <dd>PostgreSQL, ClickHouse, Hazelcast</dd>
-            <dt>Infrastructure</dt>
-            <dd>AWS, Docker, GitHub Actions, CI/CD pipelines</dd>
-            <dt>Architecture</dt>
-            <dd>Distributed systems, event sourcing, microservices</dd>
-            <dt>Leadership</dt>
-            <dd>Technical architecture ownership, team building, mentoring, engineering culture</dd>
-        </dl>
+        <p>Java Champion and distributed-systems engineer with 14+ years of experience architecting and scaling distributed, event-driven systems, combined with hands-on technical leadership. <br><br>Career roles span Lead Architect in Hazelcast's CTO office, Founding Engineer, Principal Engineer, and independent consultant.</p>
+        <p style="color:#888; font-style:italic; margin-top:12px; margin-bottom:4px;">Selected OSS projects:</p>
+        <ul class="community-list" style="color:#888; font-style:italic;">
+            <li><a href="https://github.com/vavr-io/vavr" style="color:#888">Vavr</a>: functional programming toolkit for Java (6k+ stars)</li>
+            <li><a href="https://github.com/pivovarit/parallel-collectors" style="color:#888">Parallel Collectors</a>: parallel processing toolkit for the Stream API (670+ stars)</li>
+            <li><a href="https://github.com/pivovarit/fencepost" style="color:#888">Fencepost</a>: distributed concurrency toolkit for Java relying on PostgreSQL (prototype)</li>
+        </ul>
+        <p style="color:#888; font-style:italic; margin-top:12px; margin-bottom:4px;">Selected technical writing:</p>
+        <ul class="community-list" style="color:#888; font-style:italic;">
+            <li><a href="https://4comprehension.com/java-last-gatherer/" style="color:#888">Benchmarking and profiling a custom Stream Gatherer</a></li>
+            <li><a href="https://4comprehension.com/enum-map-serialization/" style="color:#888">Diagnosing a cross-process enum/Map serialization bug</a></li>
+        </ul>
     </section>
 
     <section>
@@ -325,12 +320,16 @@
 
         <div class="job">
             <div class="job-header">
-                <span class="job-title">Senior Software Engineer (Contract)</span>
+                <span class="job-title">Software Architect (Contract)</span>
                 <span class="job-date">Oct 2024 - Present</span>
             </div>
             <div class="job-company">Bound, London (remote)</div>
-            <p>Shaping the architecture of event-driven distributed systems to balance reliability, consistency, and scalability.</p>
-            <div class="tech">Distributed Systems, Event-Driven Architecture</div>
+            <p>Own platform reliability and core trading mechanics on an FX hedging/trading platform, tackling distributed systems challenges arising from adopting an event-driven architecture.</p>
+            <ul>
+                <li>Leading the ISO 27001 certification process</li>
+                <li>Spearheading AI adoption across the engineering team</li>
+            </ul>
+            <div class="tech">Frameworkless Java, Javalin, AWS, CI/CD, Microservices</div>
         </div>
 
         <div class="job">
@@ -346,6 +345,7 @@
                 <li>Defined the internal data representation layer for multi-format data processing</li>
                 <li>Established GitHub Actions-based CI automation, merge queue, and developer productivity tooling</li>
             </ul>
+            <p style="color:#888; font-style:italic; margin-top:4px;">Quesma proxy was acquired by Hydrolix.</p>
             <div class="tech">Go, ClickHouse, GitHub Actions</div>
         </div>
 
@@ -358,7 +358,7 @@
             <p>Owned all technology backing the real-time streaming backend and data architecture of miim.ai.</p>
             <ul>
                 <li>Spearheaded architecture redesign of the core system for scalability and resilience</li>
-                <li>Identified and resolved PostgreSQL performance bottlenecks in a high-transaction multi-tenant environment</li>
+                <li>Identified and resolved PostgreSQL performance bottlenecks in a high-transaction multi-tenant environment through profiling and benchmarking</li>
                 <li>Diagnosed and fixed data consistency and performance issues in Hazelcast streaming jobs</li>
                 <li>Designed concurrent modification mechanisms for live data and a stable multi-tenant database migration system</li>
                 <li>Designed and rolled out the MVP of a public-facing REST API</li>
@@ -374,11 +374,11 @@
             <div class="job-company">Hazelcast, San Mateo (remote)</div>
             <p>Progressed from R&amp;D into lead architect in the CTO's office. Revived a project set up for failure through technical leadership and organizational change.</p>
             <ul>
+                <li>R&amp;D on WAN replication for Hazelcast IMDG - replicating distributed state across clusters and data centers</li>
                 <li>Reshaped the product into a new cloud offering (Viridian) and supported the engineering team through implementation</li>
-                <li>Kickstarted CI/CD adoption and redesigned the recruitment process; scaled the team 2x with higher deployment frequency</li>
                 <li>Worked on the initial phase of Project Alto - a thread-per-core, cloud-native generation of Hazelcast</li>
-                <li>Built Hazelcast Turbine - a new service-mesh-like product in Go (core team)</li>
-                <li>R&amp;D on GraalVM integration for Hazelcast IMDG client/server, Quarkus client, and WAN replication</li>
+                <li>Built Hazelcast Turbine - a new service-mesh-like product in Go, designing its internal communication protocol (core team)</li>
+                <li>Kickstarted CI/CD adoption and redesigned the recruitment process; scaled the team 2x with higher deployment frequency</li>
             </ul>
             <div class="tech">Java, Go, AWS, Kubernetes, GraalVM, gRPC, Spring Boot, Quarkus, GitHub Actions</div>
         </div>
@@ -390,7 +390,7 @@
             </div>
             <div class="job-company">Casumo, Malta (remote)</div>
             <ul>
-                <li>Scaled the core event-sourced monetary transaction engine to 10,000 TPS and enabled multi-node deployments</li>
+                <li>Scaled the core event-sourced monetary transaction engine to 10,000 TPS and enabled multi-node deployments, relying on replicated, ordered event streams for correctness</li>
                 <li>Recruited, assembled, and coached a team tackling performance and scalability issues in legacy components</li>
                 <li>Modernised CI/CD pipelines with parallel builds, cutting minutes from each execution</li>
                 <li>Refactored and scaled cometd-relaying for zero-downtime deployments</li>
@@ -414,9 +414,10 @@
             </div>
             <div class="job-company">TouK, Warsaw</div>
             <ul>
-                <li>Developed a Kafka-based message broker for Allegro (<a href="https://hermes.allegro.tech" style="color:#555">hermes.allegro.tech</a>) &mdash; high-throughput data ingestion at scale</li>
+                <li>Designed and built <a href="https://hermes.allegro.tech" style="color:#555">Hermes</a>, a Kafka-based message broker for Allegro &mdash; messaging protocol design and high-throughput data ingestion at scale</li>
                 <li>Built an OSGi-based integration platform for a major GSM provider</li>
             </ul>
+            <p style="color:#888; font-style:italic; margin-top:4px;">Hermes remains a core part of Allegro's platform as of 2026.</p>
             <div class="tech">Java, Kotlin, Scala, Spring Boot, PostgreSQL, Kafka, Docker</div>
         </div>
 
@@ -428,6 +429,7 @@
         <h2>Open Source &amp; Community</h2>
         <p style="margin-bottom:12px;"><strong>Java Champion</strong></p>
 
+        <p style="font-weight:600; font-size:13px; color:#333; margin-bottom:8px;">Selected OSS Projects</p>
         <div class="oss-grid">
             <div class="oss-card">
                 <div class="oss-card-header">
@@ -443,20 +445,6 @@
                     <span class="oss-card-stars">670+ stars</span>
                 </div>
                 <p>Parallel processing toolkit for the Stream API</p>
-            </div>
-
-            <div class="oss-card">
-                <div class="oss-card-header">
-                    <a href="https://github.com/pivovarit/outboxd">Outboxd</a>
-                </div>
-                <p>Lightweight transactional outbox relay using PostgreSQL logical replication</p>
-            </div>
-
-            <div class="oss-card">
-                <div class="oss-card-header">
-                    <a href="https://github.com/pivovarit/fencepost">Fencepost</a>
-                </div>
-                <p>Distributed concurrency toolkit for Java relying on PostgreSQL</p>
             </div>
         </div>
 
