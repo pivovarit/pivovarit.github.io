@@ -284,32 +284,6 @@
             <h4><a href="https://pivovarit.com">Grzegorz Piwowarek</a></h4>
         </section>
 
-
-        <section>
-            <h2 style="margin-bottom: 0.3em;">{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
-
-            <h4 style="margin: 0.5em 0; font-weight: 500;">
-                <span style="margin: 0 10px;">Java Champion</span>
-                <span style="color: #3aa0a0;">|</span>
-                <span style="margin: 0 10px;">Oracle ACE</span>
-            </h4>
-
-            <div style="color: #555; font-size: 0.6em; margin: 0.6em 0;">
-                <span style="margin: 0 8px;">WarsawJUG Leader</span>
-                <span style="color: #3aa0a0;">|</span>
-                <span style="margin: 0 8px;">Vavr Leader</span>
-            </div>
-
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 1em 0;">
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">distributed systems</span>
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">microservices</span>
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">reactive</span>
-                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">java</span>
-            </div>
-
-            <h5 style="margin-top: 1em;"><a href="https://x.com/pivovarit">@pivovarit</a></h5>
-        </section>
-
         <section>
             <img src="img/snake.jpg" width="60%" alt="A snake eating its own tail (ouroboros)"/>
             <aside class="notes">
@@ -319,7 +293,15 @@
         </section>
 
         <section>
-            <h2>What makes systems...distributed?</h2>
+            <blockquote>
+                A distributed system is a collection of independent computers or nodes that work together over a
+                network to achieve a shared goal, while appearing to the end-user as a single, unified system
+            </blockquote>
+            <small><small><a href="https://www.atlassian.com/microservices/microservices-architecture/distributed-architecture">https://www.atlassian.com/microservices/microservices-architecture/distributed-architecture</a></small></small>
+        </section>
+
+        <section>
+            <h3>What makes systems...distributed?</h3>
         </section>
 
         <section>
@@ -3000,9 +2982,9 @@ Produces Kafka event: OrderCreated { orderId: 42 }
             <h3>Dancing with uncertainty</h3>
             <p>You can’t eliminate uncertainty - you learn the steps:</p>
             <ul>
-                <li class="fragment">Assume <strong>at-least-once</strong> -> make every consumer idempotent</li>
-                <li class="fragment">Never dual-write -> <strong>outbox + CDC</strong></li>
-                <li class="fragment">Never order events by wall clock -> use <strong>causal order</strong></li>
+                <li class="fragment">"Default" to <strong>at-least-once</strong> -> make every consumer idempotent</li>
+                <li class="fragment">"Never" dual-write -> <strong>outbox + CDC</strong></li>
+                <li class="fragment">"Never" order events by wall clock -> use <strong>causal order</strong></li>
                 <li class="fragment">Pick your trade-offs <em>explicitly</em> -> A vs C, latency vs consistency</li>
             </ul>
             <aside class="notes">
@@ -3019,6 +3001,32 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 Using common sense is the ultimate Best Practice™.
             </blockquote>
         </section>
+
+        <section>
+            <h2 style="margin-bottom: 0.3em;">{ <a href="https://4comprehension.com/">4comprehension.com</a> }</h2>
+
+            <h4 style="margin: 0.5em 0; font-weight: 500;">
+                <span style="margin: 0 10px;">Java Champion</span>
+                <span style="color: #3aa0a0;">|</span>
+                <span style="margin: 0 10px;">Oracle ACE</span>
+            </h4>
+
+            <div style="color: #555; font-size: 0.6em; margin: 0.6em 0;">
+                <span style="margin: 0 8px;">WarsawJUG Leader</span>
+                <span style="color: #3aa0a0;">|</span>
+                <span style="margin: 0 8px;">Vavr Leader</span>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 1em 0;">
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">distributed systems</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">microservices</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">reactive</span>
+                <span style="background: #f5f5f5; padding: 5px 12px; border-radius: 15px; font-size: 0.55em; color: #444;">java</span>
+            </div>
+
+            <h5 style="margin-top: 1em;"><a href="https://x.com/pivovarit">@pivovarit</a></h5>
+        </section>
+
         <section>
             <h2>Thank You!</h2>
 
