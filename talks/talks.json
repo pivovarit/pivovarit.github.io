@@ -1,6 +1,12 @@
 {
   "events": [
     {
+      "conference": "Java Champions Conf",
+      "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
+      "date": "2027-01-21",
+      "location": "online"
+    },
+    {
       "conference": "InfoShare Katowice 2026",
       "talk": "Dancing with Uncertainty: Challenges of Distributed Systems",
       "date": "2026-11-17",
