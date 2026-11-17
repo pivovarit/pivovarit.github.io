@@ -1560,7 +1560,7 @@
             <small><p>This is the “ELC” part of PACELC.</p></small>
         </section>
 
-        <section>
+       <!-- <section>
             <h3>Imagine two check-in desks for the same flight</h3>
             <ul>
                 <li><strong>network failure</strong> -> choice:
@@ -1568,15 +1568,15 @@
                 <li><strong>no failure</strong> -> each assignment can be:
                     <em>fast but from a cached seat map (L)</em> or <em>slow but from a confirmed seat map (C)</em></li>
             </ul>
-        </section>
+        </section>-->
 
-        <section>
+      <!--  <section>
             <h3>Real-world examples</h3>
             <ul>
                 <li><strong>Amazon Dynamo / Cassandra</strong> -> prioritize <em>Availability + Low Latency</em></li>
                 <li><strong>Google Spanner</strong> -> prioritize <em>Consistency</em>, accept more latency</li>
             </ul>
-        </section>
+        </section>-->
 
         <section>
             <h3>False Dichotomy:</h3>
@@ -2104,24 +2104,24 @@
             <img src="img/sync2.png" width="80%" alt="Diagram of asynchronous communication between services"/>
         </section>
 
-        <section>
+     <!--   <section>
             <h3>From HTTP calls...</h3>
             <pre><code data-trim>
 OrderService -> PaymentService -> NotificationService
     </code></pre>
             <p>Each service calls another directly...</p>
             <p><em>...tight coupling, dependencies, and failure chains.</em></p>
-        </section>
+        </section>-->
 
-        <section>
+       <!-- <section>
             <h3>...to Events</h3>
             <pre><code data-trim>
-OrderService --> publishes OrderCreatedEvent
-PaymentService --> consumes OrderCreatedEvent
-NotificationService --> consumes PaymentConfirmedEvent
+OrderService &ndash;&gt; publishes OrderCreatedEvent
+PaymentService &ndash;&gt; consumes OrderCreatedEvent
+NotificationService &ndash;&gt; consumes PaymentConfirmedEvent
     </code></pre>
             <p>Services react to <strong>events</strong> instead of making direct calls.</p>
-        </section>
+        </section>-->
 
         <section>
             <h2>Local Read Models</h2>
@@ -2448,7 +2448,7 @@ Produces Kafka event: OrderCreated { orderId: 42 }
     </code></pre>
         </section>
 
-        <section>
+       <!-- <section>
             <h3>Outbox + CDC: the deal</h3>
             <ul>
                 <li><span style="color: #3aa0a0; font-weight: bold;">✓</span> atomic writes - no dual writes, no lost events, no distributed transactions</li>
@@ -2456,7 +2456,7 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 <li><span style="color: #b45050; font-weight: bold;">✗</span> extra tables and processes</li>
                 <li><span style="color: #b45050; font-weight: bold;">✗</span> duplicates still happen -> consumers must be idempotent</li>
             </ul>
-        </section>
+        </section>-->
 
         <section>
             <h3>OSS Support</h3>
@@ -2946,11 +2946,11 @@ Produces Kafka event: OrderCreated { orderId: 42 }
             <p>Distributed systems live in <strong>logical time</strong>.</p>
         </section>
 
-        <section>
+       <!-- <section>
             <p>Google’s Spanner uses special hardware clocks (TrueTime API)</p>
             <p>But even then, they include an <strong>uncertainty window</strong> - because perfect time doesn’t exist.
             </p>
-        </section>
+        </section>-->
 
         <section>
             <h3>Summary</h3>
@@ -2978,7 +2978,7 @@ Produces Kafka event: OrderCreated { orderId: 42 }
             <p class="fragment">Distributed systems are <strong>genuinely hard</strong>.<br>Design with failure in mind - always.</p>
         </section>
 
-        <section>
+       <!-- <section>
             <h3>Dancing with uncertainty</h3>
             <p>You can’t eliminate uncertainty - you learn the steps:</p>
             <ul>
@@ -2994,7 +2994,7 @@ Produces Kafka event: OrderCreated { orderId: 42 }
                 ordering is safe only when clock uncertainty is explicit, bounded, and waited out; commodity NTP
                 gives you none of that.
             </aside>
-        </section>
+        </section>-->
 
         <section>
             <blockquote>
